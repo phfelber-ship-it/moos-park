@@ -1,7 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getEvent, eventTicketUrl, priceToEuro } from "@/lib/clubscale";
+import { getEvent, eventTicketUrl } from "@/lib/clubscale";
+import TicketSelector from "@/components/TicketSelector";
 
 function formatDate(iso: string) {
   return new Date(iso).toLocaleDateString("de-DE", {
@@ -96,41 +97,23 @@ export default async function EventDetailPage({
         {event.description}
       </div>
 
-      <div className="mt-10 rounded-2xl border border-black/8 bg-black/[0.025] p-6">
-        <h2 className="text-xl font-black uppercase text-foreground">Tickets</h2>
-        <ul className="mt-4 divide-y divide-black/8">
-          {event.ticketPools
-            .filter((p) => !p.deactivated)
-            .sort((a, b) => a.sortIndex - b.sortIndex)
-            .map((pool) => (
-              <li
-                key={pool.id}
-                className="flex items-center justify-between gap-4 py-3"
-              >
-                <span className="text-sm text-black/70">{pool.name}</span>
-                <span className="text-sm font-bold text-accent">
-                  {pool.free ? "Gratis" : `${priceToEuro(pool.price)} €`}
-                </span>
-              </li>
-            ))}
-          {event.hasBoxOffice && (
-            <li className="flex items-center justify-between gap-4 py-3">
-              <span className="text-sm text-black/70">Abendkasse</span>
-              <span className="text-sm font-bold text-accent">
-                {priceToEuro(event.boxOfficePrice)} €
-              </span>
-            </li>
-          )}
-        </ul>
-
-        <a
-          href={eventTicketUrl(event.id)}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="mt-6 inline-block rounded-full bg-accent px-8 py-3 text-sm font-black uppercase tracking-wide text-black transition-transform hover:scale-105"
-        >
-          Tickets sichern
-        </a>
+      <div className="mt-10 rounded-3xl border border-black/8 bg-white p-6 shadow-[0_2px_20px_rgba(0,0,0,0.04)]">
+        <h2 className="text-xl font-black uppercase text-foreground">
+          Tickets
+        </h2>
+        <div className="mt-4">
+          <TicketSelector
+            pools={event.ticketPools
+              .filter((p) => !p.deactivated)
+              .sort((a, b) => a.sortIndex - b.sortIndex)}
+            ticketUrl={eventTicketUrl(event.id)}
+          />
+        </div>
+        {event.hasBoxOffice && (
+          <p className="mt-4 text-sm text-black/60">
+            Abendkasse: {event.boxOfficeText}
+          </p>
+        )}
       </div>
     </div>
   );

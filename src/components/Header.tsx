@@ -20,6 +20,27 @@ const NAV_LINKS = [
 const NAV_LINKS_LEFT = NAV_LINKS.slice(1, 5);
 const NAV_LINKS_RIGHT = NAV_LINKS.slice(5);
 
+function HomeIcon() {
+  return (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+      <path
+        d="M3 11.5 12 4l9 7.5"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M5.5 10v9a1 1 0 0 0 1 1H9a1 1 0 0 0 1-1v-4a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v4a1 1 0 0 0 1 1h2.5a1 1 0 0 0 1-1v-9"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
 export default function Header() {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
@@ -34,13 +55,13 @@ export default function Header() {
   return (
     <div className="sticky top-3 z-50 px-3">
       <header className="relative z-50 mx-auto flex max-w-6xl items-center justify-between rounded-full bg-white px-6 py-3 shadow-[0_2px_20px_rgba(0,0,0,0.08)]">
-        {open ? (
-          <button
-            aria-label="Menü schließen"
-            onClick={() => setOpen(false)}
-            className="text-foreground lg:hidden"
-          >
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+        <button
+          aria-label={open ? "Menü schließen" : "Menü öffnen"}
+          onClick={() => setOpen((v) => !v)}
+          className="text-foreground lg:hidden"
+        >
+          {open ? (
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
               <path
                 d="M5 5l14 14M19 5 5 19"
                 stroke="currentColor"
@@ -48,53 +69,20 @@ export default function Header() {
                 strokeLinecap="round"
               />
             </svg>
-          </button>
-        ) : (
-          <Link
-            href="/"
-            aria-label="Home"
-            className="text-foreground lg:hidden"
-          >
+          ) : (
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
               <path
-                d="M3 11.5 12 4l9 7.5"
+                d="M4 6h16M4 12h16M4 18h16"
                 stroke="currentColor"
                 strokeWidth="2"
                 strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-              <path
-                d="M5.5 10v9a1 1 0 0 0 1 1H9a1 1 0 0 0 1-1v-4a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v4a1 1 0 0 0 1 1h2.5a1 1 0 0 0 1-1v-9"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
               />
             </svg>
-          </Link>
-        )}
+          )}
+        </button>
 
-        <Link
-          href="/"
-          aria-label="Home"
-          className="hidden text-foreground lg:block"
-        >
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-            <path
-              d="M3 11.5 12 4l9 7.5"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-            <path
-              d="M5.5 10v9a1 1 0 0 0 1 1H9a1 1 0 0 0 1-1v-4a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v4a1 1 0 0 0 1 1h2.5a1 1 0 0 0 1-1v-9"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
+        <Link href="/" aria-label="Home" className="hidden text-foreground lg:block">
+          <HomeIcon />
         </Link>
 
         <nav className="hidden items-center gap-6 lg:flex">
@@ -109,6 +97,20 @@ export default function Header() {
           ))}
         </nav>
 
+        <Link
+          href="/"
+          aria-label="Home"
+          className="absolute left-1/2 top-1/2 w-8 -translate-x-1/2 -translate-y-1/2"
+        >
+          <Image
+            src="/images/logo.png"
+            alt="moos.park"
+            width={40}
+            height={40}
+            className="w-full"
+          />
+        </Link>
+
         <nav className="hidden items-center gap-6 lg:flex">
           {NAV_LINKS_RIGHT.map((link) => (
             <Link
@@ -121,30 +123,12 @@ export default function Header() {
           ))}
         </nav>
 
-        <div className="flex items-center gap-4">
-          <Link
-            href="/events"
-            className="hidden items-center gap-1.5 rounded-full bg-accent px-5 py-2 text-xs font-black uppercase tracking-wide text-black transition-transform hover:scale-105 sm:inline-flex"
-          >
-            Tickets
-          </Link>
-          <button
-            className="text-foreground lg:hidden"
-            aria-label="Menü öffnen"
-            onClick={() => setOpen((v) => !v)}
-          >
-            {!open && (
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                <path
-                  d="M4 6h16M4 12h16M4 18h16"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                />
-              </svg>
-            )}
-          </button>
-        </div>
+        <Link
+          href="/events"
+          className="inline-flex items-center gap-1.5 rounded-full bg-accent px-4 py-2 text-xs font-black uppercase tracking-wide text-black transition-transform hover:scale-105 sm:px-5"
+        >
+          Tickets
+        </Link>
       </header>
 
       {open && (

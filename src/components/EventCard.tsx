@@ -1,7 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
 import type { ClubscaleEvent } from "@/lib/clubscale";
-import { priceToEuro } from "@/lib/clubscale";
 
 function formatDate(iso: string) {
   const d = new Date(iso);
@@ -18,14 +17,12 @@ function formatTime(iso: string) {
 }
 
 export default function EventCard({ event }: { event: ClubscaleEvent }) {
-  const minPrice = event.ticketPoolMinPrice;
-
   return (
-    <Link
-      href={`/events/${event.id}`}
-      className="group flex flex-col overflow-hidden rounded-2xl border border-black/8 bg-black/[0.025] transition-colors hover:border-accent/40"
-    >
-      <div className="relative aspect-[4/3] w-full overflow-hidden bg-black/5">
+    <div className="flex flex-col items-center text-center">
+      <Link
+        href={`/events/${event.id}`}
+        className="group relative aspect-[16/10] w-full overflow-hidden rounded-3xl bg-black/5"
+      >
         {event.thumbnail?.presignedURL && (
           <Image
             src={event.thumbnail.presignedURL}
@@ -35,40 +32,38 @@ export default function EventCard({ event }: { event: ClubscaleEvent }) {
             sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
           />
         )}
-        <span className="absolute left-3 top-3 rounded-full bg-black/70 px-3 py-1 text-xs font-bold text-foreground">
+        <span className="absolute left-3 top-3 rounded-full bg-white px-3 py-1 text-xs font-bold text-foreground shadow">
           {event.ageRestriction}+
         </span>
+      </Link>
+
+      <div className="mt-4 flex flex-wrap items-center justify-center gap-2">
+        {event.tags.slice(0, 3).map((tag) => (
+          <span
+            key={tag}
+            className="rounded-full border border-black/15 px-3 py-1 text-[11px] font-bold uppercase tracking-wide text-black/70"
+          >
+            {tag}
+          </span>
+        ))}
       </div>
 
-      <div className="flex flex-1 flex-col gap-2 p-5">
-        <div className="flex flex-wrap gap-1.5">
-          {event.tags.slice(0, 3).map((tag) => (
-            <span
-              key={tag}
-              className="rounded-full bg-black/10 px-2.5 py-0.5 text-[11px] font-semibold uppercase tracking-wide text-black/70"
-            >
-              {tag}
-            </span>
-          ))}
-        </div>
-
-        <h3 className="text-lg font-black leading-tight text-foreground">
+      <Link href={`/events/${event.id}`}>
+        <h3 className="mt-3 text-lg font-black uppercase leading-tight text-foreground">
           {event.name}
         </h3>
+      </Link>
 
-        <p className="text-sm font-semibold text-accent">
-          {formatDate(event.start)} · {formatTime(event.start)} Uhr
-        </p>
+      <p className="mt-2 text-sm text-black/60">
+        {formatDate(event.start)} · {formatTime(event.start)} Uhr
+      </p>
 
-        <div className="mt-auto flex items-center justify-between pt-3">
-          <span className="text-sm text-black/60">
-            ab {priceToEuro(minPrice)} €
-          </span>
-          <span className="rounded-full bg-accent px-4 py-1.5 text-xs font-black uppercase tracking-wide text-black">
-            Mehr Infos
-          </span>
-        </div>
-      </div>
-    </Link>
+      <Link
+        href={`/events/${event.id}`}
+        className="mt-4 rounded-full bg-black px-6 py-2.5 text-xs font-black uppercase tracking-wide text-white transition-transform hover:scale-105"
+      >
+        Mehr Infos
+      </Link>
+    </div>
   );
 }
