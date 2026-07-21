@@ -23,62 +23,74 @@ export default function TicketSelector({
   const total = Object.values(quantities).reduce((a, b) => a + b, 0);
 
   return (
-    <div className="grid gap-3">
-      {pools.map((pool) => {
-        const soldOut = pool.sold >= pool.contingent;
-        const qty = quantities[pool.id] ?? 0;
-        const available = pool.contingent - pool.sold;
+    <div>
+      <p className="mb-4 text-xs font-bold uppercase tracking-wide text-accent-lime">
+        Online Ticket kaufen &amp; sparen
+      </p>
 
-        return (
-          <div
-            key={pool.id}
-            className={`rounded-2xl border p-5 ${
-              soldOut
-                ? "border-red-200 bg-red-50"
-                : "border-foreground/10 bg-foreground/[0.015]"
-            }`}
-          >
-            <p className="font-bold text-foreground">{pool.name}</p>
-            <p className="mt-1 text-sm text-foreground/60">
-              {pool.free ? "Gratis" : `Preis: ${priceToEuro(pool.price)} € + Ticketgebühr*`}{" "}
-              · {soldOut ? "Ausverkauft" : "Verfügbar"}
-            </p>
+      <div className="divide-y divide-foreground/8">
+        {pools.map((pool) => {
+          const soldOut = pool.sold >= pool.contingent;
+          const qty = quantities[pool.id] ?? 0;
+          const available = pool.contingent - pool.sold;
 
-            <div className="mt-4 flex items-center justify-between">
-              {soldOut ? (
-                <span className="rounded-full border-2 border-red-400 px-6 py-2 text-sm font-black uppercase tracking-wide text-red-500">
-                  Sold Out
-                </span>
-              ) : (
-                <>
+          return (
+            <div
+              key={pool.id}
+              className={`flex items-center justify-between gap-4 py-3.5 ${
+                soldOut ? "opacity-50" : ""
+              }`}
+            >
+              <div className="flex min-w-0 items-start gap-2.5">
+                <span
+                  className={`mt-1.5 h-2 w-2 shrink-0 rounded-full ${
+                    soldOut ? "bg-foreground/30" : "bg-green-500"
+                  }`}
+                />
+                <div className="min-w-0">
+                  <p className="truncate text-sm font-bold text-foreground">
+                    {pool.name}
+                  </p>
+                  <p className="text-xs text-foreground/50">
+                    {soldOut
+                      ? "Ausverkauft"
+                      : pool.free
+                      ? "Gratis"
+                      : `${priceToEuro(pool.price)} € + Ticketgebühr*`}
+                  </p>
+                </div>
+              </div>
+
+              {!soldOut && (
+                <div className="flex shrink-0 items-center gap-3">
                   <button
                     type="button"
                     onClick={() => setQty(pool.id, -1, available)}
                     disabled={qty === 0}
-                    className="flex h-11 w-11 items-center justify-center rounded-full border-2 border-foreground text-lg font-bold text-foreground disabled:opacity-30"
+                    className="flex h-7 w-7 items-center justify-center rounded-full border border-foreground/20 text-sm text-foreground disabled:opacity-30"
                     aria-label="Weniger"
                   >
                     −
                   </button>
-                  <span className="text-lg font-black text-foreground">
+                  <span className="w-4 text-center text-sm font-bold text-foreground">
                     {qty}
                   </span>
                   <button
                     type="button"
                     onClick={() => setQty(pool.id, 1, available)}
-                    className="flex h-11 w-11 items-center justify-center rounded-full border-2 border-foreground text-lg font-bold text-foreground"
+                    className="flex h-7 w-7 items-center justify-center rounded-full border border-foreground/20 text-sm text-foreground"
                     aria-label="Mehr"
                   >
                     +
                   </button>
-                </>
+                </div>
               )}
             </div>
-          </div>
-        );
-      })}
+          );
+        })}
+      </div>
 
-      <p className="text-xs text-foreground/50">
+      <p className="mt-4 text-xs text-foreground/50">
         *Gebühren werden auf der nächsten Seite automatisch berechnet.
       </p>
 
@@ -86,7 +98,7 @@ export default function TicketSelector({
         href={ticketUrl}
         target="_blank"
         rel="noopener noreferrer"
-        className={`mt-2 rounded-full border-2 border-foreground px-8 py-3 text-center text-sm font-black uppercase tracking-wide text-foreground transition-colors hover:bg-foreground hover:text-background ${
+        className={`mt-4 block rounded-full bg-accent px-8 py-3 text-center text-sm font-black uppercase tracking-wide text-black transition-transform hover:scale-105 ${
           total === 0 ? "pointer-events-none opacity-40" : ""
         }`}
       >

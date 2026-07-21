@@ -38,11 +38,11 @@ export default function EventCard({ event }: { event: ClubscaleEvent }) {
         </span>
       </Link>
 
-      <div className="mt-4 flex flex-wrap items-center justify-center gap-2">
+      <div className="mt-4 flex max-w-full flex-nowrap items-center justify-center gap-1.5 overflow-x-auto">
         {event.tags.slice(0, 3).map((tag) => (
           <span
             key={tag}
-            className={`rounded-full px-3 py-1 text-[11px] font-bold uppercase tracking-wide ${tagClasses(
+            className={`shrink-0 rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide ${tagClasses(
               tag
             )}`}
           >

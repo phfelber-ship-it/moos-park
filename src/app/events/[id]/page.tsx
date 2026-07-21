@@ -51,11 +51,11 @@ export default async function EventDetailPage({
         </div>
       )}
 
-      <div className="mt-6 flex flex-wrap items-center justify-center gap-2 text-center">
+      <div className="mt-6 flex max-w-full flex-nowrap items-center justify-center gap-1.5 overflow-x-auto text-center">
         {event.tags.map((tag) => (
           <span
             key={tag}
-            className={`rounded-full px-3 py-1 text-xs font-bold uppercase tracking-wide ${tagClasses(
+            className={`shrink-0 rounded-full px-2.5 py-1 text-[11px] font-bold uppercase tracking-wide ${tagClasses(
               tag
             )}`}
           >
