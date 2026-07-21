@@ -1,15 +1,24 @@
 import Link from "next/link";
 import Image from "next/image";
 import { getEvents } from "@/lib/clubscale";
-import EventCard from "@/components/EventCard";
+import EventsExplorer from "@/components/EventsExplorer";
+
+const TICKER_ITEMS = [
+  "Musik",
+  "Eventlocation",
+  "Kultur",
+  "Festival",
+  "Unvergessliche Events",
+  "Tagungen",
+  "Raum für mehr",
+];
 
 export default async function Home() {
   const events = await getEvents();
-  const upcoming = events.slice(0, 4);
 
   return (
     <div>
-      <section className="relative flex min-h-[70vh] items-end overflow-hidden text-center text-white sm:min-h-[85vh]">
+      <section className="relative flex min-h-[75vh] items-end overflow-hidden text-center text-white sm:min-h-[90vh]">
         <Image
           src="/images/hero-bg.jpg"
           alt="moos.park"
@@ -30,117 +39,209 @@ export default async function Home() {
           />
         </div>
 
-        <div className="relative z-10 mx-auto max-w-4xl px-6 pb-16">
+        <div className="relative z-10 mx-auto max-w-4xl px-6 pb-10">
           <h1 className="text-4xl font-black uppercase leading-[1.05] tracking-tight text-white sm:text-6xl">
             Deine Freiheit
             <br />
             beginnt hier – im moos.park
           </h1>
-          <p className="mx-auto mt-6 max-w-xl text-lg text-white/85">
-            Eventlocation in modernem Design und exklusivem Ambiente – für
-            Konzerte, Clubnächte, Firmenfeiern und unvergessliche Partys.
-          </p>
-          <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
-            <Link
-              href="/events"
-              className="rounded-full bg-accent px-8 py-3 text-sm font-black uppercase tracking-wide text-black transition-transform hover:scale-105"
-            >
-              Alle Events ansehen
-            </Link>
+
+          <div className="mt-8 flex justify-center gap-12 sm:gap-20">
+            <div>
+              <p className="text-4xl font-black sm:text-5xl">2200</p>
+              <p className="mt-1 max-w-[10rem] text-sm text-white/80">
+                QM Eventfläche, Exclusive Ausstattung
+              </p>
+            </div>
+            <div>
+              <p className="text-4xl font-black sm:text-5xl">100%</p>
+              <p className="mt-1 max-w-[10rem] text-sm text-white/80">
+                Spaß. Für jede Altersklasse.
+              </p>
+            </div>
+          </div>
+
+          <div className="mt-8 inline-flex rounded-full bg-black/30 p-1 backdrop-blur">
+            <span className="rounded-full bg-white px-5 py-2 text-xs font-black uppercase tracking-wide text-black">
+              Club
+            </span>
             <Link
               href="/eventlocation"
-              className="rounded-full border border-white/40 px-8 py-3 text-sm font-black uppercase tracking-wide text-white transition-colors hover:border-white"
+              className="rounded-full px-5 py-2 text-xs font-black uppercase tracking-wide text-white"
             >
-              Location entdecken
+              Eventlocation
             </Link>
           </div>
         </div>
       </section>
 
-      <section className="border-y border-black/8 bg-black/[0.02] px-6 py-10">
-        <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-center gap-x-10 gap-y-4 text-sm font-bold uppercase tracking-wide text-black/50">
-          <span>Musik</span>
-          <span>Eventlocation</span>
-          <span>Kultur</span>
-          <span>Festival</span>
-          <span>Unvergessliche Events</span>
-          <span>Tagungen</span>
-          <span>Raum für mehr</span>
+      <div className="overflow-hidden bg-accent-lime py-3">
+        <div className="flex animate-marquee gap-8 whitespace-nowrap">
+          {[...TICKER_ITEMS, ...TICKER_ITEMS, ...TICKER_ITEMS].map(
+            (item, i) => (
+              <span
+                key={i}
+                className="flex items-center gap-2 text-sm font-black uppercase tracking-wide text-black"
+              >
+                <span>✔</span> {item}
+              </span>
+            )
+          )}
         </div>
-      </section>
+      </div>
 
       <section className="px-6 py-24">
         <div className="mx-auto max-w-7xl">
-          <div className="mb-10 flex flex-wrap items-end justify-between gap-4">
-            <h2 className="text-3xl font-black uppercase text-foreground">
-              Kommende Events
-            </h2>
-            <Link
-              href="/events"
-              className="text-sm font-bold uppercase tracking-wide text-accent hover:text-accent/80"
-            >
-              Alle Events ansehen →
-            </Link>
+          <h2 className="text-center text-3xl font-black uppercase text-foreground sm:text-4xl">
+            Kommende Events
+          </h2>
+
+          <div className="mt-12">
+            <EventsExplorer events={events} limit={4} />
           </div>
 
-          {upcoming.length > 0 ? (
-            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-              {upcoming.map((event) => (
-                <EventCard key={event.id} event={event} />
-              ))}
-            </div>
-          ) : (
-            <p className="text-black/60">
-              Aktuell sind keine Events geladen. Schau bald wieder vorbei.
-            </p>
-          )}
+          <div className="mt-12 text-center">
+            <Link
+              href="/events"
+              className="inline-block rounded-full bg-accent px-8 py-3 text-sm font-black uppercase tracking-wide text-black transition-transform hover:scale-105"
+            >
+              Alle Events ansehen
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      <section className="bg-black/[0.02] px-6 py-24 text-center">
+        <h2 className="text-2xl font-black uppercase text-foreground sm:text-3xl">
+          Tanz Nächte
+        </h2>
+        <p className="mx-auto mt-4 max-w-md text-black/60">
+          &bdquo;Jeden 2. und 4. Freitag im Monat. Tanzbare Musik, gute
+          Stimmung und echte Emotionen.&ldquo;
+        </p>
+        <Link
+          href="/tanzabend"
+          className="mt-8 inline-block rounded-full bg-accent-lime px-8 py-3 text-sm font-black uppercase tracking-wide text-black transition-transform hover:scale-105"
+        >
+          Alle Tanztermine ansehen
+        </Link>
+      </section>
+
+      <section className="px-6 py-24 text-center">
+        <div className="mx-auto max-w-xl">
+          <h2 className="text-3xl font-black uppercase leading-tight text-foreground">
+            &bdquo;App drauf – mehr drin.&ldquo;
+          </h2>
+          <p className="mt-4 text-black/60">
+            Exklusive Specials, Aktionen &amp; Überraschungen – nur in der
+            moos.park App.
+          </p>
+
+          <ul className="mx-auto mt-6 inline-flex flex-col gap-2 text-left font-semibold text-accent-lime">
+            <li>› Coupons &amp; Vorteile</li>
+            <li>› Alle Events</li>
+            <li>› Tickets &amp; Reservierungen</li>
+            <li>› Kundenkarte</li>
+            <li>› News &amp; Updates</li>
+          </ul>
+
+          <div className="mt-8 flex justify-center gap-4">
+            <a
+              href="https://www.apple.com/app-store/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <Image
+                src="/images/appstore.png"
+                alt="App Store"
+                width={150}
+                height={41}
+              />
+            </a>
+            <a
+              href="https://play.google.com/store"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <Image
+                src="/images/googleplay.png"
+                alt="Google Play"
+                width={150}
+                height={42}
+              />
+            </a>
+          </div>
+        </div>
+
+        <div className="relative mx-auto mt-12 aspect-[1454/2560] w-full max-w-xs">
+          <Image
+            src="/images/hero-home.jpg"
+            alt="moos.park App"
+            fill
+            className="object-contain"
+            sizes="400px"
+          />
         </div>
       </section>
 
       <section className="px-6 py-24">
-        <div className="mx-auto grid max-w-6xl gap-10 sm:grid-cols-3">
-          {[
-            {
-              title: "Exklusive Ausstattung",
-              text: "Modernes Design, hochwertige Technik und viel Platz für unvergessliche Events.",
-            },
-            {
-              title: "Für jede Zielgruppe",
-              text: "Vom Firmen-Event über Geburtstage bis zur Clubnacht – flexibel für jeden Anlass.",
-            },
-            {
-              title: "Zentral in Bayern",
-              text: "Direkt zwischen Aichach und Friedberg – gut erreichbar mit ausreichend Parkplätzen.",
-            },
-          ].map((item) => (
-            <div
-              key={item.title}
-              className="rounded-2xl border border-black/8 bg-black/[0.025] p-8"
-            >
-              <h3 className="text-lg font-black uppercase text-foreground">
-                {item.title}
-              </h3>
-              <p className="mt-3 text-sm text-black/60">{item.text}</p>
-            </div>
-          ))}
+        <div className="mx-auto max-w-3xl text-center">
+          <p className="text-sm font-black uppercase tracking-wide text-accent-lime">
+            moos.park
+          </p>
+          <h2 className="mt-2 text-3xl font-black uppercase text-foreground">
+            Mehr als eine Eventlocation.
+          </h2>
+          <p className="mt-6 text-black/70">
+            Seit 1994 steht unser Haus für musikalische Highlights,
+            unvergessliche Events und eine besondere Atmosphäre, die
+            verbindet. Was damals als Club mit Charakter begann, hat sich
+            längst zu einer der vielseitigsten Locations in Süddeutschland
+            entwickelt: ein Raum für Kultur, Konzerte, Corporate-Events und
+            Clubnächte – mit Seele und Substanz.
+          </p>
+        </div>
+
+        <div className="relative mx-auto mt-10 aspect-[4/5] w-full max-w-md overflow-hidden rounded-3xl">
+          <Image
+            src="/images/gallery-1.jpg"
+            alt="moos.park"
+            fill
+            className="object-cover"
+            sizes="(min-width: 640px) 400px, 100vw"
+          />
         </div>
       </section>
 
-      <section className="px-6 pb-28">
-        <div className="mx-auto flex max-w-5xl flex-col items-center gap-6 rounded-3xl border border-black/8 bg-black/[0.025] px-8 py-16 text-center">
+      <section className="px-6 pb-24">
+        <div className="relative mx-auto aspect-[4/5] w-full max-w-md overflow-hidden rounded-3xl">
+          <Image
+            src="/images/gallery-2.jpg"
+            alt="moos.park"
+            fill
+            className="object-cover grayscale"
+            sizes="(min-width: 640px) 400px, 100vw"
+          />
+        </div>
+
+        <div className="mx-auto mt-10 max-w-2xl text-center">
           <h2 className="text-3xl font-black uppercase text-foreground">
-            Du planst ein Event?
+            Raum für mehr.
           </h2>
-          <p className="max-w-xl text-black/60">
-            Ob Firmenfeier, Geburtstag oder private Veranstaltung – wir finden
-            gemeinsam das passende Konzept für dein Event im moos.park.
+          <p className="mt-6 text-black/70">
+            Mit wachsendem Bedarf an professionellen Veranstaltungsflächen
+            wurde der moos.park kontinuierlich erweitert. Heute bieten wir:
           </p>
-          <Link
-            href="/kontakt"
-            className="rounded-full bg-accent px-8 py-3 text-sm font-black uppercase tracking-wide text-black transition-transform hover:scale-105"
-          >
-            Jetzt anfragen
-          </Link>
+          <ul className="mx-auto mt-6 max-w-md list-disc space-y-3 pl-5 text-left text-black/70">
+            <li>Mehrere individuell nutzbare Eventbereiche</li>
+            <li>Eine stilvolle Terrasse mit Platz für Outdoor-Events</li>
+            <li>Eine hauseigene Pizzeria für kulinarische Vielfalt</li>
+            <li>
+              Voll ausgestattete Techniklösungen für Business-Events und
+              Kultur
+            </li>
+            <li>Backstage- und Produktionsflächen für Künstler &amp; Veranstalter</li>
+          </ul>
         </div>
       </section>
     </div>

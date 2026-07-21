@@ -1,5 +1,5 @@
 import { getEvents } from "@/lib/clubscale";
-import EventCard from "@/components/EventCard";
+import EventsExplorer from "@/components/EventsExplorer";
 
 export const metadata = {
   title: "Events - moos.park | Eventlocation",
@@ -10,23 +10,13 @@ export default async function EventsPage() {
 
   return (
     <div className="mx-auto max-w-7xl px-6 py-20">
-      <h1 className="text-4xl font-black uppercase text-foreground">Events</h1>
-      <p className="mt-3 max-w-xl text-black/60">
-        Alle kommenden Veranstaltungen im moos.park – von Open Airs über
-        Konzerte bis zu Clubnächten.
-      </p>
+      <h1 className="text-center text-4xl font-black uppercase text-foreground sm:text-5xl">
+        Kommende Events
+      </h1>
 
-      {events.length > 0 ? (
-        <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {events.map((event) => (
-            <EventCard key={event.id} event={event} />
-          ))}
-        </div>
-      ) : (
-        <p className="mt-12 text-black/60">
-          Aktuell sind keine Events verfügbar.
-        </p>
-      )}
+      <div className="mt-12">
+        <EventsExplorer events={events} />
+      </div>
     </div>
   );
 }
