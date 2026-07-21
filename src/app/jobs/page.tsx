@@ -1,4 +1,4 @@
-"use client";
+export const metadata = { title: "Jobs - moos.park | Eventlocation" };
 
 export default function JobsPage() {
   return (
