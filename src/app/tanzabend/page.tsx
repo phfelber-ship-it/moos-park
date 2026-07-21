@@ -16,7 +16,7 @@ export default function TanzabendPage() {
   return (
     <div>
       <section className="px-6 pb-8 pt-20 text-center">
-        <h1 className="text-3xl font-black uppercase leading-tight text-white sm:text-5xl">
+        <h1 className="text-3xl font-black uppercase leading-tight  text-foreground sm:text-5xl">
           Tanzbare Musik, gute Stimmung
           <br />
           und echte Emotionen.
@@ -33,7 +33,7 @@ export default function TanzabendPage() {
       </section>
 
       <section className="mx-auto max-w-4xl px-6 py-12">
-        <div className="relative aspect-[1024/379] w-full overflow-hidden rounded-2xl bg-white/5">
+        <div className="relative aspect-[1024/379] w-full overflow-hidden rounded-2xl bg-black/5">
           <Image
             src="/images/tanzabend-banner.png"
             alt="Tanzen im moospark"
@@ -49,16 +49,16 @@ export default function TanzabendPage() {
           {TERMINE.map((termin) => (
             <div
               key={termin.date + termin.dj}
-              className="rounded-2xl border border-white/5 bg-white/[0.03] p-6"
+              className="rounded-2xl border border-black/8 bg-black/[0.025] p-6"
             >
               <p className="text-sm font-bold text-accent">{termin.date}</p>
-              <h3 className="mt-2 text-lg font-black uppercase text-white">
+              <h3 className="mt-2 text-lg font-black uppercase text-foreground">
                 Tanzen im Moospark
               </h3>
-              <p className="mt-1 text-white/70">
+              <p className="mt-1 text-black/70">
                 Dein Tanzabend mit {termin.dj}
               </p>
-              <p className="mt-2 text-sm text-white/50">Beginn: 20:00 Uhr</p>
+              <p className="mt-2 text-sm text-black/50">Beginn: 20:00 Uhr</p>
             </div>
           ))}
         </div>

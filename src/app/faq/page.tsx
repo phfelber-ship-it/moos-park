@@ -69,10 +69,10 @@ const FAQ_ITEMS = [
 export default function FaqPage() {
   return (
     <div className="mx-auto max-w-3xl px-6 py-20">
-      <h1 className="text-4xl font-black uppercase text-white">
+      <h1 className="text-4xl font-black uppercase text-foreground">
         FAQ – Häufig gestellte Fragen
       </h1>
-      <p className="mt-3 text-white/60">
+      <p className="mt-3 text-black/60">
         Du hast Fragen? Kein Problem! In unseren FAQs findest du schnell und
         einfach Antworten auf häufig gestellte Fragen und mehr. Kurz, klar und
         auf den Punkt.
@@ -83,10 +83,10 @@ export default function FaqPage() {
       </div>
 
       <div className="mt-16">
-        <h2 className="text-2xl font-black uppercase text-white">
+        <h2 className="text-2xl font-black uppercase text-foreground">
           Deine Frage ist hier nicht aufgelistet?
         </h2>
-        <p className="mt-2 text-white/60">
+        <p className="mt-2 text-black/60">
           Dann schreib uns direkt über das Kontaktformular.
         </p>
         <div className="mt-6">

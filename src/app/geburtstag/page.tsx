@@ -86,12 +86,12 @@ export default function GeburtstagPage() {
         <p className="text-sm font-bold uppercase tracking-wide text-accent-lime">
           🎂 Geburtstags-Special
         </p>
-        <h1 className="mt-3 text-4xl font-black uppercase leading-tight text-white sm:text-6xl">
+        <h1 className="mt-3 text-4xl font-black uppercase leading-tight  text-foreground sm:text-6xl">
           Dein Geburtstag.
           <br />
           Einfach unvergesslich.
         </h1>
-        <p className="mx-auto mt-4 max-w-xl text-white/70">
+        <p className="mx-auto mt-4 max-w-xl text-black/70">
           Kein Stress. Kein Aufräumen. Einfach nur feiern – wir kümmern uns um
           den Rest.
         </p>
@@ -101,27 +101,27 @@ export default function GeburtstagPage() {
         >
           Jetzt anfragen
         </a>
-        <p className="mt-6 text-sm text-white/50">
+        <p className="mt-6 text-sm text-black/50">
           ⭐⭐⭐⭐⭐ Hunderte Geburtstage bereits gefeiert – im moos.park.
         </p>
       </section>
 
       <section className="px-6 py-20">
         <div className="mx-auto max-w-6xl">
-          <h2 className="text-center text-3xl font-black uppercase text-white">
+          <h2 className="text-center text-3xl font-black uppercase text-foreground">
             Deine Geburtstagsparty im moospark
           </h2>
-          <p className="mt-2 text-center text-white/60">Was dich erwartet?</p>
+          <p className="mt-2 text-center text-black/60">Was dich erwartet?</p>
           <div className="mt-10 grid gap-6 sm:grid-cols-3">
             {BENEFITS.map((b) => (
               <div
                 key={b.title}
-                className="rounded-2xl border border-white/5 bg-white/[0.03] p-8"
+                className="rounded-2xl border border-black/8 bg-black/[0.025] p-8"
               >
-                <h3 className="text-lg font-black uppercase text-white">
+                <h3 className="text-lg font-black uppercase text-foreground">
                   {b.title}
                 </h3>
-                <p className="mt-3 text-sm text-white/60">{b.text}</p>
+                <p className="mt-3 text-sm text-black/60">{b.text}</p>
               </div>
             ))}
           </div>
@@ -130,10 +130,10 @@ export default function GeburtstagPage() {
 
       <section className="px-6 py-20">
         <div className="mx-auto max-w-5xl">
-          <h2 className="text-center text-3xl font-black uppercase text-white">
+          <h2 className="text-center text-3xl font-black uppercase text-foreground">
             So einfach geht's.
           </h2>
-          <p className="mt-2 text-center text-white/60">
+          <p className="mt-2 text-center text-black/60">
             In 4 Schritten zu deiner Party.
           </p>
           <div className="mt-10 grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
@@ -142,10 +142,10 @@ export default function GeburtstagPage() {
                 <span className="text-4xl font-black text-accent">
                   {s.num}
                 </span>
-                <h3 className="mt-2 text-lg font-black uppercase text-white">
+                <h3 className="mt-2 text-lg font-black uppercase text-foreground">
                   {s.title}
                 </h3>
-                <p className="mt-2 text-sm text-white/60">{s.text}</p>
+                <p className="mt-2 text-sm text-black/60">{s.text}</p>
               </div>
             ))}
           </div>
@@ -154,23 +154,23 @@ export default function GeburtstagPage() {
 
       <section className="px-6 py-20">
         <div className="mx-auto max-w-6xl">
-          <h2 className="text-center text-3xl font-black uppercase text-white">
+          <h2 className="text-center text-3xl font-black uppercase text-foreground">
             Was Gäste sagen.
           </h2>
-          <p className="mt-2 text-center text-white/60">
+          <p className="mt-2 text-center text-black/60">
             Echte Geburtstage. Echte Momente.
           </p>
           <div className="mt-10 grid gap-6 sm:grid-cols-3">
             {REVIEWS.map((r) => (
               <div
                 key={r.author}
-                className="rounded-2xl border border-white/5 bg-white/[0.03] p-8"
+                className="rounded-2xl border border-black/8 bg-black/[0.025] p-8"
               >
                 <p className="text-accent">⭐⭐⭐⭐⭐</p>
-                <p className="mt-3 text-sm italic text-white/70">
+                <p className="mt-3 text-sm italic text-black/70">
                   „{r.text}"
                 </p>
-                <p className="mt-4 text-sm font-bold text-white/50">
+                <p className="mt-4 text-sm font-bold text-black/50">
                   {r.author}
                 </p>
               </div>
@@ -181,21 +181,21 @@ export default function GeburtstagPage() {
 
       <section className="px-6 pb-28">
         <div className="mx-auto max-w-3xl">
-          <h2 className="text-center text-3xl font-black uppercase text-white">
+          <h2 className="text-center text-3xl font-black uppercase text-foreground">
             Häufige Fragen
           </h2>
-          <p className="mt-2 text-center text-white/60">
+          <p className="mt-2 text-center text-black/60">
             Alles, was du wissen möchtest.
           </p>
-          <div className="mt-10 divide-y divide-white/5 rounded-2xl border border-white/5 bg-white/[0.03]">
+          <div className="mt-10 divide-y divide-black/8 rounded-2xl border border-black/8 bg-black/[0.025]">
             {FAQ.map((f) => (
               <div key={f.q} className="px-6 py-5">
-                <p className="font-bold text-white">{f.q}</p>
-                <p className="mt-2 text-sm text-white/60">{f.a}</p>
+                <p className="font-bold text-foreground">{f.q}</p>
+                <p className="mt-2 text-sm text-black/60">{f.a}</p>
               </div>
             ))}
           </div>
-          <p className="mt-6 text-center text-white/60">
+          <p className="mt-6 text-center text-black/60">
             Noch eine Frage offen?{" "}
             <a href="/kontakt" className="font-bold text-accent">
               Kontakt aufnehmen

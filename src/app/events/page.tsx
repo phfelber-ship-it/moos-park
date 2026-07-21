@@ -10,8 +10,8 @@ export default async function EventsPage() {
 
   return (
     <div className="mx-auto max-w-7xl px-6 py-20">
-      <h1 className="text-4xl font-black uppercase text-white">Events</h1>
-      <p className="mt-3 max-w-xl text-white/60">
+      <h1 className="text-4xl font-black uppercase text-foreground">Events</h1>
+      <p className="mt-3 max-w-xl text-black/60">
         Alle kommenden Veranstaltungen im moos.park – von Open Airs über
         Konzerte bis zu Clubnächten.
       </p>
@@ -23,7 +23,7 @@ export default async function EventsPage() {
           ))}
         </div>
       ) : (
-        <p className="mt-12 text-white/60">
+        <p className="mt-12 text-black/60">
           Aktuell sind keine Events verfügbar.
         </p>
       )}

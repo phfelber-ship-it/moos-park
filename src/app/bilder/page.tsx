@@ -28,15 +28,15 @@ const GALLERIES = [
 export default function BilderPage() {
   return (
     <div className="mx-auto max-w-7xl px-6 py-20">
-      <h1 className="text-4xl font-black uppercase text-white">Bilder</h1>
+      <h1 className="text-4xl font-black uppercase text-foreground">Bilder</h1>
 
       <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {GALLERIES.map((g) => (
           <div
             key={g.title}
-            className="overflow-hidden rounded-2xl border border-white/5 bg-white/[0.03]"
+            className="overflow-hidden rounded-2xl border border-black/8 bg-black/[0.025]"
           >
-            <div className="relative aspect-[4/3] w-full bg-white/5">
+            <div className="relative aspect-[4/3] w-full bg-black/5">
               {g.image && (
                 <Image
                   src={g.image}
@@ -49,7 +49,7 @@ export default function BilderPage() {
             </div>
             <div className="p-5">
               <p className="text-sm font-bold text-accent">{g.date}</p>
-              <h3 className="mt-1 font-black uppercase text-white">
+              <h3 className="mt-1 font-black uppercase text-foreground">
                 {g.title}
               </h3>
             </div>

@@ -41,19 +41,19 @@ export default async function EventDetailPage({
         {event.tags.map((tag) => (
           <span
             key={tag}
-            className="rounded-full bg-white/10 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-white/70"
+            className="rounded-full bg-black/10 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-black/70"
           >
             {tag}
           </span>
         ))}
       </div>
 
-      <h1 className="mt-4 text-3xl font-black uppercase text-white sm:text-5xl">
+      <h1 className="mt-4 text-3xl font-black uppercase  text-foreground sm:text-5xl">
         {event.name}
       </h1>
 
       {event.thumbnail?.presignedURL && (
-        <div className="relative mt-8 aspect-video w-full overflow-hidden rounded-2xl bg-white/5">
+        <div className="relative mt-8 aspect-video w-full overflow-hidden rounded-2xl bg-black/5">
           <Image
             src={event.thumbnail.presignedURL}
             alt={event.name}
@@ -65,40 +65,40 @@ export default async function EventDetailPage({
         </div>
       )}
 
-      <div className="mt-8 grid gap-4 rounded-2xl border border-white/5 bg-white/[0.03] p-6 sm:grid-cols-3">
+      <div className="mt-8 grid gap-4 rounded-2xl border border-black/8 bg-black/[0.025] p-6 sm:grid-cols-3">
         <div>
-          <p className="text-xs font-bold uppercase tracking-wide text-white/40">
+          <p className="text-xs font-bold uppercase tracking-wide text-black/40">
             Datum
           </p>
-          <p className="mt-1 font-semibold text-white">
+          <p className="mt-1 font-semibold text-foreground">
             {formatDate(event.start)}
           </p>
         </div>
         <div>
-          <p className="text-xs font-bold uppercase tracking-wide text-white/40">
+          <p className="text-xs font-bold uppercase tracking-wide text-black/40">
             Beginn
           </p>
-          <p className="mt-1 font-semibold text-white">
+          <p className="mt-1 font-semibold text-foreground">
             {formatTime(event.start)} Uhr
           </p>
         </div>
         <div>
-          <p className="text-xs font-bold uppercase tracking-wide text-white/40">
+          <p className="text-xs font-bold uppercase tracking-wide text-black/40">
             Alter
           </p>
-          <p className="mt-1 font-semibold text-white">
+          <p className="mt-1 font-semibold text-foreground">
             {event.ageRestriction}+
           </p>
         </div>
       </div>
 
-      <div className="prose prose-invert mt-10 max-w-none whitespace-pre-line text-white/80">
+      <div className="prose prose-invert mt-10 max-w-none whitespace-pre-line text-black/70">
         {event.description}
       </div>
 
-      <div className="mt-10 rounded-2xl border border-white/5 bg-white/[0.03] p-6">
-        <h2 className="text-xl font-black uppercase text-white">Tickets</h2>
-        <ul className="mt-4 divide-y divide-white/5">
+      <div className="mt-10 rounded-2xl border border-black/8 bg-black/[0.025] p-6">
+        <h2 className="text-xl font-black uppercase text-foreground">Tickets</h2>
+        <ul className="mt-4 divide-y divide-black/8">
           {event.ticketPools
             .filter((p) => !p.deactivated)
             .sort((a, b) => a.sortIndex - b.sortIndex)
@@ -107,7 +107,7 @@ export default async function EventDetailPage({
                 key={pool.id}
                 className="flex items-center justify-between gap-4 py-3"
               >
-                <span className="text-sm text-white/80">{pool.name}</span>
+                <span className="text-sm text-black/70">{pool.name}</span>
                 <span className="text-sm font-bold text-accent">
                   {pool.free ? "Gratis" : `${priceToEuro(pool.price)} €`}
                 </span>
@@ -115,7 +115,7 @@ export default async function EventDetailPage({
             ))}
           {event.hasBoxOffice && (
             <li className="flex items-center justify-between gap-4 py-3">
-              <span className="text-sm text-white/80">Abendkasse</span>
+              <span className="text-sm text-black/70">Abendkasse</span>
               <span className="text-sm font-bold text-accent">
                 {priceToEuro(event.boxOfficePrice)} €
               </span>
