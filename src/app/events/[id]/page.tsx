@@ -10,6 +10,7 @@ import {
 } from "@/lib/clubscale";
 import TicketSelector from "@/components/TicketSelector";
 import EventCard from "@/components/EventCard";
+import ReadMore from "@/components/ReadMore";
 
 function formatTime(iso: string) {
   return new Date(iso).toLocaleTimeString("de-DE", {
@@ -115,8 +116,8 @@ export default async function EventDetailPage({
         </div>
       </div>
 
-      <div className="prose prose-neutral mt-12 max-w-none whitespace-pre-line text-foreground/80">
-        {event.description}
+      <div className="prose prose-neutral mt-12 max-w-none">
+        <ReadMore text={event.description} />
       </div>
 
       {artists.length > 0 && (

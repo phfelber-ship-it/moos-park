@@ -19,10 +19,10 @@ function formatTime(iso: string) {
 
 export default function EventCard({ event }: { event: ClubscaleEvent }) {
   return (
-    <div className="flex flex-col items-center text-center">
+    <div className="flex flex-col items-center rounded-3xl border border-foreground/10 p-4 text-center transition-colors hover:border-foreground/25">
       <Link
         href={`/events/${event.id}`}
-        className="group relative aspect-[16/10] w-full overflow-hidden rounded-3xl bg-foreground/5"
+        className="group relative aspect-[16/10] w-full overflow-hidden rounded-2xl bg-foreground/5"
       >
         {event.thumbnail?.presignedURL && (
           <Image
@@ -61,12 +61,20 @@ export default function EventCard({ event }: { event: ClubscaleEvent }) {
         {formatDate(event.start)} · {formatTime(event.start)} Uhr
       </p>
 
-      <Link
-        href={`/events/${event.id}`}
-        className="mt-4 rounded-full bg-foreground px-6 py-2.5 text-xs font-black uppercase tracking-wide text-background transition-transform hover:scale-105"
-      >
-        Mehr Infos
-      </Link>
+      <div className="mt-4 flex w-full max-w-[220px] flex-col gap-2">
+        <Link
+          href={`/events/${event.id}#tickets`}
+          className="rounded-full bg-foreground px-6 py-2.5 text-xs font-black uppercase tracking-wide text-background transition-transform hover:scale-105"
+        >
+          Ticket kaufen
+        </Link>
+        <Link
+          href={`/reservierung?event=${event.id}`}
+          className="rounded-full border border-foreground/25 px-6 py-2.5 text-xs font-black uppercase tracking-wide text-foreground transition-colors hover:border-foreground/60"
+        >
+          Jetzt reservieren
+        </Link>
+      </div>
     </div>
   );
 }
