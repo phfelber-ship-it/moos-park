@@ -2,12 +2,8 @@
 
 import { useMemo, useState } from "react";
 import type { ClubscaleEvent } from "@/lib/clubscale";
+import { tagClasses } from "@/lib/clubscale";
 import EventCard from "@/components/EventCard";
-
-const TAG_STYLES: Record<string, string> = {
-  Party: "bg-accent-lime",
-  Konzerte: "bg-accent",
-};
 
 export default function EventsExplorer({
   events,
@@ -43,24 +39,19 @@ export default function EventsExplorer({
         >
           Alle
         </button>
-        {tags.map((tag) => {
-          const accentBg = TAG_STYLES[tag];
-          return (
-            <button
-              key={tag}
-              onClick={() => setActive(tag)}
-              className={`rounded-full px-6 py-3 text-sm font-black uppercase tracking-wide transition-colors ${
-                active === tag
-                  ? accentBg
-                    ? `${accentBg} text-black`
-                    : "bg-background text-foreground shadow-[0_2px_10px_rgba(0,0,0,0.1)]"
-                  : "bg-foreground/5 text-foreground/70"
-              }`}
-            >
-              {tag}
-            </button>
-          );
-        })}
+        {tags.map((tag) => (
+          <button
+            key={tag}
+            onClick={() => setActive(tag)}
+            className={`rounded-full px-6 py-3 text-sm font-black uppercase tracking-wide transition-colors ${
+              active === tag
+                ? tagClasses(tag)
+                : "bg-foreground/5 text-foreground/70"
+            }`}
+          >
+            {tag}
+          </button>
+        ))}
       </div>
 
       {filtered.length > 0 ? (

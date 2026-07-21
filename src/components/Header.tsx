@@ -127,7 +127,7 @@ export default function Header() {
         <div className="flex items-center gap-2">
           <ThemeToggle />
           <Link
-            href="/events"
+            href="/eventtickets"
             className="inline-flex items-center gap-1.5 rounded-full bg-accent px-4 py-2 text-xs font-black uppercase tracking-wide text-black transition-transform hover:scale-105 sm:px-5"
           >
             Tickets

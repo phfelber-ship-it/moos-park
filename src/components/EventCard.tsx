@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import type { ClubscaleEvent } from "@/lib/clubscale";
+import { tagClasses } from "@/lib/clubscale";
 
 function formatDate(iso: string) {
   const d = new Date(iso);
@@ -41,7 +42,9 @@ export default function EventCard({ event }: { event: ClubscaleEvent }) {
         {event.tags.slice(0, 3).map((tag) => (
           <span
             key={tag}
-            className="rounded-full border border-foreground/15 px-3 py-1 text-[11px] font-bold uppercase tracking-wide text-foreground/70"
+            className={`rounded-full px-3 py-1 text-[11px] font-bold uppercase tracking-wide ${tagClasses(
+              tag
+            )}`}
           >
             {tag}
           </span>

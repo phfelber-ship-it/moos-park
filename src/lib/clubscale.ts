@@ -42,7 +42,24 @@ export type ClubscaleEvent = {
   ticketPoolMaxPrice: number;
   logo: ClubscaleImage | null;
   thumbnail: ClubscaleImage | null;
+  artists: string[];
 };
+
+export type Artist = {
+  id: string;
+  name: string;
+  subtext: string;
+  image: ClubscaleImage | null;
+};
+
+export const TAG_STYLES: Record<string, string> = {
+  Party: "bg-accent-lime text-black",
+  Konzerte: "bg-accent text-black",
+};
+
+export function tagClasses(tag: string): string {
+  return TAG_STYLES[tag] ?? "bg-foreground/10 text-foreground/70";
+}
 
 export function eventTicketUrl(eventId: string): string {
   return `https://moospark.clubscale.com/events/${eventId}`;
@@ -73,4 +90,19 @@ export async function getEvents(): Promise<ClubscaleEvent[]> {
 export async function getEvent(id: string): Promise<ClubscaleEvent | null> {
   const events = await getEvents();
   return events.find((e) => e.id === id) ?? null;
+}
+
+export async function getArtist(id: string): Promise<Artist | null> {
+  const res = await fetch(`${API_BASE}/artists/${id}`, {
+    next: { revalidate: 3600 },
+  });
+  if (!res.ok) {
+    return null;
+  }
+  return (await res.json()) as Artist;
+}
+
+export async function getArtists(ids: string[]): Promise<Artist[]> {
+  const artists = await Promise.all(ids.map((id) => getArtist(id)));
+  return artists.filter((a): a is Artist => a !== null);
 }
