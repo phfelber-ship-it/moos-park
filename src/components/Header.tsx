@@ -5,6 +5,7 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import ThemeToggle from "@/components/ThemeToggle";
+import { MAIN_ACTIONS } from "@/lib/nav";
 
 const NAV_LINKS = [
   { href: "/", label: "Home" },
@@ -16,12 +17,6 @@ const NAV_LINKS = [
   { href: "/jobs", label: "Jobs" },
   { href: "/faq", label: "FAQ" },
   { href: "/kontakt", label: "Kontakt" },
-];
-
-const MAIN_ACTIONS = [
-  { href: "/eventtickets", label: "Events + Tickets", filled: true },
-  { href: "/reservierung", label: "Reservierung", filled: false },
-  { href: "/eventlocation", label: "Location mieten", filled: false },
 ];
 
 export default function Header() {
@@ -56,18 +51,14 @@ export default function Header() {
           </span>
         </Link>
 
-        <nav className="hidden items-center gap-3 lg:flex">
-          {MAIN_ACTIONS.map((action) => (
+        <nav className="hidden items-center gap-6 lg:flex">
+          {NAV_LINKS.slice(1).map((link) => (
             <Link
-              key={action.href}
-              href={action.href}
-              className={
-                action.filled
-                  ? "rounded-full bg-accent px-5 py-2.5 text-xs font-black uppercase tracking-wide text-black transition-transform hover:scale-105"
-                  : "rounded-full border border-foreground/20 px-5 py-2.5 text-xs font-black uppercase tracking-wide text-foreground transition-colors hover:border-foreground/50"
-              }
+              key={link.href}
+              href={link.href}
+              className="text-xs font-bold uppercase tracking-wide text-foreground transition-colors hover:text-foreground/60"
             >
-              {action.label}
+              {link.label}
             </Link>
           ))}
         </nav>
@@ -104,7 +95,7 @@ export default function Header() {
 
       {open && (
         <div className="fixed inset-0 z-40 flex flex-col items-center justify-center gap-6 bg-background px-6">
-          <div className="flex w-full max-w-xs flex-col gap-3 lg:hidden">
+          <div className="flex w-full max-w-xs flex-col gap-3">
             {MAIN_ACTIONS.map((action) => (
               <Link
                 key={action.href}

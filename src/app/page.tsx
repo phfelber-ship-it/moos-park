@@ -2,6 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { getEvents } from "@/lib/clubscale";
 import EventsExplorer from "@/components/EventsExplorer";
+import { MAIN_ACTIONS } from "@/lib/nav";
 
 const TICKER_ITEMS = [
   "Musik",
@@ -71,6 +72,22 @@ export default async function Home() {
             >
               Eventlocation
             </Link>
+          </div>
+
+          <div className="mt-8 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
+            {MAIN_ACTIONS.map((action) => (
+              <Link
+                key={action.href}
+                href={action.href}
+                className={
+                  action.filled
+                    ? "w-full rounded-full bg-accent px-6 py-3 text-center text-xs font-black uppercase tracking-wide text-black transition-transform hover:scale-105 sm:w-auto"
+                    : "w-full rounded-full border border-white/40 px-6 py-3 text-center text-xs font-black uppercase tracking-wide text-white transition-colors hover:border-white sm:w-auto"
+                }
+              >
+                {action.label}
+              </Link>
+            ))}
           </div>
         </div>
       </section>
