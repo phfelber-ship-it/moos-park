@@ -32,7 +32,7 @@ export default function EventCard({ event }: { event: ClubscaleEvent }) {
             sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
           />
         )}
-        <span className="absolute left-3 top-3 rounded-full bg-white px-3 py-1 text-xs font-bold text-foreground shadow">
+        <span className="absolute left-3 top-3 rounded-full bg-white px-3 py-1 text-xs font-bold text-black shadow">
           {event.ageRestriction}+
         </span>
       </Link>
