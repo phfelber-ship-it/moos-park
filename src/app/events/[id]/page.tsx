@@ -78,7 +78,11 @@ export default async function EventDetailPage({
         </a>
       </div>
 
-      <div className="mt-8 grid grid-cols-2 divide-x divide-foreground/10 rounded-2xl border border-foreground/8 bg-foreground/[0.025] text-center">
+      <div
+        className={`mt-8 grid divide-x divide-foreground/10 rounded-2xl border border-foreground/8 bg-foreground/[0.025] text-center ${
+          event.hasBoxOffice ? "grid-cols-3" : "grid-cols-2"
+        }`}
+      >
         <div className="p-4">
           <p className="text-xs font-bold uppercase tracking-wide text-foreground/40">
             Beginn
@@ -95,25 +99,25 @@ export default async function EventDetailPage({
             {event.ageRestriction}+
           </p>
         </div>
+        {event.hasBoxOffice && (
+          <div className="p-4">
+            <p className="text-xs font-bold uppercase tracking-wide text-foreground/40">
+              Abendkasse
+            </p>
+            <p className="mt-1 text-sm font-black text-foreground">
+              Vorhanden
+            </p>
+          </div>
+        )}
       </div>
 
       <div id="tickets" className="mt-10 scroll-mt-24">
-        <h2 className="text-center text-xl font-black uppercase text-foreground">
-          Tickets
-        </h2>
-        {event.hasBoxOffice && (
-          <p className="mt-2 text-center text-sm text-foreground/60">
-            {event.boxOfficeText}
-          </p>
-        )}
-        <div className="mt-6">
-          <TicketSelector
-            pools={event.ticketPools
-              .filter((p) => !p.deactivated)
-              .sort((a, b) => a.sortIndex - b.sortIndex)}
-            ticketUrl={eventTicketUrl(event.id)}
-          />
-        </div>
+        <TicketSelector
+          pools={event.ticketPools
+            .filter((p) => !p.deactivated)
+            .sort((a, b) => a.sortIndex - b.sortIndex)}
+          ticketUrl={eventTicketUrl(event.id)}
+        />
       </div>
 
       <div className="prose prose-neutral mt-12 max-w-none">
