@@ -9,7 +9,7 @@ export default function KontaktPage() {
 
       <div className="mt-12 grid gap-12 lg:grid-cols-2">
         <div>
-          <div className="overflow-hidden rounded-2xl border border-black/8">
+          <div className="overflow-hidden rounded-2xl border border-foreground/8">
             <iframe
               title="moos.park Standort"
               src="https://www.google.com/maps?q=Rudolf-Diesel-Stra%C3%9Fe+23,+86554+P%C3%B6ttmes&output=embed"
@@ -23,7 +23,7 @@ export default function KontaktPage() {
 
           <div className="mt-8 grid gap-6 sm:grid-cols-2">
             <div>
-              <p className="text-xs font-bold uppercase tracking-wide text-black/40">
+              <p className="text-xs font-bold uppercase tracking-wide text-foreground/40">
                 E-Mail
               </p>
               <a
@@ -34,7 +34,7 @@ export default function KontaktPage() {
               </a>
             </div>
             <div>
-              <p className="text-xs font-bold uppercase tracking-wide text-black/40">
+              <p className="text-xs font-bold uppercase tracking-wide text-foreground/40">
                 Adresse
               </p>
               <p className="mt-1 font-semibold text-foreground">
@@ -46,7 +46,7 @@ export default function KontaktPage() {
               </p>
             </div>
             <div>
-              <p className="text-xs font-bold uppercase tracking-wide text-black/40">
+              <p className="text-xs font-bold uppercase tracking-wide text-foreground/40">
                 Telefon
               </p>
               <a
@@ -57,13 +57,13 @@ export default function KontaktPage() {
               </a>
             </div>
             <div>
-              <p className="text-xs font-bold uppercase tracking-wide text-black/40">
+              <p className="text-xs font-bold uppercase tracking-wide text-foreground/40">
                 Bürozeiten
               </p>
               <p className="mt-1 font-semibold text-foreground">
                 Mo., Mi., Fr.: 09:00 – 15:00 Uhr
               </p>
-              <p className="mt-1 text-sm text-black/50">
+              <p className="mt-1 text-sm text-foreground/50">
                 Gerne auch eine Nachricht auf unseren Anrufbeantworter. Wir
                 rufen zurück.
               </p>
@@ -71,7 +71,7 @@ export default function KontaktPage() {
           </div>
 
           <div className="mt-8">
-            <p className="text-xs font-bold uppercase tracking-wide text-black/40">
+            <p className="text-xs font-bold uppercase tracking-wide text-foreground/40">
               Folge uns
             </p>
             <div className="mt-2 flex gap-4">

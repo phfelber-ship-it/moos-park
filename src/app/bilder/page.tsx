@@ -70,9 +70,9 @@ export default function BilderPage() {
           <Link
             key={g.slug}
             href={`/bilder/${g.slug}`}
-            className="group overflow-hidden rounded-2xl border border-black/8 bg-black/[0.025] transition-colors hover:border-accent/40"
+            className="group overflow-hidden rounded-2xl border border-foreground/8 bg-foreground/[0.025] transition-colors hover:border-accent/40"
           >
-            <div className="relative aspect-[4/3] w-full bg-black/5">
+            <div className="relative aspect-[4/3] w-full bg-foreground/5">
               <Image
                 src={g.image}
                 alt={g.title}

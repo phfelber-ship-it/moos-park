@@ -35,11 +35,11 @@ export default function TicketSelector({
             className={`rounded-2xl border p-5 ${
               soldOut
                 ? "border-red-200 bg-red-50"
-                : "border-black/10 bg-black/[0.015]"
+                : "border-foreground/10 bg-foreground/[0.015]"
             }`}
           >
             <p className="font-bold text-foreground">{pool.name}</p>
-            <p className="mt-1 text-sm text-black/60">
+            <p className="mt-1 text-sm text-foreground/60">
               {pool.free ? "Gratis" : `Preis: ${priceToEuro(pool.price)} € + Ticketgebühr*`}{" "}
               · {soldOut ? "Ausverkauft" : "Verfügbar"}
             </p>
@@ -55,7 +55,7 @@ export default function TicketSelector({
                     type="button"
                     onClick={() => setQty(pool.id, -1, available)}
                     disabled={qty === 0}
-                    className="flex h-11 w-11 items-center justify-center rounded-full border-2 border-black text-lg font-bold text-foreground disabled:opacity-30"
+                    className="flex h-11 w-11 items-center justify-center rounded-full border-2 border-foreground text-lg font-bold text-foreground disabled:opacity-30"
                     aria-label="Weniger"
                   >
                     −
@@ -66,7 +66,7 @@ export default function TicketSelector({
                   <button
                     type="button"
                     onClick={() => setQty(pool.id, 1, available)}
-                    className="flex h-11 w-11 items-center justify-center rounded-full border-2 border-black text-lg font-bold text-foreground"
+                    className="flex h-11 w-11 items-center justify-center rounded-full border-2 border-foreground text-lg font-bold text-foreground"
                     aria-label="Mehr"
                   >
                     +
@@ -78,7 +78,7 @@ export default function TicketSelector({
         );
       })}
 
-      <p className="text-xs text-black/50">
+      <p className="text-xs text-foreground/50">
         *Gebühren werden auf der nächsten Seite automatisch berechnet.
       </p>
 
@@ -86,7 +86,7 @@ export default function TicketSelector({
         href={ticketUrl}
         target="_blank"
         rel="noopener noreferrer"
-        className={`mt-2 rounded-full border-2 border-black px-8 py-3 text-center text-sm font-black uppercase tracking-wide text-foreground transition-colors hover:bg-black hover:text-white ${
+        className={`mt-2 rounded-full border-2 border-foreground px-8 py-3 text-center text-sm font-black uppercase tracking-wide text-foreground transition-colors hover:bg-foreground hover:text-background ${
           total === 0 ? "pointer-events-none opacity-40" : ""
         }`}
       >

@@ -42,7 +42,7 @@ export default async function EventDetailPage({
         {event.tags.map((tag) => (
           <span
             key={tag}
-            className="rounded-full bg-black/10 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-black/70"
+            className="rounded-full bg-foreground/10 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-foreground/70"
           >
             {tag}
           </span>
@@ -54,7 +54,7 @@ export default async function EventDetailPage({
       </h1>
 
       {event.thumbnail?.presignedURL && (
-        <div className="relative mt-8 aspect-video w-full overflow-hidden rounded-2xl bg-black/5">
+        <div className="relative mt-8 aspect-video w-full overflow-hidden rounded-2xl bg-foreground/5">
           <Image
             src={event.thumbnail.presignedURL}
             alt={event.name}
@@ -66,9 +66,9 @@ export default async function EventDetailPage({
         </div>
       )}
 
-      <div className="mt-8 grid gap-4 rounded-2xl border border-black/8 bg-black/[0.025] p-6 sm:grid-cols-3">
+      <div className="mt-8 grid gap-4 rounded-2xl border border-foreground/8 bg-foreground/[0.025] p-6 sm:grid-cols-3">
         <div>
-          <p className="text-xs font-bold uppercase tracking-wide text-black/40">
+          <p className="text-xs font-bold uppercase tracking-wide text-foreground/40">
             Datum
           </p>
           <p className="mt-1 font-semibold text-foreground">
@@ -76,7 +76,7 @@ export default async function EventDetailPage({
           </p>
         </div>
         <div>
-          <p className="text-xs font-bold uppercase tracking-wide text-black/40">
+          <p className="text-xs font-bold uppercase tracking-wide text-foreground/40">
             Beginn
           </p>
           <p className="mt-1 font-semibold text-foreground">
@@ -84,7 +84,7 @@ export default async function EventDetailPage({
           </p>
         </div>
         <div>
-          <p className="text-xs font-bold uppercase tracking-wide text-black/40">
+          <p className="text-xs font-bold uppercase tracking-wide text-foreground/40">
             Alter
           </p>
           <p className="mt-1 font-semibold text-foreground">
@@ -93,11 +93,11 @@ export default async function EventDetailPage({
         </div>
       </div>
 
-      <div className="prose prose-invert mt-10 max-w-none whitespace-pre-line text-black/70">
+      <div className="prose prose-invert mt-10 max-w-none whitespace-pre-line text-foreground/70">
         {event.description}
       </div>
 
-      <div className="mt-10 rounded-3xl border border-black/8 bg-white p-6 shadow-[0_2px_20px_rgba(0,0,0,0.04)]">
+      <div className="mt-10 rounded-3xl border border-foreground/8 bg-background p-6 shadow-[0_2px_20px_rgba(0,0,0,0.04)]">
         <h2 className="text-xl font-black uppercase text-foreground">
           Tickets
         </h2>
@@ -110,7 +110,7 @@ export default async function EventDetailPage({
           />
         </div>
         {event.hasBoxOffice && (
-          <p className="mt-4 text-sm text-black/60">
+          <p className="mt-4 text-sm text-foreground/60">
             Abendkasse: {event.boxOfficeText}
           </p>
         )}

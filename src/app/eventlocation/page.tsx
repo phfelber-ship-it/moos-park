@@ -84,7 +84,7 @@ export default function EventlocationPage() {
           className="object-cover"
           sizes="100vw"
         />
-        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/75 via-black/20 to-transparent" />
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-foreground/75 via-foreground/20 to-transparent" />
 
         <div className="relative z-10 mx-auto max-w-3xl px-6 pb-10">
           <h1 className="text-3xl font-black uppercase leading-[1.05] tracking-tight text-white sm:text-5xl">
@@ -125,7 +125,7 @@ export default function EventlocationPage() {
           <h2 className="text-3xl font-black uppercase text-foreground">
             Die Eventlocation für einzigartige Momente.
           </h2>
-          <p className="mt-6 text-black/70">
+          <p className="mt-6 text-foreground/70">
             Der <strong>moos.park in Pöttmes</strong> – wo Erlebnis auf
             Atmosphäre trifft. Mit seinem modernen Industrieflair und einer
             Ausstattung auf höchstem Niveau bietet der moos.park den idealen
@@ -136,19 +136,19 @@ export default function EventlocationPage() {
             </strong>
             .
           </p>
-          <p className="mt-4 text-black/70">
+          <p className="mt-4 text-foreground/70">
             Dank <strong>variabler Raumkonzepte</strong>, neuester
             Eventtechnik und einem engagierten Team wird jedes Event zu einem
             individuellen Erlebnis. Von der ersten Idee bis zur letzten Minute
             begleiten wir Sie mit Leidenschaft und Präzision –{" "}
             <strong>alles aus einer Hand.</strong>
           </p>
-          <p className="mt-4 text-black/70">
+          <p className="mt-4 text-foreground/70">
             Ob stilvoll, außergewöhnlich oder ganz nach Ihren Vorstellungen –
             im <strong>moos.park Pöttmes</strong> entstehen Momente, die
             bleiben.
           </p>
-          <p className="mt-4 text-black/70">
+          <p className="mt-4 text-foreground/70">
             Eine <strong>Location voller Möglichkeiten</strong>, perfekt für
             alle, die mehr als nur einen Veranstaltungsort suchen.
           </p>
@@ -167,11 +167,11 @@ export default function EventlocationPage() {
           <h2 className="text-3xl font-black uppercase text-foreground">
             Unsere Räume
           </h2>
-          <p className="mt-4 text-black/70">
+          <p className="mt-4 text-foreground/70">
             Ob einzelne Bereiche, flexible Kombinationen oder die gesamte
             Anlage:
           </p>
-          <p className="mt-4 text-black/70">
+          <p className="mt-4 text-foreground/70">
             Nutzen Sie unser vielseitiges Raumkonzept mit{" "}
             <strong>2200 m² Eventfläche</strong> inklusive neuer{" "}
             <strong>460 m² Sonnen-Terrasse</strong>. Auf einer Gesamtfläche
@@ -183,9 +183,9 @@ export default function EventlocationPage() {
           {ROOMS.map((room) => (
             <div
               key={room.name}
-              className="flex flex-col items-center rounded-3xl bg-black/[0.03] p-4 text-center"
+              className="flex flex-col items-center rounded-3xl bg-foreground/[0.03] p-4 text-center"
             >
-              <div className="relative aspect-[4/3] w-full overflow-hidden rounded-2xl bg-black/5">
+              <div className="relative aspect-[4/3] w-full overflow-hidden rounded-2xl bg-foreground/5">
                 <Image
                   src={room.image}
                   alt={room.name}
@@ -195,12 +195,12 @@ export default function EventlocationPage() {
                 />
               </div>
 
-              <div className="mt-5 flex items-center gap-4 text-sm font-semibold text-black/70">
+              <div className="mt-5 flex items-center gap-4 text-sm font-semibold text-foreground/70">
                 <span className="flex items-center gap-1.5">
                   <PersonIcon />
                   {room.capacity}
                 </span>
-                <span className="h-5 w-px bg-black/15" />
+                <span className="h-5 w-px bg-foreground/15" />
                 <span className="flex items-center gap-1.5">
                   <AreaIcon />
                   {room.area}
@@ -210,7 +210,7 @@ export default function EventlocationPage() {
               <h3 className="mt-3 text-lg font-black uppercase text-foreground">
                 {room.name}
               </h3>
-              <p className="mt-3 text-sm text-black/70">{room.text}</p>
+              <p className="mt-3 text-sm text-foreground/70">{room.text}</p>
 
               <a
                 href="#anfragen"
@@ -224,14 +224,14 @@ export default function EventlocationPage() {
       </section>
 
       <section id="anfragen" className="px-6 pb-28">
-        <div className="mx-auto max-w-3xl rounded-3xl border border-black/8 bg-black/[0.025] p-8 sm:p-12">
+        <div className="mx-auto max-w-3xl rounded-3xl border border-foreground/8 bg-foreground/[0.025] p-8 sm:p-12">
           <p className="text-sm font-bold uppercase tracking-wide text-accent-lime">
             Ihr Event, unsere Beratung.
           </p>
           <h2 className="mt-2 text-3xl font-black uppercase text-foreground">
             Ganz unverbindlich anfragen.
           </h2>
-          <p className="mt-4 text-black/70">
+          <p className="mt-4 text-foreground/70">
             Ihre Idee sind unser Antrieb. Melden Sie sich bei uns und wir
             verwandeln Ihre Pläne in unvergessliche Erlebnisse. Los geht's!
           </p>
@@ -240,12 +240,12 @@ export default function EventlocationPage() {
             <input
               name="firma"
               placeholder="Firma"
-              className="rounded-xl border border-black/15 bg-black/5 px-4 py-3 text-foreground placeholder-black/40 outline-none focus:border-accent"
+              className="rounded-xl border border-foreground/15 bg-foreground/5 px-4 py-3 text-foreground placeholder-foreground/40 outline-none focus:border-accent"
             />
             <select
               name="veranstaltungsort"
               defaultValue=""
-              className="rounded-xl border border-black/15 bg-black/5 px-4 py-3 text-black/70 outline-none focus:border-accent"
+              className="rounded-xl border border-foreground/15 bg-foreground/5 px-4 py-3 text-foreground/70 outline-none focus:border-accent"
             >
               <option value="" disabled>
                 Veranstaltungsort
@@ -259,31 +259,31 @@ export default function EventlocationPage() {
             <input
               name="vorname"
               placeholder="Vorname"
-              className="rounded-xl border border-black/15 bg-black/5 px-4 py-3 text-foreground placeholder-black/40 outline-none focus:border-accent"
+              className="rounded-xl border border-foreground/15 bg-foreground/5 px-4 py-3 text-foreground placeholder-foreground/40 outline-none focus:border-accent"
             />
             <input
               name="nachname"
               placeholder="Nachname"
-              className="rounded-xl border border-black/15 bg-black/5 px-4 py-3 text-foreground placeholder-black/40 outline-none focus:border-accent"
+              className="rounded-xl border border-foreground/15 bg-foreground/5 px-4 py-3 text-foreground placeholder-foreground/40 outline-none focus:border-accent"
             />
             <input
               name="telefon"
               placeholder="Telefonnummer"
-              className="rounded-xl border border-black/15 bg-black/5 px-4 py-3 text-foreground placeholder-black/40 outline-none focus:border-accent"
+              className="rounded-xl border border-foreground/15 bg-foreground/5 px-4 py-3 text-foreground placeholder-foreground/40 outline-none focus:border-accent"
             />
             <input
               name="email"
               type="email"
               placeholder="E-Mail"
-              className="rounded-xl border border-black/15 bg-black/5 px-4 py-3 text-foreground placeholder-black/40 outline-none focus:border-accent"
+              className="rounded-xl border border-foreground/15 bg-foreground/5 px-4 py-3 text-foreground placeholder-foreground/40 outline-none focus:border-accent"
             />
             <textarea
               name="nachricht"
               placeholder="Nachricht"
               rows={4}
-              className="rounded-xl border border-black/15 bg-black/5 px-4 py-3 text-foreground placeholder-black/40 outline-none focus:border-accent sm:col-span-2"
+              className="rounded-xl border border-foreground/15 bg-foreground/5 px-4 py-3 text-foreground placeholder-foreground/40 outline-none focus:border-accent sm:col-span-2"
             />
-            <label className="flex items-start gap-2 text-xs text-black/50 sm:col-span-2">
+            <label className="flex items-start gap-2 text-xs text-foreground/50 sm:col-span-2">
               <input type="checkbox" className="mt-0.5" />
               Ich habe die Datenschutzbestimmungen zur Kenntnis genommen und
               akzeptiere diese.

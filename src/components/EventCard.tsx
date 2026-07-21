@@ -21,7 +21,7 @@ export default function EventCard({ event }: { event: ClubscaleEvent }) {
     <div className="flex flex-col items-center text-center">
       <Link
         href={`/events/${event.id}`}
-        className="group relative aspect-[16/10] w-full overflow-hidden rounded-3xl bg-black/5"
+        className="group relative aspect-[16/10] w-full overflow-hidden rounded-3xl bg-foreground/5"
       >
         {event.thumbnail?.presignedURL && (
           <Image
@@ -41,7 +41,7 @@ export default function EventCard({ event }: { event: ClubscaleEvent }) {
         {event.tags.slice(0, 3).map((tag) => (
           <span
             key={tag}
-            className="rounded-full border border-black/15 px-3 py-1 text-[11px] font-bold uppercase tracking-wide text-black/70"
+            className="rounded-full border border-foreground/15 px-3 py-1 text-[11px] font-bold uppercase tracking-wide text-foreground/70"
           >
             {tag}
           </span>
@@ -54,13 +54,13 @@ export default function EventCard({ event }: { event: ClubscaleEvent }) {
         </h3>
       </Link>
 
-      <p className="mt-2 text-sm text-black/60">
+      <p className="mt-2 text-sm text-foreground/60">
         {formatDate(event.start)} · {formatTime(event.start)} Uhr
       </p>
 
       <Link
         href={`/events/${event.id}`}
-        className="mt-4 rounded-full bg-black px-6 py-2.5 text-xs font-black uppercase tracking-wide text-white transition-transform hover:scale-105"
+        className="mt-4 rounded-full bg-foreground px-6 py-2.5 text-xs font-black uppercase tracking-wide text-background transition-transform hover:scale-105"
       >
         Mehr Infos
       </Link>

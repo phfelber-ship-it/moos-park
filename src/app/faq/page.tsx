@@ -72,7 +72,7 @@ export default function FaqPage() {
       <h1 className="text-4xl font-black uppercase text-foreground">
         FAQ – Häufig gestellte Fragen
       </h1>
-      <p className="mt-3 text-black/60">
+      <p className="mt-3 text-foreground/60">
         Du hast Fragen? Kein Problem! In unseren FAQs findest du schnell und
         einfach Antworten auf häufig gestellte Fragen und mehr. Kurz, klar und
         auf den Punkt.
@@ -86,7 +86,7 @@ export default function FaqPage() {
         <h2 className="text-2xl font-black uppercase text-foreground">
           Deine Frage ist hier nicht aufgelistet?
         </h2>
-        <p className="mt-2 text-black/60">
+        <p className="mt-2 text-foreground/60">
           Dann schreib uns direkt über das Kontaktformular.
         </p>
         <div className="mt-6">

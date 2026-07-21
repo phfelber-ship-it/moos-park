@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
+import ThemeToggle from "@/components/ThemeToggle";
 
 const NAV_LINKS = [
   { href: "/", label: "Home" },
@@ -54,7 +55,7 @@ export default function Header() {
 
   return (
     <div className="sticky top-3 z-50 px-3">
-      <header className="relative z-50 mx-auto flex max-w-6xl items-center justify-between rounded-full bg-white px-6 py-3 shadow-[0_2px_20px_rgba(0,0,0,0.08)]">
+      <header className="relative z-50 mx-auto flex max-w-6xl items-center justify-between rounded-full bg-background px-6 py-3 shadow-[0_2px_20px_rgba(0,0,0,0.08)]">
         <button
           aria-label={open ? "Menü schließen" : "Menü öffnen"}
           onClick={() => setOpen((v) => !v)}
@@ -90,7 +91,7 @@ export default function Header() {
             <Link
               key={link.href}
               href={link.href}
-              className="text-xs font-bold uppercase tracking-wide text-foreground transition-colors hover:text-black/60"
+              className="text-xs font-bold uppercase tracking-wide text-foreground transition-colors hover:text-foreground/60"
             >
               {link.label}
             </Link>
@@ -116,23 +117,26 @@ export default function Header() {
             <Link
               key={link.href}
               href={link.href}
-              className="text-xs font-bold uppercase tracking-wide text-foreground transition-colors hover:text-black/60"
+              className="text-xs font-bold uppercase tracking-wide text-foreground transition-colors hover:text-foreground/60"
             >
               {link.label}
             </Link>
           ))}
         </nav>
 
-        <Link
-          href="/events"
-          className="inline-flex items-center gap-1.5 rounded-full bg-accent px-4 py-2 text-xs font-black uppercase tracking-wide text-black transition-transform hover:scale-105 sm:px-5"
-        >
-          Tickets
-        </Link>
+        <div className="flex items-center gap-2">
+          <ThemeToggle />
+          <Link
+            href="/events"
+            className="inline-flex items-center gap-1.5 rounded-full bg-accent px-4 py-2 text-xs font-black uppercase tracking-wide text-black transition-transform hover:scale-105 sm:px-5"
+          >
+            Tickets
+          </Link>
+        </div>
       </header>
 
       {open && (
-        <div className="fixed inset-0 z-40 flex flex-col items-center justify-center gap-7 bg-white lg:hidden">
+        <div className="fixed inset-0 z-40 flex flex-col items-center justify-center gap-7 bg-background lg:hidden">
           {NAV_LINKS.map((link) => {
             const active =
               link.href === "/"

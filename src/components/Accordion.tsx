@@ -10,7 +10,7 @@ export default function Accordion({
   const [open, setOpen] = useState<number | null>(null);
 
   return (
-    <div className="divide-y divide-black/8 rounded-2xl border border-black/8 bg-black/[0.025]">
+    <div className="divide-y divide-foreground/8 rounded-2xl border border-foreground/8 bg-foreground/[0.025]">
       {items.map((item, i) => (
         <div key={item.q}>
           <button
@@ -21,7 +21,7 @@ export default function Accordion({
             <span className="text-xl text-accent">{open === i ? "−" : "+"}</span>
           </button>
           {open === i && (
-            <div className="px-6 pb-5 text-sm text-black/70">{item.a}</div>
+            <div className="px-6 pb-5 text-sm text-foreground/70">{item.a}</div>
           )}
         </div>
       ))}

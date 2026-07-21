@@ -37,25 +37,30 @@ export default function EventsExplorer({
           onClick={() => setActive("Alle")}
           className={`rounded-full px-6 py-3 text-sm font-black uppercase tracking-wide transition-colors ${
             active === "Alle"
-              ? "bg-white text-black shadow-[0_2px_10px_rgba(0,0,0,0.1)]"
-              : "bg-black/5 text-black/70"
+              ? "bg-background text-foreground shadow-[0_2px_10px_rgba(0,0,0,0.1)]"
+              : "bg-foreground/5 text-foreground/70"
           }`}
         >
           Alle
         </button>
-        {tags.map((tag) => (
-          <button
-            key={tag}
-            onClick={() => setActive(tag)}
-            className={`rounded-full px-6 py-3 text-sm font-black uppercase tracking-wide transition-colors ${
-              active === tag
-                ? (TAG_STYLES[tag] ?? "bg-white") + " text-black"
-                : "bg-black/5 text-black/70"
-            }`}
-          >
-            {tag}
-          </button>
-        ))}
+        {tags.map((tag) => {
+          const accentBg = TAG_STYLES[tag];
+          return (
+            <button
+              key={tag}
+              onClick={() => setActive(tag)}
+              className={`rounded-full px-6 py-3 text-sm font-black uppercase tracking-wide transition-colors ${
+                active === tag
+                  ? accentBg
+                    ? `${accentBg} text-black`
+                    : "bg-background text-foreground shadow-[0_2px_10px_rgba(0,0,0,0.1)]"
+                  : "bg-foreground/5 text-foreground/70"
+              }`}
+            >
+              {tag}
+            </button>
+          );
+        })}
       </div>
 
       {filtered.length > 0 ? (
@@ -65,7 +70,7 @@ export default function EventsExplorer({
           ))}
         </div>
       ) : (
-        <p className="mt-12 text-center text-black/60">
+        <p className="mt-12 text-center text-foreground/60">
           Für diese Kategorie sind aktuell keine Events geplant.
         </p>
       )}

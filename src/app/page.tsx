@@ -27,7 +27,7 @@ export default async function Home() {
           className="object-cover"
           sizes="100vw"
         />
-        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-foreground/70 via-foreground/10 to-transparent" />
 
         <div className="absolute left-1/2 top-16 z-10 w-24 -translate-x-1/2">
           <Image
@@ -111,11 +111,11 @@ export default async function Home() {
         </div>
       </section>
 
-      <section className="bg-black/[0.02] px-6 py-24 text-center">
+      <section className="bg-foreground/[0.02] px-6 py-24 text-center">
         <h2 className="text-2xl font-black uppercase text-foreground sm:text-3xl">
           Tanz Nächte
         </h2>
-        <p className="mx-auto mt-4 max-w-md text-black/60">
+        <p className="mx-auto mt-4 max-w-md text-foreground/60">
           &bdquo;Jeden 2. und 4. Freitag im Monat. Tanzbare Musik, gute
           Stimmung und echte Emotionen.&ldquo;
         </p>
@@ -132,7 +132,7 @@ export default async function Home() {
           <h2 className="text-3xl font-black uppercase leading-tight text-foreground">
             &bdquo;App drauf – mehr drin.&ldquo;
           </h2>
-          <p className="mt-4 text-black/60">
+          <p className="mt-4 text-foreground/60">
             Exklusive Specials, Aktionen &amp; Überraschungen – nur in der
             moos.park App.
           </p>
@@ -192,7 +192,7 @@ export default async function Home() {
           <h2 className="mt-2 text-3xl font-black uppercase text-foreground">
             Mehr als eine Eventlocation.
           </h2>
-          <p className="mt-6 text-black/70">
+          <p className="mt-6 text-foreground/70">
             Seit 1994 steht unser Haus für musikalische Highlights,
             unvergessliche Events und eine besondere Atmosphäre, die
             verbindet. Was damals als Club mit Charakter begann, hat sich
@@ -228,11 +228,11 @@ export default async function Home() {
           <h2 className="text-3xl font-black uppercase text-foreground">
             Raum für mehr.
           </h2>
-          <p className="mt-6 text-black/70">
+          <p className="mt-6 text-foreground/70">
             Mit wachsendem Bedarf an professionellen Veranstaltungsflächen
             wurde der moos.park kontinuierlich erweitert. Heute bieten wir:
           </p>
-          <ul className="mx-auto mt-6 max-w-md list-disc space-y-3 pl-5 text-left text-black/70">
+          <ul className="mx-auto mt-6 max-w-md list-disc space-y-3 pl-5 text-left text-foreground/70">
             <li>Mehrere individuell nutzbare Eventbereiche</li>
             <li>Eine stilvolle Terrasse mit Platz für Outdoor-Events</li>
             <li>Eine hauseigene Pizzeria für kulinarische Vielfalt</li>

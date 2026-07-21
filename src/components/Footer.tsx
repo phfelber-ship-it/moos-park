@@ -37,7 +37,7 @@ const APP_LINKS = [
 
 export default function Footer() {
   return (
-    <footer className="border-t border-black/8 bg-black/[0.02] px-6 py-16 text-center">
+    <footer className="border-t border-foreground/8 bg-foreground/[0.02] px-6 py-16 text-center">
       <div className="mx-auto max-w-3xl">
         <Image
           src="/images/logo.png"
@@ -59,7 +59,7 @@ export default function Footer() {
               aria-label={s.label}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex h-11 w-11 items-center justify-center rounded-full bg-black text-white transition-transform hover:scale-105"
+              className="flex h-11 w-11 items-center justify-center rounded-full bg-foreground text-background transition-transform hover:scale-105"
             >
               <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
                 {s.icon}
@@ -73,7 +73,7 @@ export default function Footer() {
               aria-label={s.label}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex h-11 w-11 items-center justify-center rounded-full bg-black text-white transition-transform hover:scale-105"
+              className="flex h-11 w-11 items-center justify-center rounded-full bg-foreground text-background transition-transform hover:scale-105"
             >
               <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
                 {s.icon}
@@ -82,21 +82,21 @@ export default function Footer() {
           ))}
         </div>
 
-        <div className="mt-8 flex flex-wrap items-center justify-center gap-4 text-sm font-semibold text-black/60">
-          <Link href="/impressum" className="hover:text-black">
+        <div className="mt-8 flex flex-wrap items-center justify-center gap-4 text-sm font-semibold text-foreground/60">
+          <Link href="/impressum" className="hover:text-foreground">
             Impressum
           </Link>
           <span>·</span>
-          <Link href="/datenschutz" className="hover:text-black">
+          <Link href="/datenschutz" className="hover:text-foreground">
             Datenschutz
           </Link>
           <span>·</span>
-          <Link href="/agb" className="hover:text-black">
+          <Link href="/agb" className="hover:text-foreground">
             AGB
           </Link>
         </div>
 
-        <p className="mt-6 text-xs text-black/40">
+        <p className="mt-6 text-xs text-foreground/40">
           © moos-park Gastronomie GmbH {new Date().getFullYear()}. Alle
           Rechte vorbehalten.
         </p>
