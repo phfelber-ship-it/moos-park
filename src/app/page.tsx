@@ -7,6 +7,7 @@ import Reveal from "@/components/Reveal";
 import AppPhoneReveal from "@/components/AppPhoneReveal";
 import FanGallery from "@/components/FanGallery";
 import FlipText from "@/components/FlipText";
+import GalleryCard from "@/components/GalleryCard";
 
 function TicketIcon() {
   return (
@@ -69,14 +70,6 @@ function CalendarIcon() {
       />
     </svg>
   );
-}
-
-function formatGalleryDate(iso: string) {
-  return new Date(iso).toLocaleDateString("de-DE", {
-    day: "2-digit",
-    month: "long",
-    year: "numeric",
-  });
 }
 
 const TICKER_ITEMS = [
@@ -188,37 +181,11 @@ export default async function Home() {
           </Reveal>
 
           <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            {galleries.map((gallery, i) => {
-              const cover = gallery.coverMediaObjects[0]?.thumbnail?.presignedURL;
-              return (
-                <Reveal key={gallery.id} delay={i * 0.08}>
-                  <Link
-                    href={`/bilder/${gallery.id}`}
-                    className="group block overflow-hidden rounded-xl border border-foreground/8 bg-foreground/[0.025] transition-colors hover:border-accent-lime/40"
-                  >
-                    <div className="relative aspect-[4/3] w-full bg-foreground/5">
-                      {cover && (
-                        <Image
-                          src={cover}
-                          alt={gallery.name}
-                          fill
-                          className="object-cover transition-transform duration-300 group-hover:scale-105"
-                          sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
-                        />
-                      )}
-                    </div>
-                    <div className="p-4">
-                      <h3 className="font-black uppercase leading-tight text-foreground line-clamp-2">
-                        {gallery.name}
-                      </h3>
-                      <p className="mt-1 text-xs text-foreground/50">
-                        {formatGalleryDate(gallery.date)}
-                      </p>
-                    </div>
-                  </Link>
-                </Reveal>
-              );
-            })}
+            {galleries.map((gallery, i) => (
+              <Reveal key={gallery.id} delay={i * 0.08}>
+                <GalleryCard gallery={gallery} />
+              </Reveal>
+            ))}
           </div>
 
           <Reveal delay={0.2} className="mt-12 text-center">

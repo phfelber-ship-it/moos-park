@@ -61,7 +61,7 @@ const MARKETING_JOBS = [
 
 export default function JobsPage() {
   return (
-    <div className="mx-auto max-w-2xl px-6 py-20">
+    <div className="mx-auto max-w-2xl px-6 pb-20 pt-32">
       <p className="text-center text-sm font-bold uppercase tracking-wide text-accent-lime">
         Werde Teil unseres Teams
       </p>

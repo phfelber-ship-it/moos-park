@@ -68,7 +68,7 @@ const FAQ_ITEMS = [
 
 export default function FaqPage() {
   return (
-    <div className="mx-auto max-w-3xl px-6 py-20">
+    <div className="mx-auto max-w-3xl px-6 pb-20 pt-32">
       <h1 className="text-4xl font-black uppercase text-foreground">
         FAQ – Häufig gestellte Fragen
       </h1>

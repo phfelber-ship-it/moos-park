@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
-import { motion, AnimatePresence, type Variants } from "motion/react";
+import { motion, type Variants } from "motion/react";
 import MotionLink from "@/components/MotionLink";
 import FlipText from "@/components/FlipText";
 import { MAIN_ACTIONS } from "@/lib/nav";
@@ -23,7 +23,7 @@ const item: Variants = {
   },
 };
 
-const SLIDE_DURATION = 5000;
+const SLIDE_DURATION = 8000;
 
 export default function Hero({ images }: { images: string[] }) {
   const slides = images.length > 0 ? images : ["/images/hero-bg.jpg"];
@@ -39,25 +39,22 @@ export default function Hero({ images }: { images: string[] }) {
 
   return (
     <section className="relative flex min-h-[75vh] items-end overflow-hidden text-center text-white sm:min-h-[90vh]">
-      <AnimatePresence>
-        <motion.div
-          key={index}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.18, ease: "easeOut" }}
-          className="absolute inset-0"
+      {slides.map((src, i) => (
+        <div
+          key={src}
+          className="absolute inset-0 transition-opacity duration-700 ease-in-out"
+          style={{ opacity: i === index ? 1 : 0 }}
         >
           <Image
-            src={slides[index]}
+            src={src}
             alt="moos.park"
             fill
-            priority={index === 0}
+            priority={i === 0}
             className="object-cover"
             sizes="100vw"
           />
-        </motion.div>
-      </AnimatePresence>
+        </div>
+      ))}
       <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-foreground/70 via-foreground/10 to-transparent" />
 
       <motion.div

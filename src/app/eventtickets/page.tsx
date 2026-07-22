@@ -9,7 +9,7 @@ export default async function EventTicketsPage() {
   const events = await getEvents();
 
   return (
-    <div className="mx-auto max-w-3xl px-6 py-20">
+    <div className="mx-auto max-w-3xl px-6 pb-20 pt-32">
       <h1 className="text-center text-4xl font-black uppercase text-foreground">
         Event-Tickets
       </h1>

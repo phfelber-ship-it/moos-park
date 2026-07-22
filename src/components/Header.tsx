@@ -50,7 +50,7 @@ export default function Header() {
         aria-label={open ? "Menü schließen" : "Menü öffnen"}
         className={`fixed left-10 top-10 z-50 ${CIRCLE_BTN}`}
       >
-        <span className="relative h-4 w-4 text-foreground">
+        <span className="relative h-4 w-4 text-accent-lime">
           <svg
             width="18"
             height="18"

@@ -15,7 +15,7 @@ const TERMINE = [
 export default function TanzabendPage() {
   return (
     <div>
-      <section className="px-6 pb-8 pt-20 text-center">
+      <section className="px-6 pb-8 pt-32 text-center">
         <h1 className="text-3xl font-black uppercase leading-tight  text-foreground sm:text-5xl">
           Tanzbare Musik, gute Stimmung
           <br />

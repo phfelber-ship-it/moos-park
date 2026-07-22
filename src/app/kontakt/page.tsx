@@ -4,7 +4,7 @@ export const metadata = { title: "Kontakt - moos.park | Eventlocation" };
 
 export default function KontaktPage() {
   return (
-    <div className="mx-auto max-w-6xl px-6 py-20">
+    <div className="mx-auto max-w-6xl px-6 pb-20 pt-32">
       <h1 className="text-4xl font-black uppercase text-foreground">Kontakt</h1>
 
       <div className="mt-12 grid gap-12 lg:grid-cols-2">

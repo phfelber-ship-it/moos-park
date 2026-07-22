@@ -26,7 +26,7 @@ export default async function GalleryPage({
   const media = await getGalleryMedia(id);
 
   return (
-    <div className="mx-auto max-w-5xl px-6 py-16">
+    <div className="mx-auto max-w-5xl px-6 pb-16 pt-32">
       <Link href="/bilder" className="text-sm font-bold text-accent">
         ← Alle Bilder
       </Link>

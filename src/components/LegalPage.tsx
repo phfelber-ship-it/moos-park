@@ -6,7 +6,7 @@ export default function LegalPage({
   children: React.ReactNode;
 }) {
   return (
-    <div className="mx-auto max-w-3xl px-6 py-20">
+    <div className="mx-auto max-w-3xl px-6 pb-20 pt-32">
       <h1 className="text-3xl font-black uppercase text-foreground sm:text-4xl">
         {title}
       </h1>

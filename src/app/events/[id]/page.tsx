@@ -38,7 +38,7 @@ export default async function EventDetailPage({
   const moreEvents = allEvents.filter((e) => e.id !== event.id).slice(0, 3);
 
   return (
-    <div className="mx-auto max-w-2xl px-6 py-16">
+    <div className="mx-auto max-w-2xl px-6 pb-16 pt-32">
       {event.thumbnail?.presignedURL && (
         <div className="relative aspect-video w-full overflow-hidden rounded-2xl bg-foreground/5">
           <Image

@@ -82,7 +82,7 @@ const FAQ = [
 export default function GeburtstagPage() {
   return (
     <div>
-      <section className="px-6 pb-12 pt-20 text-center">
+      <section className="px-6 pb-12 pt-32 text-center">
         <p className="text-sm font-bold uppercase tracking-wide text-accent-lime">
           🎂 Geburtstags-Special
         </p>
