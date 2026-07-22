@@ -77,8 +77,15 @@ export function tagClasses(tag: string): string {
   return TAG_STYLES[tag] ?? "bg-foreground/10 text-foreground/70";
 }
 
-export function eventTicketUrl(eventId: string): string {
-  return `https://moospark.clubscale.com/events/${eventId}`;
+export function checkoutUrl(
+  eventId: string,
+  items: { poolId: string; qty: number }[]
+): string {
+  const params = new URLSearchParams({
+    eventId,
+    items: JSON.stringify(items),
+  });
+  return `https://moos-park.de/tickets-data/?${params.toString()}`;
 }
 
 export function priceToEuro(cents: number): string {

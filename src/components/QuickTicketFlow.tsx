@@ -4,7 +4,7 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import type { ClubscaleEvent } from "@/lib/clubscale";
-import { eventTicketUrl, tagClasses } from "@/lib/clubscale";
+import { tagClasses } from "@/lib/clubscale";
 import TicketSelector from "@/components/TicketSelector";
 
 function formatDate(iso: string) {
@@ -121,10 +121,10 @@ export default function QuickTicketFlow({
               {isOpen && (
                 <div className="border-t border-foreground/8 p-5">
                   <TicketSelector
+                    eventId={event.id}
                     pools={event.ticketPools
                       .filter((p) => !p.deactivated)
                       .sort((a, b) => a.sortIndex - b.sortIndex)}
-                    ticketUrl={eventTicketUrl(event.id)}
                   />
                   <Link
                     href={`/events/${event.id}`}

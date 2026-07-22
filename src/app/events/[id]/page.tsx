@@ -1,13 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import {
-  getEvent,
-  getEvents,
-  getArtists,
-  eventTicketUrl,
-  tagClasses,
-} from "@/lib/clubscale";
+import { getEvent, getEvents, getArtists, tagClasses } from "@/lib/clubscale";
 import TicketSelector from "@/components/TicketSelector";
 import EventCard from "@/components/EventCard";
 import ReadMore from "@/components/ReadMore";
@@ -116,10 +110,10 @@ export default async function EventDetailPage({
           Tickets
         </h2>
         <TicketSelector
+          eventId={event.id}
           pools={event.ticketPools
             .filter((p) => !p.deactivated)
             .sort((a, b) => a.sortIndex - b.sortIndex)}
-          ticketUrl={eventTicketUrl(event.id)}
         />
       </div>
 

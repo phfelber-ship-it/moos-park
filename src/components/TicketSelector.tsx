@@ -2,14 +2,14 @@
 
 import { useState } from "react";
 import type { TicketPool } from "@/lib/clubscale";
-import { priceToEuro } from "@/lib/clubscale";
+import { checkoutUrl, priceToEuro } from "@/lib/clubscale";
 
 export default function TicketSelector({
+  eventId,
   pools,
-  ticketUrl,
 }: {
+  eventId: string;
   pools: TicketPool[];
-  ticketUrl: string;
 }) {
   const [quantities, setQuantities] = useState<Record<string, number>>({});
 
@@ -21,6 +21,10 @@ export default function TicketSelector({
   };
 
   const total = Object.values(quantities).reduce((a, b) => a + b, 0);
+
+  const items = Object.entries(quantities)
+    .filter(([, qty]) => qty > 0)
+    .map(([poolId, qty]) => ({ poolId, qty }));
 
   return (
     <div>
@@ -95,7 +99,7 @@ export default function TicketSelector({
       </p>
 
       <a
-        href={ticketUrl}
+        href={total > 0 ? checkoutUrl(eventId, items) : undefined}
         target="_blank"
         rel="noopener noreferrer"
         className={`mt-4 block rounded-full bg-accent px-8 py-3 text-center text-sm font-black uppercase tracking-wide text-black transition-transform hover:scale-105 ${
