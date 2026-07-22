@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { photosFor } from "@/lib/galleryPhotos";
 
 export const metadata = { title: "Bilder - moos.park | Eventlocation" };
 
@@ -8,55 +9,46 @@ export const GALLERIES = [
     slug: "ue30-party-open-air-summer-edition",
     title: "Ü30 Party Open Air Summer Edition + Aftershowparty",
     date: "18. Juli 2026",
-    image: "/images/gallery-2.jpg",
   },
   {
     slug: "summer-break-party-2026",
     title: "Summer Break Party 2026 – Next Date: Summer Open Juli 2026",
     date: "09. Mai 2026",
-    image: "/images/gallery-1.jpg",
   },
   {
     slug: "2016er-party-april-2026",
     title: "2016er Party | April 2026",
     date: "25. April 2026",
-    image: "/images/gallery-1.jpg",
   },
   {
     slug: "80er-90er-party-april-2026",
     title: "80er - 90er Party | April 2026",
     date: "18. April 2026",
-    image: "/images/gallery-2.jpg",
   },
   {
     slug: "ue30-party-2-areas",
     title: "Die Ü30 Party | Auf 2 Areas",
     date: "11. April 2026",
-    image: "/images/gallery-1.jpg",
   },
   {
     slug: "mega-mallorca-party-frenzy-live",
     title: "Mega Mallorca Party | Frenzy Live",
     date: "05. April 2026",
-    image: "/images/gallery-2.jpg",
   },
   {
     slug: "2010er-party-april-2026",
     title: "2010er Party | April 2026",
     date: "04. April 2026",
-    image: "/images/gallery-1.jpg",
   },
   {
     slug: "5-dj-2-areas-1-nacht",
     title: "5 DJ - 2 Areas - 1 Nacht | Du entscheidest.",
     date: "28. März 2026",
-    image: "/images/gallery-2.jpg",
   },
   {
     slug: "zeitreise-raus-aus-dem-alltag",
     title: "Zeitreise - Raus aus dem Alltag!",
     date: "21. März 2026",
-    image: "/images/gallery-1.jpg",
   },
 ];
 
@@ -66,7 +58,7 @@ export default function BilderPage() {
       <h1 className="text-4xl font-black uppercase text-foreground">Bilder</h1>
 
       <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {GALLERIES.map((g) => (
+        {GALLERIES.map((g, i) => (
           <Link
             key={g.slug}
             href={`/bilder/${g.slug}`}
@@ -74,7 +66,7 @@ export default function BilderPage() {
           >
             <div className="relative aspect-[4/3] w-full bg-foreground/5">
               <Image
-                src={g.image}
+                src={photosFor(i, 1)[0]}
                 alt={g.title}
                 fill
                 className="object-cover transition-transform duration-300 group-hover:scale-105"

@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { GALLERIES } from "../page";
+import { photosFor } from "@/lib/galleryPhotos";
 
 export default async function GalleryPage({
   params,
@@ -9,22 +10,14 @@ export default async function GalleryPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const gallery = GALLERIES.find((g) => g.slug === slug);
+  const index = GALLERIES.findIndex((g) => g.slug === slug);
+  const gallery = GALLERIES[index];
 
   if (!gallery) {
     notFound();
   }
 
-  const photos = [
-    gallery.image,
-    gallery.image === "/images/gallery-1.jpg"
-      ? "/images/gallery-2.jpg"
-      : "/images/gallery-1.jpg",
-    gallery.image,
-    gallery.image === "/images/gallery-1.jpg"
-      ? "/images/gallery-2.jpg"
-      : "/images/gallery-1.jpg",
-  ];
+  const photos = photosFor(index, 4);
 
   return (
     <div className="mx-auto max-w-4xl px-6 py-16">

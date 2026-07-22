@@ -224,7 +224,7 @@ export default function EventlocationPage() {
       </section>
 
       <section id="anfragen" className="px-6 pb-28">
-        <div className="mx-auto max-w-3xl rounded-3xl border border-foreground/8 bg-foreground/[0.025] p-8 sm:p-12">
+        <div className="mx-auto max-w-3xl overflow-hidden rounded-3xl border border-foreground/8 bg-foreground/[0.025] p-8 sm:p-12">
           <p className="text-sm font-bold uppercase tracking-wide text-accent-lime">
             Ihr Event, unsere Beratung.
           </p>
@@ -240,12 +240,12 @@ export default function EventlocationPage() {
             <input
               name="firma"
               placeholder="Firma"
-              className="rounded-xl border border-foreground/15 bg-foreground/5 px-4 py-3 text-foreground placeholder-foreground/40 outline-none focus:border-accent"
+              className="w-full rounded-xl border border-foreground/15 bg-foreground/5 px-4 py-3 text-foreground placeholder-foreground/40 outline-none focus:border-accent"
             />
             <select
               name="veranstaltungsort"
               defaultValue=""
-              className="rounded-xl border border-foreground/15 bg-foreground/5 px-4 py-3 text-foreground/70 outline-none focus:border-accent"
+              className="w-full appearance-none rounded-xl border border-foreground/15 bg-foreground/5 px-4 py-3 text-foreground/70 outline-none focus:border-accent"
             >
               <option value="" disabled>
                 Veranstaltungsort

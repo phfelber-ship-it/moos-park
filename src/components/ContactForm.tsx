@@ -6,29 +6,29 @@ export default function ContactForm() {
       <input
         name="vorname"
         placeholder="Vorname"
-        className="rounded-xl border border-foreground/15 bg-foreground/5 px-4 py-3  text-foreground placeholder-foreground/40 outline-none focus:border-accent"
+        className="w-full rounded-xl border border-foreground/15 bg-foreground/5 px-4 py-3 text-foreground placeholder-foreground/40 outline-none focus:border-accent"
       />
       <input
         name="nachname"
         placeholder="Nachname"
-        className="rounded-xl border border-foreground/15 bg-foreground/5 px-4 py-3  text-foreground placeholder-foreground/40 outline-none focus:border-accent"
+        className="w-full rounded-xl border border-foreground/15 bg-foreground/5 px-4 py-3 text-foreground placeholder-foreground/40 outline-none focus:border-accent"
       />
       <input
         name="telefon"
         placeholder="Telefonnummer"
-        className="rounded-xl border border-foreground/15 bg-foreground/5 px-4 py-3  text-foreground placeholder-foreground/40 outline-none focus:border-accent"
+        className="w-full rounded-xl border border-foreground/15 bg-foreground/5 px-4 py-3 text-foreground placeholder-foreground/40 outline-none focus:border-accent"
       />
       <input
         name="email"
         type="email"
         placeholder="E-Mail"
-        className="rounded-xl border border-foreground/15 bg-foreground/5 px-4 py-3  text-foreground placeholder-foreground/40 outline-none focus:border-accent"
+        className="w-full rounded-xl border border-foreground/15 bg-foreground/5 px-4 py-3 text-foreground placeholder-foreground/40 outline-none focus:border-accent"
       />
       <textarea
         name="nachricht"
         placeholder="Nachricht"
         rows={4}
-        className="rounded-xl border border-foreground/15 bg-foreground/5 px-4 py-3  text-foreground placeholder-foreground/40 outline-none focus:border-accent"
+        className="w-full rounded-xl border border-foreground/15 bg-foreground/5 px-4 py-3 text-foreground placeholder-foreground/40 outline-none focus:border-accent"
       />
       <label className="flex items-start gap-2 text-xs text-foreground/50">
         <input type="checkbox" className="mt-0.5" />

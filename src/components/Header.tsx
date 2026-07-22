@@ -5,7 +5,6 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import ThemeToggle from "@/components/ThemeToggle";
-import { MAIN_ACTIONS } from "@/lib/nav";
 
 const NAV_LINKS = [
   { href: "/", label: "Home" },
@@ -68,52 +67,48 @@ export default function Header() {
           <button
             aria-label={open ? "Menü schließen" : "Menü öffnen"}
             onClick={() => setOpen((v) => !v)}
-            className="text-foreground"
+            className="relative h-6 w-6 text-foreground"
           >
-            {open ? (
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-                <path
-                  d="M5 5l14 14M19 5 5 19"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                />
-              </svg>
-            ) : (
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                <path
-                  d="M4 6h16M4 12h16M4 18h16"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                />
-              </svg>
-            )}
+            <svg
+              width="22"
+              height="22"
+              viewBox="0 0 24 24"
+              fill="none"
+              className={`absolute inset-0 m-auto transition-all duration-300 ${
+                open ? "rotate-90 opacity-100" : "rotate-0 opacity-0"
+              }`}
+            >
+              <path
+                d="M5 5l14 14M19 5 5 19"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+              />
+            </svg>
+            <svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              className={`absolute inset-0 m-auto transition-all duration-300 ${
+                open ? "-rotate-90 opacity-0" : "rotate-0 opacity-100"
+              }`}
+            >
+              <path
+                d="M4 6h16M4 12h16M4 18h16"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+              />
+            </svg>
           </button>
         </div>
       </header>
 
       {open && (
-        <div className="fixed inset-0 z-40 flex flex-col items-center justify-center gap-6 bg-background px-6">
-          <div className="flex w-full max-w-xs flex-col gap-3">
-            {MAIN_ACTIONS.map((action) => (
-              <Link
-                key={action.href}
-                href={action.href}
-                onClick={() => setOpen(false)}
-                className={
-                  action.filled
-                    ? "rounded-full bg-accent px-6 py-3 text-center text-sm font-black uppercase tracking-wide text-black"
-                    : "rounded-full border border-foreground/20 px-6 py-3 text-center text-sm font-black uppercase tracking-wide text-foreground"
-                }
-              >
-                {action.label}
-              </Link>
-            ))}
-          </div>
-
-          <div className="mt-4 flex flex-col items-center gap-6 overflow-y-auto">
-            {NAV_LINKS.map((link) => {
+        <div className="animate-menu-fade-in fixed inset-0 z-40 flex flex-col items-center justify-center gap-6 bg-background px-6">
+          <div className="flex flex-col items-center gap-6 overflow-y-auto">
+            {NAV_LINKS.map((link, i) => {
               const active =
                 link.href === "/"
                   ? pathname === "/"
@@ -123,7 +118,8 @@ export default function Header() {
                   key={link.href}
                   href={link.href}
                   onClick={() => setOpen(false)}
-                  className={`text-2xl font-black uppercase tracking-tight sm:text-4xl ${
+                  style={{ animationDelay: `${i * 40}ms` }}
+                  className={`animate-menu-item-in text-2xl font-black uppercase tracking-tight sm:text-4xl ${
                     active ? "text-accent-lime" : "text-foreground"
                   }`}
                 >
