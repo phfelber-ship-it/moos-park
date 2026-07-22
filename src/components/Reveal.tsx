@@ -1,11 +1,14 @@
 "use client";
 
-import { motion } from "motion/react";
+import { motion, type TargetAndTransition } from "motion/react";
 import type { ReactNode } from "react";
 
 type Direction = "up" | "left" | "right" | "scale";
 
-const VARIANTS: Record<Direction, { hidden: object; show: object }> = {
+const VARIANTS: Record<
+  Direction,
+  { hidden: TargetAndTransition; show: TargetAndTransition }
+> = {
   up: { hidden: { opacity: 0, y: 40 }, show: { opacity: 1, y: 0 } },
   left: { hidden: { opacity: 0, x: -40 }, show: { opacity: 1, x: 0 } },
   right: { hidden: { opacity: 0, x: 40 }, show: { opacity: 1, x: 0 } },

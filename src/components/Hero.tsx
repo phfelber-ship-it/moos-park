@@ -1,18 +1,18 @@
 "use client";
 
 import Image from "next/image";
-import { motion } from "motion/react";
+import { motion, type Variants } from "motion/react";
 import MotionLink from "@/components/MotionLink";
 import { MAIN_ACTIONS } from "@/lib/nav";
 
-const container = {
+const container: Variants = {
   hidden: {},
   show: {
     transition: { staggerChildren: 0.12, delayChildren: 0.05 },
   },
 };
 
-const item = {
+const item: Variants = {
   hidden: { opacity: 0, y: 30 },
   show: {
     opacity: 1,
