@@ -19,7 +19,7 @@ const NAV_LINKS = [
 ];
 
 const CIRCLE_BTN =
-  "flex h-[46px] w-[46px] items-center justify-center rounded-full border border-foreground/10 bg-background shadow-[var(--header-shadow)] transition-[transform,box-shadow] duration-300 ease-out hover:scale-105";
+  "flex h-[46px] w-[46px] items-center justify-center rounded-full bg-accent-lime shadow-[var(--header-shadow)] transition-[transform,box-shadow] duration-300 ease-out hover:scale-105";
 
 export default function Header() {
   const [open, setOpen] = useState(false);
@@ -50,7 +50,7 @@ export default function Header() {
         aria-label={open ? "Menü schließen" : "Menü öffnen"}
         className={`fixed left-10 top-10 z-50 ${CIRCLE_BTN}`}
       >
-        <span className="relative h-4 w-4 text-accent-lime">
+        <span className="relative h-4 w-4 text-black">
           <svg
             width="18"
             height="18"
