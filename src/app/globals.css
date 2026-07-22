@@ -95,3 +95,35 @@ a {
     box-shadow 0.2s ease-in-out,
     background-color 0.2s ease-in-out;
 }
+
+.flip-text {
+  position: relative;
+  display: inline-block;
+  perspective: 200px;
+}
+
+.flip-text .flip-face {
+  display: block;
+  backface-visibility: hidden;
+  transition: transform 0.4s cubic-bezier(0.76, 0, 0.24, 1);
+}
+
+.flip-text .flip-front {
+  transform: rotateX(0deg);
+  transform-origin: bottom;
+}
+
+.flip-text .flip-back {
+  position: absolute;
+  inset: 0;
+  transform: rotateX(90deg);
+  transform-origin: top;
+}
+
+a:hover .flip-text .flip-front {
+  transform: rotateX(-90deg);
+}
+
+a:hover .flip-text .flip-back {
+  transform: rotateX(0deg);
+}

@@ -1,8 +1,10 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Image from "next/image";
-import { motion, type Variants } from "motion/react";
+import { motion, AnimatePresence, type Variants } from "motion/react";
 import MotionLink from "@/components/MotionLink";
+import FlipText from "@/components/FlipText";
 import { MAIN_ACTIONS } from "@/lib/nav";
 
 const container: Variants = {
@@ -21,17 +23,44 @@ const item: Variants = {
   },
 };
 
-export default function Hero() {
+const SLIDE_DURATION = 6000;
+
+export default function Hero({ images }: { images: string[] }) {
+  const slides = images.length > 0 ? images : ["/images/hero-bg.jpg"];
+  const [index, setIndex] = useState(0);
+
+  useEffect(() => {
+    if (slides.length < 2) return;
+    const id = setInterval(() => {
+      setIndex((i) => (i + 1) % slides.length);
+    }, SLIDE_DURATION);
+    return () => clearInterval(id);
+  }, [slides.length]);
+
   return (
     <section className="relative flex min-h-[75vh] items-end overflow-hidden text-center text-white sm:min-h-[90vh]">
-      <Image
-        src="/images/hero-bg.jpg"
-        alt="moos.park"
-        fill
-        priority
-        className="object-cover"
-        sizes="100vw"
-      />
+      <AnimatePresence>
+        <motion.div
+          key={index}
+          initial={{ opacity: 0, scale: 1 }}
+          animate={{ opacity: 1, scale: 1.08 }}
+          exit={{ opacity: 0 }}
+          transition={{
+            opacity: { duration: 1.4, ease: "easeInOut" },
+            scale: { duration: SLIDE_DURATION / 1000, ease: "linear" },
+          }}
+          className="absolute inset-0"
+        >
+          <Image
+            src={slides[index]}
+            alt="moos.park"
+            fill
+            priority={index === 0}
+            className="object-cover"
+            sizes="100vw"
+          />
+        </motion.div>
+      </AnimatePresence>
       <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-foreground/70 via-foreground/10 to-transparent" />
 
       <motion.div
@@ -41,20 +70,9 @@ export default function Hero() {
         viewport={{ once: true, amount: 0.4 }}
         className="relative z-10 mx-auto flex max-w-2xl flex-col items-center px-6 pb-16"
       >
-        <motion.div variants={item}>
-          <Image
-            src="/images/logo.png"
-            alt="moos.park – Dein Hotspot für Tag und Nacht"
-            width={160}
-            height={160}
-            className="w-32 sm:w-40"
-            priority
-          />
-        </motion.div>
-
         <motion.span
           variants={item}
-          className="mt-6 rounded-lg bg-accent-lime px-4 py-1.5 text-xs font-black uppercase tracking-wide text-black"
+          className="rounded-lg bg-accent-lime px-4 py-1.5 text-xs font-black uppercase tracking-wide text-black"
         >
           #1 Eventlocation
         </motion.span>
@@ -67,7 +85,7 @@ export default function Hero() {
         </motion.h1>
         <motion.p
           variants={item}
-          className="mt-2 text-lg font-normal uppercase tracking-[0.3em] text-white/70"
+          className="text-5xl font-normal uppercase leading-[0.95] tracking-tight text-white/70 sm:text-7xl"
         >
           Pöttmes
         </motion.p>
@@ -87,7 +105,7 @@ export default function Hero() {
                   : "block w-full rounded-lg border border-white/40 px-6 py-3.5 text-center text-sm font-black uppercase tracking-wide text-white transition-colors hover:border-white sm:w-auto"
               }
             >
-              {action.label}
+              <FlipText text={action.label} />
             </MotionLink>
           ))}
         </motion.div>

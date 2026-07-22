@@ -5,6 +5,8 @@ import EventsExplorer from "@/components/EventsExplorer";
 import Hero from "@/components/Hero";
 import Reveal from "@/components/Reveal";
 import AppPhoneReveal from "@/components/AppPhoneReveal";
+import FanGallery from "@/components/FanGallery";
+import FlipText from "@/components/FlipText";
 
 function TicketIcon() {
   return (
@@ -89,11 +91,23 @@ const TICKER_ITEMS = [
 
 export default async function Home() {
   const events = await getEvents();
-  const galleries = (await getGalleries()).slice(0, 4);
+  const allGalleries = await getGalleries();
+  const galleries = allGalleries.slice(0, 4);
+  const heroImages = allGalleries
+    .map((g) => g.coverMediaObjects[0]?.fullImage?.presignedURL)
+    .filter((src): src is string => Boolean(src))
+    .slice(0, 6);
+  const fanPhotos = allGalleries
+    .map((g) => ({
+      src: g.coverMediaObjects[0]?.thumbnail?.presignedURL,
+      alt: g.name,
+    }))
+    .filter((p): p is { src: string; alt: string } => Boolean(p.src))
+    .slice(0, 5);
 
   return (
     <div>
-      <Hero />
+      <Hero images={heroImages} />
 
       <div className="overflow-hidden bg-accent-lime py-3">
         <div className="flex animate-marquee gap-8 whitespace-nowrap">
@@ -127,17 +141,46 @@ export default async function Home() {
               href="/events"
               className="inline-block rounded-lg bg-accent-lime px-8 py-3 text-sm font-black uppercase tracking-wide text-black transition-transform hover:scale-105"
             >
-              Alle Events ansehen
+              <FlipText text="Alle Events ansehen" />
             </Link>
           </Reveal>
         </div>
+      </section>
+
+      <section className="relative overflow-hidden px-6 py-32 text-center">
+        <Image
+          src="/images/tanzabend-banner.png"
+          alt="Tanz Nächte"
+          fill
+          className="object-cover"
+          sizes="100vw"
+        />
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-foreground via-foreground/60 to-foreground/30" />
+
+        <Reveal direction="scale" className="relative">
+          <p className="text-xs font-black uppercase tracking-[0.3em] text-accent-lime">
+            Jeden 2. &amp; 4. Freitag im Monat
+          </p>
+          <h2 className="mt-4 text-4xl font-black uppercase leading-[0.95] text-white sm:text-6xl">
+            Tanz Nächte
+          </h2>
+          <p className="mx-auto mt-4 max-w-md text-white/70">
+            &bdquo;Tanzbare Musik, gute Stimmung und echte Emotionen.&ldquo;
+          </p>
+          <Link
+            href="/tanzabend"
+            className="mt-8 inline-block rounded-lg bg-accent-lime px-8 py-3 text-sm font-black uppercase tracking-wide text-black transition-transform hover:scale-105"
+          >
+            <FlipText text="Alle Tanztermine ansehen" />
+          </Link>
+        </Reveal>
       </section>
 
       <section className="px-6 py-24">
         <div className="mx-auto max-w-7xl">
           <Reveal>
             <h2 className="text-center text-3xl font-black uppercase text-foreground sm:text-4xl">
-              Galerie
+              Bilder
             </h2>
             <p className="mx-auto mt-3 max-w-md text-center text-foreground/60">
               Manche Momente brauchen keine Worte – nur das richtige Bild.
@@ -183,28 +226,10 @@ export default async function Home() {
               href="/bilder"
               className="inline-block rounded-lg bg-accent-lime px-8 py-3 text-sm font-black uppercase tracking-wide text-black transition-transform hover:scale-105"
             >
-              Alle Galerien ansehen
+              <FlipText text="Alle Galerien ansehen" />
             </Link>
           </Reveal>
         </div>
-      </section>
-
-      <section className="bg-foreground/[0.02] px-6 py-24 text-center">
-        <Reveal direction="scale">
-          <h2 className="text-2xl font-black uppercase text-foreground sm:text-3xl">
-            Tanz Nächte
-          </h2>
-          <p className="mx-auto mt-4 max-w-md text-foreground/60">
-            &bdquo;Jeden 2. und 4. Freitag im Monat. Tanzbare Musik, gute
-            Stimmung und echte Emotionen.&ldquo;
-          </p>
-          <Link
-            href="/tanzabend"
-            className="mt-8 inline-block rounded-lg bg-accent-lime px-8 py-3 text-sm font-black uppercase tracking-wide text-black transition-transform hover:scale-105"
-          >
-            Alle Tanztermine ansehen
-          </Link>
-        </Reveal>
       </section>
 
       <section className="px-6 py-24">
@@ -248,7 +273,7 @@ export default async function Home() {
                 rel="noopener noreferrer"
                 className="mt-8 inline-block rounded-lg bg-accent-lime px-8 py-3 text-sm font-black uppercase tracking-wide text-black transition-transform hover:scale-105"
               >
-                App laden
+                <FlipText text="App laden" />
               </a>
 
               <div className="mt-4 flex flex-wrap gap-3">
@@ -302,19 +327,7 @@ export default async function Home() {
           </p>
         </Reveal>
 
-        <Reveal
-          direction="scale"
-          delay={0.15}
-          className="relative mx-auto mt-10 aspect-[4/5] w-full max-w-md overflow-hidden rounded-2xl"
-        >
-          <Image
-            src="/images/gallery-1.jpg"
-            alt="moos.park"
-            fill
-            className="object-cover"
-            sizes="(min-width: 640px) 400px, 100vw"
-          />
-        </Reveal>
+        <FanGallery photos={fanPhotos} />
       </section>
 
       <section className="px-6 pb-24">

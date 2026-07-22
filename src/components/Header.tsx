@@ -18,8 +18,8 @@ const NAV_LINKS = [
   { href: "/kontakt", label: "Kontakt" },
 ];
 
-const CIRCLE_BTN =
-  "flex h-14 w-14 items-center justify-center rounded-full border border-foreground/10 bg-background shadow-[var(--header-shadow)] sm:h-16 sm:w-16";
+const SQUARE_BTN =
+  "flex h-14 w-14 items-center justify-center rounded-xl border border-foreground/10 bg-background shadow-[var(--header-shadow)] sm:h-16 sm:w-16";
 
 export default function Header() {
   const [open, setOpen] = useState(false);
@@ -48,7 +48,7 @@ export default function Header() {
         ref={btnRef}
         onClick={toggle}
         aria-label={open ? "Menü schließen" : "Menü öffnen"}
-        className={`fixed left-3 top-3 z-50 ${CIRCLE_BTN}`}
+        className={`fixed left-3 top-3 z-50 ${SQUARE_BTN}`}
       >
         <span className="relative h-4 w-4 text-foreground">
           <svg
@@ -89,21 +89,22 @@ export default function Header() {
       <Link
         href="/"
         aria-label="moos.park Startseite"
-        className={`fixed left-1/2 top-3 z-50 -translate-x-1/2 ${CIRCLE_BTN}`}
+        className="fixed left-1/2 top-1 z-50 -translate-x-1/2"
       >
         <Image
           src="/images/logo.png"
           alt="moos.park"
-          width={44}
-          height={44}
-          className="w-9 sm:w-10"
+          width={88}
+          height={88}
+          className="w-16 sm:w-20"
+          priority
         />
       </Link>
 
       <Link
         href="/eventtickets"
         aria-label="Tickets kaufen"
-        className="fixed right-3 top-3 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-accent-lime text-black shadow-[var(--header-shadow)] transition-transform hover:scale-105 sm:h-16 sm:w-16"
+        className="fixed right-3 top-3 z-50 flex h-14 w-14 items-center justify-center rounded-xl bg-accent-lime text-black shadow-[var(--header-shadow)] transition-transform hover:scale-105 sm:h-16 sm:w-16"
       >
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
           <path

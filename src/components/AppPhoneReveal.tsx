@@ -11,9 +11,13 @@ export default function AppPhoneReveal() {
       viewport={{ once: true, amount: 0.3 }}
       transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
       className="relative order-2 mx-auto w-full max-w-[220px] sm:max-w-[260px] lg:order-1"
+      style={{ perspective: "1000px" }}
     >
       <div className="absolute inset-0 scale-125 rounded-full bg-accent-lime/20 blur-3xl" />
-      <div className="relative aspect-[1454/2560] w-full overflow-hidden rounded-[2rem] border-4 border-background/10 shadow-2xl">
+      <div
+        className="relative aspect-[1454/2560] w-full overflow-hidden rounded-[2rem] border-4 border-background/10 shadow-2xl"
+        style={{ transform: "rotateY(-18deg) rotateX(4deg)" }}
+      >
         <Image
           src="/images/hero-home.jpg"
           alt="moos.park App"
