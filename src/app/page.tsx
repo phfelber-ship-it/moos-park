@@ -135,60 +135,81 @@ export default async function Home() {
         </Link>
       </section>
 
-      <section className="px-6 py-24 text-center">
-        <div className="mx-auto max-w-xl">
-          <h2 className="text-3xl font-black uppercase leading-tight text-foreground">
-            &bdquo;App drauf – mehr drin.&ldquo;
-          </h2>
-          <p className="mt-4 text-foreground/60">
-            Exklusive Specials, Aktionen &amp; Überraschungen – nur in der
-            moos.park App.
-          </p>
+      <section className="px-6 py-24">
+        <div className="mx-auto max-w-6xl overflow-hidden rounded-[2.5rem] bg-foreground text-background">
+          <div className="grid items-center gap-10 px-8 py-14 sm:px-14 sm:py-16 lg:grid-cols-2 lg:gap-16">
+            <div>
+              <p className="text-xs font-black uppercase tracking-[0.3em] text-accent-lime">
+                moos.park App
+              </p>
+              <h2 className="mt-4 text-3xl font-black uppercase leading-[1.05] sm:text-4xl">
+                Alles an einem Ort. Direkt in deiner Tasche.
+              </h2>
+              <p className="mt-5 max-w-md text-background/70">
+                Tickets kaufen, Tisch reservieren, Coupons einlösen &amp; keine
+                Party mehr verpassen – die moos.park App bündelt alles, was du
+                brauchst.
+              </p>
 
-          <ul className="mx-auto mt-6 inline-flex flex-col gap-2 text-left font-semibold text-accent-lime">
-            <li>› Coupons &amp; Vorteile</li>
-            <li>› Alle Events</li>
-            <li>› Tickets &amp; Reservierungen</li>
-            <li>› Kundenkarte</li>
-            <li>› News &amp; Updates</li>
-          </ul>
+              <div className="mt-8 grid grid-cols-2 gap-3 max-w-md">
+                {[
+                  "Tickets & Reservierungen",
+                  "Coupons & Vorteile",
+                  "Kundenkarte",
+                  "News & Updates",
+                ].map((feature) => (
+                  <div
+                    key={feature}
+                    className="rounded-2xl bg-background/10 px-4 py-3 text-sm font-bold"
+                  >
+                    {feature}
+                  </div>
+                ))}
+              </div>
 
-          <div className="mt-8 flex justify-center gap-4">
-            <a
-              href="https://www.apple.com/app-store/"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <Image
-                src="/images/appstore.png"
-                alt="App Store"
-                width={150}
-                height={41}
-              />
-            </a>
-            <a
-              href="https://play.google.com/store"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <Image
-                src="/images/googleplay.png"
-                alt="Google Play"
-                width={150}
-                height={42}
-              />
-            </a>
+              <div className="mt-8 flex flex-wrap gap-4">
+                <a
+                  href="https://www.apple.com/app-store/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="opacity-90 transition-opacity hover:opacity-100"
+                >
+                  <Image
+                    src="/images/appstore.png"
+                    alt="App Store"
+                    width={150}
+                    height={41}
+                  />
+                </a>
+                <a
+                  href="https://play.google.com/store"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="opacity-90 transition-opacity hover:opacity-100"
+                >
+                  <Image
+                    src="/images/googleplay.png"
+                    alt="Google Play"
+                    width={150}
+                    height={42}
+                  />
+                </a>
+              </div>
+            </div>
+
+            <div className="relative mx-auto w-full max-w-[220px] sm:max-w-[260px]">
+              <div className="absolute inset-0 scale-125 rounded-full bg-accent-lime/20 blur-3xl" />
+              <div className="relative aspect-[1454/2560] w-full rotate-3 overflow-hidden rounded-[2rem] border-4 border-background/10 shadow-2xl">
+                <Image
+                  src="/images/hero-home.jpg"
+                  alt="moos.park App"
+                  fill
+                  className="object-cover"
+                  sizes="260px"
+                />
+              </div>
+            </div>
           </div>
-        </div>
-
-        <div className="relative mx-auto mt-12 aspect-[1454/2560] w-full max-w-xs">
-          <Image
-            src="/images/hero-home.jpg"
-            alt="moos.park App"
-            fill
-            className="object-contain"
-            sizes="400px"
-          />
         </div>
       </section>
 
