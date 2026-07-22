@@ -4,7 +4,6 @@ import Script from "next/script";
 import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import FloatingTicketButton from "@/components/FloatingTicketButton";
 import FloatingWhatsAppButton from "@/components/FloatingWhatsAppButton";
 import CookieConsent from "@/components/CookieConsent";
 import GoogleTagManager from "@/components/GoogleTagManager";
@@ -44,7 +43,6 @@ export default function RootLayout({
         <main className="flex-1">{children}</main>
         <Footer />
         <FloatingWhatsAppButton />
-        <FloatingTicketButton />
         <CookieConsent />
         <GoogleTagManager />
       </body>

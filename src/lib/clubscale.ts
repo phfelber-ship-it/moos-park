@@ -52,6 +52,22 @@ export type Artist = {
   image: ClubscaleImage | null;
 };
 
+export type GalleryMedia = {
+  id: string;
+  title: string;
+  thumbnail: ClubscaleImage | null;
+  fullImage: ClubscaleImage | null;
+};
+
+export type Gallery = {
+  id: string;
+  eventID: string;
+  name: string;
+  date: string;
+  mediaCount: number;
+  coverMediaObjects: GalleryMedia[];
+};
+
 export const TAG_STYLES: Record<string, string> = {
   Party: "bg-accent-lime text-black",
   Konzerte: "bg-accent text-black",
@@ -105,4 +121,40 @@ export async function getArtist(id: string): Promise<Artist | null> {
 export async function getArtists(ids: string[]): Promise<Artist[]> {
   const artists = await Promise.all(ids.map((id) => getArtist(id)));
   return artists.filter((a): a is Artist => a !== null);
+}
+
+export async function getGalleries(): Promise<Gallery[]> {
+  const res = await fetch(`${API_BASE}/galleries?limit=100`, {
+    next: { revalidate: 300 },
+  });
+
+  if (!res.ok) {
+    return [];
+  }
+
+  const data = (await res.json()) as { galleries: Gallery[] };
+  return [...data.galleries].sort(
+    (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+  );
+}
+
+export async function getGallery(id: string): Promise<Gallery | null> {
+  const res = await fetch(`${API_BASE}/galleries/${id}`, {
+    next: { revalidate: 300 },
+  });
+  if (!res.ok) {
+    return null;
+  }
+  return (await res.json()) as Gallery;
+}
+
+export async function getGalleryMedia(id: string): Promise<GalleryMedia[]> {
+  const res = await fetch(`${API_BASE}/galleries/${id}/media?limit=100`, {
+    next: { revalidate: 300 },
+  });
+  if (!res.ok) {
+    return [];
+  }
+  const data = (await res.json()) as { media: GalleryMedia[] };
+  return data.media;
 }

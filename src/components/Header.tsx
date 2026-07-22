@@ -63,6 +63,28 @@ export default function Header() {
         </nav>
 
         <div className="flex items-center gap-2">
+          <Link
+            href="/eventtickets"
+            aria-label="Tickets kaufen"
+            className="flex items-center gap-2 rounded-full bg-accent px-4 py-2.5 text-xs font-black uppercase tracking-wide text-black transition-transform hover:scale-105 sm:px-5"
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+              <path
+                d="M3 8a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v2a2 2 0 1 0 0 4v2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a2 2 0 1 0 0-4z"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinejoin="round"
+              />
+              <path
+                d="M10 7v10"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeDasharray="2 2"
+                strokeLinecap="round"
+              />
+            </svg>
+            <span className="hidden sm:inline">Tickets</span>
+          </Link>
           <ThemeToggle />
           <button
             aria-label={open ? "Menü schließen" : "Menü öffnen"}
