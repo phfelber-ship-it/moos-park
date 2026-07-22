@@ -1,8 +1,16 @@
 import Link from "next/link";
 import Image from "next/image";
-import { getEvents } from "@/lib/clubscale";
+import { getEvents, getGalleries } from "@/lib/clubscale";
 import EventsExplorer from "@/components/EventsExplorer";
 import Hero from "@/components/Hero";
+
+function formatGalleryDate(iso: string) {
+  return new Date(iso).toLocaleDateString("de-DE", {
+    day: "2-digit",
+    month: "long",
+    year: "numeric",
+  });
+}
 
 const TICKER_ITEMS = [
   "Musik",
@@ -16,6 +24,7 @@ const TICKER_ITEMS = [
 
 export default async function Home() {
   const events = await getEvents();
+  const galleries = (await getGalleries()).slice(0, 4);
 
   return (
     <div>
@@ -52,6 +61,59 @@ export default async function Home() {
               className="inline-block rounded-full bg-accent px-8 py-3 text-sm font-black uppercase tracking-wide text-black transition-transform hover:scale-105"
             >
               Alle Events ansehen
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      <section className="px-6 py-24">
+        <div className="mx-auto max-w-7xl">
+          <h2 className="text-center text-3xl font-black uppercase text-foreground sm:text-4xl">
+            Galerie
+          </h2>
+          <p className="mx-auto mt-3 max-w-md text-center text-foreground/60">
+            Manche Momente brauchen keine Worte – nur das richtige Bild.
+          </p>
+
+          <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            {galleries.map((gallery) => {
+              const cover = gallery.coverMediaObjects[0]?.thumbnail?.presignedURL;
+              return (
+                <Link
+                  key={gallery.id}
+                  href={`/bilder/${gallery.id}`}
+                  className="group overflow-hidden rounded-2xl border border-foreground/8 bg-foreground/[0.025] transition-colors hover:border-accent/40"
+                >
+                  <div className="relative aspect-[4/3] w-full bg-foreground/5">
+                    {cover && (
+                      <Image
+                        src={cover}
+                        alt={gallery.name}
+                        fill
+                        className="object-cover transition-transform duration-300 group-hover:scale-105"
+                        sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
+                      />
+                    )}
+                  </div>
+                  <div className="p-4">
+                    <h3 className="font-black uppercase leading-tight text-foreground line-clamp-2">
+                      {gallery.name}
+                    </h3>
+                    <p className="mt-1 text-xs text-foreground/50">
+                      {formatGalleryDate(gallery.date)}
+                    </p>
+                  </div>
+                </Link>
+              );
+            })}
+          </div>
+
+          <div className="mt-12 text-center">
+            <Link
+              href="/bilder"
+              className="inline-block rounded-full bg-accent px-8 py-3 text-sm font-black uppercase tracking-wide text-black transition-transform hover:scale-105"
+            >
+              Alle Galerien ansehen
             </Link>
           </div>
         </div>
