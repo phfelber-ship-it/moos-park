@@ -1,7 +1,13 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
+import { motion } from "motion/react";
 import type { ClubscaleEvent } from "@/lib/clubscale";
 import { tagClasses } from "@/lib/clubscale";
+import MotionLink from "@/components/MotionLink";
+
+const SPRING = { type: "spring", stiffness: 300, damping: 24 } as const;
 
 function formatDate(iso: string) {
   const d = new Date(iso);
@@ -19,7 +25,11 @@ function formatTime(iso: string) {
 
 export default function EventCard({ event }: { event: ClubscaleEvent }) {
   return (
-    <div className="flex flex-col items-center rounded-3xl border border-foreground/10 p-4 text-center transition-colors hover:border-foreground/25">
+    <motion.div
+      whileHover={{ scale: 1.03, boxShadow: "0 12px 32px rgba(0,0,0,0.1)" }}
+      transition={SPRING}
+      className="flex flex-col items-center rounded-3xl border border-foreground/10 p-4 text-center transition-colors hover:border-foreground/25"
+    >
       <Link
         href={`/events/${event.id}`}
         className="group relative aspect-[16/10] w-full overflow-hidden rounded-2xl bg-foreground/5"
@@ -62,19 +72,19 @@ export default function EventCard({ event }: { event: ClubscaleEvent }) {
       </p>
 
       <div className="mt-4 flex w-full max-w-[220px] flex-col gap-2">
-        <Link
+        <MotionLink
           href={`/events/${event.id}#tickets`}
-          className="rounded-full bg-foreground px-6 py-2.5 text-xs font-black uppercase tracking-wide text-background transition-transform hover:scale-105"
+          className="block rounded-full bg-foreground px-6 py-2.5 text-center text-xs font-black uppercase tracking-wide text-background"
         >
           Ticket kaufen
-        </Link>
-        <Link
+        </MotionLink>
+        <MotionLink
           href={`/reservierung?event=${event.id}`}
-          className="rounded-full border border-foreground/25 px-6 py-2.5 text-xs font-black uppercase tracking-wide text-foreground transition-colors hover:border-foreground/60"
+          className="block rounded-full border border-foreground/25 px-6 py-2.5 text-center text-xs font-black uppercase tracking-wide text-foreground transition-colors hover:border-foreground/60"
         >
           Jetzt reservieren
-        </Link>
+        </MotionLink>
       </div>
-    </div>
+    </motion.div>
   );
 }
