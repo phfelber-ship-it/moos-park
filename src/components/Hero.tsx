@@ -23,7 +23,7 @@ const item: Variants = {
   },
 };
 
-const SLIDE_DURATION = 2800;
+const SLIDE_DURATION = 5000;
 
 export default function Hero({ images }: { images: string[] }) {
   const slides = images.length > 0 ? images : ["/images/hero-bg.jpg"];
@@ -42,13 +42,10 @@ export default function Hero({ images }: { images: string[] }) {
       <AnimatePresence>
         <motion.div
           key={index}
-          initial={{ opacity: 0, scale: 1.12 }}
-          animate={{ opacity: 1, scale: 1.06 }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{
-            opacity: { duration: 0.18, ease: "easeOut" },
-            scale: { duration: SLIDE_DURATION / 1000, ease: "easeOut" },
-          }}
+          transition={{ duration: 0.18, ease: "easeOut" }}
           className="absolute inset-0"
         >
           <Image
