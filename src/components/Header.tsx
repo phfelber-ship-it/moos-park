@@ -18,8 +18,8 @@ const NAV_LINKS = [
   { href: "/kontakt", label: "Kontakt" },
 ];
 
-const SQUARE_BTN =
-  "flex h-14 w-14 items-center justify-center rounded-xl border border-foreground/10 bg-background shadow-[var(--header-shadow)] sm:h-16 sm:w-16";
+const CIRCLE_BTN =
+  "flex h-[46px] w-[46px] items-center justify-center rounded-full border border-foreground/10 bg-background shadow-[var(--header-shadow)] transition-[transform,box-shadow] duration-300 ease-out hover:scale-105";
 
 export default function Header() {
   const [open, setOpen] = useState(false);
@@ -48,7 +48,7 @@ export default function Header() {
         ref={btnRef}
         onClick={toggle}
         aria-label={open ? "Menü schließen" : "Menü öffnen"}
-        className={`fixed left-3 top-3 z-50 ${SQUARE_BTN}`}
+        className={`fixed left-10 top-10 z-50 ${CIRCLE_BTN}`}
       >
         <span className="relative h-4 w-4 text-foreground">
           <svg
@@ -89,7 +89,7 @@ export default function Header() {
       <Link
         href="/"
         aria-label="moos.park Startseite"
-        className="fixed left-1/2 top-1 z-50 -translate-x-1/2"
+        className="fixed left-1/2 top-8 z-50 -translate-x-1/2 sm:top-6"
       >
         <Image
           src="/images/logo.png"
@@ -104,9 +104,9 @@ export default function Header() {
       <Link
         href="/eventtickets"
         aria-label="Tickets kaufen"
-        className="fixed right-3 top-3 z-50 flex h-14 w-14 items-center justify-center rounded-xl bg-accent-lime text-black shadow-[var(--header-shadow)] transition-transform hover:scale-105 sm:h-16 sm:w-16"
+        className="fixed right-10 top-10 z-50 flex h-[46px] w-[46px] items-center justify-center rounded-full bg-accent-lime text-black shadow-[0_4px_20px_rgba(185,206,173,0.4)] transition-[transform,box-shadow] duration-300 ease-out hover:scale-105"
       >
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
           <path
             d="M3 8a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v2a2 2 0 1 0 0 4v2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a2 2 0 1 0 0-4z"
             stroke="currentColor"
