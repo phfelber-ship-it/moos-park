@@ -39,12 +39,12 @@ const LINKS_COL_1 = [
   { href: "/", label: "Home" },
   { href: "/events", label: "Events" },
   { href: "/bilder", label: "Bilder" },
-  { href: "/eventlocation", label: "Firmenevents" },
-  { href: "/eventlocation", label: "Eventlocation mieten" },
-  { href: "/eventlocation", label: "Eventlocation Augsburg" },
-  { href: "/eventlocation", label: "Eventlocation Bayern" },
-  { href: "/eventlocation", label: "Eventlocation Ingolstadt" },
-  { href: "/eventlocation#anfragen", label: "Veranstaltungsanfragen" },
+  { href: "/firmenevents", label: "Firmenevents" },
+  { href: "/eventlocation-mieten", label: "Eventlocation mieten" },
+  { href: "/eventlocation-augsburg", label: "Eventlocation Augsburg" },
+  { href: "/eventlocation-bayern", label: "Eventlocation Bayern" },
+  { href: "/eventlocation-ingolstadt", label: "Eventlocation Ingolstadt" },
+  { href: "/veranstaltungsanfrage", label: "Veranstaltungsanfragen" },
 ];
 
 const LINKS_COL_2 = [
