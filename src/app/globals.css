@@ -5,11 +5,13 @@
   --foreground: #14171a;
   --accent: #e8e94f;
   --accent-lime: #b9cead;
+  --header-shadow: 0 4px 24px rgba(0, 0, 0, 0.12);
 }
 
 [data-theme="dark"] {
   --background: #101215;
   --foreground: #f2f3f4;
+  --header-shadow: none;
 }
 
 @theme inline {

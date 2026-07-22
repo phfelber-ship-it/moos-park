@@ -23,7 +23,7 @@ const item = {
 
 export default function Hero() {
   return (
-    <section className="relative flex min-h-[75vh] items-end overflow-hidden text-center text-white sm:min-h-[90vh]">
+    <section className="relative -mt-[66px] flex min-h-[75vh] items-end overflow-hidden pt-[66px] text-center text-white sm:min-h-[90vh]">
       <Image
         src="/images/hero-bg.jpg"
         alt="moos.park"

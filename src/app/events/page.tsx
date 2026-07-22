@@ -15,7 +15,7 @@ export default async function EventsPage() {
       </h1>
 
       <div className="mt-12">
-        <EventsExplorer events={events} />
+        <EventsExplorer events={events} columns={3} />
       </div>
     </div>
   );

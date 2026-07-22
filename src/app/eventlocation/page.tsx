@@ -75,7 +75,7 @@ function AreaIcon() {
 export default function EventlocationPage() {
   return (
     <div>
-      <section className="relative flex min-h-[70vh] items-end overflow-hidden text-center text-white sm:min-h-[85vh]">
+      <section className="relative -mt-[66px] flex min-h-[70vh] items-end overflow-hidden pt-[66px] text-center text-white sm:min-h-[85vh]">
         <Image
           src="/images/eventlocation-hero.png"
           alt="moos.park Eventlocation"
