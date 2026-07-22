@@ -87,7 +87,7 @@ export default async function Home() {
           </h2>
 
           <div className="mt-12">
-            <EventsExplorer events={events} limit={4} />
+            <EventsExplorer events={events} limit={3} columns={3} />
           </div>
 
           <div className="mt-12 text-center">

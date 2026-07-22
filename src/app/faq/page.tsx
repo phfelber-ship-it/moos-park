@@ -1,4 +1,4 @@
-import Accordion from "@/components/Accordion";
+import JobAccordion from "@/components/JobAccordion";
 import ContactForm from "@/components/ContactForm";
 
 export const metadata = { title: "FAQ - moos.park | Eventlocation" };
@@ -79,7 +79,9 @@ export default function FaqPage() {
       </p>
 
       <div className="mt-10">
-        <Accordion items={FAQ_ITEMS} />
+        <JobAccordion
+          jobs={FAQ_ITEMS.map((item) => ({ title: item.q, text: item.a }))}
+        />
       </div>
 
       <div className="mt-16">

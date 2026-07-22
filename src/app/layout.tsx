@@ -4,6 +4,8 @@ import Script from "next/script";
 import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import FloatingTicketButton from "@/components/FloatingTicketButton";
+import FloatingWhatsAppButton from "@/components/FloatingWhatsAppButton";
 
 const montserrat = Montserrat({
   variable: "--font-montserrat",
@@ -39,6 +41,8 @@ export default function RootLayout({
         <Header />
         <main className="flex-1">{children}</main>
         <Footer />
+        <FloatingWhatsAppButton />
+        <FloatingTicketButton />
       </body>
     </html>
   );

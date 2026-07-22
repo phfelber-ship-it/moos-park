@@ -8,9 +8,11 @@ import EventCard from "@/components/EventCard";
 export default function EventsExplorer({
   events,
   limit,
+  columns = 4,
 }: {
   events: ClubscaleEvent[];
   limit?: number;
+  columns?: 3 | 4;
 }) {
   const tags = useMemo(() => {
     const set = new Set<string>();
@@ -55,7 +57,11 @@ export default function EventsExplorer({
       </div>
 
       {filtered.length > 0 ? (
-        <div className="mt-12 grid gap-x-6 gap-y-14 sm:grid-cols-2 lg:grid-cols-4">
+        <div
+          className={`mt-12 grid gap-x-6 gap-y-14 sm:grid-cols-2 ${
+            columns === 3 ? "lg:grid-cols-3" : "lg:grid-cols-4"
+          }`}
+        >
           {filtered.map((event) => (
             <EventCard key={event.id} event={event} />
           ))}

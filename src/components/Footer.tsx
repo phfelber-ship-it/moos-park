@@ -35,71 +35,139 @@ const APP_LINKS = [
   },
 ];
 
+const LINKS_COL_1 = [
+  { href: "/", label: "Home" },
+  { href: "/events", label: "Events" },
+  { href: "/bilder", label: "Bilder" },
+  { href: "/eventlocation", label: "Firmenevents" },
+  { href: "/eventlocation", label: "Eventlocation mieten" },
+  { href: "/eventlocation", label: "Eventlocation Augsburg" },
+  { href: "/eventlocation", label: "Eventlocation Bayern" },
+  { href: "/eventlocation", label: "Eventlocation Ingolstadt" },
+  { href: "/eventlocation#anfragen", label: "Veranstaltungsanfragen" },
+];
+
+const LINKS_COL_2 = [
+  { href: "/jobs", label: "Bewerbung" },
+  { href: "/jobs", label: "Jobs" },
+  { href: "/kontakt", label: "Kontakt" },
+  { href: "/faq", label: "FAQ" },
+];
+
+const LINKS_COL_3 = [
+  { href: "/impressum", label: "Impressum" },
+  { href: "/datenschutz", label: "Datenschutz" },
+  { href: "/agb", label: "Widerruf" },
+  { href: "/agb", label: "AGB" },
+];
+
+function IconButton({
+  href,
+  label,
+  icon,
+}: {
+  href: string;
+  label: string;
+  icon: React.ReactNode;
+}) {
+  return (
+    <a
+      href={href}
+      aria-label={label}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="flex h-10 w-10 items-center justify-center rounded-full bg-foreground text-background transition-transform hover:scale-105"
+    >
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor">
+        {icon}
+      </svg>
+    </a>
+  );
+}
+
 export default function Footer() {
   return (
-    <footer className="border-t border-foreground/8 bg-foreground/[0.02] px-6 py-16 text-center">
-      <div className="mx-auto max-w-3xl">
-        <Image
-          src="/images/logo.png"
-          alt="moos.park – Dein Hotspot für Tag und Nacht"
-          width={96}
-          height={96}
-          className="mx-auto w-20"
-        />
-
-        <p className="mt-6 text-lg font-black uppercase text-foreground">
-          Deine Eventlocation seit 1994.
-        </p>
-
-        <div className="mt-6 flex flex-wrap items-center justify-center gap-4">
-          {SOCIALS.map((s) => (
-            <a
-              key={s.label}
-              href={s.href}
-              aria-label={s.label}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex h-11 w-11 items-center justify-center rounded-full bg-foreground text-background transition-transform hover:scale-105"
-            >
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-                {s.icon}
-              </svg>
-            </a>
-          ))}
-          {APP_LINKS.map((s) => (
-            <a
-              key={s.label}
-              href={s.href}
-              aria-label={s.label}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex h-11 w-11 items-center justify-center rounded-full bg-foreground text-background transition-transform hover:scale-105"
-            >
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-                {s.icon}
-              </svg>
-            </a>
-          ))}
+    <footer className="border-t border-foreground/8 bg-foreground/[0.02] px-6 py-16">
+      <div className="mx-auto grid max-w-7xl gap-12 lg:grid-cols-[1.3fr_1fr_1fr_1fr_1fr] lg:gap-8">
+        <div className="text-center lg:text-left">
+          <Image
+            src="/images/logo.png"
+            alt="moos.park – Dein Hotspot für Tag und Nacht"
+            width={96}
+            height={96}
+            className="mx-auto w-20 lg:mx-0"
+          />
+          <p className="mt-6 text-lg font-black uppercase text-foreground">
+            Deine Eventlocation seit 1994.
+          </p>
         </div>
 
-        <div className="mt-8 flex flex-wrap items-center justify-center gap-4 text-sm font-semibold text-foreground/60">
-          <Link href="/impressum" className="hover:text-foreground">
-            Impressum
-          </Link>
-          <span>·</span>
-          <Link href="/datenschutz" className="hover:text-foreground">
-            Datenschutz
-          </Link>
-          <span>·</span>
-          <Link href="/agb" className="hover:text-foreground">
-            AGB
-          </Link>
+        <div className="text-center lg:text-left">
+          <p className="text-sm font-black uppercase tracking-wide text-foreground">
+            Links
+          </p>
+          <ul className="mt-4 space-y-2.5 text-sm text-foreground/60">
+            {LINKS_COL_1.map((l) => (
+              <li key={l.label}>
+                <Link href={l.href} className="hover:text-foreground">
+                  {l.label}
+                </Link>
+              </li>
+            ))}
+          </ul>
         </div>
 
-        <p className="mt-6 text-xs text-foreground/40">
-          © moos-park Gastronomie GmbH {new Date().getFullYear()}. Alle
+        <div className="text-center lg:text-left">
+          <p className="text-sm font-black uppercase tracking-wide text-foreground">
+            Noch mehr Links
+          </p>
+          <ul className="mt-4 space-y-2.5 text-sm text-foreground/60">
+            {LINKS_COL_2.map((l) => (
+              <li key={l.label}>
+                <Link href={l.href} className="hover:text-foreground">
+                  {l.label}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <div className="text-center lg:text-left">
+          <p className="text-sm font-black uppercase tracking-wide text-foreground">
+            Rechtliches
+          </p>
+          <ul className="mt-4 space-y-2.5 text-sm text-foreground/60">
+            {LINKS_COL_3.map((l) => (
+              <li key={l.label}>
+                <Link href={l.href} className="hover:text-foreground">
+                  {l.label}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <div className="text-center lg:text-left">
+          <p className="text-sm font-black uppercase tracking-wide text-foreground">
+            Get in Touch
+          </p>
+          <div className="mt-4 flex flex-wrap justify-center gap-3 lg:justify-start">
+            {SOCIALS.map((s) => (
+              <IconButton key={s.label} href={s.href} label={s.label} icon={s.icon} />
+            ))}
+            {APP_LINKS.map((s) => (
+              <IconButton key={s.label} href={s.href} label={s.label} icon={s.icon} />
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <div className="mx-auto mt-14 flex max-w-7xl flex-col items-center justify-between gap-4 border-t border-foreground/8 pt-8 text-xs text-foreground/40 sm:flex-row">
+        <p>
+          © MOOS-PARK GASTRONOMIE GMBH {new Date().getFullYear()}. Alle
           Rechte vorbehalten.
         </p>
+        <p>Mit ❤ erstellt</p>
       </div>
     </footer>
   );

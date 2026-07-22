@@ -31,7 +31,7 @@ export default function Header() {
 
   return (
     <div className="sticky top-3 z-50 px-3">
-      <header className="relative z-50 mx-auto flex max-w-6xl items-center justify-between rounded-full bg-background px-5 py-2.5 shadow-[0_2px_20px_rgba(0,0,0,0.08)]">
+      <header className="relative z-50 mx-auto flex max-w-6xl items-center justify-between rounded-full border border-foreground/10 bg-background px-5 py-2.5 shadow-[0_4px_24px_rgba(0,0,0,0.12)]">
         <Link href="/" className="flex items-center gap-3">
           <Image
             src="/images/logo.png"
