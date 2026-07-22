@@ -75,7 +75,7 @@ export default function Hero() {
               href={action.href}
               className={
                 action.filled
-                  ? "block w-full rounded-full bg-accent px-6 py-3.5 text-center text-sm font-black uppercase tracking-wide text-black"
+                  ? "block w-full rounded-full bg-accent-lime px-6 py-3.5 text-center text-sm font-black uppercase tracking-wide text-black"
                   : "block w-full rounded-full border border-white/40 px-6 py-3.5 text-center text-sm font-black uppercase tracking-wide text-white transition-colors hover:border-white"
               }
             >

@@ -240,12 +240,12 @@ export default function EventlocationPage() {
             <input
               name="firma"
               placeholder="Firma"
-              className="w-full rounded-xl border border-foreground/15 bg-foreground/5 px-4 py-3 text-foreground placeholder-foreground/40 outline-none focus:border-accent"
+              className="w-full rounded-xl border border-foreground/15 bg-foreground/5 px-4 py-3 text-foreground placeholder-foreground/40 outline-none focus:border-accent-lime"
             />
             <select
               name="veranstaltungsort"
               defaultValue=""
-              className="w-full appearance-none rounded-xl border border-foreground/15 bg-foreground/5 px-4 py-3 text-foreground/70 outline-none focus:border-accent"
+              className="w-full appearance-none rounded-xl border border-foreground/15 bg-foreground/5 px-4 py-3 text-foreground/70 outline-none focus:border-accent-lime"
             >
               <option value="" disabled>
                 Veranstaltungsort
@@ -259,29 +259,29 @@ export default function EventlocationPage() {
             <input
               name="vorname"
               placeholder="Vorname"
-              className="rounded-xl border border-foreground/15 bg-foreground/5 px-4 py-3 text-foreground placeholder-foreground/40 outline-none focus:border-accent"
+              className="rounded-xl border border-foreground/15 bg-foreground/5 px-4 py-3 text-foreground placeholder-foreground/40 outline-none focus:border-accent-lime"
             />
             <input
               name="nachname"
               placeholder="Nachname"
-              className="rounded-xl border border-foreground/15 bg-foreground/5 px-4 py-3 text-foreground placeholder-foreground/40 outline-none focus:border-accent"
+              className="rounded-xl border border-foreground/15 bg-foreground/5 px-4 py-3 text-foreground placeholder-foreground/40 outline-none focus:border-accent-lime"
             />
             <input
               name="telefon"
               placeholder="Telefonnummer"
-              className="rounded-xl border border-foreground/15 bg-foreground/5 px-4 py-3 text-foreground placeholder-foreground/40 outline-none focus:border-accent"
+              className="rounded-xl border border-foreground/15 bg-foreground/5 px-4 py-3 text-foreground placeholder-foreground/40 outline-none focus:border-accent-lime"
             />
             <input
               name="email"
               type="email"
               placeholder="E-Mail"
-              className="rounded-xl border border-foreground/15 bg-foreground/5 px-4 py-3 text-foreground placeholder-foreground/40 outline-none focus:border-accent"
+              className="rounded-xl border border-foreground/15 bg-foreground/5 px-4 py-3 text-foreground placeholder-foreground/40 outline-none focus:border-accent-lime"
             />
             <textarea
               name="nachricht"
               placeholder="Nachricht"
               rows={4}
-              className="rounded-xl border border-foreground/15 bg-foreground/5 px-4 py-3 text-foreground placeholder-foreground/40 outline-none focus:border-accent sm:col-span-2"
+              className="rounded-xl border border-foreground/15 bg-foreground/5 px-4 py-3 text-foreground placeholder-foreground/40 outline-none focus:border-accent-lime sm:col-span-2"
             />
             <label className="flex items-start gap-2 text-xs text-foreground/50 sm:col-span-2">
               <input type="checkbox" className="mt-0.5" />
@@ -290,7 +290,7 @@ export default function EventlocationPage() {
             </label>
             <button
               type="submit"
-              className="rounded-full bg-accent px-8 py-3 text-sm font-black uppercase tracking-wide text-black transition-transform hover:scale-105 sm:col-span-2 sm:w-fit"
+              className="rounded-full bg-accent-lime px-8 py-3 text-sm font-black uppercase tracking-wide text-black transition-transform hover:scale-105 sm:col-span-2 sm:w-fit"
             >
               Senden
             </button>

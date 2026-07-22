@@ -72,7 +72,7 @@ export default async function EventDetailPage({
       <div className="mt-6 text-center">
         <a
           href="#tickets"
-          className="inline-flex items-center gap-2 rounded-full bg-accent px-8 py-3 text-sm font-black uppercase tracking-wide text-black transition-transform hover:scale-105"
+          className="inline-flex items-center gap-2 rounded-full bg-accent-lime px-8 py-3 text-sm font-black uppercase tracking-wide text-black transition-transform hover:scale-105"
         >
           Tickets sichern
         </a>

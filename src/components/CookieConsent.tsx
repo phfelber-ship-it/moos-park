@@ -96,7 +96,7 @@ export default function CookieConsent() {
         <div className="mt-4 flex flex-wrap items-center gap-3">
           <button
             onClick={acceptAll}
-            className="rounded-full bg-accent px-6 py-2.5 text-xs font-black uppercase tracking-wide text-black transition-transform hover:scale-105"
+            className="rounded-full bg-accent-lime px-6 py-2.5 text-xs font-black uppercase tracking-wide text-black transition-transform hover:scale-105"
           >
             Alle akzeptieren
           </button>

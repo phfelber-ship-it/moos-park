@@ -80,7 +80,7 @@ export default function ReservationWizard({
       <div className="mx-auto max-w-md">
         <div className="h-2.5 w-full overflow-hidden rounded-full bg-foreground/10">
           <div
-            className="h-full rounded-full bg-accent transition-all duration-500 ease-out"
+            className="h-full rounded-full bg-accent-lime transition-all duration-500 ease-out"
             style={{ width: `${PROGRESS[step]}%` }}
           />
         </div>
@@ -100,7 +100,7 @@ export default function ReservationWizard({
               onClick={() => setEventId(null)}
               className={`rounded-2xl border p-4 text-left transition-colors ${
                 eventId === null
-                  ? "border-accent bg-accent/10"
+                  ? "border-accent-lime bg-accent-lime/10"
                   : "border-foreground/10 hover:border-foreground/25"
               }`}
             >
@@ -118,7 +118,7 @@ export default function ReservationWizard({
                 onClick={() => setEventId(event.id)}
                 className={`flex items-center gap-4 rounded-2xl border p-4 text-left transition-colors ${
                   eventId === event.id
-                    ? "border-accent bg-accent/10"
+                    ? "border-accent-lime bg-accent-lime/10"
                     : "border-foreground/10 hover:border-foreground/25"
                 }`}
               >
@@ -186,7 +186,7 @@ export default function ReservationWizard({
                   onClick={() => setArrival(slot)}
                   className={`rounded-full border px-4 py-3 text-sm font-bold transition-colors ${
                     arrival === slot
-                      ? "border-accent bg-accent text-black"
+                      ? "border-accent-lime bg-accent-lime text-black"
                       : "border-foreground/15 text-foreground hover:border-foreground/40"
                   }`}
                 >
@@ -203,27 +203,27 @@ export default function ReservationWizard({
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="Name"
-              className="w-full rounded-xl border border-foreground/15 bg-foreground/5 px-4 py-3 text-foreground placeholder-foreground/40 outline-none focus:border-accent"
+              className="w-full rounded-xl border border-foreground/15 bg-foreground/5 px-4 py-3 text-foreground placeholder-foreground/40 outline-none focus:border-accent-lime"
             />
             <input
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
               placeholder="Telefonnummer"
-              className="w-full rounded-xl border border-foreground/15 bg-foreground/5 px-4 py-3 text-foreground placeholder-foreground/40 outline-none focus:border-accent"
+              className="w-full rounded-xl border border-foreground/15 bg-foreground/5 px-4 py-3 text-foreground placeholder-foreground/40 outline-none focus:border-accent-lime"
             />
             <input
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               type="email"
               placeholder="E-Mail (optional)"
-              className="w-full rounded-xl border border-foreground/15 bg-foreground/5 px-4 py-3 text-foreground placeholder-foreground/40 outline-none focus:border-accent"
+              className="w-full rounded-xl border border-foreground/15 bg-foreground/5 px-4 py-3 text-foreground placeholder-foreground/40 outline-none focus:border-accent-lime"
             />
             <textarea
               value={message}
               onChange={(e) => setMessage(e.target.value)}
               placeholder="Nachricht (optional)"
               rows={3}
-              className="w-full rounded-xl border border-foreground/15 bg-foreground/5 px-4 py-3 text-foreground placeholder-foreground/40 outline-none focus:border-accent"
+              className="w-full rounded-xl border border-foreground/15 bg-foreground/5 px-4 py-3 text-foreground placeholder-foreground/40 outline-none focus:border-accent-lime"
             />
           </div>
         )}
@@ -254,7 +254,7 @@ export default function ReservationWizard({
                   "Reservierungsanfrage"
                 )}&body=${mailBody}`}
                 onClick={() => setSent(true)}
-                className="mt-6 inline-block rounded-full bg-accent px-8 py-3 text-sm font-black uppercase tracking-wide text-black transition-transform hover:scale-105"
+                className="mt-6 inline-block rounded-full bg-accent-lime px-8 py-3 text-sm font-black uppercase tracking-wide text-black transition-transform hover:scale-105"
               >
                 Anfrage per E-Mail senden
               </a>

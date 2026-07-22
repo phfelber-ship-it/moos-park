@@ -103,7 +103,7 @@ export default function Header() {
       <Link
         href="/eventtickets"
         aria-label="Tickets kaufen"
-        className="fixed right-3 top-3 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-accent text-black shadow-[var(--header-shadow)] transition-transform hover:scale-105 sm:h-16 sm:w-16"
+        className="fixed right-3 top-3 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-accent-lime text-black shadow-[var(--header-shadow)] transition-transform hover:scale-105 sm:h-16 sm:w-16"
       >
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
           <path

@@ -41,7 +41,7 @@ export default function QuickTicketFlow({
       <div className="mx-auto max-w-md">
         <div className="h-2.5 w-full overflow-hidden rounded-full bg-foreground/10">
           <div
-            className="h-full rounded-full bg-accent transition-all duration-500 ease-out"
+            className="h-full rounded-full bg-accent-lime transition-all duration-500 ease-out"
             style={{ width: `${progress}%` }}
           />
         </div>

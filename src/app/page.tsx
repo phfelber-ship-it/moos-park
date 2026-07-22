@@ -4,6 +4,70 @@ import { getEvents, getGalleries } from "@/lib/clubscale";
 import EventsExplorer from "@/components/EventsExplorer";
 import Hero from "@/components/Hero";
 import Reveal from "@/components/Reveal";
+import AppPhoneReveal from "@/components/AppPhoneReveal";
+
+function TicketIcon() {
+  return (
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+      <path
+        d="M3 8a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v2a2 2 0 1 0 0 4v2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a2 2 0 1 0 0-4z"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M10 7v10"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeDasharray="2 2"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
+
+function CouponIcon() {
+  return (
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+      <path
+        d="M9 6h10a2 2 0 0 1 2 2v3a2 2 0 0 0 0 2v3a2 2 0 0 1-2 2H9"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M9 4 4 12l5 8"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <circle cx="15" cy="12" r="1.5" fill="currentColor" />
+    </svg>
+  );
+}
+
+function CalendarIcon() {
+  return (
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+      <rect
+        x="4"
+        y="5"
+        width="16"
+        height="15"
+        rx="2"
+        stroke="currentColor"
+        strokeWidth="2"
+      />
+      <path
+        d="M4 10h16M8 3v4M16 3v4"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
 
 function formatGalleryDate(iso: string) {
   return new Date(iso).toLocaleDateString("de-DE", {
@@ -61,7 +125,7 @@ export default async function Home() {
           <Reveal delay={0.2} className="mt-12 text-center">
             <Link
               href="/events"
-              className="inline-block rounded-full bg-accent px-8 py-3 text-sm font-black uppercase tracking-wide text-black transition-transform hover:scale-105"
+              className="inline-block rounded-full bg-accent-lime px-8 py-3 text-sm font-black uppercase tracking-wide text-black transition-transform hover:scale-105"
             >
               Alle Events ansehen
             </Link>
@@ -87,7 +151,7 @@ export default async function Home() {
                 <Reveal key={gallery.id} delay={i * 0.08}>
                   <Link
                     href={`/bilder/${gallery.id}`}
-                    className="group block overflow-hidden rounded-2xl border border-foreground/8 bg-foreground/[0.025] transition-colors hover:border-accent/40"
+                    className="group block overflow-hidden rounded-2xl border border-foreground/8 bg-foreground/[0.025] transition-colors hover:border-accent-lime/40"
                   >
                     <div className="relative aspect-[4/3] w-full bg-foreground/5">
                       {cover && (
@@ -117,7 +181,7 @@ export default async function Home() {
           <Reveal delay={0.2} className="mt-12 text-center">
             <Link
               href="/bilder"
-              className="inline-block rounded-full bg-accent px-8 py-3 text-sm font-black uppercase tracking-wide text-black transition-transform hover:scale-105"
+              className="inline-block rounded-full bg-accent-lime px-8 py-3 text-sm font-black uppercase tracking-wide text-black transition-transform hover:scale-105"
             >
               Alle Galerien ansehen
             </Link>
@@ -144,84 +208,80 @@ export default async function Home() {
       </section>
 
       <section className="px-6 py-24">
-        <Reveal
-          direction="scale"
-          className="mx-auto max-w-6xl overflow-hidden rounded-[2.5rem] bg-foreground text-background"
-        >
+        <div className="mx-auto max-w-6xl overflow-hidden rounded-[2.5rem] bg-foreground text-background">
           <div className="grid items-center gap-10 px-8 py-14 sm:px-14 sm:py-16 lg:grid-cols-2 lg:gap-16">
-            <div>
+            <AppPhoneReveal />
+
+            <Reveal direction="right" className="order-1 lg:order-2">
               <p className="text-xs font-black uppercase tracking-[0.3em] text-accent-lime">
                 moos.park App
               </p>
               <h2 className="mt-4 text-3xl font-black uppercase leading-[1.05] sm:text-4xl">
-                Alles an einem Ort. Direkt in deiner Tasche.
+                Deine Nacht. Deine App.
               </h2>
               <p className="mt-5 max-w-md text-background/70">
-                Tickets kaufen, Tisch reservieren, Coupons einlösen &amp; keine
-                Party mehr verpassen – die moos.park App bündelt alles, was du
-                brauchst.
+                Tickets kaufen, Tisch reservieren und Coupons einlösen – alles
+                an einem Ort. Nie wieder eine Party verpassen.
               </p>
 
-              <div className="mt-8 grid grid-cols-2 gap-3 max-w-md">
+              <div className="mt-8 grid grid-cols-3 gap-4 max-w-sm">
                 {[
-                  "Tickets & Reservierungen",
-                  "Coupons & Vorteile",
-                  "Kundenkarte",
-                  "News & Updates",
-                ].map((feature) => (
+                  { label: "Tickets", icon: TicketIcon },
+                  { label: "Coupons", icon: CouponIcon },
+                  { label: "Reservierung", icon: CalendarIcon },
+                ].map(({ label, icon: Icon }) => (
                   <div
-                    key={feature}
-                    className="rounded-2xl bg-background/10 px-4 py-3 text-sm font-bold"
+                    key={label}
+                    className="flex flex-col items-center gap-2 text-center"
                   >
-                    {feature}
+                    <Icon />
+                    <span className="text-xs font-bold uppercase tracking-wide">
+                      {label}
+                    </span>
                   </div>
                 ))}
               </div>
 
-              <div className="mt-8 flex flex-wrap gap-4">
+              <a
+                href="https://www.apple.com/app-store/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-8 inline-block rounded-full bg-accent-lime px-8 py-3 text-sm font-black uppercase tracking-wide text-black transition-transform hover:scale-105"
+              >
+                App laden
+              </a>
+
+              <div className="mt-4 flex flex-wrap gap-3">
                 <a
                   href="https://www.apple.com/app-store/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="opacity-90 transition-opacity hover:opacity-100"
+                  className="opacity-70 transition-opacity hover:opacity-100"
                 >
                   <Image
                     src="/images/appstore.png"
                     alt="App Store"
-                    width={150}
-                    height={41}
+                    width={120}
+                    height={33}
                   />
                 </a>
                 <a
                   href="https://play.google.com/store"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="opacity-90 transition-opacity hover:opacity-100"
+                  className="opacity-70 transition-opacity hover:opacity-100"
                 >
                   <Image
                     src="/images/googleplay.png"
                     alt="Google Play"
-                    width={150}
-                    height={42}
+                    width={120}
+                    height={34}
                   />
                 </a>
               </div>
-            </div>
-
-            <div className="relative mx-auto w-full max-w-[220px] sm:max-w-[260px]">
-              <div className="absolute inset-0 scale-125 rounded-full bg-accent-lime/20 blur-3xl" />
-              <div className="relative aspect-[1454/2560] w-full rotate-3 overflow-hidden rounded-[2rem] border-4 border-background/10 shadow-2xl">
-                <Image
-                  src="/images/hero-home.jpg"
-                  alt="moos.park App"
-                  fill
-                  className="object-cover"
-                  sizes="260px"
-                />
-              </div>
-            </div>
+            </Reveal>
           </div>
-        </Reveal>
+        </div>
       </section>
 
       <section className="px-6 py-24">

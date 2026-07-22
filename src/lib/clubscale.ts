@@ -69,12 +69,12 @@ export type Gallery = {
 };
 
 export const TAG_STYLES: Record<string, string> = {
-  Party: "bg-accent-lime text-black",
-  Konzerte: "bg-accent text-black",
+  party: "bg-accent-lime text-black",
+  konzerte: "bg-accent text-black",
 };
 
 export function tagClasses(tag: string): string {
-  return TAG_STYLES[tag] ?? "bg-foreground/10 text-foreground/70";
+  return TAG_STYLES[tag.toLowerCase()] ?? "bg-foreground/10 text-foreground/70";
 }
 
 const TAG_ORDER = [

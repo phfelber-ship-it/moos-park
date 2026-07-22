@@ -97,7 +97,7 @@ export default function GeburtstagPage() {
         </p>
         <a
           href="/kontakt"
-          className="mt-8 inline-block rounded-full bg-accent px-8 py-3 text-sm font-black uppercase tracking-wide text-black transition-transform hover:scale-105"
+          className="mt-8 inline-block rounded-full bg-accent-lime px-8 py-3 text-sm font-black uppercase tracking-wide text-black transition-transform hover:scale-105"
         >
           Jetzt anfragen
         </a>
