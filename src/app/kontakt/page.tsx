@@ -9,7 +9,7 @@ export default function KontaktPage() {
 
       <div className="mt-12 grid gap-12 lg:grid-cols-2">
         <div>
-          <div className="overflow-hidden rounded-2xl border border-foreground/8">
+          <div className="overflow-hidden rounded-xl border border-foreground/8">
             <iframe
               title="moos.park Standort"
               src="https://www.google.com/maps?q=Rudolf-Diesel-Stra%C3%9Fe+23,+86554+P%C3%B6ttmes&output=embed"

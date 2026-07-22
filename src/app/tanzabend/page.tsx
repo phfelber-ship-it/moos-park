@@ -26,14 +26,14 @@ export default function TanzabendPage() {
         </p>
         <a
           href="/kontakt"
-          className="mt-6 inline-block rounded-full bg-accent-lime px-8 py-3 text-sm font-black uppercase tracking-wide text-black transition-transform hover:scale-105"
+          className="mt-6 inline-block rounded-lg bg-accent-lime px-8 py-3 text-sm font-black uppercase tracking-wide text-black transition-transform hover:scale-105"
         >
           Hier Tisch reservieren
         </a>
       </section>
 
       <section className="mx-auto max-w-4xl px-6 py-12">
-        <div className="relative aspect-[1024/379] w-full overflow-hidden rounded-2xl bg-foreground/5">
+        <div className="relative aspect-[1024/379] w-full overflow-hidden rounded-xl bg-foreground/5">
           <Image
             src="/images/tanzabend-banner.png"
             alt="Tanzen im moospark"
@@ -49,7 +49,7 @@ export default function TanzabendPage() {
           {TERMINE.map((termin) => (
             <div
               key={termin.date + termin.dj}
-              className="rounded-2xl border border-foreground/8 bg-foreground/[0.025] p-6"
+              className="rounded-xl border border-foreground/8 bg-foreground/[0.025] p-6"
             >
               <p className="text-sm font-bold text-accent">{termin.date}</p>
               <h3 className="mt-2 text-lg font-black uppercase text-foreground">

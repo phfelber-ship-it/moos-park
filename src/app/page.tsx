@@ -125,7 +125,7 @@ export default async function Home() {
           <Reveal delay={0.2} className="mt-12 text-center">
             <Link
               href="/events"
-              className="inline-block rounded-full bg-accent-lime px-8 py-3 text-sm font-black uppercase tracking-wide text-black transition-transform hover:scale-105"
+              className="inline-block rounded-lg bg-accent-lime px-8 py-3 text-sm font-black uppercase tracking-wide text-black transition-transform hover:scale-105"
             >
               Alle Events ansehen
             </Link>
@@ -151,7 +151,7 @@ export default async function Home() {
                 <Reveal key={gallery.id} delay={i * 0.08}>
                   <Link
                     href={`/bilder/${gallery.id}`}
-                    className="group block overflow-hidden rounded-2xl border border-foreground/8 bg-foreground/[0.025] transition-colors hover:border-accent-lime/40"
+                    className="group block overflow-hidden rounded-xl border border-foreground/8 bg-foreground/[0.025] transition-colors hover:border-accent-lime/40"
                   >
                     <div className="relative aspect-[4/3] w-full bg-foreground/5">
                       {cover && (
@@ -181,7 +181,7 @@ export default async function Home() {
           <Reveal delay={0.2} className="mt-12 text-center">
             <Link
               href="/bilder"
-              className="inline-block rounded-full bg-accent-lime px-8 py-3 text-sm font-black uppercase tracking-wide text-black transition-transform hover:scale-105"
+              className="inline-block rounded-lg bg-accent-lime px-8 py-3 text-sm font-black uppercase tracking-wide text-black transition-transform hover:scale-105"
             >
               Alle Galerien ansehen
             </Link>
@@ -200,7 +200,7 @@ export default async function Home() {
           </p>
           <Link
             href="/tanzabend"
-            className="mt-8 inline-block rounded-full bg-accent-lime px-8 py-3 text-sm font-black uppercase tracking-wide text-black transition-transform hover:scale-105"
+            className="mt-8 inline-block rounded-lg bg-accent-lime px-8 py-3 text-sm font-black uppercase tracking-wide text-black transition-transform hover:scale-105"
           >
             Alle Tanztermine ansehen
           </Link>
@@ -208,7 +208,7 @@ export default async function Home() {
       </section>
 
       <section className="px-6 py-24">
-        <div className="mx-auto max-w-6xl overflow-hidden rounded-[2.5rem] bg-foreground text-background">
+        <div className="mx-auto max-w-6xl overflow-hidden rounded-2xl bg-foreground text-background">
           <div className="grid items-center gap-10 px-8 py-14 sm:px-14 sm:py-16 lg:grid-cols-2 lg:gap-16">
             <AppPhoneReveal />
 
@@ -246,7 +246,7 @@ export default async function Home() {
                 href="https://www.apple.com/app-store/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="mt-8 inline-block rounded-full bg-accent-lime px-8 py-3 text-sm font-black uppercase tracking-wide text-black transition-transform hover:scale-105"
+                className="mt-8 inline-block rounded-lg bg-accent-lime px-8 py-3 text-sm font-black uppercase tracking-wide text-black transition-transform hover:scale-105"
               >
                 App laden
               </a>
@@ -305,7 +305,7 @@ export default async function Home() {
         <Reveal
           direction="scale"
           delay={0.15}
-          className="relative mx-auto mt-10 aspect-[4/5] w-full max-w-md overflow-hidden rounded-3xl"
+          className="relative mx-auto mt-10 aspect-[4/5] w-full max-w-md overflow-hidden rounded-2xl"
         >
           <Image
             src="/images/gallery-1.jpg"
@@ -320,7 +320,7 @@ export default async function Home() {
       <section className="px-6 pb-24">
         <Reveal
           direction="left"
-          className="relative mx-auto aspect-[4/5] w-full max-w-md overflow-hidden rounded-3xl"
+          className="relative mx-auto aspect-[4/5] w-full max-w-md overflow-hidden rounded-2xl"
         >
           <Image
             src="/images/gallery-2.jpg"

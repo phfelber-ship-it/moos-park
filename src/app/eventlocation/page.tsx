@@ -106,14 +106,14 @@ export default function EventlocationPage() {
             </div>
           </div>
 
-          <div className="mt-8 inline-flex rounded-full bg-black/30 p-1 backdrop-blur">
+          <div className="mt-8 inline-flex rounded-lg bg-black/30 p-1 backdrop-blur">
             <Link
               href="/"
-              className="rounded-full px-5 py-2 text-xs font-black uppercase tracking-wide text-white"
+              className="rounded-lg px-5 py-2 text-xs font-black uppercase tracking-wide text-white"
             >
               Club
             </Link>
-            <span className="rounded-full bg-white px-5 py-2 text-xs font-black uppercase tracking-wide text-black">
+            <span className="rounded-lg bg-white px-5 py-2 text-xs font-black uppercase tracking-wide text-black">
               Eventlocation
             </span>
           </div>
@@ -155,7 +155,7 @@ export default function EventlocationPage() {
 
           <a
             href="#raeume"
-            className="mt-8 inline-block rounded-full bg-accent-lime px-8 py-3 text-sm font-black uppercase tracking-wide text-black transition-transform hover:scale-105"
+            className="mt-8 inline-block rounded-lg bg-accent-lime px-8 py-3 text-sm font-black uppercase tracking-wide text-black transition-transform hover:scale-105"
           >
             Unvergesslich werden
           </a>
@@ -183,9 +183,9 @@ export default function EventlocationPage() {
           {ROOMS.map((room) => (
             <div
               key={room.name}
-              className="flex flex-col items-center rounded-3xl bg-foreground/[0.03] p-4 text-center"
+              className="flex flex-col items-center rounded-2xl bg-foreground/[0.03] p-4 text-center"
             >
-              <div className="relative aspect-[4/3] w-full overflow-hidden rounded-2xl bg-foreground/5">
+              <div className="relative aspect-[4/3] w-full overflow-hidden rounded-xl bg-foreground/5">
                 <Image
                   src={room.image}
                   alt={room.name}
@@ -214,7 +214,7 @@ export default function EventlocationPage() {
 
               <a
                 href="#anfragen"
-                className="mt-5 inline-block rounded-full bg-accent-lime px-8 py-2.5 text-xs font-black uppercase tracking-wide text-black transition-transform hover:scale-105"
+                className="mt-5 inline-block rounded-lg bg-accent-lime px-8 py-2.5 text-xs font-black uppercase tracking-wide text-black transition-transform hover:scale-105"
               >
                 Anfragen
               </a>
@@ -224,7 +224,7 @@ export default function EventlocationPage() {
       </section>
 
       <section id="anfragen" className="px-6 pb-28">
-        <div className="mx-auto max-w-3xl overflow-hidden rounded-3xl border border-foreground/8 bg-foreground/[0.025] p-8 sm:p-12">
+        <div className="mx-auto max-w-3xl overflow-hidden rounded-2xl border border-foreground/8 bg-foreground/[0.025] p-8 sm:p-12">
           <p className="text-sm font-bold uppercase tracking-wide text-accent-lime">
             Ihr Event, unsere Beratung.
           </p>
@@ -290,7 +290,7 @@ export default function EventlocationPage() {
             </label>
             <button
               type="submit"
-              className="rounded-full bg-accent-lime px-8 py-3 text-sm font-black uppercase tracking-wide text-black transition-transform hover:scale-105 sm:col-span-2 sm:w-fit"
+              className="rounded-lg bg-accent-lime px-8 py-3 text-sm font-black uppercase tracking-wide text-black transition-transform hover:scale-105 sm:col-span-2 sm:w-fit"
             >
               Senden
             </button>

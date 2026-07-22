@@ -33,7 +33,7 @@ export default function EventsExplorer({
       <div className="flex flex-nowrap items-center justify-start gap-2 overflow-x-auto pb-1 sm:justify-center">
         <button
           onClick={() => setActive("Alle")}
-          className={`shrink-0 rounded-full px-4 py-2 text-xs font-black uppercase tracking-wide transition-colors ${
+          className={`shrink-0 rounded-md px-4 py-2 text-xs font-black uppercase tracking-wide transition-colors ${
             active === "Alle"
               ? "bg-background text-foreground shadow-[0_2px_10px_rgba(0,0,0,0.1)]"
               : "bg-foreground/5 text-foreground/70"
@@ -45,7 +45,7 @@ export default function EventsExplorer({
           <button
             key={tag}
             onClick={() => setActive(tag)}
-            className={`shrink-0 rounded-full px-4 py-2 text-xs font-black uppercase tracking-wide transition-colors ${
+            className={`shrink-0 rounded-md px-4 py-2 text-xs font-black uppercase tracking-wide transition-colors ${
               active === tag
                 ? tagClasses(tag)
                 : "bg-foreground/5 text-foreground/70"

@@ -97,7 +97,7 @@ export default function GeburtstagPage() {
         </p>
         <a
           href="/kontakt"
-          className="mt-8 inline-block rounded-full bg-accent-lime px-8 py-3 text-sm font-black uppercase tracking-wide text-black transition-transform hover:scale-105"
+          className="mt-8 inline-block rounded-lg bg-accent-lime px-8 py-3 text-sm font-black uppercase tracking-wide text-black transition-transform hover:scale-105"
         >
           Jetzt anfragen
         </a>
@@ -116,7 +116,7 @@ export default function GeburtstagPage() {
             {BENEFITS.map((b) => (
               <div
                 key={b.title}
-                className="rounded-2xl border border-foreground/8 bg-foreground/[0.025] p-8"
+                className="rounded-xl border border-foreground/8 bg-foreground/[0.025] p-8"
               >
                 <h3 className="text-lg font-black uppercase text-foreground">
                   {b.title}
@@ -164,7 +164,7 @@ export default function GeburtstagPage() {
             {REVIEWS.map((r) => (
               <div
                 key={r.author}
-                className="rounded-2xl border border-foreground/8 bg-foreground/[0.025] p-8"
+                className="rounded-xl border border-foreground/8 bg-foreground/[0.025] p-8"
               >
                 <p className="text-accent">⭐⭐⭐⭐⭐</p>
                 <p className="mt-3 text-sm italic text-foreground/70">
@@ -187,7 +187,7 @@ export default function GeburtstagPage() {
           <p className="mt-2 text-center text-foreground/60">
             Alles, was du wissen möchtest.
           </p>
-          <div className="mt-10 divide-y divide-foreground/8 rounded-2xl border border-foreground/8 bg-foreground/[0.025]">
+          <div className="mt-10 divide-y divide-foreground/8 rounded-xl border border-foreground/8 bg-foreground/[0.025]">
             {FAQ.map((f) => (
               <div key={f.q} className="px-6 py-5">
                 <p className="font-bold text-foreground">{f.q}</p>

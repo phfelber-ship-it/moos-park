@@ -98,7 +98,7 @@ export default function ReservationWizard({
           <div className="flex flex-col gap-3">
             <button
               onClick={() => setEventId(null)}
-              className={`rounded-2xl border p-4 text-left transition-colors ${
+              className={`rounded-xl border p-4 text-left transition-colors ${
                 eventId === null
                   ? "border-accent-lime bg-accent-lime/10"
                   : "border-foreground/10 hover:border-foreground/25"
@@ -116,7 +116,7 @@ export default function ReservationWizard({
               <button
                 key={event.id}
                 onClick={() => setEventId(event.id)}
-                className={`flex items-center gap-4 rounded-2xl border p-4 text-left transition-colors ${
+                className={`flex items-center gap-4 rounded-xl border p-4 text-left transition-colors ${
                   eventId === event.id
                     ? "border-accent-lime bg-accent-lime/10"
                     : "border-foreground/10 hover:border-foreground/25"
@@ -147,7 +147,7 @@ export default function ReservationWizard({
         )}
 
         {step === 1 && (
-          <div className="flex flex-col items-center gap-6 rounded-3xl border border-foreground/10 p-8 text-center">
+          <div className="flex flex-col items-center gap-6 rounded-2xl border border-foreground/10 p-8 text-center">
             <p className="font-black uppercase text-foreground">
               Wie viele Personen?
             </p>
@@ -184,7 +184,7 @@ export default function ReservationWizard({
                 <button
                   key={slot}
                   onClick={() => setArrival(slot)}
-                  className={`rounded-full border px-4 py-3 text-sm font-bold transition-colors ${
+                  className={`rounded-lg border px-4 py-3 text-sm font-bold transition-colors ${
                     arrival === slot
                       ? "border-accent-lime bg-accent-lime text-black"
                       : "border-foreground/15 text-foreground hover:border-foreground/40"
@@ -229,7 +229,7 @@ export default function ReservationWizard({
         )}
 
         {step === 4 && (
-          <div className="rounded-3xl border border-foreground/10 p-6">
+          <div className="rounded-2xl border border-foreground/10 p-6">
             <p className="text-xs font-bold uppercase tracking-wide text-foreground/50">
               Zusammenfassung
             </p>
@@ -254,7 +254,7 @@ export default function ReservationWizard({
                   "Reservierungsanfrage"
                 )}&body=${mailBody}`}
                 onClick={() => setSent(true)}
-                className="mt-6 inline-block rounded-full bg-accent-lime px-8 py-3 text-sm font-black uppercase tracking-wide text-black transition-transform hover:scale-105"
+                className="mt-6 inline-block rounded-lg bg-accent-lime px-8 py-3 text-sm font-black uppercase tracking-wide text-black transition-transform hover:scale-105"
               >
                 Anfrage per E-Mail senden
               </a>
@@ -271,7 +271,7 @@ export default function ReservationWizard({
           {step > 0 ? (
             <button
               onClick={back}
-              className="rounded-full border border-foreground/20 px-6 py-2.5 text-xs font-black uppercase tracking-wide text-foreground"
+              className="rounded-lg border border-foreground/20 px-6 py-2.5 text-xs font-black uppercase tracking-wide text-foreground"
             >
               Zurück
             </button>
@@ -283,7 +283,7 @@ export default function ReservationWizard({
             <button
               onClick={next}
               disabled={!canNext[step]}
-              className="rounded-full bg-foreground px-6 py-2.5 text-xs font-black uppercase tracking-wide text-background transition-transform hover:scale-105 disabled:opacity-40 disabled:hover:scale-100"
+              className="rounded-lg bg-foreground px-6 py-2.5 text-xs font-black uppercase tracking-wide text-background transition-transform hover:scale-105 disabled:opacity-40 disabled:hover:scale-100"
             >
               Weiter
             </button>

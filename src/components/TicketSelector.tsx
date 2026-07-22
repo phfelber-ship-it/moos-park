@@ -102,7 +102,7 @@ export default function TicketSelector({
         href={total > 0 ? checkoutUrl(eventId, items) : undefined}
         target="_blank"
         rel="noopener noreferrer"
-        className={`mt-4 block rounded-full bg-accent-lime px-8 py-3 text-center text-sm font-black uppercase tracking-wide text-black transition-transform hover:scale-105 ${
+        className={`mt-4 block rounded-lg bg-accent-lime px-8 py-3 text-center text-sm font-black uppercase tracking-wide text-black transition-transform hover:scale-105 ${
           total === 0 ? "pointer-events-none opacity-40" : ""
         }`}
       >

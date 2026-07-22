@@ -45,7 +45,7 @@ export default async function GalleryPage({
           return (
             <div
               key={item.id}
-              className={`relative overflow-hidden rounded-2xl bg-foreground/5 ${
+              className={`relative overflow-hidden rounded-xl bg-foreground/5 ${
                 i === 0 ? "col-span-2 aspect-video" : "aspect-square"
               }`}
             >

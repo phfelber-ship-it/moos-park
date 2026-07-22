@@ -60,7 +60,7 @@ export default function QuickTicketFlow({
           return (
             <div
               key={event.id}
-              className="overflow-hidden rounded-3xl border border-foreground/8 bg-foreground/[0.02]"
+              className="overflow-hidden rounded-2xl border border-foreground/8 bg-foreground/[0.02]"
             >
               <button
                 onClick={() => setOpenId(isOpen ? null : event.id)}
@@ -83,7 +83,7 @@ export default function QuickTicketFlow({
                     {sortTags(event.tags).slice(0, 2).map((tag) => (
                       <span
                         key={tag}
-                        className={`rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide ${tagClasses(
+                        className={`rounded-md px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide ${tagClasses(
                           tag
                         )}`}
                       >

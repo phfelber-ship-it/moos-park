@@ -12,7 +12,7 @@ export default function JobAccordion({ jobs }: { jobs: Job[] }) {
       {jobs.map((job, i) => (
         <div
           key={job.title}
-          className="overflow-hidden rounded-3xl bg-accent-lime/40"
+          className="overflow-hidden rounded-2xl bg-accent-lime/40"
         >
           <button
             onClick={() => setOpen(open === i ? null : i)}

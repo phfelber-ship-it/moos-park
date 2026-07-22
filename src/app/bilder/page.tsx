@@ -26,7 +26,7 @@ export default async function BilderPage() {
             <Link
               key={gallery.id}
               href={`/bilder/${gallery.id}`}
-              className="group overflow-hidden rounded-2xl border border-foreground/8 bg-foreground/[0.025] transition-colors hover:border-accent-lime/40"
+              className="group overflow-hidden rounded-xl border border-foreground/8 bg-foreground/[0.025] transition-colors hover:border-accent-lime/40"
             >
               <div className="relative aspect-[4/3] w-full bg-foreground/5">
                 {cover && (

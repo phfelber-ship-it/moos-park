@@ -10,7 +10,7 @@ export default function Accordion({
   const [open, setOpen] = useState<number | null>(null);
 
   return (
-    <div className="divide-y divide-foreground/8 rounded-2xl border border-foreground/8 bg-foreground/[0.025]">
+    <div className="divide-y divide-foreground/8 rounded-xl border border-foreground/8 bg-foreground/[0.025]">
       {items.map((item, i) => (
         <div key={item.q}>
           <button

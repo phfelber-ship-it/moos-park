@@ -37,7 +37,7 @@ export default function ContactForm() {
       </label>
       <button
         type="submit"
-        className="w-fit rounded-full bg-accent-lime px-8 py-3 text-sm font-black uppercase tracking-wide text-black transition-transform hover:scale-105"
+        className="w-fit rounded-lg bg-accent-lime px-8 py-3 text-sm font-black uppercase tracking-wide text-black transition-transform hover:scale-105"
       >
         Senden
       </button>

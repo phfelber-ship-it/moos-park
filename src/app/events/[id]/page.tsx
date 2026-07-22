@@ -40,7 +40,7 @@ export default async function EventDetailPage({
   return (
     <div className="mx-auto max-w-2xl px-6 py-16">
       {event.thumbnail?.presignedURL && (
-        <div className="relative aspect-video w-full overflow-hidden rounded-3xl bg-foreground/5">
+        <div className="relative aspect-video w-full overflow-hidden rounded-2xl bg-foreground/5">
           <Image
             src={event.thumbnail.presignedURL}
             alt={event.name}
@@ -56,7 +56,7 @@ export default async function EventDetailPage({
         {sortTags(event.tags).map((tag) => (
           <span
             key={tag}
-            className={`shrink-0 rounded-full px-2.5 py-1 text-[11px] font-bold uppercase tracking-wide ${tagClasses(
+            className={`shrink-0 rounded-md px-2.5 py-1 text-[11px] font-bold uppercase tracking-wide ${tagClasses(
               tag
             )}`}
           >
@@ -72,14 +72,14 @@ export default async function EventDetailPage({
       <div className="mt-6 text-center">
         <a
           href="#tickets"
-          className="inline-flex items-center gap-2 rounded-full bg-accent-lime px-8 py-3 text-sm font-black uppercase tracking-wide text-black transition-transform hover:scale-105"
+          className="inline-flex items-center gap-2 rounded-lg bg-accent-lime px-8 py-3 text-sm font-black uppercase tracking-wide text-black transition-transform hover:scale-105"
         >
           Tickets sichern
         </a>
       </div>
 
       <div
-        className={`mt-8 grid divide-x divide-foreground/10 rounded-2xl border border-foreground/8 bg-foreground/[0.025] text-center ${
+        className={`mt-8 grid divide-x divide-foreground/10 rounded-xl border border-foreground/8 bg-foreground/[0.025] text-center ${
           event.hasBoxOffice ? "grid-cols-3" : "grid-cols-2"
         }`}
       >
@@ -168,7 +168,7 @@ export default async function EventDetailPage({
           <div className="mt-10 text-center">
             <Link
               href="/events"
-              className="inline-block rounded-full bg-accent-lime px-8 py-3 text-sm font-black uppercase tracking-wide text-black transition-transform hover:scale-105"
+              className="inline-block rounded-lg bg-accent-lime px-8 py-3 text-sm font-black uppercase tracking-wide text-black transition-transform hover:scale-105"
             >
               Alle Events ansehen
             </Link>

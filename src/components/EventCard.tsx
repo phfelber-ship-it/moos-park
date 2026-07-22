@@ -28,11 +28,11 @@ export default function EventCard({ event }: { event: ClubscaleEvent }) {
     <motion.div
       whileHover={{ scale: 1.03, boxShadow: "0 12px 32px rgba(0,0,0,0.1)" }}
       transition={SPRING}
-      className="flex flex-col items-center rounded-3xl border border-foreground/10 p-4 text-center transition-colors hover:border-foreground/25"
+      className="flex flex-col items-center rounded-2xl border border-foreground/10 p-4 text-center transition-colors hover:border-foreground/25"
     >
       <Link
         href={`/events/${event.id}`}
-        className="group relative aspect-[16/10] w-full overflow-hidden rounded-2xl bg-foreground/5"
+        className="group relative aspect-[16/10] w-full overflow-hidden rounded-xl bg-foreground/5"
       >
         {event.thumbnail?.presignedURL && (
           <Image
@@ -43,7 +43,7 @@ export default function EventCard({ event }: { event: ClubscaleEvent }) {
             sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
           />
         )}
-        <span className="absolute left-3 top-3 rounded-full bg-white px-3 py-1 text-xs font-bold text-black shadow">
+        <span className="absolute left-3 top-3 rounded-md bg-white px-3 py-1 text-xs font-bold text-black shadow">
           {event.ageRestriction}+
         </span>
       </Link>
@@ -52,7 +52,7 @@ export default function EventCard({ event }: { event: ClubscaleEvent }) {
         {sortTags(event.tags).slice(0, 3).map((tag) => (
           <span
             key={tag}
-            className={`shrink-0 rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide ${tagClasses(
+            className={`shrink-0 rounded-md px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide ${tagClasses(
               tag
             )}`}
           >
@@ -74,13 +74,13 @@ export default function EventCard({ event }: { event: ClubscaleEvent }) {
       <div className="mt-4 flex w-full max-w-[220px] flex-col gap-2">
         <MotionLink
           href={`/events/${event.id}#tickets`}
-          className="block rounded-full bg-foreground px-6 py-2.5 text-center text-xs font-black uppercase tracking-wide text-background"
+          className="block rounded-lg bg-foreground px-6 py-2.5 text-center text-xs font-black uppercase tracking-wide text-background"
         >
           Ticket kaufen
         </MotionLink>
         <MotionLink
           href={`/reservierung?event=${event.id}`}
-          className="block rounded-full border border-foreground/25 px-6 py-2.5 text-center text-xs font-black uppercase tracking-wide text-foreground transition-colors hover:border-foreground/60"
+          className="block rounded-lg border border-foreground/25 px-6 py-2.5 text-center text-xs font-black uppercase tracking-wide text-foreground transition-colors hover:border-foreground/60"
         >
           Jetzt reservieren
         </MotionLink>

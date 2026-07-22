@@ -69,7 +69,7 @@ export default function CookieConsent() {
         </p>
 
         {details && (
-          <div className="mt-4 flex flex-col gap-3 rounded-2xl border border-foreground/10 p-4 text-sm">
+          <div className="mt-4 flex flex-col gap-3 rounded-xl border border-foreground/10 p-4 text-sm">
             <label className="flex items-center justify-between gap-4 opacity-60">
               <span>Notwendig (immer aktiv)</span>
               <input type="checkbox" checked disabled />
@@ -96,20 +96,20 @@ export default function CookieConsent() {
         <div className="mt-4 flex flex-wrap items-center gap-3">
           <button
             onClick={acceptAll}
-            className="rounded-full bg-accent-lime px-6 py-2.5 text-xs font-black uppercase tracking-wide text-black transition-transform hover:scale-105"
+            className="rounded-lg bg-accent-lime px-6 py-2.5 text-xs font-black uppercase tracking-wide text-black transition-transform hover:scale-105"
           >
             Alle akzeptieren
           </button>
           <button
             onClick={rejectAll}
-            className="rounded-full border border-foreground/20 px-6 py-2.5 text-xs font-black uppercase tracking-wide text-foreground"
+            className="rounded-lg border border-foreground/20 px-6 py-2.5 text-xs font-black uppercase tracking-wide text-foreground"
           >
             Nur notwendige
           </button>
           {details ? (
             <button
               onClick={saveSelection}
-              className="rounded-full border border-foreground/20 px-6 py-2.5 text-xs font-black uppercase tracking-wide text-foreground"
+              className="rounded-lg border border-foreground/20 px-6 py-2.5 text-xs font-black uppercase tracking-wide text-foreground"
             >
               Auswahl speichern
             </button>

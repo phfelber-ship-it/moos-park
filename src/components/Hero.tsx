@@ -52,36 +52,56 @@ export default function Hero() {
           />
         </motion.div>
 
+        <motion.span
+          variants={item}
+          className="mt-6 rounded-lg bg-accent-lime px-4 py-1.5 text-xs font-black uppercase tracking-wide text-black"
+        >
+          #1 Eventlocation
+        </motion.span>
+
         <motion.h1
           variants={item}
-          className="mt-6 text-5xl font-black uppercase leading-[0.95] tracking-tight text-white sm:text-7xl"
+          className="mt-5 text-5xl font-black uppercase leading-[0.95] tracking-tight text-white sm:text-7xl"
         >
           Moos.park
         </motion.h1>
         <motion.p
           variants={item}
-          className="mt-2 text-lg font-bold uppercase tracking-[0.3em] text-white/70"
+          className="mt-2 text-lg font-normal uppercase tracking-[0.3em] text-white/70"
         >
           Pöttmes
         </motion.p>
 
         <motion.div
           variants={item}
-          className="mt-10 flex w-full max-w-xs flex-col gap-3"
+          className="mt-10 flex w-full max-w-md flex-col gap-3 sm:max-w-none sm:flex-row sm:justify-center"
         >
           {MAIN_ACTIONS.map((action) => (
             <MotionLink
               key={action.href}
               href={action.href}
+              fullWidth={false}
               className={
                 action.filled
-                  ? "block w-full rounded-full bg-accent-lime px-6 py-3.5 text-center text-sm font-black uppercase tracking-wide text-black"
-                  : "block w-full rounded-full border border-white/40 px-6 py-3.5 text-center text-sm font-black uppercase tracking-wide text-white transition-colors hover:border-white"
+                  ? "block w-full rounded-lg bg-accent-lime px-6 py-3.5 text-center text-sm font-black uppercase tracking-wide text-black sm:w-auto"
+                  : "block w-full rounded-lg border border-white/40 px-6 py-3.5 text-center text-sm font-black uppercase tracking-wide text-white transition-colors hover:border-white sm:w-auto"
               }
             >
               {action.label}
             </MotionLink>
           ))}
+        </motion.div>
+
+        <motion.div
+          variants={item}
+          className="mt-14 flex flex-col items-center gap-3 text-white/70"
+        >
+          <span className="text-[11px] font-bold uppercase tracking-[0.3em]">
+            Scroll
+          </span>
+          <span className="flex h-9 w-5 items-start justify-center rounded-full border-2 border-white/40 p-1.5">
+            <span className="h-1.5 w-1.5 animate-scroll-dot rounded-full bg-accent-lime" />
+          </span>
         </motion.div>
       </motion.div>
     </section>

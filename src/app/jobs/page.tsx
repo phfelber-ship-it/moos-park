@@ -94,7 +94,7 @@ export default function JobsPage() {
         <JobAccordion jobs={MARKETING_JOBS} />
       </div>
 
-      <div className="mt-16 rounded-3xl bg-foreground p-10 text-center text-background">
+      <div className="mt-16 rounded-2xl bg-foreground p-10 text-center text-background">
         <h2 className="text-2xl font-black uppercase">
           Warte nicht. Starte jetzt!
         </h2>
@@ -103,7 +103,7 @@ export default function JobsPage() {
         </p>
         <a
           href="mailto:kontakt@moos-park.de"
-          className="mt-6 inline-block rounded-full bg-accent-lime px-8 py-3 text-sm font-black uppercase tracking-wide text-black transition-transform hover:scale-105"
+          className="mt-6 inline-block rounded-lg bg-accent-lime px-8 py-3 text-sm font-black uppercase tracking-wide text-black transition-transform hover:scale-105"
         >
           Jetzt bewerben
         </a>

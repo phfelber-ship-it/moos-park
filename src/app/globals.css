@@ -69,3 +69,29 @@ body {
 .animate-menu-item-in {
   animation: menu-item-in 0.35s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
+
+@keyframes scroll-dot {
+  0% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  60% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(14px);
+    opacity: 0;
+  }
+}
+
+.animate-scroll-dot {
+  animation: scroll-dot 1.4s ease-in-out infinite;
+}
+
+button,
+a {
+  transition:
+    transform 0.2s ease-in-out,
+    box-shadow 0.2s ease-in-out,
+    background-color 0.2s ease-in-out;
+}
