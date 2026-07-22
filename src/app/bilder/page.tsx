@@ -8,7 +8,9 @@ export default async function BilderPage() {
 
   return (
     <div className="mx-auto max-w-7xl px-6 pb-20 pt-32">
-      <h1 className="text-4xl font-black uppercase text-foreground">Bilder</h1>
+      <h1 className="text-center text-4xl font-black uppercase text-foreground">
+        Bilder
+      </h1>
 
       <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {galleries.map((gallery) => (

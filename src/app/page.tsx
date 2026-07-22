@@ -297,43 +297,53 @@ export default async function Home() {
         <FanGallery photos={fanPhotos} />
       </section>
 
-      <section className="px-6 pb-24">
-        <Reveal
-          direction="left"
-          className="relative mx-auto aspect-[4/5] w-full max-w-md overflow-hidden rounded-2xl"
-        >
-          <Image
-            src="/images/gallery-2.jpg"
-            alt="moos.park"
-            fill
-            className="object-cover grayscale"
-            sizes="(min-width: 640px) 400px, 100vw"
-          />
-        </Reveal>
+      <section className="px-6 py-24">
+        <div className="mx-auto max-w-6xl">
+          <div className="grid gap-10 lg:grid-cols-2 lg:items-center lg:gap-16">
+            <Reveal direction="left">
+              <div className="relative aspect-[4/5] w-full overflow-hidden rounded-2xl border border-foreground/10 shadow-[0_20px_40px_rgba(0,0,0,0.12)]">
+                <Image
+                  src="/images/gallery-2.jpg"
+                  alt="moos.park"
+                  fill
+                  className="object-cover grayscale"
+                  sizes="(min-width: 1024px) 500px, 100vw"
+                />
+              </div>
+            </Reveal>
 
-        <Reveal
-          direction="right"
-          delay={0.1}
-          className="mx-auto mt-10 max-w-2xl text-center"
-        >
-          <h2 className="text-3xl font-black uppercase text-foreground">
-            Raum für mehr.
-          </h2>
-          <p className="mt-6 text-foreground/70">
-            Mit wachsendem Bedarf an professionellen Veranstaltungsflächen
-            wurde der moos.park kontinuierlich erweitert. Heute bieten wir:
-          </p>
-          <ul className="mx-auto mt-6 max-w-md list-disc space-y-3 pl-5 text-left text-foreground/70">
-            <li>Mehrere individuell nutzbare Eventbereiche</li>
-            <li>Eine stilvolle Terrasse mit Platz für Outdoor-Events</li>
-            <li>Eine hauseigene Pizzeria für kulinarische Vielfalt</li>
-            <li>
-              Voll ausgestattete Techniklösungen für Business-Events und
-              Kultur
-            </li>
-            <li>Backstage- und Produktionsflächen für Künstler &amp; Veranstalter</li>
-          </ul>
-        </Reveal>
+            <Reveal direction="right" delay={0.1}>
+              <h2 className="text-3xl font-black uppercase text-foreground sm:text-4xl">
+                Raum für mehr.
+              </h2>
+              <p className="mt-4 text-foreground/70">
+                Mit wachsendem Bedarf an professionellen
+                Veranstaltungsflächen wurde der moos.park kontinuierlich
+                erweitert. Heute bieten wir:
+              </p>
+
+              <div className="mt-6 grid gap-3 sm:grid-cols-2">
+                {[
+                  "Mehrere individuell nutzbare Eventbereiche",
+                  "Eine stilvolle Terrasse mit Platz für Outdoor-Events",
+                  "Eine hauseigene Pizzeria für kulinarische Vielfalt",
+                  "Voll ausgestattete Techniklösungen für Business-Events und Kultur",
+                  "Backstage- und Produktionsflächen für Künstler & Veranstalter",
+                ].map((text) => (
+                  <div
+                    key={text}
+                    className="flex items-start gap-3 rounded-2xl border border-foreground/10 p-4"
+                  >
+                    <span className="mt-0.5 shrink-0 text-accent-lime">
+                      ✔
+                    </span>
+                    <span className="text-sm text-foreground/80">{text}</span>
+                  </div>
+                ))}
+              </div>
+            </Reveal>
+          </div>
+        </div>
       </section>
     </div>
   );

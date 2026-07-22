@@ -20,7 +20,7 @@ export default function ThemeToggle() {
     <button
       onClick={toggle}
       aria-label={dark ? "Helles Design aktivieren" : "Dunkles Design aktivieren"}
-      className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-foreground transition-colors hover:bg-foreground/5"
+      className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-foreground/10 bg-background text-foreground shadow-[var(--header-shadow)] transition-transform hover:scale-105"
     >
       {dark ? (
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none">

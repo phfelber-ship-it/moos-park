@@ -129,7 +129,7 @@ export default function Header() {
             ? `circle(150% at ${origin.x}px ${origin.y}px)`
             : `circle(0% at ${origin.x}px ${origin.y}px)`,
         }}
-        className={`fixed inset-0 z-40 flex flex-col items-center justify-center gap-5 bg-accent-lime transition-[clip-path] duration-700 ease-[cubic-bezier(0.77,0,0.175,1)] ${
+        className={`fixed inset-0 z-40 flex flex-col items-center justify-center gap-5 bg-foreground transition-[clip-path] duration-700 ease-[cubic-bezier(0.77,0,0.175,1)] ${
           open ? "" : "pointer-events-none"
         }`}
       >
@@ -152,17 +152,20 @@ export default function Header() {
                 className={`${
                   open ? "animate-menu-item-in" : ""
                 } text-2xl font-black uppercase tracking-tight sm:text-4xl ${
-                  active ? "text-black underline decoration-2 underline-offset-4" : "text-black/70"
+                  active
+                    ? "text-accent-lime underline decoration-2 underline-offset-4"
+                    : "text-background"
                 }`}
               >
                 {link.label}
               </Link>
             );
           })}
-          <div className="mt-4">
-            <ThemeToggle />
-          </div>
         </div>
+      </div>
+
+      <div className="fixed bottom-5 left-5 z-30">
+        <ThemeToggle />
       </div>
     </>
   );
