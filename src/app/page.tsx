@@ -3,6 +3,7 @@ import Image from "next/image";
 import { getEvents, getGalleries } from "@/lib/clubscale";
 import EventsExplorer from "@/components/EventsExplorer";
 import Hero from "@/components/Hero";
+import Reveal from "@/components/Reveal";
 
 function formatGalleryDate(iso: string) {
   return new Date(iso).toLocaleDateString("de-DE", {
@@ -47,96 +48,106 @@ export default async function Home() {
 
       <section className="px-6 py-24">
         <div className="mx-auto max-w-7xl">
-          <h2 className="text-center text-3xl font-black uppercase text-foreground sm:text-4xl">
-            Kommende Events
-          </h2>
+          <Reveal>
+            <h2 className="text-center text-3xl font-black uppercase text-foreground sm:text-4xl">
+              Kommende Events
+            </h2>
+          </Reveal>
 
-          <div className="mt-12">
+          <Reveal delay={0.1} className="mt-12">
             <EventsExplorer events={events} limit={3} columns={3} />
-          </div>
+          </Reveal>
 
-          <div className="mt-12 text-center">
+          <Reveal delay={0.2} className="mt-12 text-center">
             <Link
               href="/events"
               className="inline-block rounded-full bg-accent px-8 py-3 text-sm font-black uppercase tracking-wide text-black transition-transform hover:scale-105"
             >
               Alle Events ansehen
             </Link>
-          </div>
+          </Reveal>
         </div>
       </section>
 
       <section className="px-6 py-24">
         <div className="mx-auto max-w-7xl">
-          <h2 className="text-center text-3xl font-black uppercase text-foreground sm:text-4xl">
-            Galerie
-          </h2>
-          <p className="mx-auto mt-3 max-w-md text-center text-foreground/60">
-            Manche Momente brauchen keine Worte – nur das richtige Bild.
-          </p>
+          <Reveal>
+            <h2 className="text-center text-3xl font-black uppercase text-foreground sm:text-4xl">
+              Galerie
+            </h2>
+            <p className="mx-auto mt-3 max-w-md text-center text-foreground/60">
+              Manche Momente brauchen keine Worte – nur das richtige Bild.
+            </p>
+          </Reveal>
 
           <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            {galleries.map((gallery) => {
+            {galleries.map((gallery, i) => {
               const cover = gallery.coverMediaObjects[0]?.thumbnail?.presignedURL;
               return (
-                <Link
-                  key={gallery.id}
-                  href={`/bilder/${gallery.id}`}
-                  className="group overflow-hidden rounded-2xl border border-foreground/8 bg-foreground/[0.025] transition-colors hover:border-accent/40"
-                >
-                  <div className="relative aspect-[4/3] w-full bg-foreground/5">
-                    {cover && (
-                      <Image
-                        src={cover}
-                        alt={gallery.name}
-                        fill
-                        className="object-cover transition-transform duration-300 group-hover:scale-105"
-                        sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
-                      />
-                    )}
-                  </div>
-                  <div className="p-4">
-                    <h3 className="font-black uppercase leading-tight text-foreground line-clamp-2">
-                      {gallery.name}
-                    </h3>
-                    <p className="mt-1 text-xs text-foreground/50">
-                      {formatGalleryDate(gallery.date)}
-                    </p>
-                  </div>
-                </Link>
+                <Reveal key={gallery.id} delay={i * 0.08}>
+                  <Link
+                    href={`/bilder/${gallery.id}`}
+                    className="group block overflow-hidden rounded-2xl border border-foreground/8 bg-foreground/[0.025] transition-colors hover:border-accent/40"
+                  >
+                    <div className="relative aspect-[4/3] w-full bg-foreground/5">
+                      {cover && (
+                        <Image
+                          src={cover}
+                          alt={gallery.name}
+                          fill
+                          className="object-cover transition-transform duration-300 group-hover:scale-105"
+                          sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
+                        />
+                      )}
+                    </div>
+                    <div className="p-4">
+                      <h3 className="font-black uppercase leading-tight text-foreground line-clamp-2">
+                        {gallery.name}
+                      </h3>
+                      <p className="mt-1 text-xs text-foreground/50">
+                        {formatGalleryDate(gallery.date)}
+                      </p>
+                    </div>
+                  </Link>
+                </Reveal>
               );
             })}
           </div>
 
-          <div className="mt-12 text-center">
+          <Reveal delay={0.2} className="mt-12 text-center">
             <Link
               href="/bilder"
               className="inline-block rounded-full bg-accent px-8 py-3 text-sm font-black uppercase tracking-wide text-black transition-transform hover:scale-105"
             >
               Alle Galerien ansehen
             </Link>
-          </div>
+          </Reveal>
         </div>
       </section>
 
       <section className="bg-foreground/[0.02] px-6 py-24 text-center">
-        <h2 className="text-2xl font-black uppercase text-foreground sm:text-3xl">
-          Tanz Nächte
-        </h2>
-        <p className="mx-auto mt-4 max-w-md text-foreground/60">
-          &bdquo;Jeden 2. und 4. Freitag im Monat. Tanzbare Musik, gute
-          Stimmung und echte Emotionen.&ldquo;
-        </p>
-        <Link
-          href="/tanzabend"
-          className="mt-8 inline-block rounded-full bg-accent-lime px-8 py-3 text-sm font-black uppercase tracking-wide text-black transition-transform hover:scale-105"
-        >
-          Alle Tanztermine ansehen
-        </Link>
+        <Reveal direction="scale">
+          <h2 className="text-2xl font-black uppercase text-foreground sm:text-3xl">
+            Tanz Nächte
+          </h2>
+          <p className="mx-auto mt-4 max-w-md text-foreground/60">
+            &bdquo;Jeden 2. und 4. Freitag im Monat. Tanzbare Musik, gute
+            Stimmung und echte Emotionen.&ldquo;
+          </p>
+          <Link
+            href="/tanzabend"
+            className="mt-8 inline-block rounded-full bg-accent-lime px-8 py-3 text-sm font-black uppercase tracking-wide text-black transition-transform hover:scale-105"
+          >
+            Alle Tanztermine ansehen
+          </Link>
+        </Reveal>
       </section>
 
       <section className="px-6 py-24">
-        <div className="mx-auto max-w-6xl overflow-hidden rounded-[2.5rem] bg-foreground text-background">
+        <Reveal
+          direction="scale"
+          className="mx-auto max-w-6xl overflow-hidden rounded-[2.5rem] bg-foreground text-background"
+        >
           <div className="grid items-center gap-10 px-8 py-14 sm:px-14 sm:py-16 lg:grid-cols-2 lg:gap-16">
             <div>
               <p className="text-xs font-black uppercase tracking-[0.3em] text-accent-lime">
@@ -210,11 +221,11 @@ export default async function Home() {
               </div>
             </div>
           </div>
-        </div>
+        </Reveal>
       </section>
 
       <section className="px-6 py-24">
-        <div className="mx-auto max-w-3xl text-center">
+        <Reveal className="mx-auto max-w-3xl text-center">
           <p className="text-sm font-black uppercase tracking-wide text-accent-lime">
             moos.park
           </p>
@@ -229,9 +240,13 @@ export default async function Home() {
             entwickelt: ein Raum für Kultur, Konzerte, Corporate-Events und
             Clubnächte – mit Seele und Substanz.
           </p>
-        </div>
+        </Reveal>
 
-        <div className="relative mx-auto mt-10 aspect-[4/5] w-full max-w-md overflow-hidden rounded-3xl">
+        <Reveal
+          direction="scale"
+          delay={0.15}
+          className="relative mx-auto mt-10 aspect-[4/5] w-full max-w-md overflow-hidden rounded-3xl"
+        >
           <Image
             src="/images/gallery-1.jpg"
             alt="moos.park"
@@ -239,11 +254,14 @@ export default async function Home() {
             className="object-cover"
             sizes="(min-width: 640px) 400px, 100vw"
           />
-        </div>
+        </Reveal>
       </section>
 
       <section className="px-6 pb-24">
-        <div className="relative mx-auto aspect-[4/5] w-full max-w-md overflow-hidden rounded-3xl">
+        <Reveal
+          direction="left"
+          className="relative mx-auto aspect-[4/5] w-full max-w-md overflow-hidden rounded-3xl"
+        >
           <Image
             src="/images/gallery-2.jpg"
             alt="moos.park"
@@ -251,9 +269,13 @@ export default async function Home() {
             className="object-cover grayscale"
             sizes="(min-width: 640px) 400px, 100vw"
           />
-        </div>
+        </Reveal>
 
-        <div className="mx-auto mt-10 max-w-2xl text-center">
+        <Reveal
+          direction="right"
+          delay={0.1}
+          className="mx-auto mt-10 max-w-2xl text-center"
+        >
           <h2 className="text-3xl font-black uppercase text-foreground">
             Raum für mehr.
           </h2>
@@ -271,7 +293,7 @@ export default async function Home() {
             </li>
             <li>Backstage- und Produktionsflächen für Künstler &amp; Veranstalter</li>
           </ul>
-        </div>
+        </Reveal>
       </section>
     </div>
   );
