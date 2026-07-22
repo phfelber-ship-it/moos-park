@@ -4,7 +4,7 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import type { ClubscaleEvent } from "@/lib/clubscale";
-import { tagClasses } from "@/lib/clubscale";
+import { sortTags, tagClasses } from "@/lib/clubscale";
 import TicketSelector from "@/components/TicketSelector";
 
 function formatDate(iso: string) {
@@ -80,7 +80,7 @@ export default function QuickTicketFlow({
 
                 <div className="min-w-0 flex-1">
                   <div className="flex flex-wrap gap-1.5">
-                    {event.tags.slice(0, 2).map((tag) => (
+                    {sortTags(event.tags).slice(0, 2).map((tag) => (
                       <span
                         key={tag}
                         className={`rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide ${tagClasses(

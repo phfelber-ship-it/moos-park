@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import type { ClubscaleEvent } from "@/lib/clubscale";
-import { tagClasses } from "@/lib/clubscale";
+import { sortTags, tagClasses } from "@/lib/clubscale";
 import EventCard from "@/components/EventCard";
 
 export default function EventsExplorer({
@@ -17,7 +17,7 @@ export default function EventsExplorer({
   const tags = useMemo(() => {
     const set = new Set<string>();
     events.forEach((e) => e.tags.forEach((t) => set.add(t)));
-    return [...set];
+    return sortTags([...set]);
   }, [events]);
 
   const [active, setActive] = useState("Alle");

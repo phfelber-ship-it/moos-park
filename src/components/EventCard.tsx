@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { motion } from "motion/react";
 import type { ClubscaleEvent } from "@/lib/clubscale";
-import { tagClasses } from "@/lib/clubscale";
+import { sortTags, tagClasses } from "@/lib/clubscale";
 import MotionLink from "@/components/MotionLink";
 
 const SPRING = { type: "spring", stiffness: 300, damping: 24 } as const;
@@ -49,7 +49,7 @@ export default function EventCard({ event }: { event: ClubscaleEvent }) {
       </Link>
 
       <div className="mt-4 flex max-w-full flex-nowrap items-center justify-center gap-1.5 overflow-x-auto">
-        {event.tags.slice(0, 3).map((tag) => (
+        {sortTags(event.tags).slice(0, 3).map((tag) => (
           <span
             key={tag}
             className={`shrink-0 rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide ${tagClasses(

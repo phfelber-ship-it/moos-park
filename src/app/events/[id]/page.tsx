@@ -1,7 +1,13 @@
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getEvent, getEvents, getArtists, tagClasses } from "@/lib/clubscale";
+import {
+  getEvent,
+  getEvents,
+  getArtists,
+  sortTags,
+  tagClasses,
+} from "@/lib/clubscale";
 import TicketSelector from "@/components/TicketSelector";
 import EventCard from "@/components/EventCard";
 import ReadMore from "@/components/ReadMore";
@@ -47,7 +53,7 @@ export default async function EventDetailPage({
       )}
 
       <div className="mt-6 flex max-w-full flex-nowrap items-center justify-center gap-1.5 overflow-x-auto text-center">
-        {event.tags.map((tag) => (
+        {sortTags(event.tags).map((tag) => (
           <span
             key={tag}
             className={`shrink-0 rounded-full px-2.5 py-1 text-[11px] font-bold uppercase tracking-wide ${tagClasses(

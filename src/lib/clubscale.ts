@@ -77,6 +77,29 @@ export function tagClasses(tag: string): string {
   return TAG_STYLES[tag] ?? "bg-foreground/10 text-foreground/70";
 }
 
+const TAG_ORDER = [
+  "Main Floor",
+  "Kleiner Club",
+  "Terrasse",
+  "Party",
+  "Konzerte",
+  "Comedy",
+  "Lifestyle",
+];
+
+const TAG_ORDER_LOWER = TAG_ORDER.map((t) => t.toLowerCase());
+
+export function sortTags(tags: string[]): string[] {
+  return [...tags].sort((a, b) => {
+    const ai = TAG_ORDER_LOWER.indexOf(a.toLowerCase());
+    const bi = TAG_ORDER_LOWER.indexOf(b.toLowerCase());
+    if (ai === -1 && bi === -1) return 0;
+    if (ai === -1) return 1;
+    if (bi === -1) return -1;
+    return ai - bi;
+  });
+}
+
 export function checkoutUrl(
   eventId: string,
   items: { poolId: string; qty: number }[]
