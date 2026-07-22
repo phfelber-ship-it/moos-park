@@ -77,7 +77,7 @@ export default function EventlocationPage() {
     <div>
       <section className="relative flex min-h-[70vh] items-end overflow-hidden text-center text-white sm:min-h-[85vh]">
         <Image
-          src="/images/hero-bg.jpg"
+          src="/images/eventlocation-hero.png"
           alt="moos.park Eventlocation"
           fill
           priority
