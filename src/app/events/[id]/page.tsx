@@ -19,6 +19,38 @@ function formatTime(iso: string) {
   });
 }
 
+// Ohne generateMetadata würde jede Event-Seite den generischen
+// Website-Titel zeigen - schlecht fürs Teilen und für Suchmaschinen,
+// da genau diese Seiten am häufigsten verlinkt/gesucht werden.
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const { id } = await params;
+  const event = await getEvent(id);
+
+  if (!event) {
+    return { title: "Event nicht gefunden - moos.park" };
+  }
+
+  const description =
+    event.descriptionContent?.text?.slice(0, 155) ??
+    `${event.name} im moos.park Pöttmes. Jetzt Tickets sichern.`;
+
+  return {
+    title: `${event.name} - moos.park Pöttmes`,
+    description,
+    openGraph: {
+      title: event.name,
+      description,
+      images: event.thumbnail?.presignedURL
+        ? [{ url: event.thumbnail.presignedURL }]
+        : undefined,
+    },
+  };
+}
+
 export default async function EventDetailPage({
   params,
 }: {

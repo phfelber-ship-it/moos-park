@@ -14,15 +14,21 @@ export default function AppPhoneReveal() {
       style={{ perspective: "1000px" }}
     >
       <div className="absolute inset-0 scale-125 rounded-full bg-accent-lime/20 blur-3xl" />
+      {/*
+        hero-home.jpg ist bereits ein fertiges 3D-Handy-Mockup mit echtem
+        Rahmen - wir croppen hier nur den weißen Rand ringsum weg (statt
+        einen eigenen CSS-Rahmen drüberzulegen) und wenden dann die
+        3D-Neigung auf das ganze Bild an.
+      */}
       <div
-        className="relative aspect-[1454/2560] w-full overflow-hidden rounded-[2rem] border-4 border-background/10 shadow-2xl"
+        className="relative aspect-[1454/2560] w-full overflow-hidden drop-shadow-2xl"
         style={{ transform: "rotateY(-18deg) rotateX(4deg)" }}
       >
         <Image
           src="/images/hero-home.jpg"
           alt="moos.park App"
           fill
-          className="object-cover"
+          className="scale-[1.18] object-cover"
           sizes="260px"
         />
       </div>

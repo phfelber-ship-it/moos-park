@@ -11,6 +11,29 @@ function formatDate(iso: string) {
   });
 }
 
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const { id } = await params;
+  const gallery = await getGallery(id);
+
+  if (!gallery) {
+    return { title: "Galerie nicht gefunden - moos.park" };
+  }
+
+  const cover = gallery.coverMediaObjects[0]?.thumbnail?.presignedURL;
+
+  return {
+    title: `${gallery.name} - Bilder - moos.park`,
+    description: `Fotos von ${gallery.name} im moos.park Pöttmes am ${formatDate(
+      gallery.date
+    )}.`,
+    openGraph: cover ? { images: [{ url: cover }] } : undefined,
+  };
+}
+
 export default async function GalleryPage({
   params,
 }: {

@@ -14,10 +14,27 @@ const montserrat = Montserrat({
   weight: ["400", "500", "600", "700", "800", "900"],
 });
 
+const SITE_URL =
+  process.env.NEXT_PUBLIC_SITE_URL ?? "https://moos-park-hmd7.vercel.app";
+
 export const metadata: Metadata = {
-  title: "moos.park Pöttmes – Eventlocation Bayern | Firmenfeiern, Partys & mehr",
+  metadataBase: new URL(SITE_URL),
+  title:
+    "moos.park Pöttmes – Eventlocation Bayern | Firmenfeiern, Partys & mehr",
   description:
     "moos.park in Pöttmes – deine Eventlocation in Aichach-Friedberg. Konzerte, Clubnächte, Firmenfeiern und Partys in modernem Design und exklusivem Ambiente.",
+  openGraph: {
+    type: "website",
+    locale: "de_DE",
+    siteName: "moos.park",
+    title: "moos.park Pöttmes – Eventlocation Bayern",
+    description:
+      "Deine Eventlocation in Aichach-Friedberg: Konzerte, Clubnächte, Firmenfeiern und Partys.",
+    images: [{ url: "/images/logo.png" }],
+  },
+  twitter: {
+    card: "summary_large_image",
+  },
 };
 
 export default function RootLayout({
