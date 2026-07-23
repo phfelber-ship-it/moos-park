@@ -45,7 +45,6 @@ export default function GalleryLightbox({
 
   if (index === null) return null;
 
-  const photo = photos[index];
   let touchStartX = 0;
 
   const next = () => setIndex((i) => (i === null ? null : (i + 1) % photos.length));
@@ -118,13 +117,42 @@ export default function GalleryLightbox({
         </svg>
       </button>
 
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        src={photo.src}
-        alt={photo.alt}
+      {/*
+        Gestapelter Karten-Effekt (angelehnt an Swipers "Cards"-Effekt):
+        aktuelles Bild vorne mittig, die Nachbarbilder schimmern leicht
+        gedreht/verkleinert dahinter durch.
+      */}
+      <div
+        className="relative flex h-[80vh] w-full max-w-2xl items-center justify-center"
+        style={{ perspective: "1200px" }}
         onClick={(e) => e.stopPropagation()}
-        className="max-h-[90vh] max-w-full rounded-lg object-contain"
-      />
+      >
+        {[-2, -1, 0, 1, 2].map((offset) => {
+          const i =
+            (index + offset + photos.length * 2) % photos.length;
+          const p = photos[i];
+          const abs = Math.abs(offset);
+          return (
+            <div
+              key={`${i}-${offset}`}
+              className="absolute overflow-hidden rounded-2xl shadow-2xl transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]"
+              style={{
+                transform: `translateX(${offset * 36}px) rotateZ(${offset * 6}deg) scale(${1 - abs * 0.08})`,
+                zIndex: 10 - abs,
+                opacity: abs > 1 ? 0 : 1,
+              }}
+            >
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={p.src}
+                alt={p.alt}
+                className="max-h-[80vh] max-w-[80vw] object-contain"
+                draggable={false}
+              />
+            </div>
+          );
+        })}
+      </div>
     </div>
   );
 }

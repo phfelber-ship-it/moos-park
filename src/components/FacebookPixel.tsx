@@ -35,7 +35,16 @@ export default function FacebookPixel() {
       version: string;
       callMethod?: (...args: unknown[]) => void;
     };
-    const w = window as unknown as { fbq?: FbqFn; _fbq?: FbqFn };
+    const w = window as unknown as {
+      fbq?: FbqFn;
+      _fbq?: FbqFn;
+      __fbPixelInitialized?: boolean;
+    };
+
+    // Schutz gegen doppeltes "init"+"PageView", falls dieser Effect
+    // durch React Strict Mode oder erneutes Mounten zweimal laeuft.
+    if (w.__fbPixelInitialized) return;
+    w.__fbPixelInitialized = true;
 
     if (!w.fbq) {
       const fbq: FbqFn = function (...args: unknown[]) {
