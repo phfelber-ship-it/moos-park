@@ -37,14 +37,23 @@ export default function TicketSelector({
           const soldOut = pool.sold >= pool.contingent;
           const qty = quantities[pool.id] ?? 0;
           const available = pool.contingent - pool.sold;
+          const lowStock = !soldOut && available > 0 && available < 20;
+          const isEarly = /early/i.test(pool.name);
+          const isFriends = /friend|freund/i.test(pool.name);
 
           return (
             <div
               key={pool.id}
-              className={`flex items-center justify-between gap-4 py-3.5 ${
+              className={`relative flex items-center justify-between gap-4 py-3.5 ${
                 soldOut ? "opacity-50" : ""
-              }`}
+              } ${lowStock ? "-mx-3 rounded-lg bg-accent/10 px-3" : ""}`}
             >
+              {isFriends && (
+                <span className="absolute right-0 top-1 rounded-full bg-accent px-2.5 py-0.5 text-[10px] font-black uppercase tracking-wide text-black">
+                  Best Deal
+                </span>
+              )}
+
               <div className="flex min-w-0 items-start gap-2.5">
                 <span
                   className={`mt-1.5 h-2 w-2 shrink-0 rounded-full ${
@@ -52,15 +61,27 @@ export default function TicketSelector({
                   }`}
                 />
                 <div className="min-w-0">
-                  <p className="truncate text-sm font-bold text-foreground">
-                    {pool.name}
-                  </p>
+                  <div className="flex flex-wrap items-center gap-1.5">
+                    <p className="truncate text-sm font-bold text-foreground">
+                      {pool.name}
+                    </p>
+                    {isEarly && (
+                      <span className="shrink-0 rounded-full bg-accent-lime px-2 py-0.5 text-[10px] font-black uppercase tracking-wide text-black">
+                        Beliebt
+                      </span>
+                    )}
+                  </div>
                   <p className="text-xs text-foreground/50">
                     {soldOut
                       ? "Ausverkauft"
                       : pool.free
                       ? "Gratis"
                       : `${priceToEuro(pool.price)} € + Ticketgebühr*`}
+                    {lowStock && (
+                      <span className="ml-1 font-bold text-foreground/70">
+                        (nur noch wenige verfügbar)
+                      </span>
+                    )}
                   </p>
                 </div>
               </div>

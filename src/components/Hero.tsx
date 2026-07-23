@@ -55,14 +55,14 @@ export default function Hero({ images }: { images: string[] }) {
           />
         </div>
       ))}
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-foreground/70 via-foreground/10 to-transparent" />
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-foreground/70 via-foreground/10 to-foreground/25" />
 
       <motion.div
         variants={container}
         initial="hidden"
         whileInView="show"
         viewport={{ once: true, amount: 0.4 }}
-        className="relative z-10 mx-auto flex max-w-2xl flex-col items-center px-6 pb-16"
+        className="relative z-10 mx-auto flex max-w-2xl flex-col items-center px-6 pb-16 pt-28 sm:pt-0"
       >
         <motion.span
           variants={item}

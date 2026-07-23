@@ -173,10 +173,10 @@ export default async function Home() {
         <div className="mx-auto max-w-7xl">
           <Reveal>
             <h2 className="text-center text-3xl font-black uppercase text-foreground sm:text-4xl">
-              Bilder
+              Galerie
             </h2>
             <p className="mx-auto mt-3 max-w-md text-center text-foreground/60">
-              Manche Momente brauchen keine Worte – nur das richtige Bild.
+              Jede Nacht ihre eigene Geschichte – stöbere durch unsere Fotos.
             </p>
           </Reveal>
 
@@ -313,16 +313,16 @@ export default async function Home() {
             </Reveal>
 
             <Reveal direction="right" delay={0.1}>
-              <h2 className="text-3xl font-black uppercase text-foreground sm:text-4xl">
-                Raum für mehr.
+              <h2 className="text-center text-3xl font-black uppercase text-foreground sm:text-4xl">
+                Über uns
               </h2>
-              <p className="mt-4 text-foreground/70">
+              <p className="mt-4 text-center text-foreground/70">
                 Mit wachsendem Bedarf an professionellen
                 Veranstaltungsflächen wurde der moos.park kontinuierlich
                 erweitert. Heute bieten wir:
               </p>
 
-              <div className="mt-6 grid gap-3 sm:grid-cols-2">
+              <div className="mt-6 -mx-6 flex snap-x snap-mandatory gap-3 overflow-x-auto px-6 pb-2 sm:mx-0 sm:px-0">
                 {[
                   "Mehrere individuell nutzbare Eventbereiche",
                   "Eine stilvolle Terrasse mit Platz für Outdoor-Events",
@@ -332,11 +332,9 @@ export default async function Home() {
                 ].map((text) => (
                   <div
                     key={text}
-                    className="flex items-start gap-3 rounded-2xl border border-foreground/10 p-4"
+                    className="flex h-36 w-52 shrink-0 snap-start flex-col items-start gap-3 rounded-2xl border border-foreground/10 p-4"
                   >
-                    <span className="mt-0.5 shrink-0 text-accent-lime">
-                      ✔
-                    </span>
+                    <span className="shrink-0 text-accent-lime">✔</span>
                     <span className="text-sm text-foreground/80">{text}</span>
                   </div>
                 ))}

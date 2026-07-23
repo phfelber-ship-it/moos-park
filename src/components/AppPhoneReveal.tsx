@@ -13,25 +13,28 @@ export default function AppPhoneReveal() {
       className="relative order-2 mx-auto w-full max-w-[220px] sm:max-w-[260px] lg:order-1"
       style={{ perspective: "1000px" }}
     >
-      <div className="absolute inset-0 scale-125 rounded-full bg-accent-lime/20 blur-3xl" />
       {/*
         hero-home.jpg ist bereits ein fertiges 3D-Handy-Mockup mit echtem
-        Rahmen - wir croppen hier nur den weißen Rand ringsum weg (statt
-        einen eigenen CSS-Rahmen drüberzulegen) und wenden dann die
-        3D-Neigung auf das ganze Bild an.
+        Rahmen - wir croppen hier den weißen Rand ringsum komplett weg
+        (statt einen eigenen CSS-Rahmen drüberzulegen) und ersetzen ihn
+        durch einen schmalen, kantenbündigen Lime-Akzentstrich (angelehnt
+        an Bootshaus). Die 3D-Neigung liegt auf dem ganzen Bild.
       */}
-      <div
+      <motion.div
+        animate={{ y: [0, -10, 0] }}
+        transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
         className="relative aspect-[1454/2560] w-full overflow-hidden drop-shadow-2xl"
         style={{ transform: "rotateY(-18deg) rotateX(4deg)" }}
       >
+        <span className="absolute inset-y-0 left-0 z-10 w-1.5 bg-accent-lime" />
         <Image
           src="/images/hero-home.jpg"
           alt="moos.park App"
           fill
-          className="scale-[1.18] object-cover"
+          className="scale-[1.3] object-cover"
           sizes="260px"
         />
-      </div>
+      </motion.div>
     </motion.div>
   );
 }

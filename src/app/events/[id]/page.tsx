@@ -9,7 +9,6 @@ import {
   tagClasses,
 } from "@/lib/clubscale";
 import TicketSelector from "@/components/TicketSelector";
-import EventCard from "@/components/EventCard";
 import ReadMore from "@/components/ReadMore";
 
 function formatTime(iso: string) {
@@ -101,15 +100,6 @@ export default async function EventDetailPage({
         {event.name}
       </h1>
 
-      <div className="mt-6 text-center">
-        <a
-          href="#tickets"
-          className="inline-flex items-center gap-2 rounded-lg bg-accent-lime px-8 py-3 text-sm font-black uppercase tracking-wide text-black transition-transform hover:scale-105"
-        >
-          Tickets sichern
-        </a>
-      </div>
-
       <div
         className={`mt-8 grid divide-x divide-foreground/10 rounded-xl border border-foreground/8 bg-foreground/[0.025] text-center ${
           event.hasBoxOffice ? "grid-cols-3" : "grid-cols-2"
@@ -143,6 +133,19 @@ export default async function EventDetailPage({
         )}
       </div>
 
+      <div className="prose prose-neutral mt-10 max-w-none">
+        <ReadMore text={event.description} />
+      </div>
+
+      <div className="mt-10 text-center">
+        <a
+          href="#tickets"
+          className="inline-flex items-center gap-2 rounded-lg bg-accent-lime px-8 py-3 text-sm font-black uppercase tracking-wide text-black transition-transform hover:scale-105"
+        >
+          Tickets sichern
+        </a>
+      </div>
+
       <div id="tickets" className="mt-10 scroll-mt-24">
         <h2 className="mb-6 text-center text-xl font-black uppercase text-foreground">
           Tickets
@@ -153,10 +156,6 @@ export default async function EventDetailPage({
             .filter((p) => !p.deactivated)
             .sort((a, b) => a.sortIndex - b.sortIndex)}
         />
-      </div>
-
-      <div className="prose prose-neutral mt-12 max-w-none">
-        <ReadMore text={event.description} />
       </div>
 
       {artists.length > 0 && (
@@ -192,9 +191,28 @@ export default async function EventDetailPage({
           <h2 className="text-center text-xl font-black uppercase text-foreground">
             Weitere tolle Events
           </h2>
-          <div className="mt-8 grid gap-x-6 gap-y-14 sm:grid-cols-2">
+          <div className="mt-6 grid grid-cols-3 gap-3">
             {moreEvents.map((e) => (
-              <EventCard key={e.id} event={e} />
+              <Link
+                key={e.id}
+                href={`/events/${e.id}`}
+                className="group flex flex-col items-center text-center"
+              >
+                <div className="relative aspect-[16/10] w-full overflow-hidden rounded-lg bg-foreground/5">
+                  {e.thumbnail?.presignedURL && (
+                    <Image
+                      src={e.thumbnail.presignedURL}
+                      alt={e.name}
+                      fill
+                      className="object-cover transition-transform duration-300 group-hover:scale-105"
+                      sizes="(min-width: 640px) 200px, 33vw"
+                    />
+                  )}
+                </div>
+                <p className="mt-2 line-clamp-2 text-[11px] font-bold uppercase leading-tight text-foreground">
+                  {e.name}
+                </p>
+              </Link>
             ))}
           </div>
           <div className="mt-10 text-center">
