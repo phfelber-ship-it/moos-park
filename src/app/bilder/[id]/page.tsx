@@ -1,7 +1,7 @@
-import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getGallery, getGalleryMedia } from "@/lib/clubscale";
+import GalleryMasonry from "@/components/GalleryMasonry";
 
 function formatDate(iso: string) {
   return new Date(iso).toLocaleDateString("de-DE", {
@@ -24,10 +24,17 @@ export default async function GalleryPage({
   }
 
   const media = await getGalleryMedia(id);
+  const photos = media
+    .map((item) => ({
+      src: item.fullImage?.presignedURL ?? item.thumbnail?.presignedURL,
+      alt: `${gallery.name} – ${item.title}`,
+    }))
+    .filter((p): p is { src: string; alt: string } => Boolean(p.src))
+    .slice(0, 20);
 
   return (
     <div className="mx-auto max-w-5xl px-6 pb-16 pt-32">
-      <Link href="/bilder" className="text-sm font-bold text-accent">
+      <Link href="/bilder" className="text-sm font-bold text-accent-lime">
         ← Alle Bilder
       </Link>
 
@@ -38,28 +45,7 @@ export default async function GalleryPage({
         {formatDate(gallery.date)} · {gallery.mediaCount} Fotos
       </p>
 
-      <div className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-3">
-        {media.map((item, i) => {
-          const src = item.thumbnail?.presignedURL;
-          if (!src) return null;
-          return (
-            <div
-              key={item.id}
-              className={`relative overflow-hidden rounded-xl bg-foreground/5 ${
-                i === 0 ? "col-span-2 aspect-video" : "aspect-square"
-              }`}
-            >
-              <Image
-                src={src}
-                alt={`${gallery.name} – ${item.title}`}
-                fill
-                className="object-cover"
-                sizes="(min-width: 640px) 33vw, 50vw"
-              />
-            </div>
-          );
-        })}
-      </div>
+      <GalleryMasonry photos={photos} />
     </div>
   );
 }
