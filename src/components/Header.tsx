@@ -5,6 +5,7 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import ThemeToggle from "@/components/ThemeToggle";
+import StaggerText from "@/components/StaggerText";
 
 const NAV_LINKS = [
   { href: "/", label: "Home" },
@@ -50,10 +51,10 @@ export default function Header() {
         aria-label={open ? "Menü schließen" : "Menü öffnen"}
         className={`fixed left-10 top-10 z-50 ${CIRCLE_BTN}`}
       >
-        <span className="relative flex h-7 w-7 items-center justify-center text-black">
+        <span className="relative flex h-[22px] w-[22px] items-center justify-center text-black">
           <svg
-            width="26"
-            height="26"
+            width="22"
+            height="22"
             viewBox="0 0 24 24"
             fill="none"
             className={`absolute inset-0 m-auto transition-all duration-300 ${
@@ -63,13 +64,13 @@ export default function Header() {
             <path
               d="M5 5l14 14M19 5 5 19"
               stroke="currentColor"
-              strokeWidth="2.2"
+              strokeWidth="2"
               strokeLinecap="round"
             />
           </svg>
           <svg
-            width="26"
-            height="26"
+            width="22"
+            height="22"
             viewBox="0 0 24 24"
             fill="none"
             className={`absolute inset-0 m-auto transition-all duration-300 ${
@@ -79,7 +80,7 @@ export default function Header() {
             <path
               d="M2 6h20M2 12h20M2 18h20"
               stroke="currentColor"
-              strokeWidth="2.2"
+              strokeWidth="2"
               strokeLinecap="round"
             />
           </svg>
@@ -106,7 +107,7 @@ export default function Header() {
         aria-label="Tickets kaufen"
         className="fixed right-10 top-10 z-50 flex h-[46px] w-[46px] items-center justify-center rounded-full bg-accent-lime text-black shadow-[var(--header-shadow)] transition-[transform,box-shadow] duration-300 ease-out hover:scale-105"
       >
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
           <path
             d="M3 8a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v2a2 2 0 1 0 0 4v2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a2 2 0 1 0 0-4z"
             stroke="currentColor"
@@ -157,7 +158,7 @@ export default function Header() {
                     : "text-background"
                 }`}
               >
-                {link.label}
+                <StaggerText text={link.label} />
               </Link>
             );
           })}

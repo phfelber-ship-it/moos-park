@@ -88,21 +88,62 @@ function IconButton({
 export default function Footer() {
   return (
     <footer className="border-t border-foreground/8 bg-foreground/[0.02] px-6 py-16">
-      <div className="mx-auto grid max-w-7xl gap-12 lg:grid-cols-[1.3fr_1fr_1fr_1fr_1fr] lg:gap-8">
-        <div className="text-center lg:text-left">
+      {/* Mobil: schlanke Kurzfassung - nur Logo, Icons und die
+          rechtlich nötigen Links, statt aller Link-Spalten. */}
+      <div className="mx-auto max-w-sm text-center lg:hidden">
+        <Image
+          src="/images/logo.png"
+          alt="moos.park – Dein Hotspot für Tag und Nacht"
+          width={96}
+          height={96}
+          className="mx-auto w-24"
+        />
+        <p className="mt-6 text-lg font-black uppercase text-foreground">
+          Deine Eventlocation seit 1994.
+        </p>
+
+        <div className="mt-6 flex flex-wrap justify-center gap-3">
+          {SOCIALS.map((s) => (
+            <IconButton key={s.label} href={s.href} label={s.label} icon={s.icon} />
+          ))}
+          {APP_LINKS.map((s) => (
+            <IconButton key={s.label} href={s.href} label={s.label} icon={s.icon} />
+          ))}
+        </div>
+
+        <div className="mt-8 flex flex-wrap justify-center gap-x-6 gap-y-2 text-sm text-foreground/70">
+          {LINKS_COL_3.filter((l) => l.label !== "Widerruf").map((l) => (
+            <Link key={l.label} href={l.href} className="hover:text-foreground">
+              {l.label}
+            </Link>
+          ))}
+        </div>
+
+        <div className="mt-8 border-t border-foreground/8 pt-6 text-xs text-foreground/40">
+          <p>
+            © MOOS-PARK GASTRONOMIE GMBH {new Date().getFullYear()}. Alle
+            Rechte vorbehalten.
+          </p>
+          <p className="mt-1">Mit ❤ erstellt</p>
+        </div>
+      </div>
+
+      {/* Desktop: vollstaendiges Link-Grid */}
+      <div className="mx-auto hidden max-w-7xl gap-8 lg:grid lg:grid-cols-[1.3fr_1fr_1fr_1fr_1fr]">
+        <div className="text-left">
           <Image
             src="/images/logo.png"
             alt="moos.park – Dein Hotspot für Tag und Nacht"
             width={96}
             height={96}
-            className="mx-auto w-20 lg:mx-0"
+            className="w-20"
           />
           <p className="mt-6 text-lg font-black uppercase text-foreground">
             Deine Eventlocation seit 1994.
           </p>
         </div>
 
-        <div className="text-center lg:text-left">
+        <div className="text-left">
           <p className="text-sm font-black uppercase tracking-wide text-foreground">
             Links
           </p>
@@ -117,7 +158,7 @@ export default function Footer() {
           </ul>
         </div>
 
-        <div className="text-center lg:text-left">
+        <div className="text-left">
           <p className="text-sm font-black uppercase tracking-wide text-foreground">
             Noch mehr Links
           </p>
@@ -132,7 +173,7 @@ export default function Footer() {
           </ul>
         </div>
 
-        <div className="text-center lg:text-left">
+        <div className="text-left">
           <p className="text-sm font-black uppercase tracking-wide text-foreground">
             Rechtliches
           </p>
@@ -147,11 +188,11 @@ export default function Footer() {
           </ul>
         </div>
 
-        <div className="text-center lg:text-left">
+        <div className="text-left">
           <p className="text-sm font-black uppercase tracking-wide text-foreground">
             Get in Touch
           </p>
-          <div className="mt-4 flex flex-wrap justify-center gap-3 lg:justify-start">
+          <div className="mt-4 flex flex-wrap gap-3">
             {SOCIALS.map((s) => (
               <IconButton key={s.label} href={s.href} label={s.label} icon={s.icon} />
             ))}
@@ -162,7 +203,7 @@ export default function Footer() {
         </div>
       </div>
 
-      <div className="mx-auto mt-14 flex max-w-7xl flex-col items-center justify-between gap-4 border-t border-foreground/8 pt-8 text-xs text-foreground/40 sm:flex-row">
+      <div className="mx-auto mt-14 hidden max-w-7xl flex-col items-center justify-between gap-4 border-t border-foreground/8 pt-8 text-xs text-foreground/40 lg:flex lg:flex-row">
         <p>
           © MOOS-PARK GASTRONOMIE GMBH {new Date().getFullYear()}. Alle
           Rechte vorbehalten.
