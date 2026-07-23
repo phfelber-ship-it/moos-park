@@ -164,7 +164,7 @@ export default function Header() {
         </div>
       </div>
 
-      <div className="fixed bottom-5 left-5 z-30">
+      <div className="fixed left-[98px] top-[45px] z-50">
         <ThemeToggle />
       </div>
     </>
