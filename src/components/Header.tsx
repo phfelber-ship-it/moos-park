@@ -50,36 +50,36 @@ export default function Header() {
         aria-label={open ? "Menü schließen" : "Menü öffnen"}
         className={`fixed left-10 top-10 z-50 ${CIRCLE_BTN}`}
       >
-        <span className="relative h-4 w-4 text-black">
+        <span className="relative flex h-7 w-7 items-center justify-center text-black">
           <svg
-            width="18"
-            height="18"
+            width="26"
+            height="26"
             viewBox="0 0 24 24"
             fill="none"
-            className={`absolute inset-0 -m-0.5 transition-all duration-300 ${
+            className={`absolute inset-0 m-auto transition-all duration-300 ${
               open ? "rotate-90 opacity-100" : "rotate-0 opacity-0"
             }`}
           >
             <path
               d="M5 5l14 14M19 5 5 19"
               stroke="currentColor"
-              strokeWidth="2"
+              strokeWidth="2.2"
               strokeLinecap="round"
             />
           </svg>
           <svg
-            width="18"
-            height="18"
+            width="26"
+            height="26"
             viewBox="0 0 24 24"
             fill="none"
-            className={`absolute inset-0 -m-0.5 transition-all duration-300 ${
+            className={`absolute inset-0 m-auto transition-all duration-300 ${
               open ? "-rotate-90 opacity-0" : "rotate-0 opacity-100"
             }`}
           >
             <path
-              d="M4 6h16M4 12h16M4 18h16"
+              d="M2 6h20M2 12h20M2 18h20"
               stroke="currentColor"
-              strokeWidth="2"
+              strokeWidth="2.2"
               strokeLinecap="round"
             />
           </svg>
@@ -104,7 +104,7 @@ export default function Header() {
       <Link
         href="/eventtickets"
         aria-label="Tickets kaufen"
-        className="fixed right-10 top-10 z-50 flex h-[46px] w-[46px] items-center justify-center rounded-full bg-accent-lime text-black shadow-[0_4px_20px_rgba(185,206,173,0.4)] transition-[transform,box-shadow] duration-300 ease-out hover:scale-105"
+        className="fixed right-10 top-10 z-50 flex h-[46px] w-[46px] items-center justify-center rounded-full bg-accent-lime text-black shadow-[var(--header-shadow)] transition-[transform,box-shadow] duration-300 ease-out hover:scale-105"
       >
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
           <path

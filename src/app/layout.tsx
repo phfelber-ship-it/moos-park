@@ -7,6 +7,7 @@ import Footer from "@/components/Footer";
 import FloatingWhatsAppButton from "@/components/FloatingWhatsAppButton";
 import CookieConsent from "@/components/CookieConsent";
 import GoogleTagManager from "@/components/GoogleTagManager";
+import FacebookPixel from "@/components/FacebookPixel";
 
 const montserrat = Montserrat({
   variable: "--font-montserrat",
@@ -62,6 +63,7 @@ export default function RootLayout({
         <FloatingWhatsAppButton />
         <CookieConsent />
         <GoogleTagManager />
+        <FacebookPixel />
       </body>
     </html>
   );

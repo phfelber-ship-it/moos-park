@@ -29,7 +29,7 @@ export default function TicketSelector({
   return (
     <div>
       <p className="mb-4 text-xs font-bold uppercase tracking-wide text-accent-lime">
-        Online Ticket kaufen &amp; sparen
+        Online Tickets kaufen &amp; sparen
       </p>
 
       <div className="divide-y divide-foreground/8">

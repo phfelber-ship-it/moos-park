@@ -76,7 +76,7 @@ export default function EventCard({ event }: { event: ClubscaleEvent }) {
           href={`/events/${event.id}#tickets`}
           className="block rounded-lg bg-foreground px-6 py-2.5 text-center text-xs font-black uppercase tracking-wide text-background"
         >
-          Ticket kaufen
+          Tickets kaufen
         </MotionLink>
         <MotionLink
           href={`/reservierung?event=${event.id}`}
