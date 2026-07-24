@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import type { TicketPool } from "@/lib/clubscale";
 import { checkoutUrl, priceToEuro } from "@/lib/clubscale";
 
@@ -120,16 +121,14 @@ export default function TicketSelector({
         *Gebühren werden auf der nächsten Seite automatisch berechnet.
       </p>
 
-      <a
-        href={total > 0 ? checkoutUrl(eventId, items) : undefined}
-        target="_blank"
-        rel="noopener noreferrer"
+      <Link
+        href={total > 0 ? checkoutUrl(eventId, items) : "#"}
         className={`mt-4 block rounded-lg bg-accent-lime px-8 py-3 text-center text-sm font-black uppercase tracking-wide text-black transition-transform hover:scale-105 ${
           total === 0 ? "pointer-events-none opacity-40" : ""
         }`}
       >
         Weiter zum Checkout
-      </a>
+      </Link>
     </div>
   );
 }

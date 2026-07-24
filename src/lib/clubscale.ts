@@ -108,7 +108,7 @@ export function checkoutUrl(
     eventId,
     items: JSON.stringify(items),
   });
-  return `https://moos-park.de/tickets-data/?${params.toString()}`;
+  return `/tickets-data?${params.toString()}`;
 }
 
 export function priceToEuro(cents: number): string {
