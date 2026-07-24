@@ -55,11 +55,8 @@ export default function TicketSelector({
                   }`}
                 />
                 <div className="min-w-0">
-                  <p className="truncate text-sm font-bold text-foreground">
-                    {pool.name}
-                  </p>
                   {(isEarly || isFriends) && (
-                    <div className="mt-1 flex flex-wrap gap-1">
+                    <div className="mb-1 flex flex-wrap gap-1">
                       {isEarly && (
                         <span className="rounded-full bg-accent-lime px-2 py-0.5 text-[10px] font-black uppercase tracking-wide text-black">
                           Beliebt
@@ -72,6 +69,9 @@ export default function TicketSelector({
                       )}
                     </div>
                   )}
+                  <p className="truncate text-sm font-bold text-foreground">
+                    {pool.name}
+                  </p>
                   <p className="mt-1 text-xs text-foreground/50">
                     {soldOut
                       ? "Ausverkauft"
