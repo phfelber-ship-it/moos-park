@@ -2,23 +2,24 @@
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
+import { loadStripe } from "@stripe/stripe-js";
+import {
+  Elements,
+  PaymentElement,
+  useElements,
+  useStripe,
+} from "@stripe/react-stripe-js";
+import {
+  createDirectPurchaseRequest,
+  getTicketPools,
+  priceToEuro,
+  STRIPE_PUBLISHABLE_KEY,
+  type TicketPool,
+} from "@/lib/clubscale";
+
+const stripePromise = loadStripe(STRIPE_PUBLISHABLE_KEY);
 
 type Item = { poolId: string; qty: number };
-
-type Pool = {
-  id: string;
-  name: string;
-  price: number;
-  fee: number;
-  free: boolean;
-};
-
-function priceToEuro(cents: number): string {
-  return (cents / 100).toLocaleString("de-DE", {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  });
-}
 
 export default function TicketsDataFlow({
   eventId,
@@ -35,7 +36,7 @@ export default function TicketsDataFlow({
     }
   }, [itemsParam]);
 
-  const [step, setStep] = useState<"data" | "checkout">("data");
+  const [step, setStep] = useState<"data" | "payment">("data");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [day, setDay] = useState("");
@@ -43,9 +44,13 @@ export default function TicketsDataFlow({
   const [year, setYear] = useState("");
   const [mail, setMail] = useState("");
 
-  const [pools, setPools] = useState<Pool[] | null>(null);
-  const [loadingPools, setLoadingPools] = useState(false);
-  const [submitting, setSubmitting] = useState(false);
+  const [pools, setPools] = useState<TicketPool[] | null>(null);
+  const [clientSecret, setClientSecret] = useState<string | null>(null);
+  const [purchaseRequestId, setPurchaseRequestId] = useState<string | null>(
+    null
+  );
+  const [secret, setSecret] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const canContinue =
@@ -56,21 +61,50 @@ export default function TicketsDataFlow({
     year.length === 4 &&
     mail.includes("@");
 
-  const loadCheckout = async () => {
+  const startPurchase = async () => {
     setError(null);
-    setLoadingPools(true);
+    setLoading(true);
     try {
-      const res = await fetch(`/api/moos-checkout/pools/${eventId}`);
-      const data = await res.json();
-      if (!res.ok) {
-        throw new Error(data?.message ?? "Ticket-Pools konnten nicht geladen werden.");
+      const poolsData = await getTicketPools(eventId);
+      setPools(poolsData);
+
+      const birthday = `${year}-${month.padStart(2, "0")}-${day.padStart(
+        2,
+        "0"
+      )}`;
+
+      const response = await createDirectPurchaseRequest({
+        eventId,
+        birthday,
+        mail: mail.trim(),
+        firstName: firstName.trim(),
+        lastName: lastName.trim(),
+        redirectURL: window.location.origin,
+        items: items.map((i) => ({
+          ticketPoolID: i.poolId,
+          quantity: i.qty,
+        })),
+      });
+
+      const cs =
+        response.purchase?.clientSecret ?? response.clientSecret ?? null;
+
+      if (!cs) {
+        throw new Error(
+          "Zahlung konnte nicht vorbereitet werden. Bitte an den Support wenden."
+        );
       }
-      setPools(data.ticketPools as Pool[]);
-      setStep("checkout");
-    } catch {
-      setError("Deine Tickets konnten nicht geladen werden. Bitte versuche es erneut.");
+
+      setPurchaseRequestId(response.purchaseRequest.id);
+      setSecret(response.secret);
+      setClientSecret(cs);
+      setStep("payment");
+    } catch (e) {
+      setError(
+        e instanceof Error ? e.message : "Deine Tickets konnten nicht reserviert werden."
+      );
     } finally {
-      setLoadingPools(false);
+      setLoading(false);
     }
   };
 
@@ -80,59 +114,16 @@ export default function TicketsDataFlow({
       if (!item) return null;
       return { pool, qty: item.qty };
     })
-    .filter((x): x is { pool: Pool; qty: number } => Boolean(x));
+    .filter((x): x is { pool: TicketPool; qty: number } => Boolean(x));
 
   const subtotal = lineItems.reduce(
-    (sum, { pool, qty }) => sum + pool.price * qty,
+    (sum, { pool, qty }) => sum + pool.basePricePerTicket * qty,
     0
   );
-  const fees = lineItems.reduce((sum, { pool, qty }) => sum + pool.fee * qty, 0);
-  const total = subtotal + fees;
-
-  const submitPurchase = async () => {
-    setError(null);
-    setSubmitting(true);
-    try {
-      const birthday = `${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`;
-      const res = await fetch("/api/moos-checkout/purchase", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          eventId,
-          items,
-          firstName: firstName.trim(),
-          lastName: lastName.trim(),
-          mail: mail.trim(),
-          birthday,
-        }),
-      });
-      const data = await res.json();
-
-      if (!res.ok) {
-        throw new Error(data?.message ?? "Die Bestellung konnte nicht erstellt werden.");
-      }
-
-      const redirectUrl =
-        data.redirectUrl ?? data.checkoutUrl ?? data.paymentUrl ?? data.url;
-
-      if (redirectUrl) {
-        window.location.href = redirectUrl;
-        return;
-      }
-
-      setError(
-        "Bestellung wurde angelegt, aber es fehlt eine Weiterleitung zur Zahlung. Bitte an den Support wenden."
-      );
-    } catch (e) {
-      setError(
-        e instanceof Error
-          ? e.message
-          : "Die Bestellung konnte nicht erstellt werden."
-      );
-    } finally {
-      setSubmitting(false);
-    }
-  };
+  const fees = lineItems.reduce(
+    (sum, { pool, qty }) => sum + pool.communityFeePerTicket * qty,
+    0
+  );
 
   if (step === "data") {
     return (
@@ -197,11 +188,11 @@ export default function TicketsDataFlow({
 
         <button
           type="button"
-          disabled={!canContinue || loadingPools}
-          onClick={loadCheckout}
+          disabled={!canContinue || loading}
+          onClick={startPurchase}
           className="mt-6 w-full rounded-lg bg-accent-lime px-8 py-3 text-sm font-black uppercase tracking-wide text-black transition-transform hover:scale-105 disabled:pointer-events-none disabled:opacity-40"
         >
-          {loadingPools ? "Lädt..." : "Weiter"}
+          {loading ? "Reserviert..." : "Weiter"}
         </button>
       </div>
     );
@@ -209,7 +200,9 @@ export default function TicketsDataFlow({
 
   return (
     <div className="rounded-2xl border border-foreground/10 p-6 sm:p-8">
-      <h1 className="text-2xl font-black uppercase text-foreground">Checkout</h1>
+      <h1 className="text-2xl font-black uppercase text-foreground">
+        Zahlung
+      </h1>
 
       <div className="mt-6 divide-y divide-foreground/8">
         {lineItems.map(({ pool, qty }) => (
@@ -219,7 +212,9 @@ export default function TicketsDataFlow({
               <p className="text-xs text-foreground/50">{qty}x Ticket</p>
             </div>
             <p className="text-sm font-bold text-foreground">
-              {pool.free ? "Gratis" : `${priceToEuro(pool.price * qty)} €`}
+              {pool.free
+                ? "Gratis"
+                : `${priceToEuro(pool.basePricePerTicket * qty)} €`}
             </p>
           </div>
         ))}
@@ -236,20 +231,18 @@ export default function TicketsDataFlow({
         </div>
         <div className="flex justify-between text-base font-black text-foreground">
           <span>Gesamt</span>
-          <span>{priceToEuro(total)} €</span>
+          <span>{priceToEuro(subtotal + fees)} €</span>
         </div>
       </div>
 
-      {error && <p className="mt-4 text-sm text-red-500">{error}</p>}
-
-      <button
-        type="button"
-        disabled={submitting}
-        onClick={submitPurchase}
-        className="mt-6 w-full rounded-lg bg-accent-lime px-8 py-3 text-sm font-black uppercase tracking-wide text-black transition-transform hover:scale-105 disabled:pointer-events-none disabled:opacity-40"
-      >
-        {submitting ? "Wird vorbereitet..." : "Weiter zur Zahlung"}
-      </button>
+      {clientSecret && purchaseRequestId && secret && (
+        <Elements
+          stripe={stripePromise}
+          options={{ clientSecret, locale: "de" }}
+        >
+          <PaymentForm purchaseRequestId={purchaseRequestId} secret={secret} />
+        </Elements>
+      )}
 
       <button
         type="button"
@@ -265,6 +258,59 @@ export default function TicketsDataFlow({
       >
         Abbrechen
       </Link>
+    </div>
+  );
+}
+
+function PaymentForm({
+  purchaseRequestId,
+  secret,
+}: {
+  purchaseRequestId: string;
+  secret: string;
+}) {
+  const stripe = useStripe();
+  const elements = useElements();
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const pay = async () => {
+    if (!stripe || !elements) return;
+    setError(null);
+    setSubmitting(true);
+
+    const returnUrl = new URL(
+      "/tickets-data/bestaetigung",
+      window.location.origin
+    );
+    returnUrl.searchParams.set("prid", purchaseRequestId);
+    returnUrl.searchParams.set("secret", secret);
+
+    const { error: stripeError } = await stripe.confirmPayment({
+      elements,
+      confirmParams: { return_url: returnUrl.toString() },
+    });
+
+    if (stripeError) {
+      setError(
+        stripeError.message ?? "Die Zahlung konnte nicht durchgeführt werden."
+      );
+      setSubmitting(false);
+    }
+  };
+
+  return (
+    <div className="mt-6">
+      <PaymentElement />
+      {error && <p className="mt-4 text-sm text-red-500">{error}</p>}
+      <button
+        type="button"
+        disabled={!stripe || submitting}
+        onClick={pay}
+        className="mt-6 w-full rounded-lg bg-accent-lime px-8 py-3 text-sm font-black uppercase tracking-wide text-black transition-transform hover:scale-105 disabled:pointer-events-none disabled:opacity-40"
+      >
+        {submitting ? "Wird bezahlt..." : "Jetzt bezahlen"}
+      </button>
     </div>
   );
 }

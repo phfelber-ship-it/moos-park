@@ -37,7 +37,7 @@ export default function TicketSelector({
         {pools.map((pool) => {
           const soldOut = pool.sold >= pool.contingent;
           const qty = quantities[pool.id] ?? 0;
-          const available = pool.contingent - pool.sold;
+          const available = pool.contingent - pool.sold - pool.reserved;
           const lowStock = !soldOut && available > 0 && available < 20;
           const isEarly = /early/i.test(pool.name);
           const isFriends = /friend|freund/i.test(pool.name);
@@ -78,7 +78,7 @@ export default function TicketSelector({
                       ? "Ausverkauft"
                       : pool.free
                       ? "Gratis"
-                      : `${priceToEuro(pool.price)} € + Ticketgebühr*`}
+                      : `${priceToEuro(pool.basePricePerTicket)} € + Ticketgebühr*`}
                     {lowStock && (
                       <span className="ml-1 font-bold text-foreground/70">
                         (nur noch wenige verfügbar)

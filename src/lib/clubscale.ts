@@ -1,13 +1,18 @@
-const COMMUNITY_ID = "675812b48b4595ad0f323ee6";
+export const COMMUNITY_ID = "675812b48b4595ad0f323ee6";
 const API_BASE = `https://moospark.clubscale.com/api/public/v2/communities/${COMMUNITY_ID}`;
+export const CLUBSCALE_API_BASE = API_BASE;
+export const STRIPE_PUBLISHABLE_KEY =
+  "pk_live_51QQ7AK2L1eKPuLJltvFoJp0P1obYWqtlwPbRsvK9kjuvPWUri737WCeifUepVgUWleqxAkpqDWoBXDJANIw7Vwxq00yG4WWasz";
 
 export type TicketPool = {
   id: string;
   name: string;
-  price: number;
+  basePricePerTicket: number;
+  communityFeePerTicket: number;
   free: boolean;
   contingent: number;
   sold: number;
+  reserved: number;
   saleStart: string;
   saleEnd: string;
   deactivated: boolean;
@@ -187,4 +192,117 @@ export async function getGalleryMedia(id: string): Promise<GalleryMedia[]> {
   }
   const data = (await res.json()) as { media: GalleryMedia[] };
   return data.media;
+}
+
+export async function getTicketPools(eventId: string): Promise<TicketPool[]> {
+  const res = await fetch(`${API_BASE}/events/${eventId}/ticket-pools`, {
+    cache: "no-store",
+  });
+  if (!res.ok) {
+    return [];
+  }
+  const data = (await res.json()) as { ticketPools: TicketPool[] };
+  return data.ticketPools;
+}
+
+export type Gender = "MALE" | "FEMALE" | "DIVERS" | "UNKNOWN";
+
+export type PurchaseItemRequest = {
+  id: string;
+  ticketPoolID: string;
+  quantity: number;
+  free: boolean;
+  pricePerUnit: number;
+  priceTotal: number;
+  communityFeePerUnit: number;
+  communityFeeTotal: number;
+};
+
+export type PurchaseRequestStatus =
+  | "UNCONFIRMED"
+  | "PENDING"
+  | "SUCCEEDED"
+  | "CANCELLED";
+
+export type PurchaseRequest = {
+  id: string;
+  status: PurchaseRequestStatus;
+  eventID: string;
+  mailRequest: string;
+  firstNameRequest: string;
+  lastNameRequest: string;
+  purchaseItemRequests: PurchaseItemRequest[];
+  price: number;
+  communityFee: number;
+  internalClubscaleFee: number;
+  internalPaymentFee: number;
+  total: number;
+};
+
+export type Ticket = {
+  id: string;
+  ticketPoolID: string;
+  qrText: string;
+};
+
+export type Purchase = {
+  id: string;
+  clientSecret?: string;
+  tickets?: Ticket[];
+};
+
+export type DirectPurchaseResponse = {
+  secret: string;
+  purchaseRequest: PurchaseRequest;
+  purchase?: Purchase;
+  clientSecret?: string;
+};
+
+export async function createDirectPurchaseRequest(input: {
+  eventId: string;
+  birthday: string;
+  mail: string;
+  firstName: string;
+  lastName: string;
+  redirectURL: string;
+  items: { ticketPoolID: string; quantity: number }[];
+}): Promise<DirectPurchaseResponse> {
+  const res = await fetch(`${API_BASE}/purchase-requests/direct`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      event: input.eventId,
+      birthday: input.birthday,
+      mail: input.mail,
+      firstName: input.firstName,
+      lastName: input.lastName,
+      gender: "UNKNOWN" satisfies Gender,
+      redirectURL: input.redirectURL,
+      items: input.items,
+    }),
+  });
+  const data = await res.json();
+  if (!res.ok) {
+    throw new Error(data?.message ?? "Purchase-Request fehlgeschlagen.");
+  }
+  return data as DirectPurchaseResponse;
+}
+
+export async function getPurchaseRequest(
+  id: string,
+  secret: string
+): Promise<{ purchaseRequest: PurchaseRequest; purchase?: Purchase }> {
+  const res = await fetch(`${API_BASE}/purchase-requests/${id}`, {
+    headers: { "X-Purchaserequest-Secret": secret },
+    cache: "no-store",
+  });
+  const data = await res.json();
+  if (!res.ok) {
+    throw new Error(data?.message ?? "Purchase-Request konnte nicht geladen werden.");
+  }
+  return data;
+}
+
+export function ticketsPdfUrl(purchaseRequestId: string): string {
+  return `${API_BASE}/purchase-requests/${purchaseRequestId}/tickets-pdf`;
 }
