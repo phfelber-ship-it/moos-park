@@ -44,16 +44,10 @@ export default function TicketSelector({
           return (
             <div
               key={pool.id}
-              className={`relative flex items-center justify-between gap-4 py-3.5 ${
+              className={`flex flex-wrap items-center justify-between gap-x-4 gap-y-2 py-3.5 ${
                 soldOut ? "opacity-50" : ""
               } ${lowStock ? "-mx-3 rounded-lg bg-accent/10 px-3" : ""}`}
             >
-              {isFriends && (
-                <span className="absolute right-0 top-1 rounded-full bg-accent px-2.5 py-0.5 text-[10px] font-black uppercase tracking-wide text-black">
-                  Best Deal
-                </span>
-              )}
-
               <div className="flex min-w-0 items-start gap-2.5">
                 <span
                   className={`mt-1.5 h-2 w-2 shrink-0 rounded-full ${
@@ -61,17 +55,24 @@ export default function TicketSelector({
                   }`}
                 />
                 <div className="min-w-0">
-                  <div className="flex flex-wrap items-center gap-1.5">
-                    <p className="truncate text-sm font-bold text-foreground">
-                      {pool.name}
-                    </p>
-                    {isEarly && (
-                      <span className="shrink-0 rounded-full bg-accent-lime px-2 py-0.5 text-[10px] font-black uppercase tracking-wide text-black">
-                        Beliebt
-                      </span>
-                    )}
-                  </div>
-                  <p className="text-xs text-foreground/50">
+                  <p className="truncate text-sm font-bold text-foreground">
+                    {pool.name}
+                  </p>
+                  {(isEarly || isFriends) && (
+                    <div className="mt-1 flex flex-wrap gap-1">
+                      {isEarly && (
+                        <span className="rounded-full bg-accent-lime px-2 py-0.5 text-[10px] font-black uppercase tracking-wide text-black">
+                          Beliebt
+                        </span>
+                      )}
+                      {isFriends && (
+                        <span className="rounded-full bg-accent px-2 py-0.5 text-[10px] font-black uppercase tracking-wide text-black">
+                          Best Deal
+                        </span>
+                      )}
+                    </div>
+                  )}
+                  <p className="mt-1 text-xs text-foreground/50">
                     {soldOut
                       ? "Ausverkauft"
                       : pool.free
@@ -87,7 +88,7 @@ export default function TicketSelector({
               </div>
 
               {!soldOut && (
-                <div className="flex shrink-0 items-center gap-3">
+                <div className="ml-auto flex shrink-0 items-center gap-3">
                   <button
                     type="button"
                     onClick={() => setQty(pool.id, -1, available)}
