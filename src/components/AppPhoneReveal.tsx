@@ -14,6 +14,7 @@ export default function AppPhoneReveal() {
     >
       <motion.div
         animate={{ y: [0, -10, 0] }}
+        whileHover={{ scale: 1.08, transition: { duration: 0.35, ease: "easeOut" } }}
         transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
         className="relative aspect-[768/1365] w-full drop-shadow-2xl"
       >

@@ -117,7 +117,7 @@ export default async function Home() {
         </div>
       </div>
 
-      <section className="px-6 py-24">
+      <section className="flex min-h-[720px] items-center px-6 py-24">
         <div className="mx-auto max-w-7xl">
           <Reveal>
             <h2 className="text-center text-3xl font-black uppercase text-foreground sm:text-4xl">
@@ -140,7 +140,7 @@ export default async function Home() {
         </div>
       </section>
 
-      <section className="relative overflow-hidden px-6 py-32 text-center">
+      <section className="relative flex min-h-[720px] items-center overflow-hidden px-6 py-24 text-center">
         <Image
           src="/images/tanzabend-banner.png"
           alt="Tanz Nächte"
@@ -169,7 +169,7 @@ export default async function Home() {
         </Reveal>
       </section>
 
-      <section className="px-6 py-24">
+      <section className="flex min-h-[720px] items-center px-6 py-24">
         <div className="mx-auto max-w-7xl">
           <Reveal>
             <h2 className="text-center text-3xl font-black uppercase text-foreground sm:text-4xl">
@@ -199,9 +199,9 @@ export default async function Home() {
         </div>
       </section>
 
-      <section className="px-6 py-24">
-        <div className="mx-auto max-w-6xl overflow-hidden rounded-2xl bg-foreground text-background">
-          <div className="grid items-center gap-10 px-8 py-14 sm:px-14 sm:py-16 lg:grid-cols-2 lg:gap-16">
+      <section className="flex min-h-[720px] items-center px-6 py-24">
+        <div className="mx-auto max-w-6xl">
+          <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
             <AppPhoneReveal />
 
             <Reveal direction="right" className="order-1 lg:order-2">
@@ -211,7 +211,7 @@ export default async function Home() {
               <h2 className="mt-4 text-3xl font-black uppercase leading-[1.05] sm:text-4xl">
                 Deine Nacht. Deine App.
               </h2>
-              <p className="mt-5 max-w-md text-background/70">
+              <p className="mt-5 max-w-md text-foreground/70">
                 Tickets kaufen, Tisch reservieren und Coupons einlösen – alles
                 an einem Ort. Nie wieder eine Party verpassen.
               </p>
@@ -276,7 +276,7 @@ export default async function Home() {
         </div>
       </section>
 
-      <section className="px-6 py-24">
+      <section className="flex min-h-[720px] flex-col justify-center px-6 py-24">
         <Reveal className="mx-auto max-w-3xl text-center">
           <p className="text-sm font-black uppercase tracking-wide text-accent-lime">
             moos.park
@@ -297,17 +297,17 @@ export default async function Home() {
         <FanGallery photos={fanPhotos} />
       </section>
 
-      <section className="px-6 py-24">
+      <section className="flex min-h-[720px] items-center px-6 py-24">
         <div className="mx-auto max-w-6xl">
           <div className="grid gap-10 lg:grid-cols-2 lg:items-center lg:gap-16">
             <Reveal direction="left">
-              <div className="relative aspect-[4/5] w-full overflow-hidden rounded-2xl border border-foreground/10 shadow-[0_20px_40px_rgba(0,0,0,0.12)]">
+              <div className="relative aspect-[4/5] w-full max-w-xs mx-auto overflow-hidden rounded-2xl border border-foreground/10 shadow-[0_20px_40px_rgba(0,0,0,0.12)] lg:max-w-sm">
                 <Image
                   src="/images/gallery-2.jpg"
                   alt="moos.park"
                   fill
                   className="object-cover grayscale"
-                  sizes="(min-width: 1024px) 500px, 100vw"
+                  sizes="(min-width: 1024px) 384px, 320px"
                 />
               </div>
             </Reveal>
