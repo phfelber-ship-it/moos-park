@@ -90,13 +90,10 @@ export default async function Home() {
     .map((g) => g.coverMediaObjects[0]?.fullImage?.presignedURL)
     .filter((src): src is string => Boolean(src))
     .slice(0, 6);
-  const fanPhotos = allGalleries
-    .map((g) => ({
-      src: g.coverMediaObjects[0]?.thumbnail?.presignedURL,
-      alt: g.name,
-    }))
-    .filter((p): p is { src: string; alt: string } => Boolean(p.src))
-    .slice(0, 5);
+  const fanPhotos = Array.from({ length: 11 }, (_, i) => ({
+    src: `/images/fan-${i + 1}.jpg`,
+    alt: "moos.park",
+  }));
 
   return (
     <div>
@@ -298,49 +295,34 @@ export default async function Home() {
       </section>
 
       <section className="flex min-h-[720px] items-center px-6 py-24">
-        <div className="mx-auto max-w-6xl">
-          <div className="grid gap-10 lg:grid-cols-2 lg:items-center lg:gap-16">
-            <Reveal direction="left">
-              <div className="relative aspect-[4/5] w-full max-w-xs mx-auto overflow-hidden rounded-2xl border border-foreground/10 shadow-[0_20px_40px_rgba(0,0,0,0.12)] lg:max-w-sm">
-                <Image
-                  src="/images/gallery-2.jpg"
-                  alt="moos.park"
-                  fill
-                  className="object-cover"
-                  sizes="(min-width: 1024px) 384px, 320px"
-                />
-              </div>
-            </Reveal>
+        <div className="mx-auto max-w-3xl">
+          <Reveal>
+            <h2 className="text-center text-3xl font-black uppercase text-foreground sm:text-4xl">
+              Über uns
+            </h2>
+            <p className="mt-4 text-center text-foreground/70">
+              Mit wachsendem Bedarf an professionellen Veranstaltungsflächen
+              wurde der moos.park kontinuierlich erweitert. Heute bieten wir:
+            </p>
 
-            <Reveal direction="right" delay={0.1}>
-              <h2 className="text-center text-3xl font-black uppercase text-foreground sm:text-4xl">
-                Über uns
-              </h2>
-              <p className="mt-4 text-center text-foreground/70">
-                Mit wachsendem Bedarf an professionellen
-                Veranstaltungsflächen wurde der moos.park kontinuierlich
-                erweitert. Heute bieten wir:
-              </p>
-
-              <div className="mt-6 -mx-6 flex snap-x snap-mandatory gap-3 overflow-x-auto px-6 pb-2 sm:mx-0 sm:px-0">
-                {[
-                  "Mehrere individuell nutzbare Eventbereiche",
-                  "Eine stilvolle Terrasse mit Platz für Outdoor-Events",
-                  "Eine hauseigene Pizzeria für kulinarische Vielfalt",
-                  "Voll ausgestattete Techniklösungen für Business-Events und Kultur",
-                  "Backstage- und Produktionsflächen für Künstler & Veranstalter",
-                ].map((text) => (
-                  <div
-                    key={text}
-                    className="flex h-36 w-52 shrink-0 snap-start flex-col items-start gap-3 rounded-2xl border border-foreground/10 p-4"
-                  >
-                    <span className="shrink-0 text-accent-lime">✔</span>
-                    <span className="text-sm text-foreground/80">{text}</span>
-                  </div>
-                ))}
-              </div>
-            </Reveal>
-          </div>
+            <div className="mt-6 -mx-6 flex snap-x snap-mandatory gap-3 overflow-x-auto px-6 pb-2 sm:mx-0 sm:justify-center sm:px-0">
+              {[
+                "Mehrere individuell nutzbare Eventbereiche",
+                "Eine stilvolle Terrasse mit Platz für Outdoor-Events",
+                "Eine hauseigene Pizzeria für kulinarische Vielfalt",
+                "Voll ausgestattete Techniklösungen für Business-Events und Kultur",
+                "Backstage- und Produktionsflächen für Künstler & Veranstalter",
+              ].map((text) => (
+                <div
+                  key={text}
+                  className="flex h-36 w-52 shrink-0 snap-start flex-col items-start gap-3 rounded-2xl border border-foreground/10 p-4"
+                >
+                  <span className="shrink-0 text-accent-lime">✔</span>
+                  <span className="text-sm text-foreground/80">{text}</span>
+                </div>
+              ))}
+            </div>
+          </Reveal>
         </div>
       </section>
     </div>

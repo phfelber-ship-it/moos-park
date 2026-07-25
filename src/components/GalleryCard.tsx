@@ -16,7 +16,7 @@ function formatDate(iso: string) {
 }
 
 export default function GalleryCard({ gallery }: { gallery: Gallery }) {
-  const cover = gallery.coverMediaObjects[0]?.thumbnail?.presignedURL;
+  const previewPhotos = gallery.coverMediaObjects.slice(0, 6);
 
   return (
     <motion.div
@@ -26,17 +26,24 @@ export default function GalleryCard({ gallery }: { gallery: Gallery }) {
     >
       <Link
         href={`/bilder/${gallery.id}`}
-        className="group relative aspect-[4/3] w-full overflow-hidden rounded-xl bg-foreground/5"
+        className="group grid w-full grid-cols-3 grid-rows-2 gap-1 overflow-hidden rounded-xl"
       >
-        {cover && (
-          <Image
-            src={cover}
-            alt={gallery.name}
-            fill
-            className="object-cover transition-transform duration-300 group-hover:scale-105"
-            sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
-          />
-        )}
+        {previewPhotos.map((photo, i) => (
+          <div
+            key={photo.id}
+            className="relative aspect-square overflow-hidden bg-foreground/5"
+          >
+            {photo.thumbnail?.presignedURL && (
+              <Image
+                src={photo.thumbnail.presignedURL}
+                alt={`${gallery.name} ${i + 1}`}
+                fill
+                className="object-cover transition-transform duration-300 group-hover:scale-105"
+                sizes="(min-width: 1024px) 8vw, (min-width: 640px) 17vw, 33vw"
+              />
+            )}
+          </div>
+        ))}
       </Link>
 
       <Link href={`/bilder/${gallery.id}`}>
