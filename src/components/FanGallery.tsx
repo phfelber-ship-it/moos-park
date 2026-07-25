@@ -31,7 +31,7 @@ export default function FanGallery({ photos }: { photos: FanPhoto[] }) {
             viewport={{ once: true, amount: 0.3 }}
             transition={{ duration: 0.6, delay: i * 0.08, ease: [0.22, 1, 0.36, 1] }}
             whileHover={{ scale: 1.05, rotate: 0, zIndex: 50 }}
-            className="absolute left-1/2 top-1/2 h-[320px] w-[240px] overflow-hidden rounded-2xl border-[1.5px] border-white/40 shadow-[0_20px_40px_rgba(0,0,0,0.25)]"
+            className="absolute left-1/2 top-1/2 h-[320px] w-[240px] overflow-hidden rounded-2xl shadow-[0_20px_40px_rgba(0,0,0,0.25)]"
             style={{
               x: tx,
               y: ty,

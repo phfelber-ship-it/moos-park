@@ -140,7 +140,7 @@ export default async function Home() {
         </div>
       </section>
 
-      <section className="relative flex min-h-[720px] items-center overflow-hidden px-6 py-24 text-center">
+      <section className="relative overflow-hidden px-6 py-32 text-center">
         <Image
           src="/images/tanzabend-banner.png"
           alt="Tanz Nächte"
@@ -306,7 +306,7 @@ export default async function Home() {
                   src="/images/gallery-2.jpg"
                   alt="moos.park"
                   fill
-                  className="object-cover grayscale"
+                  className="object-cover"
                   sizes="(min-width: 1024px) 384px, 320px"
                 />
               </div>
