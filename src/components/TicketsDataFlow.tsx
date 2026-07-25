@@ -14,6 +14,7 @@ import {
   getTicketPools,
   priceToEuro,
   STRIPE_PUBLISHABLE_KEY,
+  type PurchaseRequest,
   type TicketPool,
 } from "@/lib/clubscale";
 
@@ -45,6 +46,8 @@ export default function TicketsDataFlow({
   const [mail, setMail] = useState("");
 
   const [pools, setPools] = useState<TicketPool[] | null>(null);
+  const [purchaseRequest, setPurchaseRequest] =
+    useState<PurchaseRequest | null>(null);
   const [clientSecret, setClientSecret] = useState<string | null>(null);
   const [purchaseRequestId, setPurchaseRequestId] = useState<string | null>(
     null
@@ -96,6 +99,7 @@ export default function TicketsDataFlow({
       }
 
       setPurchaseRequestId(response.purchaseRequest.id);
+      setPurchaseRequest(response.purchaseRequest);
       setSecret(response.secret);
       setClientSecret(cs);
       setStep("payment");
@@ -116,14 +120,17 @@ export default function TicketsDataFlow({
     })
     .filter((x): x is { pool: TicketPool; qty: number } => Boolean(x));
 
-  const subtotal = lineItems.reduce(
-    (sum, { pool, qty }) => sum + pool.basePricePerTicket * qty,
-    0
-  );
-  const fees = lineItems.reduce(
-    (sum, { pool, qty }) => sum + pool.communityFeePerTicket * qty,
-    0
-  );
+  // Zwischensumme/Gebühr kommen aus der echten Purchase-Request-Antwort,
+  // nicht aus den Pool-Schätzwerten: der tatsächliche Preis enthält neben
+  // der Community-Gebühr auch Clubscale- und Zahlungs-Gebühren, die erst
+  // beim Erstellen des Purchase-Requests berechnet werden.
+  const subtotal = purchaseRequest?.price ?? 0;
+  const fees = purchaseRequest
+    ? purchaseRequest.communityFee +
+      purchaseRequest.internalClubscaleFee +
+      purchaseRequest.internalPaymentFee
+    : 0;
+  const total = purchaseRequest?.total ?? subtotal + fees;
 
   if (step === "data") {
     return (
@@ -231,7 +238,7 @@ export default function TicketsDataFlow({
         </div>
         <div className="flex justify-between text-base font-black text-foreground">
           <span>Gesamt</span>
-          <span>{priceToEuro(subtotal + fees)} €</span>
+          <span>{priceToEuro(total)} €</span>
         </div>
       </div>
 
