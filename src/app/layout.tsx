@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { Montserrat } from "next/font/google";
-import Script from "next/script";
 import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -49,14 +48,14 @@ export default function RootLayout({
       className={`${montserrat.variable} h-full antialiased`}
       suppressHydrationWarning
     >
-      <body className="flex min-h-full flex-col bg-background font-sans text-foreground">
-        <Script
-          id="theme-init"
-          strategy="beforeInteractive"
+      <head>
+        <script
           dangerouslySetInnerHTML={{
-            __html: `(function(){try{var t=localStorage.getItem('theme');if(t!=='light'){document.documentElement.setAttribute('data-theme','dark');}}catch(e){}})();`,
+            __html: `try{if(localStorage.getItem('theme')==='light'){document.documentElement.setAttribute('data-theme','light');}}catch(e){}`,
           }}
         />
+      </head>
+      <body className="flex min-h-full flex-col bg-background font-sans text-foreground">
         <Header />
         <main className="flex-1">{children}</main>
         <Footer />
