@@ -8,6 +8,7 @@ import AppPhoneReveal from "@/components/AppPhoneReveal";
 import FanGallery from "@/components/FanGallery";
 import FlipText from "@/components/FlipText";
 import GalleryCard from "@/components/GalleryCard";
+import RoomsShowcase from "@/components/RoomsShowcase";
 
 function TicketIcon() {
   return (
@@ -295,33 +296,19 @@ export default async function Home() {
       </section>
 
       <section className="flex min-h-[720px] items-center px-6 py-24">
-        <div className="mx-auto max-w-3xl">
+        <div className="mx-auto max-w-5xl">
           <Reveal>
-            <h2 className="text-center text-3xl font-black uppercase text-foreground sm:text-4xl">
+            <p className="text-center text-xs font-black uppercase tracking-[0.3em] text-accent-lime">
               Über uns
-            </h2>
-            <p className="mt-4 text-center text-foreground/70">
-              Mit wachsendem Bedarf an professionellen Veranstaltungsflächen
-              wurde der moos.park kontinuierlich erweitert. Heute bieten wir:
             </p>
+            <p className="mx-auto mt-4 max-w-2xl text-center text-foreground/70">
+              Mit wachsendem Bedarf an professionellen Veranstaltungsflächen
+              wurde der moos.park kontinuierlich erweitert.
+            </p>
+          </Reveal>
 
-            <div className="mt-6 -mx-6 flex snap-x snap-mandatory gap-3 overflow-x-auto px-6 pb-2 sm:mx-0 sm:justify-center sm:px-0">
-              {[
-                "Mehrere individuell nutzbare Eventbereiche",
-                "Eine stilvolle Terrasse mit Platz für Outdoor-Events",
-                "Eine hauseigene Pizzeria für kulinarische Vielfalt",
-                "Voll ausgestattete Techniklösungen für Business-Events und Kultur",
-                "Backstage- und Produktionsflächen für Künstler & Veranstalter",
-              ].map((text) => (
-                <div
-                  key={text}
-                  className="flex h-36 w-52 shrink-0 snap-start flex-col items-start gap-3 rounded-2xl border border-foreground/10 p-4"
-                >
-                  <span className="shrink-0 text-accent-lime">✔</span>
-                  <span className="text-sm text-foreground/80">{text}</span>
-                </div>
-              ))}
-            </div>
+          <Reveal delay={0.1} className="mt-12">
+            <RoomsShowcase />
           </Reveal>
         </div>
       </section>
