@@ -145,7 +145,7 @@ export default async function Home() {
           className="object-cover"
           sizes="100vw"
         />
-        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-foreground via-foreground/60 to-foreground/30" />
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black via-black/60 to-black/30" />
 
         <Reveal direction="scale" className="relative">
           <p className="text-xs font-black uppercase tracking-[0.3em] text-accent-lime">

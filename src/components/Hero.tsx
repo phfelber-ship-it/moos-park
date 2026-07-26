@@ -55,7 +55,7 @@ export default function Hero({ images }: { images: string[] }) {
           />
         </div>
       ))}
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-foreground/70 via-foreground/10 to-foreground/25" />
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-black/25" />
 
       <motion.div
         variants={container}

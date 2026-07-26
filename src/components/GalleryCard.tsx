@@ -26,12 +26,14 @@ export default function GalleryCard({ gallery }: { gallery: Gallery }) {
     >
       <Link
         href={`/bilder/${gallery.id}`}
-        className="group grid w-full grid-cols-3 grid-rows-2 gap-1 overflow-hidden rounded-xl"
+        className="group grid aspect-square w-full grid-cols-3 grid-rows-3 grid-flow-row-dense gap-1 overflow-hidden rounded-xl"
       >
         {previewPhotos.map((photo, i) => (
           <div
             key={photo.id}
-            className="relative aspect-square overflow-hidden bg-foreground/5"
+            className={`relative overflow-hidden bg-foreground/5 ${
+              i === 0 ? "col-span-2 row-span-2" : ""
+            }`}
           >
             {photo.thumbnail?.presignedURL && (
               <Image
@@ -39,7 +41,7 @@ export default function GalleryCard({ gallery }: { gallery: Gallery }) {
                 alt={`${gallery.name} ${i + 1}`}
                 fill
                 className="object-cover transition-transform duration-300 group-hover:scale-105"
-                sizes="(min-width: 1024px) 8vw, (min-width: 640px) 17vw, 33vw"
+                sizes="(min-width: 1024px) 12vw, (min-width: 640px) 25vw, 40vw"
               />
             )}
           </div>

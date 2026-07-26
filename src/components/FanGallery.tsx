@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import {
+  AnimatePresence,
   motion,
   useMotionValue,
   useTransform,
@@ -59,7 +60,8 @@ function Card({
 
   return (
     <motion.div
-      className="pointer-events-none absolute left-1/2 top-1/2 h-[320px] w-[240px] overflow-hidden rounded-2xl shadow-[0_20px_40px_rgba(0,0,0,0.25)]"
+      data-photo-index={index}
+      className="absolute left-1/2 top-1/2 h-[320px] w-[240px] overflow-hidden rounded-2xl shadow-[0_20px_40px_rgba(0,0,0,0.25)]"
       style={{
         x,
         y,
@@ -87,9 +89,13 @@ export default function FanGallery({ photos }: { photos: FanPhoto[] }) {
   const offset = useMotionValue(0);
   const total = photos.length;
   const [dragging, setDragging] = useState(false);
+  const [lightboxPhoto, setLightboxPhoto] = useState<FanPhoto | null>(null);
   const startOffset = useRef(0);
   const resumeAt = useRef(0);
   const rafRef = useRef<number | null>(null);
+  const pointerDown = useRef<{ x: number; y: number; target: EventTarget | null } | null>(
+    null
+  );
 
   useEffect(() => {
     if (total <= 1) return;
@@ -128,6 +134,24 @@ export default function FanGallery({ photos }: { photos: FanPhoto[] }) {
       stiffness: 260,
       damping: 32,
     });
+  };
+
+  const handlePointerDown = (e: React.PointerEvent) => {
+    pointerDown.current = { x: e.clientX, y: e.clientY, target: e.target };
+  };
+
+  const handlePointerUp = (e: React.PointerEvent) => {
+    const down = pointerDown.current;
+    pointerDown.current = null;
+    if (!down) return;
+    const dist = Math.hypot(e.clientX - down.x, e.clientY - down.y);
+    if (dist > 6) return;
+    const el =
+      down.target instanceof Element ? down.target.closest("[data-photo-index]") : null;
+    const indexAttr = el?.getAttribute("data-photo-index");
+    if (indexAttr == null) return;
+    const photo = photos[Number(indexAttr)];
+    if (photo) setLightboxPhoto(photo);
   };
 
   const step = (dir: 1 | -1) => {
@@ -184,6 +208,8 @@ export default function FanGallery({ photos }: { photos: FanPhoto[] }) {
         onPanStart={handlePanStart}
         onPan={handlePan}
         onPanEnd={handlePanEnd}
+        onPointerDown={handlePointerDown}
+        onPointerUp={handlePointerUp}
         initial={{ opacity: 0, y: 40 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, amount: 0.3 }}
@@ -193,6 +219,50 @@ export default function FanGallery({ photos }: { photos: FanPhoto[] }) {
           <Card key={photo.src} photo={photo} index={i} offset={offset} total={total} />
         ))}
       </motion.div>
+
+      <AnimatePresence>
+        {lightboxPhoto && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[200] flex items-center justify-center bg-black/85 p-6"
+            onClick={() => setLightboxPhoto(null)}
+          >
+            <motion.div
+              initial={{ opacity: 0, scale: 0.92 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.92 }}
+              transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
+              className="relative aspect-[3/4] w-full max-w-lg"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <Image
+                src={lightboxPhoto.src}
+                alt={lightboxPhoto.alt}
+                fill
+                className="rounded-2xl object-contain"
+                sizes="90vw"
+              />
+            </motion.div>
+            <button
+              type="button"
+              aria-label="Schließen"
+              onClick={() => setLightboxPhoto(null)}
+              className="absolute right-6 top-6 flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-white transition-colors hover:bg-white/20"
+            >
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                <path
+                  d="M6 6l12 12M18 6 6 18"
+                  stroke="currentColor"
+                  strokeWidth="2.2"
+                  strokeLinecap="round"
+                />
+              </svg>
+            </button>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

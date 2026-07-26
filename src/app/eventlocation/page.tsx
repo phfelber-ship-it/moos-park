@@ -84,7 +84,7 @@ export default function EventlocationPage() {
           className="object-cover"
           sizes="100vw"
         />
-        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-foreground/75 via-foreground/20 to-transparent" />
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/75 via-black/20 to-transparent" />
 
         <div className="relative z-10 mx-auto max-w-3xl px-6 pb-10">
           <h1 className="text-3xl font-black uppercase leading-[1.05] tracking-tight text-white sm:text-5xl">
