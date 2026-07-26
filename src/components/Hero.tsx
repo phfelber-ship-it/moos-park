@@ -38,8 +38,17 @@ export default function Hero({ images }: { images: string[] }) {
   }, [slides.length]);
 
   return (
-    <section className="px-3 pt-3 sm:px-5 sm:pt-5">
-    <div className="relative flex min-h-[70vh] items-end overflow-hidden rounded-3xl text-center text-white sm:min-h-[85vh]">
+    <motion.section
+      initial={{ padding: 16 }}
+      animate={{ padding: 0 }}
+      transition={{ duration: 1.3, ease: [0.22, 1, 0.36, 1], delay: 0.15 }}
+    >
+    <motion.div
+      initial={{ borderRadius: 32 }}
+      animate={{ borderRadius: 0 }}
+      transition={{ duration: 1.3, ease: [0.22, 1, 0.36, 1], delay: 0.15 }}
+      className="relative flex min-h-[70vh] items-end overflow-hidden text-center text-white sm:min-h-[85vh]"
+    >
       {slides.map((src, i) => (
         <div
           key={src}
@@ -117,7 +126,7 @@ export default function Hero({ images }: { images: string[] }) {
           </span>
         </motion.div>
       </motion.div>
-    </div>
-    </section>
+    </motion.div>
+    </motion.section>
   );
 }
