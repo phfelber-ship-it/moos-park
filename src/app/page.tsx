@@ -108,7 +108,7 @@ export default async function Home() {
                 key={i}
                 className="flex items-center gap-2 text-sm font-black uppercase tracking-wide text-black"
               >
-                <span>✔</span> {item}
+                <span className="inline-block animate-spin-slow">✔</span> {item}
               </span>
             )
           )}
@@ -116,7 +116,7 @@ export default async function Home() {
       </div>
 
       <section className="flex min-h-[720px] items-center px-6 py-24">
-        <div className="mx-auto max-w-7xl">
+        <div className="mx-auto w-full min-w-0 max-w-7xl">
           <Reveal>
             <h2 className="text-center text-3xl font-black uppercase text-foreground sm:text-4xl">
               Kommende Events
@@ -168,7 +168,7 @@ export default async function Home() {
       </section>
 
       <section className="flex min-h-[720px] items-center px-6 py-24">
-        <div className="mx-auto max-w-7xl">
+        <div className="mx-auto w-full min-w-0 max-w-7xl">
           <Reveal>
             <h2 className="text-center text-3xl font-black uppercase text-foreground sm:text-4xl">
               Galerie
@@ -198,7 +198,7 @@ export default async function Home() {
       </section>
 
       <section className="flex min-h-[720px] items-center px-6 py-24">
-        <div className="mx-auto max-w-6xl">
+        <div className="mx-auto w-full min-w-0 max-w-6xl">
           <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
             <AppPhoneReveal />
 
@@ -275,7 +275,7 @@ export default async function Home() {
       </section>
 
       <section className="flex min-h-[720px] flex-col justify-center px-6 py-24">
-        <Reveal className="mx-auto max-w-3xl text-center">
+        <Reveal className="mx-auto w-full min-w-0 max-w-3xl text-center">
           <p className="text-sm font-black uppercase tracking-wide text-accent-lime">
             moos.park
           </p>
@@ -296,18 +296,8 @@ export default async function Home() {
       </section>
 
       <section className="flex min-h-[720px] items-center px-6 py-24">
-        <div className="mx-auto max-w-5xl">
+        <div className="mx-auto w-full min-w-0 max-w-5xl">
           <Reveal>
-            <p className="text-center text-xs font-black uppercase tracking-[0.3em] text-accent-lime">
-              Über uns
-            </p>
-            <p className="mx-auto mt-4 max-w-2xl text-center text-foreground/70">
-              Mit wachsendem Bedarf an professionellen Veranstaltungsflächen
-              wurde der moos.park kontinuierlich erweitert.
-            </p>
-          </Reveal>
-
-          <Reveal delay={0.1} className="mt-12">
             <RoomsShowcase />
           </Reveal>
         </div>

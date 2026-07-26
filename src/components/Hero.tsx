@@ -38,7 +38,8 @@ export default function Hero({ images }: { images: string[] }) {
   }, [slides.length]);
 
   return (
-    <section className="relative flex min-h-[75vh] items-end overflow-hidden text-center text-white sm:min-h-[90vh]">
+    <section className="px-3 pt-3 sm:px-5 sm:pt-5">
+    <div className="relative flex min-h-[70vh] items-end overflow-hidden rounded-3xl text-center text-white sm:min-h-[85vh]">
       {slides.map((src, i) => (
         <div
           key={src}
@@ -62,7 +63,7 @@ export default function Hero({ images }: { images: string[] }) {
         initial="hidden"
         whileInView="show"
         viewport={{ once: true, amount: 0.4 }}
-        className="relative z-10 mx-auto flex max-w-2xl flex-col items-center px-6 pb-16 pt-28 sm:pt-0"
+        className="relative z-10 mx-auto flex max-w-2xl flex-col items-center px-6 pb-12 pt-36 sm:pb-16 sm:pt-0"
       >
         <motion.span
           variants={item}
@@ -73,20 +74,20 @@ export default function Hero({ images }: { images: string[] }) {
 
         <motion.h1
           variants={item}
-          className="mt-5 text-5xl font-black uppercase leading-[0.95] tracking-tight text-white sm:text-7xl"
+          className="mt-5 text-4xl font-black uppercase leading-[0.95] tracking-tight text-white sm:text-7xl"
         >
           Moos.park
         </motion.h1>
         <motion.p
           variants={item}
-          className="text-5xl font-normal uppercase leading-[0.95] tracking-tight text-white/70 sm:text-7xl"
+          className="text-4xl font-normal uppercase leading-[0.95] tracking-tight text-white/70 sm:text-7xl"
         >
           Pöttmes
         </motion.p>
 
         <motion.div
           variants={item}
-          className="mt-10 flex w-full max-w-md flex-col gap-3 sm:max-w-none sm:flex-row sm:justify-center"
+          className="mt-8 flex w-full max-w-md flex-col gap-2.5 sm:mt-10 sm:max-w-none sm:flex-row sm:justify-center sm:gap-3"
         >
           {MAIN_ACTIONS.map((action) => (
             <MotionLink
@@ -95,8 +96,8 @@ export default function Hero({ images }: { images: string[] }) {
               fullWidth={false}
               className={
                 action.filled
-                  ? "block w-full rounded-lg bg-accent-lime px-6 py-3.5 text-center text-sm font-black uppercase tracking-wide text-black sm:w-auto"
-                  : "block w-full rounded-lg border border-white/40 px-6 py-3.5 text-center text-sm font-black uppercase tracking-wide text-white transition-colors hover:border-white sm:w-auto"
+                  ? "block w-full rounded-lg bg-accent-lime px-6 py-2.5 text-center text-xs font-black uppercase tracking-wide text-black sm:py-3.5 sm:text-sm sm:w-auto"
+                  : "block w-full rounded-lg border border-white/40 px-6 py-2.5 text-center text-xs font-black uppercase tracking-wide text-white transition-colors hover:border-white sm:py-3.5 sm:text-sm sm:w-auto"
               }
             >
               <FlipText text={action.label} />
@@ -106,7 +107,7 @@ export default function Hero({ images }: { images: string[] }) {
 
         <motion.div
           variants={item}
-          className="mt-14 flex flex-col items-center gap-3 text-white/70"
+          className="mt-8 flex flex-col items-center gap-3 text-white/70 sm:mt-14"
         >
           <span className="text-[11px] font-bold uppercase tracking-[0.3em]">
             Scroll
@@ -116,6 +117,7 @@ export default function Hero({ images }: { images: string[] }) {
           </span>
         </motion.div>
       </motion.div>
+    </div>
     </section>
   );
 }

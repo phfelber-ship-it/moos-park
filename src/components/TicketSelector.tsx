@@ -5,6 +5,13 @@ import Link from "next/link";
 import type { TicketPool } from "@/lib/clubscale";
 import { checkoutUrl, priceToEuro } from "@/lib/clubscale";
 
+function formatSaleDate(iso: string) {
+  return new Date(iso).toLocaleDateString("de-DE", {
+    day: "2-digit",
+    month: "2-digit",
+  });
+}
+
 export default function TicketSelector({
   eventId,
   pools,
@@ -34,11 +41,17 @@ export default function TicketSelector({
       </p>
 
       <div className="divide-y divide-foreground/8">
-        {pools.map((pool) => {
+        {pools
+          .filter((pool) => !pool.deactivated)
+          .map((pool) => {
+          const now = Date.now();
+          const saleNotStarted = new Date(pool.saleStart).getTime() > now;
+          const saleEnded = new Date(pool.saleEnd).getTime() < now;
           const soldOut = pool.sold >= pool.contingent;
+          const unavailable = soldOut || saleNotStarted || saleEnded;
           const qty = quantities[pool.id] ?? 0;
           const available = pool.contingent - pool.sold - pool.reserved;
-          const lowStock = !soldOut && available > 0 && available < 20;
+          const lowStock = !unavailable && available > 0 && available < 20;
           const isEarly = /early/i.test(pool.name);
           const isFriends = /friend|freund/i.test(pool.name);
 
@@ -46,13 +59,13 @@ export default function TicketSelector({
             <div
               key={pool.id}
               className={`flex flex-wrap items-center justify-between gap-x-4 gap-y-2 py-3.5 ${
-                soldOut ? "opacity-50" : ""
+                unavailable ? "opacity-50" : ""
               } ${lowStock ? "-mx-3 rounded-lg bg-accent/10 px-3" : ""}`}
             >
               <div className="flex min-w-0 items-start gap-2.5">
                 <span
                   className={`mt-1.5 h-2 w-2 shrink-0 rounded-full ${
-                    soldOut ? "bg-foreground/30" : "bg-green-500"
+                    unavailable ? "bg-foreground/30" : "bg-green-500"
                   }`}
                 />
                 <div className="min-w-0">
@@ -74,7 +87,11 @@ export default function TicketSelector({
                     {pool.name}
                   </p>
                   <p className="mt-1 text-xs text-foreground/50">
-                    {soldOut
+                    {saleNotStarted
+                      ? `Verkauf ab ${formatSaleDate(pool.saleStart)}`
+                      : saleEnded
+                      ? "Verkauf beendet"
+                      : soldOut
                       ? "Ausverkauft"
                       : pool.free
                       ? "Gratis"
@@ -88,7 +105,7 @@ export default function TicketSelector({
                 </div>
               </div>
 
-              {!soldOut && (
+              {!unavailable && (
                 <div className="ml-auto flex shrink-0 items-center gap-3">
                   <button
                     type="button"

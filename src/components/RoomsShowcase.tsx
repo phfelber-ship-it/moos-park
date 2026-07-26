@@ -45,7 +45,7 @@ export default function RoomsShowcase() {
 
       <div>
         <p className="text-xs font-black uppercase tracking-[0.3em] text-accent-lime">
-          Unsere Räume
+          Eventlocation mieten
         </p>
         <h2 className="mt-3 text-3xl font-black uppercase leading-[1.05] text-foreground sm:text-4xl">
           Sechs Räume. Ein Gefühl.

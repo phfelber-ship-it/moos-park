@@ -26,8 +26,13 @@ html,
 body {
   /* Verhindert seitliches Wischen/Scrollen auf dem Handy, das durch
      bewusst breiter als der Container angelegte Effekte entsteht
-     (z.B. der aufgefaecherte Foto-Stapel in FanGallery). */
-  overflow-x: hidden;
+     (z.B. der aufgefaecherte Foto-Stapel in FanGallery). `clip` statt
+     `hidden`, weil `hidden` weiterhin einen (unsichtbaren) Scroll-
+     Container erzeugt, der sich per Fokus/scrollIntoView (z.B. beim
+     Antippen horizontal scrollbarer Filter-Pills) programmatisch nach
+     links verschieben laesst - das reisst dann die ganze Seite seitlich
+     auf. `clip` erlaubt gar kein Scrollen, auch nicht programmatisch. */
+  overflow-x: clip;
 }
 
 body {
@@ -43,6 +48,19 @@ body {
   to {
     transform: translateX(-33.333%);
   }
+}
+
+@keyframes spin-slow {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin-slow {
+  animation: spin-slow 4s linear infinite;
 }
 
 .animate-marquee {
