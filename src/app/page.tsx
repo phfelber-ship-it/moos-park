@@ -86,10 +86,10 @@ export default async function Home() {
   const events = await getEvents();
   const allGalleries = await getGalleries();
   const galleries = allGalleries.slice(0, 4);
-  const heroImages = allGalleries
-    .map((g) => g.coverMediaObjects[0]?.fullImage?.presignedURL)
-    .filter((src): src is string => Boolean(src))
-    .slice(0, 6);
+  const heroImages = Array.from(
+    { length: 11 },
+    (_, i) => `/images/hero-fan-${i + 1}.jpg`
+  );
   const fanPhotos = Array.from({ length: 11 }, (_, i) => ({
     src: `/images/fan-${i + 1}.jpg`,
     alt: "moos.park",
