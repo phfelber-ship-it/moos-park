@@ -38,34 +38,31 @@ export default function Hero({ images }: { images: string[] }) {
   }, [slides.length]);
 
   return (
-    <motion.section
-      initial={{ padding: 16 }}
-      animate={{ padding: 0 }}
-      transition={{ duration: 1.3, ease: [0.22, 1, 0.36, 1], delay: 0.15 }}
-    >
-    <motion.div
-      initial={{ borderRadius: 32 }}
-      animate={{ borderRadius: 0 }}
-      transition={{ duration: 1.3, ease: [0.22, 1, 0.36, 1], delay: 0.15 }}
-      className="relative flex min-h-[70vh] items-end overflow-hidden text-center text-white sm:min-h-[85vh]"
-    >
-      {slides.map((src, i) => (
-        <div
-          key={src}
-          className="absolute inset-0 transition-opacity duration-700 ease-in-out"
-          style={{ opacity: i === index ? 1 : 0 }}
-        >
-          <Image
-            src={src}
-            alt="moos.park"
-            fill
-            priority={i === 0}
-            className="object-cover"
-            sizes="100vw"
-          />
-        </div>
-      ))}
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-black/25" />
+    <section className="relative flex min-h-[70vh] items-end overflow-hidden text-center text-white sm:min-h-[85vh]">
+      <motion.div
+        initial={{ clipPath: "inset(16px round 32px)" }}
+        animate={{ clipPath: "inset(0px round 0px)" }}
+        transition={{ duration: 1.3, ease: [0.22, 1, 0.36, 1], delay: 0.15 }}
+        className="absolute inset-0"
+      >
+        {slides.map((src, i) => (
+          <div
+            key={src}
+            className="absolute inset-0 transition-opacity duration-700 ease-in-out"
+            style={{ opacity: i === index ? 1 : 0 }}
+          >
+            <Image
+              src={src}
+              alt="moos.park"
+              fill
+              priority={i === 0}
+              className="object-cover"
+              sizes="100vw"
+            />
+          </div>
+        ))}
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-black/25" />
+      </motion.div>
 
       <motion.div
         variants={container}
@@ -126,7 +123,6 @@ export default function Hero({ images }: { images: string[] }) {
           </span>
         </motion.div>
       </motion.div>
-    </motion.div>
-    </motion.section>
+    </section>
   );
 }
