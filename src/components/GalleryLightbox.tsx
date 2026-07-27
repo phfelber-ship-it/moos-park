@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export type LightboxPhoto = { src: string; alt: string };
 
@@ -43,9 +43,9 @@ export default function GalleryLightbox({
     return () => window.removeEventListener("open-lightbox", handler);
   }, []);
 
-  if (index === null) return null;
+  const touchStartX = useRef(0);
 
-  let touchStartX = 0;
+  if (index === null) return null;
 
   const next = () => setIndex((i) => (i === null ? null : (i + 1) % photos.length));
   const prev = () =>
@@ -56,10 +56,10 @@ export default function GalleryLightbox({
       className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 p-4"
       onClick={() => setIndex(null)}
       onTouchStart={(e) => {
-        touchStartX = e.touches[0].clientX;
+        touchStartX.current = e.touches[0].clientX;
       }}
       onTouchEnd={(e) => {
-        const dx = e.changedTouches[0].clientX - touchStartX;
+        const dx = e.changedTouches[0].clientX - touchStartX.current;
         if (dx > 50) prev();
         if (dx < -50) next();
       }}

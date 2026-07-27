@@ -14,7 +14,7 @@ export default async function EventTicketsPage() {
         Event-Tickets
       </h1>
       <p className="mx-auto mt-3 max-w-md text-center text-foreground/60">
-        Event auswählen, Ticket wählen, sichern – so einfach geht's.
+        Event auswählen, Ticket wählen, sichern – so einfach geht&apos;s.
       </p>
 
       {events.length === 0 ? (

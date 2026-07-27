@@ -131,7 +131,7 @@ export default function GeburtstagPage() {
       <section className="px-6 py-20">
         <div className="mx-auto max-w-5xl">
           <h2 className="text-center text-3xl font-black uppercase text-foreground">
-            So einfach geht's.
+            So einfach geht&apos;s.
           </h2>
           <p className="mt-2 text-center text-foreground/60">
             In 4 Schritten zu deiner Party.
@@ -168,7 +168,7 @@ export default function GeburtstagPage() {
               >
                 <p className="text-accent">⭐⭐⭐⭐⭐</p>
                 <p className="mt-3 text-sm italic text-foreground/70">
-                  „{r.text}"
+                  „{r.text}&quot;
                 </p>
                 <p className="mt-4 text-sm font-bold text-foreground/50">
                   {r.author}

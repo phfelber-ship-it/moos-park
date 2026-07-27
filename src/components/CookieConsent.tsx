@@ -33,7 +33,11 @@ export default function CookieConsent() {
   const [marketing, setMarketing] = useState(true);
 
   useEffect(() => {
+    // Bewusst SSR-sicher: Banner startet ausgeblendet (Server-Render) und
+    // wird nur nach dem Mount anhand von localStorage eingeblendet, um
+    // Hydration-Mismatches zu vermeiden.
     if (!getStoredConsent()) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setVisible(true);
     }
   }, []);

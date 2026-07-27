@@ -188,7 +188,7 @@ export default function EventlocationPage() {
           </h2>
           <p className="mt-4 text-foreground/70">
             Ihre Idee sind unser Antrieb. Melden Sie sich bei uns und wir
-            verwandeln Ihre Pläne in unvergessliche Erlebnisse. Los geht's!
+            verwandeln Ihre Pläne in unvergessliche Erlebnisse. Los geht&apos;s!
           </p>
 
           <form className="mt-8 grid gap-4 sm:grid-cols-2">

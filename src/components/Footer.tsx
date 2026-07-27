@@ -44,6 +44,7 @@ const LINKS_COL_1 = [
   { href: "/eventlocation-augsburg", label: "Eventlocation Augsburg" },
   { href: "/eventlocation-bayern", label: "Eventlocation Bayern" },
   { href: "/eventlocation-ingolstadt", label: "Eventlocation Ingolstadt" },
+  { href: "/eventlocation-region", label: "Eventlocation Region mieten" },
   { href: "/veranstaltungsanfrage", label: "Veranstaltungsanfragen" },
 ];
 

@@ -28,6 +28,9 @@ export default function TicketSelector({
     });
   };
 
+  // eslint-disable-next-line react-hooks/purity -- Verfuegbarkeit haengt bewusst von der aktuellen Uhrzeit ab
+  const now = Date.now();
+
   const total = Object.values(quantities).reduce((a, b) => a + b, 0);
 
   const items = Object.entries(quantities)
@@ -44,7 +47,6 @@ export default function TicketSelector({
         {pools
           .filter((pool) => !pool.deactivated)
           .map((pool) => {
-          const now = Date.now();
           const saleNotStarted = new Date(pool.saleStart).getTime() > now;
           const saleEnded = new Date(pool.saleEnd).getTime() < now;
           const soldOut = pool.sold >= pool.contingent;

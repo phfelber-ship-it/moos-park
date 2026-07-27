@@ -21,6 +21,7 @@ const STATIC_ROUTES = [
   "/eventlocation-augsburg",
   "/eventlocation-bayern",
   "/eventlocation-ingolstadt",
+  "/eventlocation-region",
   "/veranstaltungsanfrage",
   "/impressum",
   "/datenschutz",

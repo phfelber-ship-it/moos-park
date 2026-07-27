@@ -6,6 +6,10 @@ export default function ThemeToggle() {
   const [dark, setDark] = useState(true);
 
   useEffect(() => {
+    // Bewusst SSR-sicher: Startwert ist immer "dark" (Server-Render), das
+    // Inline-Script in layout.tsx setzt data-theme vor der Hydration bereits
+    // korrekt, dieser Effect synchronisiert nur den React-State danach.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setDark(document.documentElement.getAttribute("data-theme") !== "light");
   }, []);
 
