@@ -20,6 +20,12 @@ function Arrow({ dir }: { dir: "left" | "right" }) {
   );
 }
 
+const slideVariants = {
+  enter: (dir: number) => ({ x: dir > 0 ? "100%" : "-100%" }),
+  center: { x: "0%" },
+  exit: (dir: number) => ({ x: dir > 0 ? "-100%" : "100%" }),
+};
+
 export default function RoomImageRotator({
   images,
   alt,
@@ -29,16 +35,18 @@ export default function RoomImageRotator({
   alt: string;
   sizes: string;
 }) {
-  const [index, setIndex] = useState(0);
+  const [[index, direction], setState] = useState<[number, number]>([0, 1]);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const pointerDown = useRef<{ x: number; y: number } | null>(null);
+
+  const paginate = (dir: 1 | -1) => {
+    setState(([i]) => [(i + dir + images.length) % images.length, dir]);
+  };
 
   const restartTimer = () => {
     if (intervalRef.current) clearInterval(intervalRef.current);
     if (images.length <= 1) return;
-    intervalRef.current = setInterval(() => {
-      setIndex((i) => (i + 1) % images.length);
-    }, IMAGE_INTERVAL);
+    intervalRef.current = setInterval(() => paginate(1), IMAGE_INTERVAL);
   };
 
   useEffect(() => {
@@ -50,7 +58,7 @@ export default function RoomImageRotator({
   }, [images.length]);
 
   const goTo = (dir: 1 | -1) => {
-    setIndex((i) => (i + dir + images.length) % images.length);
+    paginate(dir);
     restartTimer();
   };
 
@@ -71,17 +79,19 @@ export default function RoomImageRotator({
 
   return (
     <div
-      className="absolute inset-0 touch-pan-y select-none"
+      className="absolute inset-0 touch-pan-y select-none overflow-hidden"
       onPointerDown={handlePointerDown}
       onPointerUp={handlePointerUp}
     >
-      <AnimatePresence mode="wait" initial={false}>
+      <AnimatePresence custom={direction} initial={false}>
         <motion.div
           key={images[index]}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.5, ease: "easeInOut" }}
+          custom={direction}
+          variants={slideVariants}
+          initial="enter"
+          animate="center"
+          exit="exit"
+          transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
           className="absolute inset-0"
         >
           <Image
