@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ROOMS } from "@/lib/rooms";
+import RoomImageRotator from "@/components/RoomImageRotator";
 
 export const metadata = {
   title: "Eventlocation Pöttmes – Veranstaltungslocation Bayern | moos.park",
@@ -142,11 +143,9 @@ export default function EventlocationPage() {
               className="flex flex-col items-center rounded-2xl bg-foreground/[0.03] p-4 text-center"
             >
               <div className="relative aspect-[4/3] w-full overflow-hidden rounded-xl bg-foreground/5">
-                <Image
-                  src={room.image}
+                <RoomImageRotator
+                  images={room.images}
                   alt={room.name}
-                  fill
-                  className="object-cover"
                   sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
                 />
               </div>

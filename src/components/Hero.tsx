@@ -40,9 +40,9 @@ export default function Hero({ images }: { images: string[] }) {
   return (
     <section className="relative flex min-h-[70vh] items-end overflow-hidden text-center text-white sm:min-h-[85vh]">
       <motion.div
-        initial={{ clipPath: "inset(35% round 32px)" }}
+        initial={{ clipPath: "inset(20% round 32px)" }}
         animate={{ clipPath: "inset(0% round 0px)" }}
-        transition={{ duration: 1.4, ease: [0.22, 1, 0.36, 1], delay: 0.15 }}
+        transition={{ duration: 1.4, ease: [0.22, 1, 0.36, 1], delay: 0 }}
         className="absolute inset-0"
       >
         {slides.map((src, i) => (

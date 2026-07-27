@@ -1,36 +1,38 @@
 "use client";
 
 import { useState } from "react";
-import Image from "next/image";
 import Link from "next/link";
 import { AnimatePresence, motion } from "motion/react";
 import { ROOMS } from "@/lib/rooms";
+import RoomImageRotator from "@/components/RoomImageRotator";
 
 export default function RoomsShowcase() {
   const [active, setActive] = useState(0);
   const room = ROOMS[active];
 
   return (
-    <div className="grid gap-8 lg:grid-cols-2 lg:items-center lg:gap-12">
-      <div className="relative aspect-[4/3] w-full overflow-hidden rounded-2xl">
-        <AnimatePresence mode="wait" initial={false}>
-          <motion.div
-            key={room.image}
-            initial={{ opacity: 0, scale: 1.03 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.4, ease: "easeInOut" }}
-            className="absolute inset-0"
-          >
-            <Image
-              src={room.image}
-              alt={room.name}
-              fill
-              className="object-cover"
-              sizes="(min-width: 1024px) 500px, 100vw"
-            />
-          </motion.div>
-        </AnimatePresence>
+    <div>
+      <div className="mx-auto max-w-2xl text-center">
+        <p className="text-xs font-black uppercase tracking-[0.3em] text-accent-lime">
+          Eventlocation mieten
+        </p>
+        <h2 className="mt-3 text-3xl font-black uppercase leading-[1.05] text-foreground sm:text-4xl">
+          Sechs Räume. Ein Gefühl.
+        </h2>
+        <p className="mx-auto mt-4 max-w-md text-foreground/70">
+          Ob Main-Halle, Terrasse oder Lounge – jeder Bereich lässt sich
+          einzeln oder in Kombination für dein Event nutzen.
+        </p>
+      </div>
+
+      <div className="mt-12 grid gap-8 lg:grid-cols-2 lg:items-center lg:gap-12">
+        <div className="relative order-1 aspect-[16/10] w-full overflow-hidden rounded-2xl lg:order-2">
+        <RoomImageRotator
+          key={room.name}
+          images={room.images}
+          alt={room.name}
+          sizes="(min-width: 1024px) 700px, 100vw"
+        />
 
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
 
@@ -41,21 +43,10 @@ export default function RoomsShowcase() {
             <span>{room.area}</span>
           </div>
         </div>
-      </div>
+        </div>
 
-      <div>
-        <p className="text-xs font-black uppercase tracking-[0.3em] text-accent-lime">
-          Eventlocation mieten
-        </p>
-        <h2 className="mt-3 text-3xl font-black uppercase leading-[1.05] text-foreground sm:text-4xl">
-          Sechs Räume. Ein Gefühl.
-        </h2>
-        <p className="mt-4 max-w-md text-foreground/70">
-          Ob Main-Halle, Terrasse oder Lounge – jeder Bereich lässt sich
-          einzeln oder in Kombination für dein Event nutzen.
-        </p>
-
-        <div className="mt-8 flex flex-col divide-y divide-foreground/10 border-t border-foreground/10">
+      <div className="order-2 lg:order-1">
+        <div className="flex flex-col divide-y divide-foreground/10 border-t border-foreground/10">
           {ROOMS.map((r, i) => {
             const isActive = i === active;
             return (
@@ -103,6 +94,7 @@ export default function RoomsShowcase() {
         >
           Mehr erfahren
         </Link>
+      </div>
       </div>
     </div>
   );
