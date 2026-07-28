@@ -1,13 +1,13 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
-import type { ClubscaleEvent } from "@/lib/clubscale";
-
-const STEPS = ["Veranstaltung", "Personen", "Ankunft", "Kontakt", "Fertig"];
-// A progress bar should never read 0% – it discourages completion before
-// the user has even started. Each step nudges it further along instead.
-const PROGRESS = [15, 35, 55, 75, 100];
+import {
+  createReservation,
+  getEventReservables,
+  type ClubscaleEvent,
+  type Reservable,
+} from "@/lib/clubscale";
 
 function formatDate(iso: string) {
   return new Date(iso).toLocaleDateString("de-DE", {
@@ -31,6 +31,8 @@ function arrivalSlots(event: ClubscaleEvent | null): string[] {
   return slots;
 }
 
+type StepKind = "event" | "reservable" | "people" | "arrival" | "contact" | "done";
+
 export default function ReservationWizard({
   events,
   preselectedEventId,
@@ -40,30 +42,73 @@ export default function ReservationWizard({
 }) {
   const [step, setStep] = useState(0);
   const [eventId, setEventId] = useState<string | null>(preselectedEventId);
+  const [reservables, setReservables] = useState<Reservable[]>([]);
+  const [reservableId, setReservableId] = useState<string | null>(null);
   const [people, setPeople] = useState(4);
   const [arrival, setArrival] = useState<string | null>(null);
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
-  const [sent, setSent] = useState(false);
+  const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">(
+    "idle"
+  );
 
   const selectedEvent = useMemo(
     () => events.find((e) => e.id === eventId) ?? null,
     [events, eventId]
   );
   const slots = useMemo(() => arrivalSlots(selectedEvent), [selectedEvent]);
+  const selectedReservable = useMemo(
+    () => reservables.find((r) => r.id === reservableId) ?? null,
+    [reservables, reservableId]
+  );
 
-  const canNext = [
-    true,
-    true,
-    arrival !== null,
-    name.trim() !== "" && phone.trim() !== "",
-    true,
+  useEffect(() => {
+    // Reservables sind an ein externes System (Clubscale-API) gebunden und
+    // haengen vom gewaehlten Event ab - Neuladen bei Event-Wechsel ist
+    // bewusst hier und nicht waehrend des Renders.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setReservables([]);
+    setReservableId(null);
+    if (!eventId) return;
+    let cancelled = false;
+    getEventReservables(eventId).then((list) => {
+      if (cancelled) return;
+      setReservables(list);
+      if (list.length === 1) setReservableId(list[0].id);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [eventId]);
+
+  const showReservableStep = reservables.length > 1;
+
+  const steps: { kind: StepKind; label: string }[] = [
+    { kind: "event", label: "Veranstaltung" },
+    ...(showReservableStep
+      ? ([{ kind: "reservable", label: "Bereich" }] as const)
+      : []),
+    { kind: "people", label: "Personen" },
+    { kind: "arrival", label: "Ankunft" },
+    { kind: "contact", label: "Kontakt" },
+    { kind: "done", label: "Fertig" },
   ];
+  const current = steps[step].kind;
+
+  const canNext: Record<StepKind, boolean> = {
+    event: true,
+    reservable: reservableId !== null,
+    people: true,
+    arrival: arrival !== null,
+    contact: name.trim() !== "" && phone.trim() !== "",
+    done: true,
+  };
 
   const mailBody = encodeURIComponent(
     `Veranstaltung: ${selectedEvent?.name ?? "Ohne bestimmte Veranstaltung"}\n` +
+      (selectedReservable ? `Bereich: ${selectedReservable.name}\n` : "") +
       `Personen: ${people}\n` +
       `Ankunft: ${arrival} Uhr\n` +
       `Name: ${name}\n` +
@@ -72,8 +117,28 @@ export default function ReservationWizard({
       (message ? `Nachricht: ${message}\n` : "")
   );
 
-  const next = () => setStep((s) => Math.min(s + 1, STEPS.length - 1));
+  const next = () => setStep((s) => Math.min(s + 1, steps.length - 1));
   const back = () => setStep((s) => Math.max(s - 1, 0));
+
+  const submit = async () => {
+    if (status === "sending") return;
+    setStatus("sending");
+    try {
+      await createReservation({
+        eventId,
+        reservableId: reservableId ?? "",
+        name: name.trim(),
+        email: email.trim(),
+        phoneNumber: phone.trim(),
+        amountOfPersons: people,
+        arrivalTime: arrival ?? "",
+        additionalInformation: message.trim(),
+      });
+      setStatus("sent");
+    } catch {
+      setStatus("error");
+    }
+  };
 
   return (
     <div>
@@ -81,20 +146,20 @@ export default function ReservationWizard({
         <div className="h-2.5 w-full overflow-hidden rounded-full bg-foreground/10">
           <div
             className="h-full rounded-full bg-accent-lime transition-all duration-500 ease-out"
-            style={{ width: `${PROGRESS[step]}%` }}
+            style={{ width: `${((step + 1) / steps.length) * 100}%` }}
           />
         </div>
         <div className="mt-2 flex justify-between text-[11px] font-bold uppercase tracking-wide text-foreground/50">
-          {STEPS.map((label, i) => (
-            <span key={label} className={i <= step ? "text-foreground" : ""}>
-              {label}
+          {steps.map((s, i) => (
+            <span key={s.kind} className={i <= step ? "text-foreground" : ""}>
+              {s.label}
             </span>
           ))}
         </div>
       </div>
 
       <div className="mx-auto mt-10 max-w-xl">
-        {step === 0 && (
+        {current === "event" && (
           <div className="flex flex-col gap-3">
             <button
               onClick={() => setEventId(null)}
@@ -146,7 +211,37 @@ export default function ReservationWizard({
           </div>
         )}
 
-        {step === 1 && (
+        {current === "reservable" && (
+          <div className="flex flex-col gap-3">
+            <p className="text-center font-black uppercase text-foreground">
+              Welchen Bereich möchtest du reservieren?
+            </p>
+            {reservables.map((r) => (
+              <button
+                key={r.id}
+                onClick={() => setReservableId(r.id)}
+                className={`rounded-xl border p-4 text-left transition-colors ${
+                  reservableId === r.id
+                    ? "border-accent-lime bg-accent-lime/10"
+                    : "border-foreground/10 hover:border-foreground/25"
+                }`}
+              >
+                <p className="font-black uppercase text-foreground">{r.name}</p>
+                <p className="mt-0.5 text-sm text-foreground/60">
+                  {r.minPersonCount}–{r.maxPersonCount} Personen
+                  {r.minConsumption > 0
+                    ? ` · Mindestverzehr ${(r.minConsumption / 100).toLocaleString(
+                        "de-DE",
+                        { minimumFractionDigits: 2 }
+                      )} €`
+                    : ""}
+                </p>
+              </button>
+            ))}
+          </div>
+        )}
+
+        {current === "people" && (
           <div className="flex flex-col items-center gap-6 rounded-2xl border border-foreground/10 p-8 text-center">
             <p className="font-black uppercase text-foreground">
               Wie viele Personen?
@@ -174,7 +269,7 @@ export default function ReservationWizard({
           </div>
         )}
 
-        {step === 2 && (
+        {current === "arrival" && (
           <div>
             <p className="text-center font-black uppercase text-foreground">
               Wann kommt ihr an?
@@ -197,7 +292,7 @@ export default function ReservationWizard({
           </div>
         )}
 
-        {step === 3 && (
+        {current === "contact" && (
           <div className="grid gap-4">
             <input
               value={name}
@@ -215,7 +310,7 @@ export default function ReservationWizard({
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               type="email"
-              placeholder="E-Mail (optional)"
+              placeholder="E-Mail"
               className="w-full rounded-xl border border-foreground/15 bg-foreground/5 px-4 py-3 text-foreground placeholder-foreground/40 outline-none focus:border-accent-lime"
             />
             <textarea
@@ -228,7 +323,7 @@ export default function ReservationWizard({
           </div>
         )}
 
-        {step === 4 && (
+        {current === "done" && (
           <div className="rounded-2xl border border-foreground/10 p-6">
             <p className="text-xs font-bold uppercase tracking-wide text-foreground/50">
               Zusammenfassung
@@ -238,6 +333,14 @@ export default function ReservationWizard({
               <dd className="font-bold text-foreground">
                 {selectedEvent?.name ?? "Ohne bestimmte Veranstaltung"}
               </dd>
+              {selectedReservable && (
+                <>
+                  <dt className="text-foreground/50">Bereich</dt>
+                  <dd className="font-bold text-foreground">
+                    {selectedReservable.name}
+                  </dd>
+                </>
+              )}
               <dt className="text-foreground/50">Personen</dt>
               <dd className="font-bold text-foreground">{people}</dd>
               <dt className="text-foreground/50">Ankunft</dt>
@@ -248,27 +351,45 @@ export default function ReservationWizard({
               <dd className="font-bold text-foreground">{phone}</dd>
             </dl>
 
-            {!sent ? (
-              <a
-                href={`mailto:kontakt@moos-park.de?subject=${encodeURIComponent(
-                  "Reservierungsanfrage"
-                )}&body=${mailBody}`}
-                onClick={() => setSent(true)}
-                className="mt-6 inline-block rounded-lg bg-accent-lime px-8 py-3 text-sm font-black uppercase tracking-wide text-black transition-transform hover:scale-105"
-              >
-                Anfrage per E-Mail senden
-              </a>
-            ) : (
+            {status === "sent" ? (
               <p className="mt-6 font-bold text-accent">
-                Dein E-Mail-Programm sollte sich geöffnet haben. Wir melden
-                uns schnellstmöglich zurück!
+                Danke! Deine Reservierungsanfrage ist bei uns eingegangen. Wir
+                melden uns schnellstmöglich zurück.
               </p>
+            ) : (
+              <>
+                <button
+                  type="button"
+                  onClick={submit}
+                  disabled={status === "sending"}
+                  className="mt-6 inline-block rounded-lg bg-accent-lime px-8 py-3 text-sm font-black uppercase tracking-wide text-black transition-transform hover:scale-105 disabled:pointer-events-none disabled:opacity-40"
+                >
+                  {status === "sending"
+                    ? "Wird gesendet..."
+                    : "Reservierungsanfrage senden"}
+                </button>
+                {status === "error" && (
+                  <p className="mt-4 text-sm text-red-500">
+                    Da ist leider etwas schiefgelaufen. Schreib uns stattdessen
+                    gerne direkt per{" "}
+                    <a
+                      href={`mailto:kontakt@moos-park.de?subject=${encodeURIComponent(
+                        "Reservierungsanfrage"
+                      )}&body=${mailBody}`}
+                      className="underline"
+                    >
+                      E-Mail
+                    </a>{" "}
+                    oder ruf uns an.
+                  </p>
+                )}
+              </>
             )}
           </div>
         )}
 
         <div className="mt-8 flex justify-between">
-          {step > 0 ? (
+          {step > 0 && status !== "sent" ? (
             <button
               onClick={back}
               className="rounded-lg border border-foreground/20 px-6 py-2.5 text-xs font-black uppercase tracking-wide text-foreground"
@@ -279,10 +400,10 @@ export default function ReservationWizard({
             <span />
           )}
 
-          {step < STEPS.length - 1 && (
+          {current !== "done" && (
             <button
               onClick={next}
-              disabled={!canNext[step]}
+              disabled={!canNext[current]}
               className="rounded-lg bg-foreground px-6 py-2.5 text-xs font-black uppercase tracking-wide text-background transition-transform hover:scale-105 disabled:opacity-40 disabled:hover:scale-100"
             >
               Weiter

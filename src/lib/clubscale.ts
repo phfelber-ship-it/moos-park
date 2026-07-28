@@ -334,3 +334,105 @@ export async function sendContactMail(input: {
     throw new Error(data?.message ?? "Nachricht konnte nicht gesendet werden.");
   }
 }
+
+export type Reservable = {
+  id: string;
+  name: string;
+  minPersonCount: number;
+  maxPersonCount: number;
+  minConsumption: number;
+  disabled: boolean;
+};
+
+export async function getEventReservables(
+  eventId: string
+): Promise<Reservable[]> {
+  const res = await fetch(`${API_BASE}/events/${eventId}/reservables`, {
+    cache: "no-store",
+  });
+  if (!res.ok) {
+    return [];
+  }
+  const data = (await res.json()) as { reservables: Reservable[] };
+  return data.reservables.filter((r) => !r.disabled);
+}
+
+// Oeffentliche Reservierungs-API: Name/E-Mail/Telefon sind fuer die
+// /public/ Variante Pflicht (siehe swagger_public.json), userID/vip/state/
+// minConsumption sind dort admin/super-only und werden bewusst nicht
+// gesendet.
+export async function createReservation(input: {
+  eventId: string | null;
+  reservableId: string;
+  name: string;
+  email: string;
+  phoneNumber: string;
+  amountOfPersons: number;
+  arrivalTime: string;
+  additionalInformation: string;
+}): Promise<void> {
+  const res = await fetch(`${API_BASE}/reservations`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      eventID: input.eventId ?? "",
+      reservableID: input.reservableId,
+      name: input.name,
+      email: input.email,
+      phoneNumber: input.phoneNumber,
+      amountOfPersons: input.amountOfPersons,
+      arrivalTime: input.arrivalTime,
+      additionalInformation: input.additionalInformation,
+    }),
+  });
+  if (!res.ok) {
+    const data = await res.json().catch(() => null);
+    throw new Error(data?.message ?? "Reservierung fehlgeschlagen.");
+  }
+}
+
+export type JobPosting = {
+  id: string;
+  title: string;
+  text: { html: string; markdown: string; text: string };
+};
+
+export async function getJobPostings(): Promise<JobPosting[]> {
+  const res = await fetch(`${API_BASE}/job-postings?limit=50`, {
+    next: { revalidate: 300 },
+  });
+  if (!res.ok) {
+    return [];
+  }
+  const data = (await res.json()) as { jobPostings: JobPosting[] };
+  return data.jobPostings;
+}
+
+// Oeffentliche Job-Application-API: firstName/lastName/email/phoneNumber/
+// text/jobPostingID sind fuer die /public/ Variante Pflicht, userID/state/
+// favorite/apComment sind dort admin/super-only.
+export async function createJobApplication(input: {
+  jobPostingId: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  phoneNumber: string;
+  text: string;
+}): Promise<void> {
+  const res = await fetch(`${API_BASE}/job-applications`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      jobPostingID: input.jobPostingId,
+      firstName: input.firstName,
+      lastName: input.lastName,
+      email: input.email,
+      phoneNumber: input.phoneNumber,
+      text: input.text,
+    }),
+  });
+  if (!res.ok) {
+    const data = await res.json().catch(() => null);
+    throw new Error(data?.message ?? "Bewerbung konnte nicht gesendet werden.");
+  }
+}

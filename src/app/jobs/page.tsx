@@ -1,8 +1,14 @@
 import JobAccordion from "@/components/JobAccordion";
+import JobApplicationAccordion from "@/components/JobApplicationAccordion";
+import { getJobPostings } from "@/lib/clubscale";
 
 export const metadata = { title: "Jobs - moos.park | Eventlocation" };
 
-const JOBS = [
+// Fallback-Texte, falls im Clubscale-Adminpanel (noch) keine JobPostings
+// gepflegt sind - dann zumindest informativ mit generischem Bewerbungs-CTA,
+// statt einer leeren Seite. Sobald echte Postings existieren, werden diese
+// bevorzugt angezeigt (inkl. funktionierendem Bewerbungsformular je Stelle).
+const FALLBACK_JOBS = [
   {
     icon: "🍸",
     title: "Barkeeper",
@@ -38,28 +44,31 @@ const JOBS = [
     title: "Duales Studium",
     text: "Du willst studieren, aber nicht nur aus Büchern lernen? Bei uns kombinierst du Praxis und Studium perfekt! Als dualer Student (m/w/d) bekommst du tiefe Einblicke ins Tagesgeschäft, übernimmst Verantwortung und entwickelst dich beruflich wie persönlich weiter.",
   },
-];
-
-const MARKETING_JOBS = [
   {
+    icon: "🎓",
     title: "Junior Marketing Manager",
     text: "Du hast ein Gespür für Marketing, willst dazulernen und erste eigene Kampagnen umsetzen? Wir suchen einen Junior Marketing Manager (m/w/d), der uns im Tagesgeschäft unterstützt, Kampagnen mitentwickelt und Schritt für Schritt mehr Verantwortung übernimmt.",
   },
   {
+    icon: "📈",
     title: "Growth Marketing Manager",
     text: "Du liebst Wachstum, Zahlen und klare Strategien? Wir suchen einen Growth Marketing Manager (m/w/d), der unsere Reichweite gezielt ausbaut, Kampagnen messbar optimiert und neue Wege findet, unsere Events und Angebote zu skalieren.",
   },
   {
+    icon: "🎨",
     title: "Grafikdesigner",
     text: "Du hast ein Auge für Design, liebst starke Visuals und willst Ideen sichtbar machen? Wir suchen einen Grafikdesigner (m/w/d), der unsere Events, Kampagnen und Markenauftritte visuell auf das nächste Level hebt – von Social Media bis Print.",
   },
   {
+    icon: "🤝",
     title: "Sales Manager",
     text: "Du liebst es, Deals abzuschließen, Menschen zu überzeugen und Ergebnisse zu sehen? Wir suchen einen Sales Manager (m/w/d), der neue Kunden gewinnt, Partnerschaften aufbaut und unsere Angebote aktiv verkauft.",
   },
 ];
 
-export default function JobsPage() {
+export default async function JobsPage() {
+  const jobPostings = await getJobPostings();
+
   return (
     <div className="mx-auto max-w-2xl px-6 pb-20 pt-32">
       <p className="text-center text-sm font-bold uppercase tracking-wide text-accent-lime">
@@ -82,31 +91,27 @@ export default function JobsPage() {
       </p>
 
       <div className="mt-10">
-        <JobAccordion jobs={JOBS} />
-      </div>
-
-      <h2 className="mt-14 text-center text-2xl font-black uppercase leading-tight text-foreground">
-        Auch im Bereich Marketing und Vertrieb sind wir ständig auf der
-        Suche.
-      </h2>
-
-      <div className="mt-10">
-        <JobAccordion jobs={MARKETING_JOBS} />
-      </div>
-
-      <div className="mt-16 rounded-2xl bg-foreground p-10 text-center text-background">
-        <h2 className="text-2xl font-black uppercase">
-          Warte nicht. Starte jetzt!
-        </h2>
-        <p className="mt-2 text-background/70">
-          Werde Teil von etwas Großem!
-        </p>
-        <a
-          href="mailto:kontakt@moos-park.de"
-          className="mt-6 inline-block rounded-lg bg-accent-lime px-8 py-3 text-sm font-black uppercase tracking-wide text-black transition-transform hover:scale-105"
-        >
-          Jetzt bewerben
-        </a>
+        {jobPostings.length > 0 ? (
+          <JobApplicationAccordion jobs={jobPostings} />
+        ) : (
+          <>
+            <JobAccordion jobs={FALLBACK_JOBS} />
+            <div className="mt-16 rounded-2xl bg-foreground p-10 text-center text-background">
+              <h2 className="text-2xl font-black uppercase">
+                Warte nicht. Starte jetzt!
+              </h2>
+              <p className="mt-2 text-background/70">
+                Werde Teil von etwas Großem!
+              </p>
+              <a
+                href="mailto:kontakt@moos-park.de"
+                className="mt-6 inline-block rounded-lg bg-accent-lime px-8 py-3 text-sm font-black uppercase tracking-wide text-black transition-transform hover:scale-105"
+              >
+                Jetzt bewerben
+              </a>
+            </div>
+          </>
+        )}
       </div>
     </div>
   );
