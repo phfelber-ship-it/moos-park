@@ -31,6 +31,23 @@ function arrivalSlots(event: ClubscaleEvent | null): string[] {
   return slots;
 }
 
+// Die Clubscale-API erwartet fuer arrivalTime einen vollen ISO-Zeitstempel,
+// keine reine "HH:MM"-Uhrzeit (sonst BINDFAIL_JSON) - Datum kommt vom Event,
+// ohne Event wird auf heute gestuetzt (gleiche lokale Basis wie arrivalSlots).
+function arrivalToISO(event: ClubscaleEvent | null, arrival: string): string {
+  const base = event ? new Date(event.start) : new Date();
+  const [h, m] = arrival.split(":").map(Number);
+  return new Date(
+    base.getFullYear(),
+    base.getMonth(),
+    base.getDate(),
+    h,
+    m,
+    0,
+    0
+  ).toISOString();
+}
+
 type StepKind = "event" | "reservable" | "people" | "arrival" | "contact" | "done";
 
 export default function ReservationWizard({
@@ -131,7 +148,7 @@ export default function ReservationWizard({
         email: email.trim(),
         phoneNumber: phone.trim(),
         amountOfPersons: people,
-        arrivalTime: arrival ?? "",
+        arrivalTime: arrival ? arrivalToISO(selectedEvent, arrival) : "",
         additionalInformation: message.trim(),
       });
       setStatus("sent");
