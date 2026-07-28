@@ -82,7 +82,6 @@ export default function TicketsDataFlow({
         mail: mail.trim(),
         firstName: firstName.trim(),
         lastName: lastName.trim(),
-        redirectURL: window.location.origin,
         items: items.map((i) => ({
           ticketPoolID: i.poolId,
           quantity: i.qty,

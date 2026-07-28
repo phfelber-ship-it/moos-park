@@ -264,9 +264,14 @@ export async function createDirectPurchaseRequest(input: {
   mail: string;
   firstName: string;
   lastName: string;
-  redirectURL: string;
   items: { ticketPoolID: string; quantity: number }[];
 }): Promise<DirectPurchaseResponse> {
+  // Feldnamen/-set exakt nach swagger_public.json (handler.CreateDirectPurchaseRequest.body):
+  // address, birthday, discountCodes, dryRun, event, firstname, gender, items,
+  // lastname, mail, phoneNumber, phoneVerificationCode sind dort als Pflichtfelder
+  // gelistet. Telefonnummer/-verifizierung werden auf dieser Seite (noch) nicht
+  // erhoben, daher leer - laut Doku nur bei /reservations explizit erzwungen,
+  // hier nicht.
   const res = await fetch(`${API_BASE}/purchase-requests/direct`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -274,10 +279,14 @@ export async function createDirectPurchaseRequest(input: {
       event: input.eventId,
       birthday: input.birthday,
       mail: input.mail,
-      firstName: input.firstName,
-      lastName: input.lastName,
+      firstname: input.firstName,
+      lastname: input.lastName,
       gender: "UNKNOWN" satisfies Gender,
-      redirectURL: input.redirectURL,
+      address: { street: "", houseNumber: "", zip: "", city: "", country: "" },
+      phoneNumber: "",
+      phoneVerificationCode: "",
+      discountCodes: [],
+      dryRun: false,
       items: input.items,
     }),
   });
