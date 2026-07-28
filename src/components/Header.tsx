@@ -49,7 +49,7 @@ export default function Header() {
         ref={btnRef}
         onClick={toggle}
         aria-label={open ? "Menü schließen" : "Menü öffnen"}
-        className={`fixed left-4 top-4 z-50 sm:left-6 sm:top-6 ${CIRCLE_BTN}`}
+        className={`fixed left-2 top-2 z-50 sm:left-4 sm:top-4 ${CIRCLE_BTN}`}
       >
         <span className="relative flex h-[22px] w-[22px] items-center justify-center text-black">
           <svg
@@ -90,7 +90,7 @@ export default function Header() {
       <Link
         href="/"
         aria-label="moos.park Startseite"
-        className="fixed left-1/2 top-4 z-50 -translate-x-1/2 sm:top-4"
+        className="fixed left-1/2 top-2 z-50 -translate-x-1/2 sm:top-4"
       >
         <Image
           src="/images/logo.png"
@@ -105,7 +105,7 @@ export default function Header() {
       <Link
         href="/tickets"
         aria-label="Tickets kaufen"
-        className="fixed right-4 top-4 z-50 flex h-[46px] w-[46px] items-center justify-center rounded-full bg-accent-lime text-black shadow-[var(--header-shadow)] transition-[transform,box-shadow] duration-300 ease-out hover:scale-105 sm:right-6 sm:top-6"
+        className="fixed right-2 top-2 z-50 flex h-[46px] w-[46px] items-center justify-center rounded-full bg-accent-lime text-black shadow-[var(--header-shadow)] transition-[transform,box-shadow] duration-300 ease-out hover:scale-105 sm:right-4 sm:top-4"
       >
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
           <path
@@ -165,7 +165,7 @@ export default function Header() {
         </div>
       </div>
 
-      <div className="fixed left-[72px] top-[39px] z-50 sm:left-[90px] sm:top-[45px]">
+      <div className="fixed left-[62px] top-[29px] z-50 sm:left-[80px] sm:top-[37px]">
         <ThemeToggle />
       </div>
     </>
