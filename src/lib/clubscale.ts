@@ -266,12 +266,11 @@ export async function createDirectPurchaseRequest(input: {
   lastName: string;
   items: { ticketPoolID: string; quantity: number }[];
 }): Promise<DirectPurchaseResponse> {
-  // Feldnamen/-set exakt nach swagger_public.json (handler.CreateDirectPurchaseRequest.body):
-  // address, birthday, discountCodes, dryRun, event, firstname, gender, items,
-  // lastname, mail, phoneNumber, phoneVerificationCode sind dort als Pflichtfelder
-  // gelistet. Telefonnummer/-verifizierung werden auf dieser Seite (noch) nicht
-  // erhoben, daher leer - laut Doku nur bei /reservations explizit erzwungen,
-  // hier nicht.
+  // phoneNumber/phoneVerificationCode duerfen hier nicht als leere Strings
+  // mitgeschickt werden - schon ihre bloße Anwesenheit im Body loest bei der
+  // Clubscale-API die Telefon-Verifizierungspflicht aus ("missing phone
+  // verification code"), obwohl auf dieser Seite gar keine Telefonnummer
+  // erhoben wird. Weggelassen statt leer gesetzt funktioniert.
   const res = await fetch(`${API_BASE}/purchase-requests/direct`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -283,8 +282,6 @@ export async function createDirectPurchaseRequest(input: {
       lastname: input.lastName,
       gender: "UNKNOWN" satisfies Gender,
       address: { street: "", houseNumber: "", zip: "", city: "", country: "" },
-      phoneNumber: "",
-      phoneVerificationCode: "",
       discountCodes: [],
       dryRun: false,
       items: input.items,
