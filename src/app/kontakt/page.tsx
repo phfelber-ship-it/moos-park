@@ -76,7 +76,7 @@ export default function KontaktPage() {
             </p>
             <div className="mt-2 flex gap-4">
               <a
-                href="https://www.facebook.com/"
+                href="https://www.facebook.com/mp.poettmes"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="font-semibold  text-foreground hover:text-accent"
@@ -84,7 +84,7 @@ export default function KontaktPage() {
                 Facebook
               </a>
               <a
-                href="https://www.instagram.com/"
+                href="https://www.instagram.com/moos.park/?hl=de"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="font-semibold  text-foreground hover:text-accent"

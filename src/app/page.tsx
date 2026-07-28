@@ -233,7 +233,7 @@ export default async function Home() {
               </div>
 
               <a
-                href="https://www.apple.com/app-store/"
+                href="https://apps.apple.com/de/app/moos-park/id6739537470"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="mt-8 inline-block rounded-lg bg-accent-lime px-8 py-3 text-sm font-black uppercase tracking-wide text-black transition-transform hover:scale-105"
@@ -243,7 +243,7 @@ export default async function Home() {
 
               <div className="mt-4 flex flex-wrap gap-3">
                 <a
-                  href="https://www.apple.com/app-store/"
+                  href="https://apps.apple.com/de/app/moos-park/id6739537470"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="opacity-70 transition-opacity hover:opacity-100"
@@ -256,7 +256,7 @@ export default async function Home() {
                   />
                 </a>
                 <a
-                  href="https://play.google.com/store"
+                  href="https://play.google.com/store/apps/details?id=de.moospark.clubscale&pcampaignid=web_share"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="opacity-70 transition-opacity hover:opacity-100"
