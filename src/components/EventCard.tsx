@@ -31,7 +31,7 @@ export default function EventCard({ event }: { event: ClubscaleEvent }) {
       className="flex flex-col items-center rounded-2xl border border-foreground/10 p-4 text-center transition-colors hover:border-foreground/25"
     >
       <Link
-        href={`/events/${event.id}`}
+        href={`/eventdetails?id=${event.id}`}
         className="group relative aspect-[16/10] w-full overflow-hidden rounded-xl bg-foreground/5"
       >
         {event.thumbnail?.presignedURL && (
@@ -61,7 +61,7 @@ export default function EventCard({ event }: { event: ClubscaleEvent }) {
         ))}
       </div>
 
-      <Link href={`/events/${event.id}`}>
+      <Link href={`/eventdetails?id=${event.id}`}>
         <h3 className="mt-3 text-lg font-black uppercase leading-tight text-foreground">
           {event.name}
         </h3>
@@ -73,7 +73,7 @@ export default function EventCard({ event }: { event: ClubscaleEvent }) {
 
       <div className="mt-4 flex w-full max-w-[220px] flex-col gap-2">
         <MotionLink
-          href={`/events/${event.id}#tickets`}
+          href={`/eventdetails?id=${event.id}#tickets`}
           className="block rounded-lg bg-foreground px-6 py-2.5 text-center text-xs font-black uppercase tracking-wide text-background"
         >
           Tickets kaufen

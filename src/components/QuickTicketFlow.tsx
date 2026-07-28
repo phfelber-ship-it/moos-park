@@ -127,7 +127,7 @@ export default function QuickTicketFlow({
                       .sort((a, b) => a.sortIndex - b.sortIndex)}
                   />
                   <Link
-                    href={`/events/${event.id}`}
+                    href={`/eventdetails?id=${event.id}`}
                     className="mt-4 inline-block text-xs font-bold text-accent hover:underline"
                   >
                     Alle Infos zum Event ansehen →

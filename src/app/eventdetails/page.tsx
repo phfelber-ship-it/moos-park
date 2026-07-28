@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import {
   getEvent,
   getEvents,
@@ -22,12 +22,12 @@ function formatTime(iso: string) {
 // Website-Titel zeigen - schlecht fürs Teilen und für Suchmaschinen,
 // da genau diese Seiten am häufigsten verlinkt/gesucht werden.
 export async function generateMetadata({
-  params,
+  searchParams,
 }: {
-  params: Promise<{ id: string }>;
+  searchParams: Promise<{ id?: string }>;
 }) {
-  const { id } = await params;
-  const event = await getEvent(id);
+  const { id } = await searchParams;
+  const event = id ? await getEvent(id) : null;
 
   if (!event) {
     return { title: "Event nicht gefunden - moos.park" };
@@ -51,11 +51,16 @@ export async function generateMetadata({
 }
 
 export default async function EventDetailPage({
-  params,
+  searchParams,
 }: {
-  params: Promise<{ id: string }>;
+  searchParams: Promise<{ id?: string }>;
 }) {
-  const { id } = await params;
+  const { id } = await searchParams;
+
+  if (!id) {
+    redirect("/events");
+  }
+
   const event = await getEvent(id);
 
   if (!event) {
@@ -195,7 +200,7 @@ export default async function EventDetailPage({
             {moreEvents.map((e) => (
               <Link
                 key={e.id}
-                href={`/events/${e.id}`}
+                href={`/eventdetails?id=${e.id}`}
                 className="group flex flex-col items-center text-center"
               >
                 <div className="relative aspect-[16/10] w-full overflow-hidden rounded-lg bg-foreground/5">

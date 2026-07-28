@@ -188,7 +188,7 @@ export default async function Home() {
 
           <Reveal delay={0.2} className="mt-12 text-center">
             <Link
-              href="/bilder"
+              href="/galerie"
               className="inline-block rounded-lg bg-accent-lime px-8 py-3 text-sm font-black uppercase tracking-wide text-black transition-transform hover:scale-105"
             >
               <FlipText text="Alle Galerien ansehen" />

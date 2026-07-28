@@ -39,7 +39,7 @@ const EVENT_TYPES = [
   {
     title: "Konzerte & Ticket-Events",
     text: "Regelmäßige Konzerte, Clubnächte und Ticket-Events – auch als Location für externe Veranstalter und Vereine mietbar.",
-    href: "/eventtickets",
+    href: "/tickets",
     cta: "Events & Tickets",
   },
 ];

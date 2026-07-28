@@ -57,7 +57,7 @@ export default async function GalleryPage({
 
   return (
     <div className="mx-auto max-w-5xl px-6 pb-16 pt-32">
-      <Link href="/bilder" className="text-sm font-bold text-accent-lime">
+      <Link href="/galerie" className="text-sm font-bold text-accent-lime">
         ← Alle Bilder
       </Link>
 

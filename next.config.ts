@@ -17,11 +17,13 @@ const nextConfig: NextConfig = {
     // ohne diese Redirects verlieren die Seiten beim Umzug ihr SEO-Ranking
     // und Nutzer mit alten Lesezeichen/Google-Treffern landen auf 404.
     return [
-      { source: "/tickets", destination: "/eventtickets", permanent: true },
-      { source: "/tickets-uebersicht", destination: "/eventtickets", permanent: true },
-      { source: "/eventdetails", destination: "/events", permanent: true },
-      { source: "/tanzabend", destination: "/tanzveranstaltungen", permanent: true },
-      { source: "/galerie", destination: "/bilder", permanent: true },
+      { source: "/tickets-uebersicht", destination: "/tickets", permanent: true },
+      { source: "/tickets-checkout", destination: "/tickets", permanent: true },
+      { source: "/purchase-checkout", destination: "/tickets", permanent: true },
+      { source: "/eventtickets", destination: "/tickets", permanent: true },
+      { source: "/bilder", destination: "/galerie", permanent: true },
+      { source: "/bilder/:id", destination: "/galerie/:id", permanent: true },
+      { source: "/events/:id", destination: "/eventdetails?id=:id", permanent: true },
     ];
   },
 };

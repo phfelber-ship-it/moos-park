@@ -13,7 +13,7 @@ const NAV_LINKS = [
   { href: "/tanzveranstaltungen", label: "Tanzabend" },
   { href: "/geburtstag", label: "Geburtstag" },
   { href: "/eventlocation", label: "Eventlocation" },
-  { href: "/bilder", label: "Bilder" },
+  { href: "/galerie", label: "Bilder" },
   { href: "/jobs", label: "Jobs" },
   { href: "/faq", label: "FAQ" },
   { href: "/kontakt", label: "Kontakt" },
@@ -103,7 +103,7 @@ export default function Header() {
       </Link>
 
       <Link
-        href="/eventtickets"
+        href="/tickets"
         aria-label="Tickets kaufen"
         className="fixed right-10 top-10 z-50 flex h-[46px] w-[46px] items-center justify-center rounded-full bg-accent-lime text-black shadow-[var(--header-shadow)] transition-[transform,box-shadow] duration-300 ease-out hover:scale-105"
       >

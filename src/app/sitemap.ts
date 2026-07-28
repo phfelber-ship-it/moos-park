@@ -7,11 +7,11 @@ const SITE_URL =
 const STATIC_ROUTES = [
   "",
   "/events",
-  "/eventtickets",
+  "/tickets",
   "/tanzveranstaltungen",
   "/geburtstag",
   "/eventlocation",
-  "/bilder",
+  "/galerie",
   "/jobs",
   "/faq",
   "/kontakt",
@@ -41,12 +41,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   }));
 
   const eventEntries = events.map((event) => ({
-    url: `${SITE_URL}/events/${event.id}`,
+    url: `${SITE_URL}/eventdetails?id=${event.id}`,
     lastModified: new Date(),
   }));
 
   const galleryEntries = galleries.map((gallery) => ({
-    url: `${SITE_URL}/bilder/${gallery.id}`,
+    url: `${SITE_URL}/galerie/${gallery.id}`,
     lastModified: new Date(gallery.date),
   }));
 

@@ -25,7 +25,7 @@ export default function GalleryCard({ gallery }: { gallery: Gallery }) {
       className="flex flex-col items-center rounded-2xl border border-foreground/10 p-4 text-center transition-colors hover:border-foreground/25"
     >
       <Link
-        href={`/bilder/${gallery.id}`}
+        href={`/galerie/${gallery.id}`}
         className="group grid aspect-square w-full grid-cols-3 grid-rows-3 grid-flow-row-dense gap-1 overflow-hidden rounded-xl"
       >
         {previewPhotos.map((photo, i) => (
@@ -48,7 +48,7 @@ export default function GalleryCard({ gallery }: { gallery: Gallery }) {
         ))}
       </Link>
 
-      <Link href={`/bilder/${gallery.id}`}>
+      <Link href={`/galerie/${gallery.id}`}>
         <h3 className="mt-3 text-lg font-black uppercase leading-tight text-foreground line-clamp-2">
           {gallery.name}
         </h3>
