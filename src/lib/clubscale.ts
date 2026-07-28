@@ -315,3 +315,22 @@ export async function getPurchaseRequest(
 export function ticketsPdfUrl(purchaseRequestId: string): string {
   return `${API_BASE}/purchase-requests/${purchaseRequestId}/tickets-pdf`;
 }
+
+export async function sendContactMail(input: {
+  firstname: string;
+  lastname: string;
+  mail: string;
+  phone: string;
+  subject: string;
+  body: string;
+}): Promise<void> {
+  const res = await fetch(`${API_BASE}/website/mail`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(input),
+  });
+  if (!res.ok) {
+    const data = await res.json().catch(() => null);
+    throw new Error(data?.message ?? "Nachricht konnte nicht gesendet werden.");
+  }
+}
