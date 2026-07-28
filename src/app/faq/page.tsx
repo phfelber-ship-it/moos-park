@@ -1,9 +1,13 @@
 import JobAccordion from "@/components/JobAccordion";
 import ContactForm from "@/components/ContactForm";
+import { getFaqs } from "@/lib/clubscale";
 
 export const metadata = { title: "FAQ - moos.park | Eventlocation" };
 
-const FAQ_ITEMS = [
+// Fallback-Texte, falls im Clubscale-Adminpanel (noch) keine FAQs gepflegt
+// sind. Sobald echte FAQs existieren, werden diese bevorzugt angezeigt.
+
+const FALLBACK_FAQ_ITEMS = [
   {
     q: "Ticket (VVK, Abendkasse)",
     a: "Early Bird Ticket – Für alle, die clever planen: Sichere dir jetzt dein Ticket im Vorverkauf zum vergünstigten Preis und garantiertem Einlass – solange der Vorrat reicht! Begrenzte Stückzahl – wenn weg, dann weg. ⸻ Abendkasse: Eine Abendkasse darf bei keiner Veranstaltung fehlen und ist immer für euch geöffnet. Für alle Spontanen: Kommt vorbei! ⸻ Fastlane Ticket: Für alle, die keine Zeit für Schlangen haben – mit priorisiertem Einlass ohne Anstehen.",
@@ -66,7 +70,13 @@ const FAQ_ITEMS = [
   },
 ];
 
-export default function FaqPage() {
+export default async function FaqPage() {
+  const faqs = await getFaqs();
+  const items =
+    faqs.length > 0
+      ? faqs.map((f) => ({ title: f.question, text: f.answer }))
+      : FALLBACK_FAQ_ITEMS.map((item) => ({ title: item.q, text: item.a }));
+
   return (
     <div className="mx-auto max-w-3xl px-6 pb-20 pt-32">
       <h1 className="text-4xl font-black uppercase text-foreground">
@@ -79,9 +89,7 @@ export default function FaqPage() {
       </p>
 
       <div className="mt-10">
-        <JobAccordion
-          jobs={FAQ_ITEMS.map((item) => ({ title: item.q, text: item.a }))}
-        />
+        <JobAccordion jobs={items} />
       </div>
 
       <div className="mt-16">

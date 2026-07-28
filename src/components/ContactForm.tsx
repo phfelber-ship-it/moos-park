@@ -43,7 +43,7 @@ export default function ContactForm() {
 
   if (status === "sent") {
     return (
-      <p className="rounded-xl border border-foreground/10 bg-foreground/[0.025] p-6 font-bold text-accent">
+      <p className="rounded-xl border border-foreground/10 bg-foreground/[0.025] p-6 font-bold text-foreground">
         Danke für deine Nachricht! Wir melden uns schnellstmöglich zurück.
       </p>
     );

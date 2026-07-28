@@ -220,22 +220,35 @@ export default function ReservationWizard({
               <button
                 key={r.id}
                 onClick={() => setReservableId(r.id)}
-                className={`rounded-xl border p-4 text-left transition-colors ${
+                className={`flex items-center gap-4 rounded-xl border p-4 text-left transition-colors ${
                   reservableId === r.id
                     ? "border-accent-lime bg-accent-lime/10"
                     : "border-foreground/10 hover:border-foreground/25"
                 }`}
               >
-                <p className="font-black uppercase text-foreground">{r.name}</p>
-                <p className="mt-0.5 text-sm text-foreground/60">
-                  {r.minPersonCount}–{r.maxPersonCount} Personen
-                  {r.minConsumption > 0
-                    ? ` · Mindestverzehr ${(r.minConsumption / 100).toLocaleString(
-                        "de-DE",
-                        { minimumFractionDigits: 2 }
-                      )} €`
-                    : ""}
-                </p>
+                {r.image?.presignedURL && (
+                  <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-lg bg-foreground/5">
+                    <Image
+                      src={r.image.presignedURL}
+                      alt={r.name}
+                      fill
+                      className="object-cover"
+                      sizes="64px"
+                    />
+                  </div>
+                )}
+                <div>
+                  <p className="font-black uppercase text-foreground">{r.name}</p>
+                  <p className="mt-0.5 text-sm text-foreground/60">
+                    {r.minPersonCount}–{r.maxPersonCount} Personen
+                    {r.minConsumption > 0
+                      ? ` · Mindestverzehr ${(r.minConsumption / 100).toLocaleString(
+                          "de-DE",
+                          { minimumFractionDigits: 2 }
+                        )} €`
+                      : ""}
+                  </p>
+                </div>
               </button>
             ))}
           </div>
@@ -352,7 +365,7 @@ export default function ReservationWizard({
             </dl>
 
             {status === "sent" ? (
-              <p className="mt-6 font-bold text-accent">
+              <p className="mt-6 font-bold text-foreground">
                 Danke! Deine Reservierungsanfrage ist bei uns eingegangen. Wir
                 melden uns schnellstmöglich zurück.
               </p>

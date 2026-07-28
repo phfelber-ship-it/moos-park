@@ -342,6 +342,7 @@ export type Reservable = {
   maxPersonCount: number;
   minConsumption: number;
   disabled: boolean;
+  image: ClubscaleImage | null;
 };
 
 export async function getEventReservables(
@@ -435,4 +436,22 @@ export async function createJobApplication(input: {
     const data = await res.json().catch(() => null);
     throw new Error(data?.message ?? "Bewerbung konnte nicht gesendet werden.");
   }
+}
+
+export type Faq = {
+  id: string;
+  question: string;
+  answer: string;
+  sortIndex: number;
+};
+
+export async function getFaqs(): Promise<Faq[]> {
+  const res = await fetch(`${API_BASE}/faqs?limit=50`, {
+    next: { revalidate: 300 },
+  });
+  if (!res.ok) {
+    return [];
+  }
+  const data = (await res.json()) as { faqs: Faq[] };
+  return [...data.faqs].sort((a, b) => a.sortIndex - b.sortIndex);
 }
