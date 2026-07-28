@@ -10,7 +10,7 @@ import StaggerText from "@/components/StaggerText";
 const NAV_LINKS = [
   { href: "/", label: "Home" },
   { href: "/events", label: "Events" },
-  { href: "/tanzabend", label: "Tanzabend" },
+  { href: "/tanzveranstaltungen", label: "Tanzabend" },
   { href: "/geburtstag", label: "Geburtstag" },
   { href: "/eventlocation", label: "Eventlocation" },
   { href: "/bilder", label: "Bilder" },

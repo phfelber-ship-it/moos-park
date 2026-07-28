@@ -27,7 +27,7 @@ const EVENT_TYPES = [
   {
     title: "Club- & Disconächte",
     text: "Profi-Sound, Lichtshow und Bühne für Club-Events, Tanzabende und private Partys mit DJ oder Live-Act.",
-    href: "/tanzabend",
+    href: "/tanzveranstaltungen",
     cta: "Tanzabende ansehen",
   },
   {

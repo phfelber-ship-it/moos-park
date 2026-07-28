@@ -159,7 +159,7 @@ export default async function Home() {
             &bdquo;Tanzbare Musik, gute Stimmung und echte Emotionen.&ldquo;
           </p>
           <Link
-            href="/tanzabend"
+            href="/tanzveranstaltungen"
             className="mt-8 inline-block rounded-lg bg-accent-lime px-8 py-3 text-sm font-black uppercase tracking-wide text-black transition-transform hover:scale-105"
           >
             <FlipText text="Alle Tanztermine ansehen" />

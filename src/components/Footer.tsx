@@ -58,7 +58,7 @@ const LINKS_COL_2 = [
 const LINKS_COL_3 = [
   { href: "/impressum", label: "Impressum" },
   { href: "/datenschutz", label: "Datenschutz" },
-  { href: "/agb", label: "Widerruf" },
+  { href: "/widerruf", label: "Widerruf" },
   { href: "/agb", label: "AGB" },
 ];
 

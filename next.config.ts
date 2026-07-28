@@ -20,7 +20,7 @@ const nextConfig: NextConfig = {
       { source: "/tickets", destination: "/eventtickets", permanent: true },
       { source: "/tickets-uebersicht", destination: "/eventtickets", permanent: true },
       { source: "/eventdetails", destination: "/events", permanent: true },
-      { source: "/tanzveranstaltungen", destination: "/tanzabend", permanent: true },
+      { source: "/tanzabend", destination: "/tanzveranstaltungen", permanent: true },
       { source: "/galerie", destination: "/bilder", permanent: true },
     ];
   },

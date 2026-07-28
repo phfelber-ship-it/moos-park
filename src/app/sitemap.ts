@@ -8,7 +8,7 @@ const STATIC_ROUTES = [
   "",
   "/events",
   "/eventtickets",
-  "/tanzabend",
+  "/tanzveranstaltungen",
   "/geburtstag",
   "/eventlocation",
   "/bilder",
@@ -26,6 +26,7 @@ const STATIC_ROUTES = [
   "/impressum",
   "/datenschutz",
   "/agb",
+  "/widerruf",
 ];
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
