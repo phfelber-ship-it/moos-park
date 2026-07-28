@@ -1,5 +1,5 @@
 export const COMMUNITY_ID = "675812b48b4595ad0f323ee6";
-const API_BASE = `https://moospark.clubscale.com/api/public/v2/communities/${COMMUNITY_ID}`;
+const API_BASE = `https://moospark.clubscale.com/api/public/v3/communities/${COMMUNITY_ID}`;
 export const CLUBSCALE_API_BASE = API_BASE;
 export const STRIPE_PUBLISHABLE_KEY =
   "pk_live_51QQ7AK2L1eKPuLJltvFoJp0P1obYWqtlwPbRsvK9kjuvPWUri737WCeifUepVgUWleqxAkpqDWoBXDJANIw7Vwxq00yG4WWasz";
