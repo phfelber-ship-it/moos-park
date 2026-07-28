@@ -408,7 +408,9 @@ export async function getJobPostings(): Promise<JobPosting[]> {
 
 // Oeffentliche Job-Application-API: firstName/lastName/email/phoneNumber/
 // text/jobPostingID sind fuer die /public/ Variante Pflicht, userID/state/
-// favorite/apComment sind dort admin/super-only.
+// favorite/apComment sind dort admin/super-only. image ist zusaetzlich
+// Pflicht ("image is required for job applications in this community") -
+// erwartet reinen Base64-String ohne data:-URL-Praefix.
 export async function createJobApplication(input: {
   jobPostingId: string;
   firstName: string;
@@ -416,6 +418,7 @@ export async function createJobApplication(input: {
   email: string;
   phoneNumber: string;
   text: string;
+  imageBase64: string;
 }): Promise<void> {
   const res = await fetch(`${API_BASE}/job-applications`, {
     method: "POST",
@@ -427,6 +430,7 @@ export async function createJobApplication(input: {
       email: input.email,
       phoneNumber: input.phoneNumber,
       text: input.text,
+      image: input.imageBase64,
     }),
   });
   if (!res.ok) {
