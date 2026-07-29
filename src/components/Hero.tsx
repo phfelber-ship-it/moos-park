@@ -38,7 +38,7 @@ export default function Hero({ images }: { images: string[] }) {
   }, [slides.length]);
 
   return (
-    <section className="relative flex min-h-[70vh] items-end overflow-hidden text-center text-white sm:min-h-[85vh]">
+    <section className="relative flex h-[100dvh] items-end overflow-hidden text-center text-white sm:h-[85vh]">
       <motion.div
         initial={{ clipPath: "inset(20% round 32px)" }}
         animate={{ clipPath: "inset(0% round 0px)" }}
@@ -69,7 +69,7 @@ export default function Hero({ images }: { images: string[] }) {
         initial="hidden"
         whileInView="show"
         viewport={{ once: true, amount: 0.4 }}
-        className="relative z-10 mx-auto flex max-w-2xl flex-col items-center px-6 pb-12 pt-36 sm:pb-16 sm:pt-0"
+        className="relative z-10 mx-auto flex max-w-2xl flex-col items-center px-6 pb-4 pt-36 sm:pb-16 sm:pt-0"
       >
         <motion.span
           variants={item}
