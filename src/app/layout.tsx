@@ -16,6 +16,9 @@ const SITE_URL =
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
+  icons: {
+    icon: "/api/favicon",
+  },
   title:
     "moos.park Pöttmes – Eventlocation Bayern | Firmenfeiern, Partys & mehr",
   description:
