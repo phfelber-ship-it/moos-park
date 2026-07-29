@@ -11,7 +11,7 @@ const data: RentalPageData = {
   heroTitle: "Die Eventlocation bei Augsburg.",
   heroSubtitle:
     "Nur 40 Minuten von Augsburg – mit allem, was Stadtlocations nicht bieten können.",
-  painHeading: "Eventlocations in Augsburg enttäuschen oft.",
+  painHeading: "Das bringen Eventlocations in Augsburg oft nicht mit.",
   painIntro:
     "Kein Parkplatz in der Innenstadt, begrenzte Kapazität, Technik extra buchen, Catering von außen – Augsburger Locations haben strukturelle Grenzen.",
   painPoints: [
@@ -48,7 +48,7 @@ const data: RentalPageData = {
     {
       num: "04",
       title: "Einfach ankommen & feiern",
-      text: "40 Minuten von Augsburg, kostenloser Großparkplatz, bis 750 Personen. Besser als alles in der Innenstadt.",
+      text: "40 Minuten von Augsburg, kostenloser Großparkplatz, bis 750 Personen. Alles an einem Ort.",
     },
   ],
   advantagesHeading: "Deine Top-Location nahe Augsburg.",
@@ -66,7 +66,7 @@ const data: RentalPageData = {
   testimonials: [
     {
       quote:
-        "Wir kommen aus Augsburg und haben 40 Minuten gefahren – es war jeden Kilometer wert. Großer Parkplatz, top Technik, super Essen. Besser als alles in der Stadt.",
+        "Wir kommen aus Augsburg und haben 40 Minuten gefahren – es war jeden Kilometer wert. Großer Parkplatz, top Technik, super Essen.",
       author: "Julia M. – 40. Geburtstag, Augsburg",
     },
     {

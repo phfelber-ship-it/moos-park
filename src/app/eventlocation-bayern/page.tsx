@@ -11,7 +11,7 @@ const data: RentalPageData = {
   heroTitle: "Die Eventlocation Bayern.",
   heroSubtitle:
     "Firmenevents, Hochzeiten, Geburtstage, Club-Events – bis 750 Personen, alles inklusive.",
-  painHeading: "Eventlocations in Bayern enttäuschen oft.",
+  painHeading: "Das bringen Eventlocations in Bayern oft nicht mit.",
   painIntro:
     "Leere Hallen, kein Catering, kein Parkplatz – die meisten Locations liefern nur vier Wände. Alles andere kostet Zeit, Nerven und zusätzliches Geld.",
   painPoints: [

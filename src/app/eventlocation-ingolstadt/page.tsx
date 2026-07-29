@@ -11,7 +11,7 @@ const data: RentalPageData = {
   heroTitle: "Die Eventlocation bei Ingolstadt.",
   heroSubtitle:
     "Nur 35 Minuten von Ingolstadt – mit allem, was Stadtlocations nicht bieten können.",
-  painHeading: "Eventlocations bei Ingolstadt enttäuschen oft.",
+  painHeading: "Das bringen Eventlocations bei Ingolstadt oft nicht mit.",
   painIntro:
     "Im Raum Ingolstadt gibt es kaum Locations mit echtem Vollservice: großer Parkplatz, 500+ Personen, eigene Küche und komplette Technik – das ist selten.",
   painPoints: [
@@ -48,10 +48,10 @@ const data: RentalPageData = {
     {
       num: "04",
       title: "Einfach ankommen & feiern",
-      text: "35 Minuten von Ingolstadt, kostenloser Großparkplatz, bis 750 Personen. Besser als alles in der Stadt.",
+      text: "35 Minuten von Ingolstadt, kostenloser Großparkplatz, bis 750 Personen. Alles an einem Ort.",
     },
   ],
-  advantagesHeading: "Besser als jede Location in Ingolstadt.",
+  advantagesHeading: "Deine Top-Location nahe Ingolstadt.",
   advantagesIntro:
     "Nur 35 Minuten von Ingolstadt – aber mit Parkplatz für alle, bis 750 Personen, eigener Küche und Vollausstattung.",
   advantages: [
@@ -66,7 +66,7 @@ const data: RentalPageData = {
   testimonials: [
     {
       quote:
-        "Wir kommen aus Ingolstadt und fahren für moos.park gerne die 35 Minuten. Großer Parkplatz, top Technik, super Essen. Besser als alles in der Stadt.",
+        "Wir kommen aus Ingolstadt und fahren für moos.park gerne die 35 Minuten. Großer Parkplatz, top Technik, super Essen.",
       author: "Florian K. – 40. Geburtstag, Ingolstadt",
     },
     {
