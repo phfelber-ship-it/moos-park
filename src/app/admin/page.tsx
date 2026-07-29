@@ -18,6 +18,11 @@ const SECTIONS = [
     title: "Favicon",
     text: "Das kleine Icon im Browser-Tab austauschen.",
   },
+  {
+    href: "/admin/statistik",
+    title: "Statistik",
+    text: "Besucher, Seitenaufrufe, Absprungrate & mehr aus Google Analytics.",
+  },
 ];
 
 export default function AdminDashboardPage() {
