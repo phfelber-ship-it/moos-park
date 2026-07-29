@@ -1,10 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import Image from "next/image";
 import { motion, type Variants } from "motion/react";
 import MotionLink from "@/components/MotionLink";
 import FlipText from "@/components/FlipText";
+import HeroBackground from "@/components/HeroBackground";
 import { MAIN_ACTIONS } from "@/lib/nav";
 
 const container: Variants = {
@@ -23,46 +22,10 @@ const item: Variants = {
   },
 };
 
-const SLIDE_DURATION = 8000;
-
 export default function Hero({ images }: { images: string[] }) {
-  const slides = images.length > 0 ? images : ["/images/hero-bg.jpg"];
-  const [index, setIndex] = useState(0);
-
-  useEffect(() => {
-    if (slides.length < 2) return;
-    const id = setInterval(() => {
-      setIndex((i) => (i + 1) % slides.length);
-    }, SLIDE_DURATION);
-    return () => clearInterval(id);
-  }, [slides.length]);
-
   return (
     <section className="relative flex h-[100vh] items-end overflow-hidden text-center text-white sm:h-[85vh]">
-      <motion.div
-        initial={{ clipPath: "inset(20% round 32px)" }}
-        animate={{ clipPath: "inset(0% round 0px)" }}
-        transition={{ duration: 1.4, ease: [0.22, 1, 0.36, 1], delay: 0 }}
-        className="absolute inset-0"
-      >
-        {slides.map((src, i) => (
-          <div
-            key={src}
-            className="absolute inset-0 transition-opacity duration-700 ease-in-out"
-            style={{ opacity: i === index ? 1 : 0 }}
-          >
-            <Image
-              src={src}
-              alt="moos.park"
-              fill
-              priority={i === 0}
-              className="object-cover"
-              sizes="100vw"
-            />
-          </div>
-        ))}
-        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-black/25" />
-      </motion.div>
+      <HeroBackground images={images} />
 
       <motion.div
         variants={container}

@@ -1,4 +1,4 @@
-import Image from "next/image";
+import HeroBackground from "@/components/HeroBackground";
 
 export const metadata = {
   title: "Links | moos.park Pöttmes",
@@ -47,61 +47,58 @@ const LINK_BUTTONS = [
   { href: "/kontakt", label: "Kontakt zu uns 🤙" },
 ];
 
+const HERO_IMAGES = Array.from(
+  { length: 11 },
+  (_, i) => `/images/hero-fan-${i + 1}.jpg`
+);
+
 export default function LinksPage() {
   return (
-    <div className="flex min-h-screen flex-col items-center bg-background px-6 pb-16 pt-6 text-center">
-      <div className="mt-10 rounded-full bg-gradient-to-tr from-yellow-400 via-pink-500 to-purple-500 p-[3px]">
-        <div className="rounded-full bg-background p-2">
-          <Image
-            src="/images/logo.png"
-            alt="moos.park – Dein Hotspot für Tag und Nacht"
-            width={180}
-            height={180}
-            className="w-40"
-          />
+    <section className="relative flex min-h-screen flex-col items-center overflow-hidden px-6 pb-16 pt-32 text-center text-white">
+      <HeroBackground images={HERO_IMAGES} />
+
+      <div className="relative z-10 flex w-full flex-col items-center">
+        <h1 className="text-3xl font-black uppercase tracking-tight text-white">
+          Links
+        </h1>
+        <p className="mt-2 text-xl font-bold text-white">
+          moos.park – Die Eventlocation seit 1994 🚀
+        </p>
+        <p className="mt-4 text-white/70">
+          Die wichtigsten Links findest du hier.
+        </p>
+
+        <div className="mt-6 flex items-center justify-center gap-4">
+          {SOCIALS.map((s) => (
+            <a
+              key={s.label}
+              href={s.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={s.label}
+              className="flex h-12 w-12 items-center justify-center rounded-full bg-white text-black transition-transform hover:scale-105"
+            >
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                {s.icon}
+              </svg>
+            </a>
+          ))}
+        </div>
+
+        <div className="mt-8 flex w-full max-w-md flex-col gap-4">
+          {LINK_BUTTONS.map((l) => (
+            <a
+              key={l.label}
+              href={l.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="rounded-full bg-accent-lime px-6 py-4 text-lg font-black text-black transition-transform hover:scale-[1.02]"
+            >
+              {l.label}
+            </a>
+          ))}
         </div>
       </div>
-
-      <h1 className="mt-6 text-3xl font-black uppercase tracking-tight text-foreground">
-        Links
-      </h1>
-      <p className="mt-2 text-xl font-bold text-foreground">
-        moos.park – Die Eventlocation seit 1994 🚀
-      </p>
-      <p className="mt-4 text-foreground/60">
-        Die wichtigsten Links findest du hier.
-      </p>
-
-      <div className="mt-6 flex items-center justify-center gap-4">
-        {SOCIALS.map((s) => (
-          <a
-            key={s.label}
-            href={s.href}
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label={s.label}
-            className="flex h-12 w-12 items-center justify-center rounded-full bg-foreground text-background transition-transform hover:scale-105"
-          >
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-              {s.icon}
-            </svg>
-          </a>
-        ))}
-      </div>
-
-      <div className="mt-8 flex w-full max-w-md flex-col gap-4">
-        {LINK_BUTTONS.map((l) => (
-          <a
-            key={l.label}
-            href={l.href}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="rounded-full bg-accent-lime px-6 py-4 text-lg font-black text-black transition-transform hover:scale-[1.02]"
-          >
-            {l.label}
-          </a>
-        ))}
-      </div>
-    </div>
+    </section>
   );
 }
