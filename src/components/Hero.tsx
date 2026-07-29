@@ -69,7 +69,7 @@ export default function Hero({ images }: { images: string[] }) {
         initial="hidden"
         whileInView="show"
         viewport={{ once: true, amount: 0.4 }}
-        className="relative z-10 mx-auto flex max-w-2xl flex-col items-center px-6 pb-12 pt-36 sm:pb-16 sm:pt-0"
+        className="relative z-10 mx-auto flex max-w-2xl flex-col items-center px-6 pb-4 pt-36 sm:pb-16 sm:pt-0"
       >
         <motion.span
           variants={item}
