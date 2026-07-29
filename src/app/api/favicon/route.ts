@@ -13,5 +13,5 @@ export async function GET(request: Request) {
   } catch {
     // faellt unten auf die statische Datei zurueck
   }
-  return NextResponse.redirect(new URL("/favicon.ico", request.url));
+  return NextResponse.redirect(new URL("/favicon-fallback.ico", request.url));
 }
