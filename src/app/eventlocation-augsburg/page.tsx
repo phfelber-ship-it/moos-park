@@ -51,7 +51,7 @@ const data: RentalPageData = {
       text: "40 Minuten von Augsburg, kostenloser Großparkplatz, bis 750 Personen. Besser als alles in der Innenstadt.",
     },
   ],
-  advantagesHeading: "Besser als jede Augsburger Stadtlocation.",
+  advantagesHeading: "Deine Top-Location nahe Augsburg.",
   advantagesIntro:
     "Nur 40 Minuten von Augsburg – aber mit Parkplatz für alle, bis 750 Personen, eigener Küche und Vollausstattung.",
   advantages: [
