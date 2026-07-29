@@ -1,17 +1,25 @@
 import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
-  const { password } = (await request.json()) as { password?: string };
+  const { username, password } = (await request.json()) as {
+    username?: string;
+    password?: string;
+  };
 
-  if (!password || password !== process.env.ADMIN_PASSWORD) {
+  if (
+    !username ||
+    !password ||
+    username !== process.env.ADMIN_USERNAME ||
+    password !== process.env.ADMIN_PASSWORD
+  ) {
     return NextResponse.json(
-      { error: "Falsches Passwort." },
+      { error: "Falscher Benutzername oder falsches Passwort." },
       { status: 401 }
     );
   }
 
   const res = NextResponse.json({ ok: true });
-  res.cookies.set("admin_session", password, {
+  res.cookies.set("admin_session", `${username}:${password}`, {
     httpOnly: true,
     secure: true,
     sameSite: "lax",

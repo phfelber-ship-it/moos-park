@@ -6,6 +6,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 function LoginForm() {
   const router = useRouter();
   const params = useSearchParams();
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -17,11 +18,11 @@ function LoginForm() {
     const res = await fetch("/api/admin/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ password }),
+      body: JSON.stringify({ username, password }),
     });
     setLoading(false);
     if (!res.ok) {
-      setError("Falsches Passwort.");
+      setError("Falscher Benutzername oder falsches Passwort.");
       return;
     }
     router.push(params.get("next") ?? "/admin/hero-bilder");
@@ -35,17 +36,26 @@ function LoginForm() {
       </h1>
       <form onSubmit={submit} className="mt-6 grid w-full gap-3">
         <input
+          type="text"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+          placeholder="Benutzername"
+          autoFocus
+          autoComplete="username"
+          className="w-full rounded-lg border border-foreground/20 bg-background px-4 py-2.5 text-center text-sm text-foreground outline-none focus:border-accent-lime"
+        />
+        <input
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           placeholder="Passwort"
-          autoFocus
+          autoComplete="current-password"
           className="w-full rounded-lg border border-foreground/20 bg-background px-4 py-2.5 text-center text-sm text-foreground outline-none focus:border-accent-lime"
         />
         {error && <p className="text-sm text-red-500">{error}</p>}
         <button
           type="submit"
-          disabled={loading || !password}
+          disabled={loading || !username || !password}
           className="rounded-lg bg-accent-lime px-6 py-2.5 text-sm font-black uppercase tracking-wide text-black disabled:pointer-events-none disabled:opacity-40"
         >
           {loading ? "Wird geprüft..." : "Einloggen"}
