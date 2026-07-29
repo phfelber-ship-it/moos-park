@@ -1,10 +1,7 @@
 import type { Metadata } from "next";
 import { Montserrat } from "next/font/google";
 import "./globals.css";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
-import FloatingWhatsAppButton from "@/components/FloatingWhatsAppButton";
-import CookieConsent from "@/components/CookieConsent";
+import SiteChrome from "@/components/SiteChrome";
 import GoogleTagManager from "@/components/GoogleTagManager";
 import FacebookPixel from "@/components/FacebookPixel";
 
@@ -56,11 +53,7 @@ export default function RootLayout({
         />
       </head>
       <body className="flex min-h-full flex-col bg-background font-sans text-foreground">
-        <Header />
-        <main className="flex-1">{children}</main>
-        <Footer />
-        <FloatingWhatsAppButton />
-        <CookieConsent />
+        <SiteChrome>{children}</SiteChrome>
         <GoogleTagManager />
         <FacebookPixel />
       </body>
