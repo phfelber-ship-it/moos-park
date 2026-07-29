@@ -3,12 +3,27 @@
 import { useState } from "react";
 import { createJobApplication, type JobPosting } from "@/lib/clubscale";
 
+// Clubscale verlangt fuer Bewerbungen zwingend ein Foto (image-Feld), API
+// erwartet reinen Base64-String ohne data:-URL-Praefix.
+function fileToBase64(file: File): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      const result = reader.result as string;
+      resolve(result.slice(result.indexOf(",") + 1));
+    };
+    reader.onerror = () => reject(reader.error);
+    reader.readAsDataURL(file);
+  });
+}
+
 function ApplicationForm({ jobPostingId }: { jobPostingId: string }) {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [text, setText] = useState("");
+  const [photo, setPhoto] = useState<File | null>(null);
   const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">(
     "idle"
   );
@@ -17,13 +32,15 @@ function ApplicationForm({ jobPostingId }: { jobPostingId: string }) {
     firstName.trim() !== "" &&
     lastName.trim() !== "" &&
     email.trim() !== "" &&
-    phoneNumber.trim() !== "";
+    phoneNumber.trim() !== "" &&
+    photo !== null;
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!canSend || status === "sending") return;
+    if (!canSend || status === "sending" || !photo) return;
     setStatus("sending");
     try {
+      const imageBase64 = await fileToBase64(photo);
       await createJobApplication({
         jobPostingId,
         firstName: firstName.trim(),
@@ -31,6 +48,7 @@ function ApplicationForm({ jobPostingId }: { jobPostingId: string }) {
         email: email.trim(),
         phoneNumber: phoneNumber.trim(),
         text: text.trim(),
+        imageBase64,
       });
       setStatus("sent");
     } catch {
@@ -82,6 +100,17 @@ function ApplicationForm({ jobPostingId }: { jobPostingId: string }) {
         rows={3}
         className="w-full rounded-lg border border-foreground/20 bg-background px-4 py-2.5 text-sm text-foreground placeholder-foreground/40 outline-none focus:border-accent-lime"
       />
+      <label className="grid gap-1.5">
+        <span className="text-xs font-bold uppercase tracking-wide text-foreground/50">
+          Foto von dir
+        </span>
+        <input
+          type="file"
+          accept="image/*"
+          onChange={(e) => setPhoto(e.target.files?.[0] ?? null)}
+          className="w-full rounded-lg border border-foreground/20 bg-background px-4 py-2.5 text-sm text-foreground file:mr-3 file:rounded-md file:border-0 file:bg-accent-lime file:px-3 file:py-1.5 file:text-xs file:font-black file:uppercase file:text-black"
+        />
+      </label>
 
       {status === "error" && (
         <p className="text-sm text-red-500">
