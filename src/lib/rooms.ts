@@ -1,4 +1,5 @@
 export type Room = {
+  slug: string;
   name: string;
   capacity: string;
   area: string;
@@ -8,6 +9,7 @@ export type Room = {
 
 export const ROOMS: Room[] = [
   {
+    slug: "mainhalle",
     name: "Main-Halle mit Galerie und Bar",
     capacity: "Bis zu 750 Personen",
     area: "475m² Eventfläche",
@@ -23,6 +25,7 @@ export const ROOMS: Room[] = [
     ],
   },
   {
+    slug: "terrasse",
     name: "Terrasse",
     capacity: "Bis zu 720 Personen",
     area: "460m² Eventfläche",
@@ -34,6 +37,7 @@ export const ROOMS: Room[] = [
     ],
   },
   {
+    slug: "lounge",
     name: "Lounge",
     capacity: "Bis zu 300 Personen",
     area: "150m² Eventfläche",
@@ -45,6 +49,7 @@ export const ROOMS: Room[] = [
     ],
   },
   {
+    slug: "chillout",
     name: "Chillout",
     capacity: "Bis zu 406 Personen",
     area: "203m² Eventfläche",
@@ -56,6 +61,7 @@ export const ROOMS: Room[] = [
     ],
   },
   {
+    slug: "foyer",
     name: "Foyer",
     capacity: "Bis zu 90 Personen",
     area: "62m² Gastfläche",
@@ -63,6 +69,7 @@ export const ROOMS: Room[] = [
     images: ["/images/rooms/foyer-1.jpg", "/images/rooms/foyer-2.jpg"],
   },
   {
+    slug: "pizzeria",
     name: "Pizzeria",
     capacity: "Bis zu 80 Personen",
     area: "41m² Eventfläche",

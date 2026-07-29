@@ -1,10 +1,16 @@
 import Link from "next/link";
+import ClearCacheButton from "@/components/ClearCacheButton";
 
 const SECTIONS = [
   {
     href: "/admin/hero-bilder",
     title: "Hero-Bilder",
     text: "Hintergrund-Slideshow auf Startseite und /links verwalten.",
+  },
+  {
+    href: "/admin/raeume",
+    title: "Räume",
+    text: "Bilder je Raum (Main-Halle, Terrasse, Lounge, ...) verwalten.",
   },
   {
     href: "/admin/favicon",
@@ -36,6 +42,17 @@ export default function AdminDashboardPage() {
             <p className="mt-2 text-sm text-foreground/60">{s.text}</p>
           </Link>
         ))}
+      </div>
+
+      <div className="mt-12 border-t border-foreground/10 pt-8">
+        <h2 className="text-lg font-black uppercase text-foreground">
+          Cache
+        </h2>
+        <p className="mt-2 text-sm text-foreground/60">
+          Erzwingt eine sofortige Aktualisierung aller Seiten (statt bis zu
+          5 Minuten zu warten).
+        </p>
+        <ClearCacheButton />
       </div>
     </div>
   );

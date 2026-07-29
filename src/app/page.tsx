@@ -2,6 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { getEvents, getGalleries } from "@/lib/clubscale";
 import { getHeroImages } from "@/lib/hero-images";
+import { getAllRoomImages } from "@/lib/room-images";
 import EventsExplorer from "@/components/EventsExplorer";
 import Hero from "@/components/Hero";
 import Reveal from "@/components/Reveal";
@@ -89,6 +90,7 @@ export default async function Home() {
   const allGalleries = await getGalleries();
   const galleries = allGalleries.slice(0, 4);
   const heroImages = await getHeroImages();
+  const roomImages = await getAllRoomImages();
   const fanPhotos = Array.from({ length: 11 }, (_, i) => ({
     src: `/images/fan-${i + 1}.jpg`,
     alt: "moos.park",
@@ -296,7 +298,7 @@ export default async function Home() {
       <section className="flex min-h-[720px] items-center px-6 py-24">
         <div className="mx-auto w-full min-w-0 max-w-5xl">
           <Reveal>
-            <RoomsShowcase />
+            <RoomsShowcase roomImages={roomImages} />
           </Reveal>
         </div>
       </section>

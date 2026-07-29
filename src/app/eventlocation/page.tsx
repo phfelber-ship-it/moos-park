@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ROOMS } from "@/lib/rooms";
+import { getAllRoomImages } from "@/lib/room-images";
 import RoomImageRotator from "@/components/RoomImageRotator";
 
 export const metadata = {
@@ -29,7 +30,8 @@ function AreaIcon() {
   );
 }
 
-export default function EventlocationPage() {
+export default async function EventlocationPage() {
+  const roomImages = await getAllRoomImages();
   return (
     <div>
       <section className="relative flex min-h-[70vh] items-end overflow-hidden text-center text-white sm:min-h-[85vh]">
@@ -144,7 +146,7 @@ export default function EventlocationPage() {
             >
               <div className="relative aspect-[4/3] w-full overflow-hidden rounded-xl bg-foreground/5">
                 <RoomImageRotator
-                  images={room.images}
+                  images={roomImages[room.slug] ?? room.images}
                   alt={room.name}
                   sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
                 />

@@ -42,6 +42,26 @@ export default function HeroBackground({ images }: { images: string[] }) {
         </div>
       ))}
       <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-black/25" />
+
+      {slides.length > 1 && (
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 flex gap-1.5 p-4">
+          {slides.map((src, i) => (
+            <div
+              key={src}
+              className="h-1 flex-1 overflow-hidden rounded-full bg-white/25"
+            >
+              {i === index && (
+                <div
+                  key={index}
+                  className="h-full rounded-full bg-accent-lime"
+                  style={{ animation: `hero-progress ${SLIDE_DURATION}ms linear` }}
+                />
+              )}
+              {i < index && <div className="h-full rounded-full bg-accent-lime" />}
+            </div>
+          ))}
+        </div>
+      )}
     </motion.div>
   );
 }

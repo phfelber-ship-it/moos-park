@@ -6,9 +6,14 @@ import { AnimatePresence, motion } from "motion/react";
 import { ROOMS } from "@/lib/rooms";
 import RoomImageRotator from "@/components/RoomImageRotator";
 
-export default function RoomsShowcase() {
+export default function RoomsShowcase({
+  roomImages,
+}: {
+  roomImages: Record<string, string[]>;
+}) {
   const [active, setActive] = useState(0);
   const room = ROOMS[active];
+  const images = roomImages[room.slug] ?? room.images;
 
   return (
     <div>
@@ -29,7 +34,7 @@ export default function RoomsShowcase() {
         <div className="relative order-1 aspect-[16/10] w-full overflow-hidden rounded-2xl lg:order-2">
         <RoomImageRotator
           key={room.name}
-          images={room.images}
+          images={images}
           alt={room.name}
           sizes="(min-width: 1024px) 700px, 100vw"
         />

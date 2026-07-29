@@ -4,7 +4,7 @@ import type { NextRequest } from "next/server";
 // Einfacher Passwort-Schutz fuer den internen Admin-Bereich (Hero-Bilder-
 // Verwaltung) - kein Nutzerkonzept auf dieser Seite, daher bewusst ein
 // einzelnes geteiltes Passwort statt eines vollen Auth-Systems.
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   if (pathname === "/admin/login" || pathname === "/api/admin/login") {
