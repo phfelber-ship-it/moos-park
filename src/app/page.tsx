@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { getEvents, getGalleries } from "@/lib/clubscale";
+import { getHeroImages } from "@/lib/hero-images";
 import EventsExplorer from "@/components/EventsExplorer";
 import Hero from "@/components/Hero";
 import Reveal from "@/components/Reveal";
@@ -87,10 +88,7 @@ export default async function Home() {
   const events = await getEvents();
   const allGalleries = await getGalleries();
   const galleries = allGalleries.slice(0, 4);
-  const heroImages = Array.from(
-    { length: 11 },
-    (_, i) => `/images/hero-fan-${i + 1}.jpg`
-  );
+  const heroImages = await getHeroImages();
   const fanPhotos = Array.from({ length: 11 }, (_, i) => ({
     src: `/images/fan-${i + 1}.jpg`,
     alt: "moos.park",

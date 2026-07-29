@@ -1,4 +1,5 @@
 import HeroBackground from "@/components/HeroBackground";
+import { getHeroImages } from "@/lib/hero-images";
 
 export const metadata = {
   title: "Links | moos.park Pöttmes",
@@ -47,15 +48,11 @@ const LINK_BUTTONS = [
   { href: "/kontakt", label: "Kontakt zu uns 🤙" },
 ];
 
-const HERO_IMAGES = Array.from(
-  { length: 11 },
-  (_, i) => `/images/hero-fan-${i + 1}.jpg`
-);
-
-export default function LinksPage() {
+export default async function LinksPage() {
+  const heroImages = await getHeroImages();
   return (
     <section className="relative flex min-h-screen flex-col items-center overflow-hidden px-6 pb-16 pt-32 text-center text-white">
-      <HeroBackground images={HERO_IMAGES} />
+      <HeroBackground images={heroImages} />
 
       <div className="relative z-10 flex w-full flex-col items-center">
         <h1 className="text-3xl font-black uppercase tracking-tight text-white">
