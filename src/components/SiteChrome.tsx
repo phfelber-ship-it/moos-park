@@ -1,6 +1,3 @@
-"use client";
-
-import { usePathname } from "next/navigation";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import FloatingWhatsAppButton from "@/components/FloatingWhatsAppButton";
@@ -11,13 +8,6 @@ export default function SiteChrome({
 }: {
   children: React.ReactNode;
 }) {
-  const pathname = usePathname();
-  const bare = pathname?.startsWith("/links");
-
-  if (bare) {
-    return <main className="flex-1">{children}</main>;
-  }
-
   return (
     <>
       <Header />

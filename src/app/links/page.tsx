@@ -1,4 +1,3 @@
-import Link from "next/link";
 import Image from "next/image";
 
 export const metadata = {
@@ -36,17 +35,14 @@ const LINK_BUTTONS = [
   {
     href: "https://www.google.com/maps?q=Rudolf-Diesel-Stra%C3%9Fe+23,+86554+P%C3%B6ttmes",
     label: "Unsere Location 📍",
-    external: true,
   },
   {
     href: "https://apps.apple.com/de/app/moos-park/id6739537470",
     label: "Ticket & App für iOS 🎫",
-    external: true,
   },
   {
     href: "https://play.google.com/store/apps/details?id=de.moospark.clubscale&pcampaignid=web_share",
     label: "Ticket & App für ANDROID 🎫",
-    external: true,
   },
   { href: "/kontakt", label: "Kontakt zu uns 🤙" },
 ];
@@ -54,48 +50,6 @@ const LINK_BUTTONS = [
 export default function LinksPage() {
   return (
     <div className="flex min-h-screen flex-col items-center bg-background px-6 pb-16 pt-6 text-center">
-      <div className="flex w-full max-w-md items-center justify-between rounded-full bg-white px-4 py-3 shadow-[0_4px_24px_rgba(0,0,0,0.08)]">
-        <Link
-          href="/"
-          aria-label="Zur moos.park Startseite"
-          className="flex h-10 w-10 items-center justify-center rounded-full text-foreground/80 transition-colors hover:text-foreground"
-        >
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-            <path
-              d="M2 6h20M2 12h20M2 18h20"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-            />
-          </svg>
-        </Link>
-
-        <Link href="/" aria-label="moos.park Startseite">
-          <Image
-            src="/images/logo.png"
-            alt="moos.park"
-            width={40}
-            height={40}
-            className="w-9"
-          />
-        </Link>
-
-        <Link
-          href="/tickets"
-          className="flex items-center gap-1.5 rounded-full bg-[#F5DF4D] px-4 py-2 text-sm font-black uppercase tracking-wide text-black transition-transform hover:scale-105"
-        >
-          Tickets
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-            <path
-              d="M3 8a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v2a2 2 0 1 0 0 4v2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a2 2 0 1 0 0-4z"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinejoin="round"
-            />
-          </svg>
-        </Link>
-      </div>
-
       <div className="mt-10 rounded-full bg-gradient-to-tr from-yellow-400 via-pink-500 to-purple-500 p-[3px]">
         <div className="rounded-full bg-background p-2">
           <Image
@@ -136,27 +90,17 @@ export default function LinksPage() {
       </div>
 
       <div className="mt-8 flex w-full max-w-md flex-col gap-4">
-        {LINK_BUTTONS.map((l) =>
-          l.external ? (
-            <a
-              key={l.label}
-              href={l.href}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="rounded-full bg-accent-lime px-6 py-4 text-lg font-black text-black transition-transform hover:scale-[1.02]"
-            >
-              {l.label}
-            </a>
-          ) : (
-            <Link
-              key={l.label}
-              href={l.href}
-              className="rounded-full bg-accent-lime px-6 py-4 text-lg font-black text-black transition-transform hover:scale-[1.02]"
-            >
-              {l.label}
-            </Link>
-          ),
-        )}
+        {LINK_BUTTONS.map((l) => (
+          <a
+            key={l.label}
+            href={l.href}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="rounded-full bg-accent-lime px-6 py-4 text-lg font-black text-black transition-transform hover:scale-[1.02]"
+          >
+            {l.label}
+          </a>
+        ))}
       </div>
     </div>
   );
