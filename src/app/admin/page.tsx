@@ -1,5 +1,6 @@
 import Link from "next/link";
 import ClearCacheButton from "@/components/ClearCacheButton";
+import FacebookPixelStatus from "@/components/FacebookPixelStatus";
 
 const SECTIONS = [
   {
@@ -54,6 +55,8 @@ export default function AdminDashboardPage() {
         </p>
         <ClearCacheButton />
       </div>
+
+      <FacebookPixelStatus />
     </div>
   );
 }
