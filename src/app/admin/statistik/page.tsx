@@ -158,6 +158,18 @@ export default async function StatistikPage() {
 
       <div className="mt-10 border-t border-foreground/10 pt-8">
         <h2 className="text-lg font-black uppercase text-foreground">
+          Einstiegsseiten
+        </h2>
+        <p className="mt-2 text-xs text-foreground/50">
+          Auf welcher Seite Besucher ihre Sitzung starten.
+        </p>
+        <div className="mt-4">
+          <BarChart rows={data.landingPages} />
+        </div>
+      </div>
+
+      <div className="mt-10 border-t border-foreground/10 pt-8">
+        <h2 className="text-lg font-black uppercase text-foreground">
           Wo Leute absprangen
         </h2>
         <p className="mt-2 text-xs text-foreground/50">
@@ -184,6 +196,50 @@ export default async function StatistikPage() {
               label: `${r.label} Uhr`,
             }))}
           />
+        </div>
+      </div>
+
+      <div className="mt-10 border-t border-foreground/10 pt-8">
+        <h2 className="text-lg font-black uppercase text-foreground">
+          Geräte
+        </h2>
+        <p className="mt-2 text-xs text-foreground/50">
+          Von welchem Gerätetyp die Besucher kommen.
+        </p>
+        <div className="mt-4">
+          <BarChart rows={data.devices} categorical />
+        </div>
+      </div>
+
+      <div className="mt-10 border-t border-foreground/10 pt-8">
+        <h2 className="text-lg font-black uppercase text-foreground">
+          Wie sich Besucher je Gerät bewegen
+        </h2>
+        <p className="mt-2 text-xs text-foreground/50">
+          Meistbesuchte Seiten getrennt nach Gerätetyp - ein echter
+          Seite-zu-Seite-Pfad pro Sitzung ist über die GA4-Datenschnittstelle
+          nicht abrufbar (nur direkt in GA4 unter{" "}
+          <a
+            href="https://analytics.google.com/analytics/web/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="underline"
+          >
+            Erkunden → Pfadexploration
+          </a>
+          ), daher hier die Annäherung je Gerät.
+        </p>
+        <div className="mt-6 grid gap-8 sm:grid-cols-2">
+          {Object.entries(data.topPagesByDevice).map(([device, rows]) => (
+            <div key={device}>
+              <h3 className="text-sm font-black uppercase tracking-wide text-foreground/70">
+                {device}
+              </h3>
+              <div className="mt-3">
+                <BarChart rows={rows} />
+              </div>
+            </div>
+          ))}
         </div>
       </div>
 

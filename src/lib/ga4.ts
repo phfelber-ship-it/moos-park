@@ -32,9 +32,12 @@ export type Ga4Data = {
   overview: Ga4Overview | null;
   trafficSources: Ga4Row[];
   topPages: Ga4Row[];
+  landingPages: Ga4Row[];
   bounceByPage: Ga4Row[];
   sessionsByHour: Ga4Row[];
   sessionsByDay: Ga4Row[];
+  devices: Ga4Row[];
+  topPagesByDevice: Record<string, Ga4Row[]>;
   keywords: Ga4Row[];
 };
 
@@ -44,9 +47,12 @@ const EMPTY: Ga4Data = {
   overview: null,
   trafficSources: [],
   topPages: [],
+  landingPages: [],
   bounceByPage: [],
   sessionsByHour: [],
   sessionsByDay: [],
+  devices: [],
+  topPagesByDevice: {},
   keywords: [],
 };
 
@@ -68,9 +74,12 @@ export async function getGa4Data(): Promise<Ga4Data> {
       overviewRes,
       trafficRes,
       pagesRes,
+      landingRes,
       bounceRes,
       hourRes,
       dayRes,
+      deviceRes,
+      pagesByDeviceRes,
       keywordRes,
     ] = await Promise.all([
         client.runReport({
@@ -103,6 +112,14 @@ export async function getGa4Data(): Promise<Ga4Data> {
         client.runReport({
           property: propertyId,
           dateRanges,
+          dimensions: [{ name: "landingPage" }],
+          metrics: [{ name: "sessions" }],
+          orderBys: [{ metric: { metricName: "sessions" }, desc: true }],
+          limit: 10,
+        }),
+        client.runReport({
+          property: propertyId,
+          dateRanges,
           dimensions: [{ name: "pagePath" }],
           metrics: [{ name: "bounceRate" }],
           orderBys: [{ metric: { metricName: "bounceRate" }, desc: true }],
@@ -121,6 +138,21 @@ export async function getGa4Data(): Promise<Ga4Data> {
           dimensions: [{ name: "date" }],
           metrics: [{ name: "sessions" }],
           orderBys: [{ dimension: { dimensionName: "date" } }],
+        }),
+        client.runReport({
+          property: propertyId,
+          dateRanges,
+          dimensions: [{ name: "deviceCategory" }],
+          metrics: [{ name: "sessions" }],
+          orderBys: [{ metric: { metricName: "sessions" }, desc: true }],
+        }),
+        client.runReport({
+          property: propertyId,
+          dateRanges,
+          dimensions: [{ name: "deviceCategory" }, { name: "pagePath" }],
+          metrics: [{ name: "screenPageViews" }],
+          orderBys: [{ metric: { metricName: "screenPageViews" }, desc: true }],
+          limit: 100,
         }),
         client.runReport({
           property: propertyId,
@@ -170,15 +202,30 @@ export async function getGa4Data(): Promise<Ga4Data> {
       label: formatDate(r.label),
     }));
 
+    // Zwei-Dimensionen-Report (Geraet + Seite) zu "Top-Seiten je Geraet"
+    // gruppieren - echte Seite-zu-Seite-Pfade sind ueber die Data-API nicht
+    // abrufbar (nur in GA4 selbst unter Erkunden > Pfadexploration).
+    const topPagesByDevice: Record<string, Ga4Row[]> = {};
+    for (const row of pagesByDeviceRes[0].rows ?? []) {
+      const device = row.dimensionValues?.[0]?.value ?? "-";
+      const page = row.dimensionValues?.[1]?.value ?? "-";
+      const views = Number(row.metricValues?.[0]?.value ?? 0);
+      const list = (topPagesByDevice[device] ??= []);
+      if (list.length < 5) list.push({ label: page, value: views });
+    }
+
     return {
       configured: true,
       error: null,
       overview,
       trafficSources: toRows(trafficRes[0]),
       topPages: toRows(pagesRes[0]),
+      landingPages: toRows(landingRes[0]),
       bounceByPage: toRows(bounceRes[0]),
       sessionsByHour: toRows(hourRes[0]),
       sessionsByDay,
+      devices: toRows(deviceRes[0]),
+      topPagesByDevice,
       keywords: toRows(keywordRes[0]),
     };
   } catch (e) {

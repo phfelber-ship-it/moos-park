@@ -10,12 +10,13 @@ function pixelLoaded(): boolean {
 }
 
 export default function FacebookPixelStatus() {
-  const [marketingConsent, setMarketingConsent] = useState(false);
+  const [consentGiven, setConsentGiven] = useState(false);
   const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
     const check = () => {
-      setMarketingConsent(getStoredConsent()?.marketing ?? false);
+      const consent = getStoredConsent();
+      setConsentGiven(Boolean(consent?.statistics || consent?.marketing));
       setLoaded(pixelLoaded());
     };
     check();
@@ -36,22 +37,29 @@ export default function FacebookPixelStatus() {
   };
 
   const status = loaded
-    ? { color: "bg-green-500", text: "Aktiv - Pixel ist geladen und feuert." }
-    : marketingConsent
+    ? {
+        color: "bg-green-500",
+        text: "Aktiv - GTM hat den Facebook-Pixel-Tag geladen, Verknuepfung funktioniert.",
+      }
+    : consentGiven
       ? {
           color: "bg-yellow-500",
-          text: "Marketing-Einwilligung vorhanden, Pixel aber (noch) nicht geladen - Seite neu laden.",
+          text: "Einwilligung vorhanden, Pixel aber (noch) nicht geladen - Seite neu laden oder GTM-Tag/Trigger pruefen.",
         }
       : {
           color: "bg-red-500",
-          text: "Inaktiv - in diesem Browser wurde noch keine Marketing-Einwilligung gegeben.",
+          text: "Inaktiv - in diesem Browser wurde noch keine Statistik-/Marketing-Einwilligung gegeben.",
         };
 
   return (
     <div className="mt-8 border-t border-foreground/10 pt-8">
       <h2 className="text-lg font-black uppercase text-foreground">
-        Facebook Pixel
+        Facebook Pixel (über GTM)
       </h2>
+      <p className="mt-2 text-xs text-foreground/50">
+        Das Pixel laeuft ausschliesslich als Tag im Google Tag Manager - diese
+        Anzeige prueft, ob die Verknuepfung tatsaechlich funktioniert.
+      </p>
       <div className="mt-3 flex items-center gap-3">
         <span className={`h-3 w-3 shrink-0 rounded-full ${status.color}`} />
         <p className="text-sm text-foreground/70">{status.text}</p>
@@ -62,7 +70,7 @@ export default function FacebookPixelStatus() {
           onClick={grantMarketingForTest}
           className="mt-4 rounded-lg border border-foreground/20 px-6 py-2.5 text-xs font-black uppercase tracking-wide text-foreground transition-colors hover:border-foreground"
         >
-          Marketing-Cookies (nur hier) testweise akzeptieren
+          Cookies (nur hier) testweise akzeptieren
         </button>
       )}
       <p className="mt-3 text-xs text-foreground/50">
