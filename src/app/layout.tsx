@@ -3,7 +3,6 @@ import { Montserrat } from "next/font/google";
 import "./globals.css";
 import SiteChrome from "@/components/SiteChrome";
 import GoogleTagManager from "@/components/GoogleTagManager";
-import FacebookPixel from "@/components/FacebookPixel";
 
 const montserrat = Montserrat({
   variable: "--font-montserrat",
@@ -58,7 +57,6 @@ export default function RootLayout({
       <body className="flex min-h-full flex-col bg-background font-sans text-foreground">
         <SiteChrome>{children}</SiteChrome>
         <GoogleTagManager />
-        <FacebookPixel />
       </body>
     </html>
   );
