@@ -1,0 +1,30 @@
+/* Farb-Tokens fuer die Statistik-Diagramme - Werte aus der validierten
+   Standard-Palette der dataviz-Skill (CVD-sicher getestet), Oberflaeche/Text
+   an die bestehenden Seiten-Tokens (--background/--foreground) angeglichen. */
+.viz-root {
+  --viz-grid: #e1e0d9;
+  --viz-axis: #c3c2b7;
+  --viz-muted: #898781;
+  --viz-text: var(--foreground);
+  --viz-sequential: #2a78d6;
+  --viz-cat-1: #2a78d6;
+  --viz-cat-2: #eb6834;
+  --viz-cat-3: #1baf7a;
+  --viz-cat-4: #eda100;
+  --viz-cat-5: #e87ba4;
+  --viz-cat-6: #4a3aa7;
+}
+
+[data-theme="dark"] .viz-root,
+:root:not([data-theme="light"]) .viz-root {
+  --viz-grid: #2c2c2a;
+  --viz-axis: #383835;
+  --viz-muted: #898781;
+  --viz-sequential: #3987e5;
+  --viz-cat-1: #3987e5;
+  --viz-cat-2: #d95926;
+  --viz-cat-3: #199e70;
+  --viz-cat-4: #c98500;
+  --viz-cat-5: #d55181;
+  --viz-cat-6: #9085e9;
+}

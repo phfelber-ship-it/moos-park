@@ -34,6 +34,7 @@ export type Ga4Data = {
   topPages: Ga4Row[];
   bounceByPage: Ga4Row[];
   sessionsByHour: Ga4Row[];
+  sessionsByDay: Ga4Row[];
   keywords: Ga4Row[];
 };
 
@@ -45,6 +46,7 @@ const EMPTY: Ga4Data = {
   topPages: [],
   bounceByPage: [],
   sessionsByHour: [],
+  sessionsByDay: [],
   keywords: [],
 };
 
@@ -62,8 +64,15 @@ export async function getGa4Data(): Promise<Ga4Data> {
   try {
     const dateRanges = [{ startDate: "30daysAgo", endDate: "today" }];
 
-    const [overviewRes, trafficRes, pagesRes, bounceRes, hourRes, keywordRes] =
-      await Promise.all([
+    const [
+      overviewRes,
+      trafficRes,
+      pagesRes,
+      bounceRes,
+      hourRes,
+      dayRes,
+      keywordRes,
+    ] = await Promise.all([
         client.runReport({
           property: propertyId,
           dateRanges,
@@ -109,6 +118,13 @@ export async function getGa4Data(): Promise<Ga4Data> {
         client.runReport({
           property: propertyId,
           dateRanges,
+          dimensions: [{ name: "date" }],
+          metrics: [{ name: "sessions" }],
+          orderBys: [{ dimension: { dimensionName: "date" } }],
+        }),
+        client.runReport({
+          property: propertyId,
+          dateRanges,
           dimensions: [{ name: "sessionManualTerm" }],
           metrics: [{ name: "sessions" }],
           orderBys: [{ metric: { metricName: "sessions" }, desc: true }],
@@ -144,6 +160,16 @@ export async function getGa4Data(): Promise<Ga4Data> {
         value: Number(r.metricValues?.[0]?.value ?? 0),
       }));
 
+    // GA4 liefert "date" als YYYYMMDD - fuer die Anzeige in TT.MM. umformen.
+    const formatDate = (raw: string) => {
+      if (!/^\d{8}$/.test(raw)) return raw;
+      return `${raw.slice(6, 8)}.${raw.slice(4, 6)}.`;
+    };
+    const sessionsByDay = toRows(dayRes[0]).map((r) => ({
+      ...r,
+      label: formatDate(r.label),
+    }));
+
     return {
       configured: true,
       error: null,
@@ -152,6 +178,7 @@ export async function getGa4Data(): Promise<Ga4Data> {
       topPages: toRows(pagesRes[0]),
       bounceByPage: toRows(bounceRes[0]),
       sessionsByHour: toRows(hourRes[0]),
+      sessionsByDay,
       keywords: toRows(keywordRes[0]),
     };
   } catch (e) {

@@ -1,4 +1,6 @@
 import { getGa4Data, type Ga4Row } from "@/lib/ga4";
+import LineChart from "@/components/charts/LineChart";
+import BarChart from "@/components/charts/BarChart";
 
 export const dynamic = "force-dynamic";
 
@@ -126,24 +128,32 @@ export default async function StatistikPage() {
 
       <div className="mt-10 border-t border-foreground/10 pt-8">
         <h2 className="text-lg font-black uppercase text-foreground">
+          Verlauf
+        </h2>
+        <p className="mt-2 text-xs text-foreground/50">
+          Sitzungen pro Tag, letzte 30 Tage.
+        </p>
+        <div className="mt-4">
+          <LineChart data={data.sessionsByDay} />
+        </div>
+      </div>
+
+      <div className="mt-10 border-t border-foreground/10 pt-8">
+        <h2 className="text-lg font-black uppercase text-foreground">
           Traffic-Quelle
         </h2>
-        <RowTable
-          rows={data.trafficSources}
-          labelHeader="Quelle"
-          valueHeader="Sitzungen"
-        />
+        <div className="mt-4">
+          <BarChart rows={data.trafficSources} categorical />
+        </div>
       </div>
 
       <div className="mt-10 border-t border-foreground/10 pt-8">
         <h2 className="text-lg font-black uppercase text-foreground">
           Meistbesuchte Seiten
         </h2>
-        <RowTable
-          rows={data.topPages}
-          labelHeader="Seite"
-          valueHeader="Aufrufe"
-        />
+        <div className="mt-4">
+          <BarChart rows={data.topPages} />
+        </div>
       </div>
 
       <div className="mt-10 border-t border-foreground/10 pt-8">
@@ -154,12 +164,9 @@ export default async function StatistikPage() {
           Absprungrate je Seite - eine hohe Rate zeigt, wo Besucher die Seite
           verlassen haben, ohne weiterzuklicken.
         </p>
-        <RowTable
-          rows={data.bounceByPage}
-          labelHeader="Seite"
-          valueHeader="Absprungrate"
-          formatValue={(v) => `${(v * 100).toFixed(0)}%`}
-        />
+        <div className="mt-4">
+          <BarChart rows={data.bounceByPage} format="percent" />
+        </div>
       </div>
 
       <div className="mt-10 border-t border-foreground/10 pt-8">
@@ -170,12 +177,14 @@ export default async function StatistikPage() {
           Sitzungen je Uhrzeit (0-23 Uhr), ueber die letzten 30 Tage
           summiert.
         </p>
-        <RowTable
-          rows={data.sessionsByHour}
-          labelHeader="Uhrzeit"
-          valueHeader="Sitzungen"
-          formatValue={(v) => String(v)}
-        />
+        <div className="mt-4">
+          <BarChart
+            rows={data.sessionsByHour.map((r) => ({
+              ...r,
+              label: `${r.label} Uhr`,
+            }))}
+          />
+        </div>
       </div>
 
       <div className="mt-10 border-t border-foreground/10 pt-8">
