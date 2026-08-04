@@ -23,6 +23,11 @@ const SECTIONS = [
     title: "Statistik",
     text: "Besucher, Seitenaufrufe, Absprungrate & mehr aus Google Analytics.",
   },
+  {
+    href: "/admin/benutzer",
+    title: "Benutzer",
+    text: "Weitere Admin-Zugänge anlegen oder entfernen.",
+  },
 ];
 
 export default function AdminDashboardPage() {

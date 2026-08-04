@@ -1,10 +1,12 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+import { verifySessionToken } from "@/lib/session";
 
-// Einfacher Benutzername/Passwort-Schutz fuer den internen Admin-Bereich -
-// kein Nutzerkonzept auf dieser Seite, daher bewusst ein einzelnes
-// geteiltes Login-Paar statt eines vollen Auth-Systems.
-export function proxy(request: NextRequest) {
+// Zugriffsschutz fuer den internen Admin-Bereich per signiertem
+// Session-Token (siehe lib/session.ts) - Benutzer selbst liegen im
+// Blob-Store (lib/admin-users.ts) und werden nur beim Login geprueft,
+// der Proxy selbst braucht dafuer keinen Netzwerkzugriff.
+export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   if (pathname === "/admin/login" || pathname === "/api/admin/login") {
@@ -12,8 +14,8 @@ export function proxy(request: NextRequest) {
   }
 
   const session = request.cookies.get("admin_session")?.value;
-  const expected = `${process.env.ADMIN_USERNAME}:${process.env.ADMIN_PASSWORD}`;
-  if (session && session === expected) {
+  const username = await verifySessionToken(session);
+  if (username) {
     return NextResponse.next();
   }
 
