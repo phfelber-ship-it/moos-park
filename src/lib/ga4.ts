@@ -38,7 +38,6 @@ export type Ga4Data = {
   sessionsByDay: Ga4Row[];
   devices: Ga4Row[];
   topPagesByDevice: Record<string, Ga4Row[]>;
-  keywords: Ga4Row[];
 };
 
 const EMPTY: Ga4Data = {
@@ -53,14 +52,51 @@ const EMPTY: Ga4Data = {
   sessionsByDay: [],
   devices: [],
   topPagesByDevice: {},
-  keywords: [],
 };
 
-// Holt die wichtigsten Kennzahlen der letzten 30 Tage aus GA4 ueber die
-// offizielle Data-API. Kommentar zu "Keywords": moderne Suchmaschinen geben
-// den Suchbegriff aus Datenschutzgruenden praktisch nie mehr weiter -
-// dieser Wert ist bei organischem Traffic fast immer "(not set)".
-export async function getGa4Data(): Promise<Ga4Data> {
+// Nur die Uebersichts-Kennzahlen fuer einen Zeitraum - leichtgewichtig fuer
+// den Vorher/Nachher-Vergleich (Trendpfeile), ohne alle Detail-Reports.
+export async function getGa4Overview(
+  startDate: string,
+  endDate: string
+): Promise<Ga4Overview | null> {
+  const client = getClient();
+  const propertyId = property();
+  if (!client || !propertyId) return null;
+
+  try {
+    const [res] = await client.runReport({
+      property: propertyId,
+      dateRanges: [{ startDate, endDate }],
+      metrics: [
+        { name: "activeUsers" },
+        { name: "screenPageViews" },
+        { name: "bounceRate" },
+        { name: "averageSessionDuration" },
+        { name: "sessions" },
+      ],
+    });
+    const row = res.rows?.[0];
+    if (!row) return null;
+    return {
+      activeUsers: Number(row.metricValues?.[0]?.value ?? 0),
+      screenPageViews: Number(row.metricValues?.[1]?.value ?? 0),
+      bounceRate: Number(row.metricValues?.[2]?.value ?? 0),
+      averageSessionDuration: Number(row.metricValues?.[3]?.value ?? 0),
+      sessions: Number(row.metricValues?.[4]?.value ?? 0),
+    };
+  } catch {
+    return null;
+  }
+}
+
+// Holt die wichtigsten Kennzahlen fuer den gewaehlten Zeitraum aus GA4 ueber
+// die offizielle Data-API. Echte Suchbegriffe liefert GA4 nicht (siehe
+// lib/search-console.ts) - dafuer braucht es die Google Search Console.
+export async function getGa4Data(
+  startDate: string,
+  endDate: string
+): Promise<Ga4Data> {
   const client = getClient();
   const propertyId = property();
   if (!client || !propertyId) {
@@ -68,7 +104,7 @@ export async function getGa4Data(): Promise<Ga4Data> {
   }
 
   try {
-    const dateRanges = [{ startDate: "30daysAgo", endDate: "today" }];
+    const dateRanges = [{ startDate, endDate }];
 
     const [
       overviewRes,
@@ -80,7 +116,6 @@ export async function getGa4Data(): Promise<Ga4Data> {
       dayRes,
       deviceRes,
       pagesByDeviceRes,
-      keywordRes,
     ] = await Promise.all([
         client.runReport({
           property: propertyId,
@@ -154,14 +189,6 @@ export async function getGa4Data(): Promise<Ga4Data> {
           orderBys: [{ metric: { metricName: "screenPageViews" }, desc: true }],
           limit: 100,
         }),
-        client.runReport({
-          property: propertyId,
-          dateRanges,
-          dimensions: [{ name: "sessionManualTerm" }],
-          metrics: [{ name: "sessions" }],
-          orderBys: [{ metric: { metricName: "sessions" }, desc: true }],
-          limit: 10,
-        }),
       ]);
 
     const overviewRow = overviewRes[0].rows?.[0];
@@ -226,7 +253,6 @@ export async function getGa4Data(): Promise<Ga4Data> {
       sessionsByDay,
       devices: toRows(deviceRes[0]),
       topPagesByDevice,
-      keywords: toRows(keywordRes[0]),
     };
   } catch (e) {
     return {
