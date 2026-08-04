@@ -1,12 +1,30 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import confetti from "canvas-confetti";
 import {
   getPurchaseRequest,
   ticketsPdfUrl,
   type PurchaseRequest,
 } from "@/lib/clubscale";
+
+// Konfetti-Kanonen aus beiden unteren Ecken, wie auf der alten Seite.
+function fireConfetti() {
+  const colors = ["#b9cead", "#e8e94f", "#ffffff"];
+  const shootFromCorner = (originX: number) => {
+    confetti({
+      particleCount: 90,
+      angle: originX < 0.5 ? 60 : 120,
+      spread: 70,
+      startVelocity: 55,
+      origin: { x: originX, y: 1 },
+      colors,
+    });
+  };
+  shootFromCorner(0);
+  shootFromCorner(1);
+}
 
 export default function PurchaseConfirmation({
   purchaseRequestId,
@@ -18,6 +36,14 @@ export default function PurchaseConfirmation({
   const [purchaseRequest, setPurchaseRequest] =
     useState<PurchaseRequest | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const confettiFired = useRef(false);
+
+  useEffect(() => {
+    if (purchaseRequest?.status === "SUCCEEDED" && !confettiFired.current) {
+      confettiFired.current = true;
+      fireConfetti();
+    }
+  }, [purchaseRequest?.status]);
 
   useEffect(() => {
     let cancelled = false;
