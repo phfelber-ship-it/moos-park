@@ -3,14 +3,14 @@ import RentalLandingTemplate, {
 } from "@/components/RentalLandingTemplate";
 
 export const metadata = {
-  title: "Eventlocation mieten Bayern – 5 Säle für 80–750 Personen | moos.park",
+  title: "Eventlocation mieten Bayern – 5 Säle für 80–2400 Personen | moos.park",
 };
 
 const data: RentalPageData = {
   eyebrow: "Hunderte Events in gemieteten Sälen – im moos.park.",
   heroTitle: "Eventlocation mieten. So einfach wie nie.",
   heroSubtitle:
-    "5 Säle, bis 750 Personen – Technik & Gastronomie inklusive. Einfach mieten, einfach feiern.",
+    "5 Säle, bis 2400 Personen – Technik & Gastronomie inklusive. Einfach mieten, einfach feiern.",
   painHeading: "Location mieten in Bayern ist komplizierter als es sein müsste.",
   painIntro:
     "Vier Wände mieten, Technik separat buchen, Catering extern organisieren, Parkplatz fehlt – was billig klingt, wird schnell teuer und aufwendig.",
@@ -55,7 +55,7 @@ const data: RentalPageData = {
   advantagesIntro:
     "Bei moos.park mietest du keine leere Halle – sondern eine vollständig ausgestattete Eventlocation mit allem drum und dran.",
   advantages: [
-    "5 Säle – einzeln oder kombinierbar für 80–750 Personen",
+    "5 Säle – einzeln oder kombinierbar für 80–2400 Personen",
     "Licht- & Tontechnik, Bühne – alles inklusive",
     "Eigene Gastronomie: Bar, Catering & Pizzeria",
     "Kostenloser Parkplatz direkt vor der Location",
@@ -87,7 +87,7 @@ const data: RentalPageData = {
     },
     {
       q: "Wie viele Personen passen in die Location?",
-      a: "80 bis 750 Personen, je nach Raumauswahl. 5 Säle sind flexibel kombinierbar.",
+      a: "80 bis 2400 Personen, je nach Raumauswahl. 5 Säle sind flexibel kombinierbar.",
     },
     {
       q: "Kann ich die Location exklusiv mieten?",

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { sendContactMail } from "@/lib/clubscale";
 
 const LOCATIONS = [
   "Im moos.park",
@@ -18,14 +19,8 @@ export default function EventRequestForm() {
   const [ort, setOrt] = useState(LOCATIONS[0]);
   const [nachricht, setNachricht] = useState("");
   const [accepted, setAccepted] = useState(false);
-
-  const mailBody = encodeURIComponent(
-    `Vorname: ${vorname}\n` +
-      `Nachname: ${nachname}\n` +
-      `Telefon: ${telefon}\n` +
-      `E-Mail: ${email}\n` +
-      `Veranstaltungsort: ${ort}\n` +
-      (nachricht ? `Nachricht: ${nachricht}\n` : "")
+  const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">(
+    "idle"
   );
 
   const canSend =
@@ -35,8 +30,39 @@ export default function EventRequestForm() {
     email.trim() !== "" &&
     accepted;
 
+  const submit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!canSend || status === "sending") return;
+
+    setStatus("sending");
+    try {
+      await sendContactMail({
+        firstname: vorname.trim(),
+        lastname: nachname.trim(),
+        mail: email.trim(),
+        phone: telefon.trim(),
+        subject: "Veranstaltungsanfrage über moos-park.de",
+        body:
+          `Veranstaltungsort: ${ort}\n` +
+          (nachricht.trim() ? `Nachricht: ${nachricht.trim()}\n` : ""),
+      });
+      setStatus("sent");
+    } catch {
+      setStatus("error");
+    }
+  };
+
+  if (status === "sent") {
+    return (
+      <p className="rounded-xl border border-foreground/10 bg-foreground/[0.025] p-6 font-bold text-foreground">
+        Danke für deine Anfrage! Wir melden uns innerhalb von 24 Stunden mit
+        einem passenden Angebot.
+      </p>
+    );
+  }
+
   return (
-    <form className="grid gap-4">
+    <form onSubmit={submit} className="grid gap-4">
       <div className="grid gap-4 sm:grid-cols-2">
         <input
           value={vorname}
@@ -111,21 +137,24 @@ export default function EventRequestForm() {
         akzeptiere diese.
       </label>
 
-      <a
-        href={
-          canSend
-            ? `mailto:kontakt@moos-park.de?subject=${encodeURIComponent(
-                "Veranstaltungsanfrage"
-              )}&body=${mailBody}`
-            : undefined
-        }
-        aria-disabled={!canSend}
-        className={`w-fit rounded-lg bg-accent-lime px-8 py-3 text-sm font-black uppercase tracking-wide text-black transition-transform hover:scale-105 ${
-          !canSend ? "pointer-events-none opacity-40" : ""
-        }`}
+      {status === "error" && (
+        <p className="text-sm text-red-500">
+          Da ist leider etwas schiefgelaufen. Schreib uns stattdessen gerne
+          direkt an{" "}
+          <a href="mailto:kontakt@moos-park.de" className="underline">
+            kontakt@moos-park.de
+          </a>
+          .
+        </p>
+      )}
+
+      <button
+        type="submit"
+        disabled={!canSend || status === "sending"}
+        className="w-fit rounded-lg bg-accent-lime px-8 py-3 text-sm font-black uppercase tracking-wide text-black transition-transform hover:scale-105 disabled:pointer-events-none disabled:opacity-40"
       >
-        Senden
-      </a>
+        {status === "sending" ? "Wird gesendet..." : "Senden"}
+      </button>
     </form>
   );
 }

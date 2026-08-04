@@ -3,6 +3,7 @@ import Link from "next/link";
 import { ROOMS } from "@/lib/rooms";
 import { getAllRoomImages } from "@/lib/room-images";
 import RoomImageRotator from "@/components/RoomImageRotator";
+import EventlocationRequestForm from "@/components/EventlocationRequestForm";
 
 export const metadata = {
   title: "Eventlocation Pöttmes – Veranstaltungslocation Bayern | moos.park",
@@ -193,65 +194,7 @@ export default async function EventlocationPage() {
             verwandeln Ihre Pläne in unvergessliche Erlebnisse. Los geht&apos;s!
           </p>
 
-          <form className="mt-8 grid gap-4 sm:grid-cols-2">
-            <input
-              name="firma"
-              placeholder="Firma"
-              className="w-full rounded-xl border border-foreground/15 bg-foreground/5 px-4 py-3 text-foreground placeholder-foreground/40 outline-none focus:border-accent-lime"
-            />
-            <select
-              name="veranstaltungsort"
-              defaultValue=""
-              className="w-full appearance-none rounded-xl border border-foreground/15 bg-foreground/5 px-4 py-3 text-foreground/70 outline-none focus:border-accent-lime"
-            >
-              <option value="" disabled>
-                Veranstaltungsort
-              </option>
-              <option>Im moos.park</option>
-              <option>In externer Location</option>
-              <option>Auf Privat- oder Firmengrundstück</option>
-              <option>Sonstige Location</option>
-              <option>Ist noch offen</option>
-            </select>
-            <input
-              name="vorname"
-              placeholder="Vorname"
-              className="rounded-xl border border-foreground/15 bg-foreground/5 px-4 py-3 text-foreground placeholder-foreground/40 outline-none focus:border-accent-lime"
-            />
-            <input
-              name="nachname"
-              placeholder="Nachname"
-              className="rounded-xl border border-foreground/15 bg-foreground/5 px-4 py-3 text-foreground placeholder-foreground/40 outline-none focus:border-accent-lime"
-            />
-            <input
-              name="telefon"
-              placeholder="Telefonnummer"
-              className="rounded-xl border border-foreground/15 bg-foreground/5 px-4 py-3 text-foreground placeholder-foreground/40 outline-none focus:border-accent-lime"
-            />
-            <input
-              name="email"
-              type="email"
-              placeholder="E-Mail"
-              className="rounded-xl border border-foreground/15 bg-foreground/5 px-4 py-3 text-foreground placeholder-foreground/40 outline-none focus:border-accent-lime"
-            />
-            <textarea
-              name="nachricht"
-              placeholder="Nachricht"
-              rows={4}
-              className="rounded-xl border border-foreground/15 bg-foreground/5 px-4 py-3 text-foreground placeholder-foreground/40 outline-none focus:border-accent-lime sm:col-span-2"
-            />
-            <label className="flex items-start gap-2 text-xs text-foreground/50 sm:col-span-2">
-              <input type="checkbox" className="mt-0.5" />
-              Ich habe die Datenschutzbestimmungen zur Kenntnis genommen und
-              akzeptiere diese.
-            </label>
-            <button
-              type="submit"
-              className="rounded-lg bg-accent-lime px-8 py-3 text-sm font-black uppercase tracking-wide text-black transition-transform hover:scale-105 sm:col-span-2 sm:w-fit"
-            >
-              Senden
-            </button>
-          </form>
+          <EventlocationRequestForm />
         </div>
       </section>
     </div>

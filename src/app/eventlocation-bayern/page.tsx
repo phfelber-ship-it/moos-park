@@ -3,14 +3,14 @@ import RentalLandingTemplate, {
 } from "@/components/RentalLandingTemplate";
 
 export const metadata = {
-  title: "Eventlocation Bayern mieten – bis 750 Personen | moos.park Pöttmes",
+  title: "Eventlocation Bayern mieten – bis 2400 Personen | moos.park Pöttmes",
 };
 
 const data: RentalPageData = {
   eyebrow: "Hunderte Events bereits gefeiert – im moos.park.",
   heroTitle: "Die Eventlocation Bayern.",
   heroSubtitle:
-    "Firmenevents, Hochzeiten, Geburtstage, Club-Events – bis 750 Personen, alles inklusive.",
+    "Firmenevents, Hochzeiten, Geburtstage, Club-Events – bis 2400 Personen, alles inklusive.",
   painHeading: "Das bringen Eventlocations in Bayern oft nicht mit.",
   painIntro:
     "Leere Hallen, kein Catering, kein Parkplatz – die meisten Locations liefern nur vier Wände. Alles andere kostet Zeit, Nerven und zusätzliches Geld.",
@@ -59,7 +59,7 @@ const data: RentalPageData = {
     "Kein Aufräumen danach – du genießt, wir kümmern uns.",
     "Professionelle Licht- & Tontechnik inklusive.",
     "Persönliche Beratung – wir planen gemeinsam mit dir.",
-    "Bis 750 Personen – flexibel kombinierbare Räume.",
+    "Bis 2400 Personen – flexibel kombinierbare Räume.",
     "Top Eventlocation in Bayern – alles inklusive.",
   ],
   testimonialsHeading: "Was unsere Kunden sagen.",
@@ -87,7 +87,7 @@ const data: RentalPageData = {
     },
     {
       q: "Wie viele Personen passen in die Location?",
-      a: "Bis zu 750 Personen in der Main-Halle. Mit flexiblen Raumkombinationen sind Events für 80 bis 750 Gäste möglich.",
+      a: "Bis zu 750 Personen in der Main-Halle. Mit flexiblen Raumkombinationen sind Events für bis zu 2400 Gäste möglich.",
     },
     {
       q: "Kann ich die Eventlocation exklusiv mieten?",

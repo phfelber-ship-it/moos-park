@@ -48,15 +48,15 @@ const data: RentalPageData = {
     {
       num: "04",
       title: "Einfach ankommen & feiern",
-      text: "35 Minuten von Ingolstadt, kostenloser Großparkplatz, bis 750 Personen. Alles an einem Ort.",
+      text: "35 Minuten von Ingolstadt, kostenloser Großparkplatz, bis 2400 Personen. Alles an einem Ort.",
     },
   ],
   advantagesHeading: "Deine Top-Location nahe Ingolstadt.",
   advantagesIntro:
-    "Nur 35 Minuten von Ingolstadt – aber mit Parkplatz für alle, bis 750 Personen, eigener Küche und Vollausstattung.",
+    "Nur 35 Minuten von Ingolstadt – aber mit Parkplatz für alle, bis 2400 Personen, eigener Küche und Vollausstattung.",
   advantages: [
     "Großer kostenloser Parkplatz direkt vor der Location",
-    "Bis 750 Personen – für große Events geeignet",
+    "Bis 2400 Personen – für große Events geeignet",
     "Eigene Gastronomie: Bar, Buffet & Pizzeria",
     "Vollständige Licht- & Tontechnik inklusive",
     "Nur 35 Minuten von Ingolstadt – schnell erreichbar",
@@ -87,7 +87,7 @@ const data: RentalPageData = {
     },
     {
       q: "Wie viele Personen passen in die Location?",
-      a: "Bis zu 750 Personen in der Main-Halle. Flexibel kombinierbar für 80 bis 750 Gäste.",
+      a: "Bis zu 750 Personen in der Main-Halle. Flexibel kombinierbar für bis zu 2400 Gäste.",
     },
     {
       q: "Für welche Anlässe eignet sich die Location?",

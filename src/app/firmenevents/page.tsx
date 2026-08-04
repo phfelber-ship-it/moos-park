@@ -10,7 +10,7 @@ const data: RentalPageData = {
   eyebrow: "Hunderte Firmenfeiern bereits umgesetzt – im moos.park.",
   heroTitle: "Ihr Firmenevent. Einfach unvergesslich.",
   heroSubtitle:
-    "Weihnachtsfeier, Betriebsfest, Kick-off, Produktlaunch – bis 750 Personen, alles aus einer Hand.",
+    "Weihnachtsfeier, Betriebsfest, Kick-off, Produktlaunch – bis 2400 Personen, alles aus einer Hand.",
   painHeading: "Firmenevent planen kostet Zeit und Nerven.",
   painIntro:
     "Jedes Jahr dasselbe: Location koordinieren, Catering organisieren, Technik klären – alles neben dem Tagesgeschäft. Klingt nach Arbeit, nicht nach Feier.",
@@ -55,7 +55,7 @@ const data: RentalPageData = {
   advantagesIntro:
     "moos.park liefert kein leeres Gelände – sondern das komplette Firmen-Event-Paket. Technik, Essen, Service, alles inklusive.",
   advantages: [
-    "Bis 750 Personen – auch für große Betriebsfeiern",
+    "Bis 2400 Personen – auch für große Betriebsfeiern",
     "Bühne, Licht & Sound – nichts extra buchen",
     "Eigene Gastronomie: Menü, Buffet, Bar",
     "Kostenloser Parkplatz für alle Mitarbeiter",
@@ -87,7 +87,7 @@ const data: RentalPageData = {
     },
     {
       q: "Wie viele Personen passen in die Location?",
-      a: "80 bis 750 Personen. Einzelne Säle oder die komplette Location – exklusiv buchbar.",
+      a: "80 bis 2400 Personen. Einzelne Säle oder die komplette Location – exklusiv buchbar.",
     },
     {
       q: "Gibt es Catering für Firmenevents?",

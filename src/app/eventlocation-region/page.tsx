@@ -8,13 +8,13 @@ export const metadata = {
   title:
     "Eventlocation mieten für Hochzeit, Firmenevent & Club-Feier – Region Augsburg, Ingolstadt, Regensburg | moos.park",
   description:
-    "moos.park in Pöttmes: Eventlocation für Hochzeiten, Firmenevents, Club- & Disconächte, Geburtstage und Feiern jeder Art. Bis 750 Personen, im Umkreis von rund 100 km um Aichach, Friedberg, Augsburg, Neuburg an der Donau, Ingolstadt, Regensburg, Wertingen und Dillingen mieten.",
+    "moos.park in Pöttmes: Eventlocation für Hochzeiten, Firmenevents, Club- & Disconächte, Geburtstage und Feiern jeder Art. Bis 2400 Personen, im Umkreis von rund 100 km um Aichach, Friedberg, Augsburg, Neuburg an der Donau, Ingolstadt, Regensburg, Wertingen und Dillingen mieten.",
 };
 
 const EVENT_TYPES = [
   {
     title: "Firmenevents",
-    text: "Weihnachtsfeier, Kick-off, Produktlaunch, Sommerfest – professionelle Location für 80 bis 750 Mitarbeiter und Gäste.",
+    text: "Weihnachtsfeier, Kick-off, Produktlaunch, Sommerfest – professionelle Location für 80 bis 2400 Mitarbeiter und Gäste.",
     href: "/firmenevents",
     cta: "Firmenevent anfragen",
   },
@@ -27,12 +27,12 @@ const EVENT_TYPES = [
   {
     title: "Club- & Disconächte",
     text: "Profi-Sound, Lichtshow und Bühne für Club-Events, Tanzabende und private Partys mit DJ oder Live-Act.",
-    href: "/tanzveranstaltungen",
+    href: "/events",
     cta: "Tanzabende ansehen",
   },
   {
     title: "Geburtstage & Feiern",
-    text: "Vom 18. bis zum 80. Geburtstag – private Feiern für 50 bis 750 Gäste, inklusive Technik, Deko-Möglichkeiten und Catering.",
+    text: "Vom 18. bis zum 80. Geburtstag – private Feiern für 50 bis 2400 Gäste, inklusive Technik, Deko-Möglichkeiten und Catering.",
     href: "/geburtstag",
     cta: "Geburtstag feiern",
   },
@@ -52,7 +52,7 @@ const REGIONS = [
   },
   {
     name: "Augsburg & Umland",
-    text: "Rund 40 Minuten von Augsburg entfernt bietet moos.park das, was Stadtlocations oft fehlt: großer Parkplatz, bis zu 750 Plätze und eigene Gastronomie. Auch aus Königsbrunn, Neusäß, Gersthofen und Stadtbergen gut erreichbar.",
+    text: "Rund 40 Minuten von Augsburg entfernt bietet moos.park das, was Stadtlocations oft fehlt: großer Parkplatz, bis zu 2400 Plätze und eigene Gastronomie. Auch aus Königsbrunn, Neusäß, Gersthofen und Stadtbergen gut erreichbar.",
     towns: ["Augsburg", "Königsbrunn", "Neusäß", "Gersthofen", "Stadtbergen"],
     link: { href: "/eventlocation-augsburg", label: "Mehr zur Eventlocation bei Augsburg" },
   },
@@ -81,7 +81,7 @@ const FAQ = [
   },
   {
     q: "Für welche Anlässe kann ich die Location mieten?",
-    a: "Für Hochzeiten, Firmenevents, Club- und Disconächte, Geburtstage, private Feiern und Konzerte. Fünf kombinierbare Räume machen Events von 50 bis 750 Personen möglich.",
+    a: "Für Hochzeiten, Firmenevents, Club- und Disconächte, Geburtstage, private Feiern und Konzerte. Fünf kombinierbare Räume machen Events von 50 bis 2400 Personen möglich.",
   },
   {
     q: "Ist eine exklusive Buchung der gesamten Location möglich?",
@@ -124,7 +124,7 @@ export default function EventlocationRegionPage() {
             Eventlocation mieten für Hochzeit, Firmenevent &amp; Club-Feier
           </h1>
           <p className="mx-auto mt-5 max-w-2xl text-foreground/70">
-            moos.park in Pöttmes – bis 750 Personen, alles inklusive. Im Umkreis
+            moos.park in Pöttmes – bis 2400 Personen, alles inklusive. Im Umkreis
             von rund 100&nbsp;km um Aichach, Friedberg, Augsburg, Neuburg an der
             Donau, Ingolstadt, Regensburg, Wertingen und Dillingen die
             Eventlocation für Hochzeiten, Firmenevents, Clubnächte, Geburtstage
@@ -184,7 +184,7 @@ export default function EventlocationRegionPage() {
               5 Räume, ein Anbieter
             </p>
             <h2 className="mx-auto mt-3 max-w-2xl text-center text-2xl font-black uppercase leading-tight text-foreground sm:text-3xl">
-              Von 50 bis 750 Gästen – flexibel kombinierbar.
+              Von 50 bis 2400 Gästen – flexibel kombinierbar.
             </h2>
           </Reveal>
 
