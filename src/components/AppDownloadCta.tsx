@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import { TicketIcon, CouponIcon, CalendarIcon } from "@/components/AppIcons";
+import FlipText from "@/components/FlipText";
 
 const APP_STORE_URL = "https://apps.apple.com/de/app/moos-park/id6739537470";
 const PLAY_STORE_URL =
@@ -42,7 +43,7 @@ export default function AppDownloadCta({
           Dein Bild ist nicht dabei?
         </p>
         <span className="inline-flex items-center gap-1.5 rounded-full bg-black px-5 py-2 text-xs font-black uppercase tracking-wide text-accent-lime">
-          Jetzt App laden →
+          <FlipText text="Jetzt App laden →" />
         </span>
       </button>
 

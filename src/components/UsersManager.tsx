@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import FlipText from "@/components/FlipText";
 
 export default function UsersManager({
   initialUsers,
@@ -76,7 +77,7 @@ export default function UsersManager({
               disabled={deleting === u}
               className="text-xs font-bold uppercase text-red-500 disabled:opacity-40"
             >
-              {deleting === u ? "..." : "Entfernen"}
+              {deleting === u ? "..." : <FlipText text="Entfernen" />}
             </button>
           </li>
         ))}
@@ -106,7 +107,7 @@ export default function UsersManager({
           disabled={loading || !username.trim() || password.length < 8}
           className="rounded-lg bg-accent-lime px-6 py-2.5 text-xs font-black uppercase tracking-wide text-black disabled:pointer-events-none disabled:opacity-40"
         >
-          {loading ? "..." : "Anlegen"}
+          {loading ? "..." : <FlipText text="Anlegen" />}
         </button>
       </form>
       {error && <p className="mt-3 text-sm text-red-500">{error}</p>}

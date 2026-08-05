@@ -7,6 +7,7 @@ import {
   isPastEvent,
   isComplete,
 } from "@/lib/dance-events";
+import FlipText from "@/components/FlipText";
 
 const EMPTY_FORM = { title: "", description: "", start: "", end: "", published: true };
 
@@ -230,7 +231,7 @@ export default function DanceEventsManager({
                   onClick={() => startEdit(ev)}
                   className="rounded-lg border border-foreground/20 px-3 py-1.5 text-foreground/70 hover:border-accent-lime"
                 >
-                  Bearbeiten
+                  <FlipText text="Bearbeiten" />
                 </button>
                 <button
                   type="button"
@@ -238,7 +239,7 @@ export default function DanceEventsManager({
                   disabled={busyId === ev.id}
                   className="rounded-lg border border-foreground/20 px-3 py-1.5 text-foreground/70 hover:border-accent-lime disabled:opacity-40"
                 >
-                  {busyId === ev.id ? "..." : "Duplizieren"}
+                  {busyId === ev.id ? "..." : <FlipText text="Duplizieren" />}
                 </button>
                 <button
                   type="button"
@@ -246,7 +247,7 @@ export default function DanceEventsManager({
                   disabled={busyId === ev.id}
                   className="rounded-lg border border-red-500/30 px-3 py-1.5 text-red-500 disabled:opacity-40"
                 >
-                  {busyId === ev.id ? "..." : "Löschen"}
+                  {busyId === ev.id ? "..." : <FlipText text="Löschen" />}
                 </button>
               </div>
             </div>
@@ -313,7 +314,7 @@ export default function DanceEventsManager({
             disabled={loading || !form.title.trim() || !form.start}
             className="rounded-lg bg-accent-lime px-6 py-2.5 text-xs font-black uppercase tracking-wide text-black disabled:pointer-events-none disabled:opacity-40"
           >
-            {loading ? "..." : editingId ? "Speichern" : "Anlegen"}
+            {loading ? "..." : <FlipText text={editingId ? "Speichern" : "Anlegen"} />}
           </button>
           {editingId && (
             <button
@@ -321,7 +322,7 @@ export default function DanceEventsManager({
               onClick={startNew}
               className="rounded-lg border border-foreground/20 px-6 py-2.5 text-xs font-black uppercase tracking-wide text-foreground/70"
             >
-              Abbrechen
+              <FlipText text="Abbrechen" />
             </button>
           )}
         </div>

@@ -17,6 +17,7 @@ import {
   type PurchaseRequest,
   type TicketPool,
 } from "@/lib/clubscale";
+import FlipText from "@/components/FlipText";
 
 const stripePromise = loadStripe(STRIPE_PUBLISHABLE_KEY);
 
@@ -198,7 +199,7 @@ export default function TicketsDataFlow({
           onClick={startPurchase}
           className="mt-6 w-full rounded-lg bg-accent-lime px-8 py-3 text-sm font-black uppercase tracking-wide text-black transition-transform hover:scale-105 disabled:pointer-events-none disabled:opacity-40"
         >
-          {loading ? "Reserviert..." : "Weiter"}
+          <FlipText text={loading ? "Reserviert..." : "Weiter"} />
         </button>
       </div>
     );
@@ -315,7 +316,7 @@ function PaymentForm({
         onClick={pay}
         className="mt-6 w-full rounded-lg bg-accent-lime px-8 py-3 text-sm font-black uppercase tracking-wide text-black transition-transform hover:scale-105 disabled:pointer-events-none disabled:opacity-40"
       >
-        {submitting ? "Wird bezahlt..." : "Jetzt bezahlen"}
+        <FlipText text={submitting ? "Wird bezahlt..." : "Jetzt bezahlen"} />
       </button>
     </div>
   );

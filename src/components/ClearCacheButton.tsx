@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import FlipText from "@/components/FlipText";
 
 export default function ClearCacheButton() {
   const [status, setStatus] = useState<"idle" | "loading" | "done" | "error">(
@@ -27,7 +28,7 @@ export default function ClearCacheButton() {
         disabled={status === "loading"}
         className="rounded-lg border border-foreground/20 px-6 py-2.5 text-xs font-black uppercase tracking-wide text-foreground transition-colors hover:border-foreground disabled:opacity-40"
       >
-        {status === "loading" ? "Wird geleert..." : "Cache leeren"}
+        <FlipText text={status === "loading" ? "Wird geleert..." : "Cache leeren"} />
       </button>
       {status === "done" && (
         <span className="text-xs font-bold text-accent-lime">

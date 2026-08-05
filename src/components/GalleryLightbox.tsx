@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import FlipText from "@/components/FlipText";
 
 export type LightboxPhoto = { src: string; alt: string; ticketHref?: string };
 
@@ -187,7 +188,7 @@ export default function GalleryLightbox({
           onClick={(e) => e.stopPropagation()}
           className="fixed inset-x-6 bottom-8 z-10 mx-auto flex w-fit items-center gap-2 rounded-full bg-accent-lime px-6 py-3 text-sm font-black uppercase tracking-wide text-black transition-transform hover:scale-105"
         >
-          Jetzt Tickets sichern →
+          <FlipText text="Jetzt Tickets sichern →" />
         </a>
       )}
     </div>

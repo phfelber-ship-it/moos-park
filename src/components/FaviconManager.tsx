@@ -2,6 +2,7 @@
 
 import { useRef, useState } from "react";
 import Image from "next/image";
+import FlipText from "@/components/FlipText";
 
 export default function FaviconManager({
   currentUrl,
@@ -55,7 +56,7 @@ export default function FaviconManager({
       </div>
 
       <label className="mt-6 block w-fit cursor-pointer rounded-lg bg-accent-lime px-6 py-2.5 text-xs font-black uppercase tracking-wide text-black transition-transform hover:scale-105">
-        {uploading ? "Wird hochgeladen..." : "Neues Favicon hochladen"}
+        <FlipText text={uploading ? "Wird hochgeladen..." : "Neues Favicon hochladen"} />
         <input
           ref={fileInputRef}
           type="file"

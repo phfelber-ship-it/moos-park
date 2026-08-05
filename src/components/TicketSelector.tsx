@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import type { TicketPool } from "@/lib/clubscale";
 import { checkoutUrl, priceToEuro } from "@/lib/clubscale";
+import FlipText from "@/components/FlipText";
 
 function formatSaleDate(iso: string) {
   return new Date(iso).toLocaleDateString("de-DE", {
@@ -146,7 +147,7 @@ export default function TicketSelector({
           total === 0 ? "pointer-events-none opacity-40" : ""
         }`}
       >
-        Weiter zum Checkout
+        <FlipText text="Weiter zum Checkout" />
       </Link>
     </div>
   );

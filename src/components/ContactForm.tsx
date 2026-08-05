@@ -4,6 +4,7 @@ import { useState } from "react";
 import { sendContactMail } from "@/lib/clubscale";
 import { logInbox } from "@/lib/inbox-client";
 import HoneypotField from "@/components/HoneypotField";
+import FlipText from "@/components/FlipText";
 
 export default function ContactForm() {
   const [firstname, setFirstname] = useState("");
@@ -124,7 +125,7 @@ export default function ContactForm() {
         disabled={!canSend || status === "sending"}
         className="w-fit rounded-lg bg-accent-lime px-8 py-3 text-sm font-black uppercase tracking-wide text-black transition-transform hover:scale-105 disabled:pointer-events-none disabled:opacity-40"
       >
-        {status === "sending" ? "Wird gesendet..." : "Senden"}
+        <FlipText text={status === "sending" ? "Wird gesendet..." : "Senden"} />
       </button>
     </form>
   );

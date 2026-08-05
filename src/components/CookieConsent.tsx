@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import FlipText from "@/components/FlipText";
 
 export type Consent = {
   necessary: true;
@@ -102,20 +103,20 @@ export default function CookieConsent() {
             onClick={acceptAll}
             className="rounded-lg bg-accent-lime px-6 py-2.5 text-xs font-black uppercase tracking-wide text-black transition-transform hover:scale-105"
           >
-            Alle akzeptieren
+            <FlipText text="Alle akzeptieren" />
           </button>
           <button
             onClick={rejectAll}
             className="rounded-lg border border-foreground/20 px-6 py-2.5 text-xs font-black uppercase tracking-wide text-foreground"
           >
-            Nur notwendige
+            <FlipText text="Nur notwendige" />
           </button>
           {details ? (
             <button
               onClick={saveSelection}
               className="rounded-lg border border-foreground/20 px-6 py-2.5 text-xs font-black uppercase tracking-wide text-foreground"
             >
-              Auswahl speichern
+              <FlipText text="Auswahl speichern" />
             </button>
           ) : (
             <button

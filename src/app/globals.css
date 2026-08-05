@@ -156,12 +156,14 @@ a {
 }
 
 a:hover .flip-text .flip-front,
-button:hover .flip-text .flip-front {
+button:hover .flip-text .flip-front,
+label:hover .flip-text .flip-front {
   transform: rotateX(-90deg);
 }
 
 a:hover .flip-text .flip-back,
-button:hover .flip-text .flip-back {
+button:hover .flip-text .flip-back,
+label:hover .flip-text .flip-back {
   transform: rotateX(0deg);
 }
 
@@ -170,6 +172,7 @@ button:hover .flip-text .flip-back {
 }
 
 a:hover .stagger-text .stagger-char,
-button:hover .stagger-text .stagger-char {
+button:hover .stagger-text .stagger-char,
+label:hover .stagger-text .stagger-char {
   transform: translateY(-100%);
 }

@@ -2,6 +2,7 @@
 
 import { useRef, useState } from "react";
 import Image from "next/image";
+import FlipText from "@/components/FlipText";
 
 type RoomImage = { url: string; pathname: string };
 
@@ -110,7 +111,7 @@ export default function RoomImageManager({
     <div className="mt-6">
       <div className="flex flex-wrap gap-3">
         <label className="block w-fit cursor-pointer rounded-lg bg-accent-lime px-6 py-2.5 text-xs font-black uppercase tracking-wide text-black transition-transform hover:scale-105">
-          {uploading ? "Wird hochgeladen..." : "Neue Bilder hochladen"}
+          <FlipText text={uploading ? "Wird hochgeladen..." : "Neue Bilder hochladen"} />
           <input
             ref={fileInputRef}
             type="file"

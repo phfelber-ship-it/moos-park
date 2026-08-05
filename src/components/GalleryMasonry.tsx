@@ -2,6 +2,7 @@
 
 import GalleryLightbox, { type LightboxPhoto } from "@/components/GalleryLightbox";
 import AppDownloadCta from "@/components/AppDownloadCta";
+import FlipText from "@/components/FlipText";
 
 export type FlyerCard = { src: string; alt: string; href: string };
 
@@ -67,7 +68,7 @@ export default function GalleryMasonry({
                 className="w-full rounded-xl transition-transform duration-300 group-hover:scale-[1.02]"
               />
               <span className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/85 to-transparent px-3 py-2.5 text-xs font-black uppercase tracking-wide text-white">
-                Jetzt Tickets sichern →
+                <FlipText text="Jetzt Tickets sichern →" />
               </span>
             </button>
           ) : (

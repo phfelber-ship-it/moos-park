@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import type { AiInsights } from "@/lib/ai-insights";
+import FlipText from "@/components/FlipText";
 
 const IMPACT_STYLES: Record<string, string> = {
   hoch: "bg-accent-lime/20 text-accent-lime",
@@ -58,7 +59,7 @@ export default function AiInsightsManager({
           disabled={loading}
           className="rounded-lg bg-accent-lime px-5 py-2.5 text-xs font-black uppercase tracking-wide text-black transition-transform hover:scale-105 disabled:pointer-events-none disabled:opacity-40"
         >
-          {loading ? "Wird analysiert..." : "Jetzt aktualisieren"}
+          <FlipText text={loading ? "Wird analysiert..." : "Jetzt aktualisieren"} />
         </button>
       </div>
 

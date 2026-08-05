@@ -10,6 +10,7 @@ import {
 } from "@/lib/clubscale";
 import { logInbox } from "@/lib/inbox-client";
 import HoneypotField from "@/components/HoneypotField";
+import FlipText from "@/components/FlipText";
 
 function formatDate(iso: string) {
   return new Date(iso).toLocaleDateString("de-DE", {
@@ -412,9 +413,13 @@ export default function ReservationWizard({
                   disabled={status === "sending"}
                   className="mt-6 inline-block rounded-lg bg-accent-lime px-8 py-3 text-sm font-black uppercase tracking-wide text-black transition-transform hover:scale-105 disabled:pointer-events-none disabled:opacity-40"
                 >
-                  {status === "sending"
-                    ? "Wird gesendet..."
-                    : "Reservierungsanfrage senden"}
+                  <FlipText
+                    text={
+                      status === "sending"
+                        ? "Wird gesendet..."
+                        : "Reservierungsanfrage senden"
+                    }
+                  />
                 </button>
                 {status === "error" && (
                   <p className="mt-4 text-sm text-red-500">
@@ -442,7 +447,7 @@ export default function ReservationWizard({
               onClick={back}
               className="rounded-lg border border-foreground/20 px-6 py-2.5 text-xs font-black uppercase tracking-wide text-foreground"
             >
-              Zurück
+              <FlipText text="Zurück" />
             </button>
           ) : (
             <span />
@@ -454,7 +459,7 @@ export default function ReservationWizard({
               disabled={!canNext[current]}
               className="rounded-lg bg-foreground px-6 py-2.5 text-xs font-black uppercase tracking-wide text-background transition-transform hover:scale-105 disabled:opacity-40 disabled:hover:scale-100"
             >
-              Weiter
+              <FlipText text="Weiter" />
             </button>
           )}
         </div>

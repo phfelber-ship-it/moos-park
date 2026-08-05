@@ -4,6 +4,7 @@ import { useState } from "react";
 import { createJobApplication, type JobPosting } from "@/lib/clubscale";
 import { logInbox } from "@/lib/inbox-client";
 import HoneypotField from "@/components/HoneypotField";
+import FlipText from "@/components/FlipText";
 
 // Clubscale verlangt fuer Bewerbungen zwingend ein Foto (image-Feld), API
 // erwartet reinen Base64-String ohne data:-URL-Praefix.
@@ -213,7 +214,7 @@ function ApplicationForm({
         disabled={!canSend || status === "sending"}
         className="w-fit rounded-lg bg-accent-lime px-6 py-2.5 text-xs font-black uppercase tracking-wide text-black transition-transform hover:scale-105 disabled:pointer-events-none disabled:opacity-40"
       >
-        {status === "sending" ? "Wird gesendet..." : "Jetzt bewerben"}
+        <FlipText text={status === "sending" ? "Wird gesendet..." : "Jetzt bewerben"} />
       </button>
     </form>
   );

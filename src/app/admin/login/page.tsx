@@ -2,6 +2,7 @@
 
 import { useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import FlipText from "@/components/FlipText";
 
 function LoginForm() {
   const router = useRouter();
@@ -58,7 +59,7 @@ function LoginForm() {
           disabled={loading || !username || !password}
           className="rounded-lg bg-accent-lime px-6 py-2.5 text-sm font-black uppercase tracking-wide text-black disabled:pointer-events-none disabled:opacity-40"
         >
-          {loading ? "Wird geprüft..." : "Einloggen"}
+          <FlipText text={loading ? "Wird geprüft..." : "Einloggen"} />
         </button>
       </form>
     </div>

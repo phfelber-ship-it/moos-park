@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import confetti from "canvas-confetti";
+import FlipText from "@/components/FlipText";
 import {
   getPurchaseRequest,
   ticketsPdfUrl,
@@ -107,7 +108,7 @@ export default function PurchaseConfirmation({
           onClick={downloadPdf}
           className="mt-6 w-full rounded-lg bg-accent-lime px-8 py-3 text-sm font-black uppercase tracking-wide text-black transition-transform hover:scale-105"
         >
-          Tickets als PDF herunterladen
+          <FlipText text="Tickets als PDF herunterladen" />
         </button>
         <Link
           href="/"
@@ -132,7 +133,7 @@ export default function PurchaseConfirmation({
           href="/events"
           className="mt-6 block rounded-lg bg-accent-lime px-8 py-3 text-center text-sm font-black uppercase tracking-wide text-black"
         >
-          Zurück zu den Events
+          <FlipText text="Zurück zu den Events" />
         </Link>
       </div>
     );

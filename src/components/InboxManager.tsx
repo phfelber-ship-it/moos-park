@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import type { InboxEntry, InboxType } from "@/lib/inbox";
+import FlipText from "@/components/FlipText";
 
 const TYPE_LABELS: Record<InboxType, string> = {
   kontakt: "Kontakt",
@@ -173,7 +174,7 @@ export default function InboxManager({
                   disabled={busyId === entry.id}
                   className="rounded-lg border border-foreground/20 px-3 py-1.5 text-foreground/70 hover:border-accent-lime disabled:opacity-40"
                 >
-                  {entry.read ? "Als ungelesen" : "Als gelesen"}
+                  <FlipText text={entry.read ? "Als ungelesen" : "Als gelesen"} />
                 </button>
                 <button
                   type="button"
@@ -181,7 +182,7 @@ export default function InboxManager({
                   disabled={busyId === entry.id}
                   className="rounded-lg border border-red-500/30 px-3 py-1.5 text-red-500 disabled:opacity-40"
                 >
-                  Löschen
+                  <FlipText text="Löschen" />
                 </button>
               </div>
             </div>
