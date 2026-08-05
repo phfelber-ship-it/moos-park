@@ -1,4 +1,5 @@
 import PromoterApplicationForm from "@/components/PromoterApplicationForm";
+import StepsTimeline from "@/components/StepsTimeline";
 
 export const metadata = {
   title: "Promoter werden - moos.park | Eventlocation Pöttmes",
@@ -160,18 +161,8 @@ export default function PromoterPage() {
           <p className="mt-2 text-center text-foreground/60">
             In 4 Schritten zum moos.park-Promoter.
           </p>
-          <div className="mt-10 grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
-            {STEPS.map((s) => (
-              <div key={s.num}>
-                <span className="text-4xl font-black text-accent">
-                  {s.num}
-                </span>
-                <h3 className="mt-2 text-lg font-black uppercase text-foreground">
-                  {s.title}
-                </h3>
-                <p className="mt-2 text-sm text-foreground/60">{s.text}</p>
-              </div>
-            ))}
+          <div className="mt-10">
+            <StepsTimeline steps={STEPS} />
           </div>
         </div>
       </section>

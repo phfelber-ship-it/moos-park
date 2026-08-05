@@ -2,6 +2,7 @@ import Link from "next/link";
 import Reveal from "@/components/Reveal";
 import FlipText from "@/components/FlipText";
 import Accordion from "@/components/Accordion";
+import StepsTimeline from "@/components/StepsTimeline";
 
 export type RentalPageData = {
   eyebrow: string;
@@ -83,16 +84,8 @@ export default function RentalLandingTemplate({ data }: { data: RentalPageData }
             </h2>
           </Reveal>
 
-          <div className="mt-10 grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
-            {data.steps.map((s, i) => (
-              <Reveal key={s.num} delay={i * 0.08}>
-                <p className="text-3xl font-black text-accent-lime">{s.num}</p>
-                <h3 className="mt-2 font-black uppercase text-foreground">
-                  {s.title}
-                </h3>
-                <p className="mt-2 text-sm text-foreground/60">{s.text}</p>
-              </Reveal>
-            ))}
+          <div className="mt-10">
+            <StepsTimeline steps={data.steps} />
           </div>
         </div>
       </section>

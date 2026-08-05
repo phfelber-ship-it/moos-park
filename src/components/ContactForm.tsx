@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { sendContactMail } from "@/lib/clubscale";
+import { logInbox } from "@/lib/inbox-client";
 
 export default function ContactForm() {
   const [firstname, setFirstname] = useState("");
@@ -34,6 +35,13 @@ export default function ContactForm() {
         phone: phone.trim(),
         subject: "Kontaktanfrage über moos-park.de",
         body: message.trim(),
+      });
+      logInbox({
+        type: "kontakt",
+        name: `${firstname.trim()} ${lastname.trim()}`,
+        email: mail.trim(),
+        phone: phone.trim(),
+        message: message.trim(),
       });
       setStatus("sent");
     } catch {

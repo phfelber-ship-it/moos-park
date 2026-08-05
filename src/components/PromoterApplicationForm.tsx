@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { sendContactMail } from "@/lib/clubscale";
+import { logInbox } from "@/lib/inbox-client";
 
 export default function PromoterApplicationForm() {
   const [vorname, setVorname] = useState("");
@@ -35,6 +36,12 @@ export default function PromoterApplicationForm() {
         phone: "",
         subject: "Promoter-Bewerbung über moos-park.de",
         body: `Instagram: ${instagram.trim()}\nFollower: ${follower.trim()}\n`,
+      });
+      logInbox({
+        type: "promoter",
+        name: `${vorname.trim()} ${nachname.trim()}`,
+        email: email.trim(),
+        summary: `${instagram.trim()} · ${follower.trim()} Follower`,
       });
       setStatus("sent");
     } catch {

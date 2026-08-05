@@ -1,4 +1,5 @@
 import Image from "next/image";
+import AppPhoneReveal from "@/components/AppPhoneReveal";
 import {
   TicketIcon,
   CouponIcon,
@@ -34,7 +35,7 @@ const BENEFITS = [
   {
     icon: PointsIcon,
     title: "Punkte sammeln & einlösen",
-    text: "Bei jedem Besuch sammelst du Punkte, die du gegen Prämien und Vorteile eintauschen kannst. Je öfter du da bist, desto mehr springt für dich raus.",
+    text: "Bei jeder Aktion sammelst du Punkte, die du im Shop gegen Prämien und Vorteile eintauschen kannst.",
   },
   {
     icon: GiftIcon,
@@ -63,50 +64,72 @@ const BENEFITS = [
   },
 ];
 
+function StoreButtons() {
+  return (
+    <div className="flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
+      <a
+        href={APP_STORE_URL}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="opacity-90 transition-opacity hover:opacity-100"
+      >
+        <Image src="/images/appstore.png" alt="App Store" width={150} height={41} />
+      </a>
+      <a
+        href={PLAY_STORE_URL}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="opacity-90 transition-opacity hover:opacity-100"
+      >
+        <Image src="/images/googleplay.png" alt="Google Play" width={150} height={43} />
+      </a>
+    </div>
+  );
+}
+
 export default function AppPage() {
   return (
     <div>
-      <section className="px-6 pb-8 pt-32 text-center">
-        <p className="text-sm font-bold uppercase tracking-wide text-accent-lime">
-          moos.park App
-        </p>
-        <h1 className="mx-auto mt-3 max-w-3xl text-4xl font-black uppercase leading-tight text-foreground sm:text-6xl">
-          Deine Nacht.
-          <br />
-          Deine App.
-        </h1>
-        <p className="mx-auto mt-4 max-w-xl text-foreground/70">
-          Tickets, Coupons, Punkte, Fastline-Eingang und alle Infos zu
-          moos.park - alles an einem Ort, immer griffbereit in deiner Hosentasche.
-        </p>
+      <section className="px-6 pb-8 pt-32">
+        <div className="mx-auto grid max-w-6xl items-center gap-10 lg:grid-cols-2 lg:gap-16">
+          <AppPhoneReveal />
 
-        <div className="mt-8 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
-          <a
-            href={APP_STORE_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="opacity-90 transition-opacity hover:opacity-100"
-          >
-            <Image
-              src="/images/appstore.png"
-              alt="App Store"
-              width={150}
-              height={41}
-            />
-          </a>
-          <a
-            href={PLAY_STORE_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="opacity-90 transition-opacity hover:opacity-100"
-          >
-            <Image
-              src="/images/googleplay.png"
-              alt="Google Play"
-              width={150}
-              height={43}
-            />
-          </a>
+          <div className="order-1 text-center lg:order-2 lg:text-left">
+            <p className="text-sm font-bold uppercase tracking-wide text-accent-lime">
+              moos.park App
+            </p>
+            <h1 className="mt-3 text-4xl font-black uppercase leading-tight text-foreground sm:text-6xl">
+              Deine Nacht.
+              <br />
+              Deine App.
+            </h1>
+            <p className="mx-auto mt-4 max-w-xl text-foreground/70 lg:mx-0">
+              Tickets, Coupons, Punkte, Fastline-Eingang und alle Infos zu
+              moos.park - alles an einem Ort, immer griffbereit in deiner
+              Hosentasche.
+            </p>
+
+            <div className="mt-8 lg:flex lg:justify-start">
+              <StoreButtons />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="px-6 py-20">
+        <div className="mx-auto max-w-3xl rounded-2xl bg-accent-lime p-8 text-center sm:p-12">
+          <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-black text-accent-lime">
+            <PointsIcon />
+          </div>
+          <h2 className="mt-4 text-3xl font-black uppercase leading-tight text-black sm:text-4xl">
+            Bei jeder Aktion sammelst du Punkte.
+          </h2>
+          <p className="mx-auto mt-4 max-w-xl font-bold text-black/80">
+            Ticket kaufen, Coupon einlösen, Freunde einladen, im Haus
+            bezahlen - fast alles in der App bringt dir Punkte. Punkte kannst
+            du direkt im Shop gegen Prämien und exklusive Vorteile einlösen.
+            Je aktiver du bist, desto mehr bekommst du zurück.
+          </p>
         </div>
       </section>
 
@@ -141,40 +164,19 @@ export default function AppPage() {
       <section className="px-6 pb-28">
         <div className="mx-auto max-w-3xl rounded-2xl border border-foreground/8 bg-foreground/[0.025] p-8 text-center sm:p-12">
           <h2 className="text-2xl font-black uppercase text-foreground sm:text-3xl">
-            Jetzt kostenlos herunterladen.
+            App downloaden und Free-Shot holen.<sup>*</sup>
           </h2>
           <p className="mx-auto mt-3 max-w-md text-foreground/70">
             Verfügbar für iOS und Android - in wenigen Sekunden installiert
             und startklar für deinen nächsten Besuch im moos.park.
           </p>
-          <div className="mt-6 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
-            <a
-              href={APP_STORE_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="opacity-90 transition-opacity hover:opacity-100"
-            >
-              <Image
-                src="/images/appstore.png"
-                alt="App Store"
-                width={150}
-                height={41}
-              />
-            </a>
-            <a
-              href={PLAY_STORE_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="opacity-90 transition-opacity hover:opacity-100"
-            >
-              <Image
-                src="/images/googleplay.png"
-                alt="Google Play"
-                width={150}
-                height={43}
-              />
-            </a>
+          <div className="mt-6">
+            <StoreButtons />
           </div>
+          <p className="mx-auto mt-6 max-w-md text-xs text-foreground/40">
+            * Voraussetzung: App herunterladen, registrieren und ein Profilbild
+            hochladen.
+          </p>
         </div>
       </section>
     </div>

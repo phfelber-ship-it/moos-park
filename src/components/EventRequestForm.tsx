@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { sendContactMail } from "@/lib/clubscale";
+import { logInbox } from "@/lib/inbox-client";
 
 const LOCATIONS = [
   "Im moos.park",
@@ -45,6 +46,14 @@ export default function EventRequestForm() {
         body:
           `Veranstaltungsort: ${ort}\n` +
           (nachricht.trim() ? `Nachricht: ${nachricht.trim()}\n` : ""),
+      });
+      logInbox({
+        type: "veranstaltung",
+        name: `${vorname.trim()} ${nachname.trim()}`,
+        email: email.trim(),
+        phone: telefon.trim(),
+        summary: ort,
+        message: nachricht.trim(),
       });
       setStatus("sent");
     } catch {

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { createJobApplication, type JobPosting } from "@/lib/clubscale";
+import { logInbox } from "@/lib/inbox-client";
 
 // Clubscale verlangt fuer Bewerbungen zwingend ein Foto (image-Feld), API
 // erwartet reinen Base64-String ohne data:-URL-Praefix.
@@ -17,7 +18,13 @@ function fileToBase64(file: File): Promise<string> {
   });
 }
 
-function ApplicationForm({ jobPostingId }: { jobPostingId: string }) {
+function ApplicationForm({
+  jobPostingId,
+  jobTitle,
+}: {
+  jobPostingId: string;
+  jobTitle: string;
+}) {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
@@ -49,6 +56,14 @@ function ApplicationForm({ jobPostingId }: { jobPostingId: string }) {
         phoneNumber: phoneNumber.trim(),
         text: text.trim(),
         imageBase64,
+      });
+      logInbox({
+        type: "bewerbung",
+        name: `${firstName.trim()} ${lastName.trim()}`,
+        email: email.trim(),
+        phone: phoneNumber.trim(),
+        summary: jobTitle,
+        message: text.trim(),
       });
       setStatus("sent");
     } catch {
@@ -174,7 +189,7 @@ export default function JobApplicationAccordion({
               <p className="whitespace-pre-line text-sm text-foreground/70">
                 {job.text.text}
               </p>
-              <ApplicationForm jobPostingId={job.id} />
+              <ApplicationForm jobPostingId={job.id} jobTitle={job.title} />
             </div>
           )}
         </div>

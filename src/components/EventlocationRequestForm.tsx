@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { sendContactMail } from "@/lib/clubscale";
+import { logInbox } from "@/lib/inbox-client";
 
 export default function EventlocationRequestForm() {
   const [firma, setFirma] = useState("");
@@ -38,6 +39,14 @@ export default function EventlocationRequestForm() {
           (firma.trim() ? `Firma: ${firma.trim()}\n` : "") +
           (veranstaltungsort ? `Veranstaltungsort: ${veranstaltungsort}\n` : "") +
           (nachricht.trim() ? `Nachricht: ${nachricht.trim()}\n` : ""),
+      });
+      logInbox({
+        type: "eventlocation",
+        name: `${vorname.trim()} ${nachname.trim()}`,
+        email: email.trim(),
+        phone: telefon.trim(),
+        summary: firma.trim() || veranstaltungsort,
+        message: nachricht.trim(),
       });
       setStatus("sent");
     } catch {

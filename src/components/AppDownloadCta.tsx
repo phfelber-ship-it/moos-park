@@ -33,14 +33,17 @@ export default function AppDownloadCta({
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className={`flex aspect-[4/3] w-full flex-col items-center justify-center rounded-xl bg-accent-lime p-6 text-center transition-transform hover:scale-[1.02] ${className}`}
+        className={`group flex aspect-[4/3] w-full flex-col items-center justify-center gap-3 rounded-xl bg-accent-lime p-6 text-center transition-transform hover:scale-[1.02] ${className}`}
       >
+        <div className="flex h-12 w-12 items-center justify-center rounded-full bg-black text-accent-lime transition-transform group-hover:scale-110">
+          <TicketIcon />
+        </div>
         <p className="font-black uppercase leading-tight text-black">
           Dein Bild ist nicht dabei?
         </p>
-        <p className="mt-1 text-sm font-bold uppercase text-black/70">
-          Dann lade dir unsere App – hier klicken
-        </p>
+        <span className="inline-flex items-center gap-1.5 rounded-full bg-black px-5 py-2 text-xs font-black uppercase tracking-wide text-accent-lime">
+          Jetzt App laden →
+        </span>
       </button>
 
       {open && (

@@ -8,6 +8,7 @@ import {
   type ClubscaleEvent,
   type Reservable,
 } from "@/lib/clubscale";
+import { logInbox } from "@/lib/inbox-client";
 
 function formatDate(iso: string) {
   return new Date(iso).toLocaleDateString("de-DE", {
@@ -150,6 +151,16 @@ export default function ReservationWizard({
         amountOfPersons: people,
         arrivalTime: arrival ? arrivalToISO(selectedEvent, arrival) : "",
         additionalInformation: message.trim(),
+      });
+      logInbox({
+        type: "reservierung",
+        name: name.trim(),
+        email: email.trim(),
+        phone: phone.trim(),
+        summary:
+          `${selectedEvent?.name ?? "Ohne bestimmte Veranstaltung"} · ${people} Personen` +
+          (arrival ? ` · Ankunft ${arrival} Uhr` : ""),
+        message: message.trim(),
       });
       setStatus("sent");
     } catch {

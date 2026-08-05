@@ -5,6 +5,37 @@ import AppDownloadCta from "@/components/AppDownloadCta";
 
 export type FlyerCard = { src: string; alt: string; href: string };
 
+type Slide = LightboxPhoto & { isFlyer?: boolean };
+
+// Verteilt die Flyer gleichmaessig ueber die Fotostrecke (nie am Anfang
+// oder Ende, nie alle hintereinander) statt sie an einer einzigen Stelle
+// zu buendeln.
+function buildSlides(photos: LightboxPhoto[], flyers: FlyerCard[]): Slide[] {
+  if (flyers.length === 0) return photos;
+  if (photos.length === 0) {
+    return flyers.map((f) => ({ src: f.src, alt: f.alt, ticketHref: f.href, isFlyer: true }));
+  }
+
+  const n = flyers.length;
+  const insertAfter = flyers.map((_, i) => {
+    const fraction = (i + 1) / (n + 1);
+    const idx = Math.round(fraction * photos.length) - 1;
+    return Math.max(0, Math.min(photos.length - 2, idx));
+  });
+
+  const slides: Slide[] = [];
+  photos.forEach((photo, i) => {
+    slides.push(photo);
+    insertAfter.forEach((afterIdx, fi) => {
+      if (afterIdx === i) {
+        const f = flyers[fi];
+        slides.push({ src: f.src, alt: f.alt, ticketHref: f.href, isFlyer: true });
+      }
+    });
+  });
+  return slides;
+}
+
 export default function GalleryMasonry({
   photos,
   flyers = [],
@@ -12,65 +43,47 @@ export default function GalleryMasonry({
   photos: LightboxPhoto[];
   flyers?: FlyerCard[];
 }) {
+  const slides = buildSlides(photos, flyers);
+
   const openAt = (i: number) => {
     window.dispatchEvent(new CustomEvent("open-lightbox", { detail: i }));
   };
 
-  // Flyer werden mittig eingestreut (nie am Anfang oder Ende) - als eigene
-  // verlinkte Karten, nicht als Teil der Lightbox-Fotos.
-  const insertAt =
-    photos.length === 0
-      ? 0
-      : Math.max(1, Math.min(photos.length - 1, Math.floor(photos.length / 2)));
-
-  const items: Array<
-    { kind: "photo"; photo: LightboxPhoto; index: number } | { kind: "flyer"; flyer: FlyerCard }
-  > = [];
-  photos.forEach((photo, i) => {
-    if (i === insertAt) {
-      flyers.forEach((flyer) => items.push({ kind: "flyer", flyer }));
-    }
-    items.push({ kind: "photo", photo, index: i });
-  });
-  if (photos.length === 0) {
-    flyers.forEach((flyer) => items.push({ kind: "flyer", flyer }));
-  }
-
   return (
     <>
       <div className="mt-8 columns-2 gap-3 sm:columns-3 lg:columns-4">
-        {items.map((item, i) =>
-          item.kind === "photo" ? (
+        {slides.map((slide, i) =>
+          slide.isFlyer ? (
             <button
-              key={item.photo.src}
-              onClick={() => openAt(item.index)}
-              className="mb-3 block w-full break-inside-avoid overflow-hidden rounded-xl bg-foreground/5"
-            >
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={item.photo.src}
-                alt={item.photo.alt}
-                loading="lazy"
-                className="w-full rounded-xl transition-transform duration-300 hover:scale-[1.02]"
-              />
-            </button>
-          ) : (
-            <a
-              key={`flyer-${i}-${item.flyer.src}`}
-              href={item.flyer.href}
+              key={`flyer-${i}-${slide.src}`}
+              onClick={() => openAt(i)}
               className="group relative mb-3 block w-full break-inside-avoid overflow-hidden rounded-xl bg-foreground/5"
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src={item.flyer.src}
-                alt={item.flyer.alt}
+                src={slide.src}
+                alt={slide.alt}
                 loading="lazy"
                 className="w-full rounded-xl transition-transform duration-300 group-hover:scale-[1.02]"
               />
               <span className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/85 to-transparent px-3 py-2.5 text-xs font-black uppercase tracking-wide text-white">
                 Jetzt Tickets sichern →
               </span>
-            </a>
+            </button>
+          ) : (
+            <button
+              key={slide.src}
+              onClick={() => openAt(i)}
+              className="mb-3 block w-full break-inside-avoid overflow-hidden rounded-xl bg-foreground/5"
+            >
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={slide.src}
+                alt={slide.alt}
+                loading="lazy"
+                className="w-full rounded-xl transition-transform duration-300 hover:scale-[1.02]"
+              />
+            </button>
           )
         )}
 
@@ -79,7 +92,7 @@ export default function GalleryMasonry({
         </div>
       </div>
 
-      <GalleryLightbox photos={photos} />
+      <GalleryLightbox photos={slides} />
     </>
   );
 }

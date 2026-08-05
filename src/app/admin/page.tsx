@@ -4,6 +4,11 @@ import FacebookPixelStatus from "@/components/FacebookPixelStatus";
 
 const SECTIONS = [
   {
+    href: "/admin/postfach",
+    title: "Postfach",
+    text: "Eingehende Kontaktanfragen, Bewerbungen, Reservierungen & mehr.",
+  },
+  {
     href: "/admin/hero-bilder",
     title: "Hero-Bilder",
     text: "Hintergrund-Slideshow auf Startseite und /links verwalten.",

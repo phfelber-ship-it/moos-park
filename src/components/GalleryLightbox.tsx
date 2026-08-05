@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 
-export type LightboxPhoto = { src: string; alt: string };
+export type LightboxPhoto = { src: string; alt: string; ticketHref?: string };
 
 export default function GalleryLightbox({
   photos,
@@ -43,7 +43,12 @@ export default function GalleryLightbox({
     return () => window.removeEventListener("open-lightbox", handler);
   }, []);
 
-  const touchStartX = useRef(0);
+  // Rondell per Maus, Trackpad UND Touch drehen: Pointer Events decken
+  // Maus/Touch/Stift einheitlich ab, zusaetzlich ein Wheel-Handler fuer
+  // Trackpad-Horizontal-Wischgesten (deltaX) ohne Klick-Drag.
+  const dragStartX = useRef(0);
+  const dragging = useRef(false);
+  const lastWheelAt = useRef(0);
 
   if (index === null) return null;
 
@@ -51,18 +56,39 @@ export default function GalleryLightbox({
   const prev = () =>
     setIndex((i) => (i === null ? null : (i - 1 + photos.length) % photos.length));
 
+  const onPointerDown = (e: React.PointerEvent) => {
+    dragStartX.current = e.clientX;
+    dragging.current = true;
+  };
+
+  const onPointerUp = (e: React.PointerEvent) => {
+    if (!dragging.current) return;
+    dragging.current = false;
+    const dx = e.clientX - dragStartX.current;
+    if (dx > 50) prev();
+    if (dx < -50) next();
+  };
+
+  const onWheel = (e: React.WheelEvent) => {
+    if (Math.abs(e.deltaX) < Math.abs(e.deltaY) || Math.abs(e.deltaX) < 24) {
+      return;
+    }
+    const now = performance.now();
+    if (now - lastWheelAt.current < 400) return;
+    lastWheelAt.current = now;
+    if (e.deltaX > 0) next();
+    else prev();
+  };
+
+  const current = photos[index];
+
   return (
     <div
       className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 p-4"
       onClick={() => setIndex(null)}
-      onTouchStart={(e) => {
-        touchStartX.current = e.touches[0].clientX;
-      }}
-      onTouchEnd={(e) => {
-        const dx = e.changedTouches[0].clientX - touchStartX.current;
-        if (dx > 50) prev();
-        if (dx < -50) next();
-      }}
+      onPointerDown={onPointerDown}
+      onPointerUp={onPointerUp}
+      onWheel={onWheel}
     >
       <button
         onClick={() => setIndex(null)}
@@ -120,10 +146,11 @@ export default function GalleryLightbox({
       {/*
         Gestapelter Karten-Effekt (angelehnt an Swipers "Cards"-Effekt):
         aktuelles Bild vorne mittig, die Nachbarbilder schimmern leicht
-        gedreht/verkleinert dahinter durch.
+        gedreht/verkleinert dahinter durch. Drehbar per Maus-/Trackpad-/
+        Touch-Drag (siehe onPointerDown/onPointerUp/onWheel oben).
       */}
       <div
-        className="relative flex h-[80vh] w-full max-w-2xl items-center justify-center"
+        className="relative flex h-[80vh] w-full max-w-2xl cursor-grab items-center justify-center active:cursor-grabbing"
         style={{ perspective: "1200px" }}
         onClick={(e) => e.stopPropagation()}
       >
@@ -153,6 +180,16 @@ export default function GalleryLightbox({
           );
         })}
       </div>
+
+      {current?.ticketHref && (
+        <a
+          href={current.ticketHref}
+          onClick={(e) => e.stopPropagation()}
+          className="fixed inset-x-6 bottom-8 z-10 mx-auto flex w-fit items-center gap-2 rounded-full bg-accent-lime px-6 py-3 text-sm font-black uppercase tracking-wide text-black transition-transform hover:scale-105"
+        >
+          Jetzt Tickets sichern →
+        </a>
+      )}
     </div>
   );
 }

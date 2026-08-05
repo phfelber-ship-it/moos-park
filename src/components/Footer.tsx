@@ -127,6 +127,10 @@ export default function Footer() {
             © MOOS-PARK GASTRONOMIE GMBH {new Date().getFullYear()}. Alle
             Rechte vorbehalten.
           </p>
+          <p className="mt-1">
+            Teilweise werden Bilder und Texte auf dieser Website mit
+            Unterstützung von KI erstellt.
+          </p>
           <p className="mt-1">Mit ❤ erstellt</p>
         </div>
       </div>
@@ -209,7 +213,8 @@ export default function Footer() {
       <div className="mx-auto mt-14 hidden max-w-7xl flex-col items-center justify-between gap-4 border-t border-foreground/8 pt-8 text-xs text-foreground/40 lg:flex lg:flex-row">
         <p>
           © MOOS-PARK GASTRONOMIE GMBH {new Date().getFullYear()}. Alle
-          Rechte vorbehalten.
+          Rechte vorbehalten. Teilweise werden Bilder und Texte auf dieser
+          Website mit Unterstützung von KI erstellt.
         </p>
         <p>Mit ❤ erstellt</p>
       </div>
