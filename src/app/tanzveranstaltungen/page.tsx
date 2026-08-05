@@ -1,18 +1,29 @@
 import Image from "next/image";
+import { getDanceEvents, sortByStart } from "@/lib/dance-events";
 
 export const metadata = { title: "Tanzveranstaltungen - moos.park | Eventlocation" };
+export const dynamic = "force-dynamic";
 
-const TERMINE = [
-  { date: "24.07.2026", dj: "DJ Willy" },
-  { date: "14.08.2026", dj: "DJ Klaus" },
-  { date: "28.08.2026", dj: "DJ Willy" },
-  { date: "11.09.2026", dj: "DJ Klaus" },
-  { date: "25.09.2026", dj: "DJ Willy" },
-  { date: "09.10.2026", dj: "DJ Klaus" },
-  { date: "23.10.2026", dj: "DJ Willy" },
-];
+function formatDateTime(iso: string) {
+  if (!iso) return null;
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return null;
+  return {
+    date: d.toLocaleDateString("de-DE", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+    }),
+    time: d.toLocaleTimeString("de-DE", {
+      hour: "2-digit",
+      minute: "2-digit",
+    }),
+  };
+}
 
-export default function TanzabendPage() {
+export default async function TanzabendPage() {
+  const events = sortByStart(await getDanceEvents());
+
   return (
     <div>
       <section className="px-6 pb-8 pt-32 text-center">
@@ -46,21 +57,34 @@ export default function TanzabendPage() {
 
       <section className="px-6 pb-28">
         <div className="mx-auto grid max-w-4xl gap-4 sm:grid-cols-2">
-          {TERMINE.map((termin) => (
-            <div
-              key={termin.date + termin.dj}
-              className="rounded-xl border border-foreground/8 bg-foreground/[0.025] p-6"
-            >
-              <p className="text-sm font-bold text-accent">{termin.date}</p>
-              <h3 className="mt-2 text-lg font-black uppercase text-foreground">
-                Tanzen im Moospark
-              </h3>
-              <p className="mt-1 text-foreground/70">
-                Dein Tanzabend mit {termin.dj}
-              </p>
-              <p className="mt-2 text-sm text-foreground/50">Beginn: 20:00 Uhr</p>
-            </div>
-          ))}
+          {events.map((termin) => {
+            const start = formatDateTime(termin.start);
+            const end = formatDateTime(termin.end);
+            return (
+              <div
+                key={termin.id}
+                className="rounded-xl border border-foreground/8 bg-foreground/[0.025] p-6"
+              >
+                {start && (
+                  <p className="text-sm font-bold text-accent">{start.date}</p>
+                )}
+                <h3 className="mt-2 text-lg font-black uppercase text-foreground">
+                  {termin.title}
+                </h3>
+                {termin.description && (
+                  <p className="mt-1 text-foreground/70">
+                    {termin.description}
+                  </p>
+                )}
+                {start && (
+                  <p className="mt-2 text-sm text-foreground/50">
+                    Beginn: {start.time} Uhr
+                    {end ? ` · Ende: ${end.time} Uhr` : ""}
+                  </p>
+                )}
+              </div>
+            );
+          })}
         </div>
       </section>
     </div>

@@ -249,7 +249,11 @@ export async function getGa4Data(
       topPages: toRows(pagesRes[0]),
       landingPages: toRows(landingRes[0]),
       bounceByPage: toRows(bounceRes[0]),
-      sessionsByHour: toRows(hourRes[0]),
+      // GA4 sortiert die "hour"-Dimension alphabetisch als String (0, 1, 10,
+      // 11, ..., 2, 20, ...) - hier numerisch nachsortieren.
+      sessionsByHour: toRows(hourRes[0]).sort(
+        (a, b) => Number(a.label) - Number(b.label)
+      ),
       sessionsByDay,
       devices: toRows(deviceRes[0]),
       topPagesByDevice,

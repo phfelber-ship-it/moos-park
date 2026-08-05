@@ -24,6 +24,11 @@ const SECTIONS = [
     text: "Besucher, Seitenaufrufe, Absprungrate & mehr aus Google Analytics.",
   },
   {
+    href: "/admin/tanzabende",
+    title: "Tanzabende",
+    text: "Termine für /tanzveranstaltungen anlegen, bearbeiten, duplizieren.",
+  },
+  {
     href: "/admin/benutzer",
     title: "Benutzer",
     text: "Weitere Admin-Zugänge anlegen oder entfernen.",
