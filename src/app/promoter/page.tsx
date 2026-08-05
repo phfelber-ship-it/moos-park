@@ -85,7 +85,7 @@ export default function PromoterPage() {
         <h1 className="mx-auto mt-3 max-w-3xl text-4xl font-black uppercase leading-tight text-foreground sm:text-6xl">
           Werde Promoter.
           <br />
-          Sichere dir Sonderkonditionen.
+          Sichere dir Extras.
         </h1>
         <p className="mx-auto mt-4 max-w-xl text-foreground/70">
           Du liebst Nightlife-Content und hast eine aktive Instagram-Community?

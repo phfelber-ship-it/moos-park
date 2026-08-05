@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getGallery, getGalleryMedia } from "@/lib/clubscale";
-import { getCurrentFlyers } from "@/lib/flyer-images";
+import { getGallery, getGalleryMedia, getEvents } from "@/lib/clubscale";
 import GalleryMasonry from "@/components/GalleryMasonry";
 
 function formatDate(iso: string) {
@@ -47,9 +46,9 @@ export default async function GalleryPage({
     notFound();
   }
 
-  const [media, currentFlyers] = await Promise.all([
+  const [media, events] = await Promise.all([
     getGalleryMedia(id),
-    getCurrentFlyers(),
+    getEvents(),
   ]);
   const photos = media
     .map((item) => ({
@@ -59,14 +58,21 @@ export default async function GalleryPage({
     .filter((p): p is { src: string; alt: string } => Boolean(p.src))
     .slice(0, 20);
 
-  // Die zwei aktuellsten Flyer werden mittig eingemischt (nie am Anfang
-  // oder Ende), egal wie alt die Galerie ist - siehe /admin/flyer. Jeder
-  // Flyer verlinkt auf den zugehoerigen Ticket-/Event-Link (Fallback /tickets).
-  const flyers = currentFlyers.map((f) => ({
-    src: f.url,
-    alt: "Aktueller Flyer – moos.park",
-    href: f.link || "/tickets",
-  }));
+  // Die 3 aktuellsten (naechsten) Event-Flyer von /events werden mittig
+  // eingemischt (nie am Anfang oder Ende), egal wie alt die Galerie ist -
+  // getEvents() liefert bereits nur aktuelle/kommende Events, aufsteigend
+  // nach Beginn sortiert. Jeder Flyer verlinkt auf die zugehoerige
+  // Event-Detailseite (Tickets).
+  const flyers = events
+    .slice(0, 3)
+    .map((e) => ({
+      src: e.thumbnail?.presignedURL,
+      alt: e.name,
+      href: `/eventdetails?id=${e.id}`,
+    }))
+    .filter(
+      (f): f is { src: string; alt: string; href: string } => Boolean(f.src)
+    );
 
   return (
     <div className="mx-auto max-w-5xl px-6 pb-16 pt-32">

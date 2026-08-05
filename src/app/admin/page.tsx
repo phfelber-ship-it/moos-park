@@ -14,11 +14,6 @@ const SECTIONS = [
     text: "Bilder je Raum (Main-Halle, Terrasse, Lounge, ...) verwalten.",
   },
   {
-    href: "/admin/flyer",
-    title: "Flyer",
-    text: "Die zwei aktuellsten Flyer, die in jede Bilder-Galerie eingemischt werden.",
-  },
-  {
     href: "/admin/favicon",
     title: "Favicon",
     text: "Das kleine Icon im Browser-Tab austauschen.",
