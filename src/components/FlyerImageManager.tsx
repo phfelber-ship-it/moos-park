@@ -3,7 +3,7 @@
 import { useRef, useState } from "react";
 import Image from "next/image";
 
-type FlyerImage = { url: string; pathname: string };
+type FlyerImage = { url: string; pathname: string; link?: string };
 
 export default function FlyerImageManager({
   initialImages,
@@ -15,6 +15,7 @@ export default function FlyerImageManager({
   const [savingOrder, setSavingOrder] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [deletingPath, setDeletingPath] = useState<string | null>(null);
+  const [savingLink, setSavingLink] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const saveOrder = async (next: FlyerImage[]) => {
@@ -81,6 +82,29 @@ export default function FlyerImageManager({
     }
   };
 
+  const setLinkValue = (pathname: string, link: string) => {
+    setImages((prev) =>
+      prev.map((i) => (i.pathname === pathname ? { ...i, link } : i))
+    );
+  };
+
+  const saveLink = async (pathname: string, link: string) => {
+    setSavingLink(pathname);
+    setError(null);
+    try {
+      const res = await fetch("/api/admin/flyer-images/link", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ pathname, link }),
+      });
+      if (!res.ok) throw new Error("Link konnte nicht gespeichert werden.");
+    } catch {
+      setError("Link konnte nicht gespeichert werden.");
+    } finally {
+      setSavingLink(null);
+    }
+  };
+
   return (
     <div className="mt-6">
       <label className="block w-fit cursor-pointer rounded-lg bg-accent-lime px-6 py-2.5 text-xs font-black uppercase tracking-wide text-black transition-transform hover:scale-105">
@@ -113,47 +137,65 @@ export default function FlyerImageManager({
           {images.map((img, i) => (
             <div
               key={img.pathname}
-              className="group relative aspect-[4/3] overflow-hidden rounded-xl border border-foreground/10"
+              className="group relative overflow-hidden rounded-xl border border-foreground/10"
             >
-              <Image
-                src={img.url}
-                alt={img.pathname}
-                fill
-                className="object-cover"
-                sizes="(min-width: 640px) 33vw, 50vw"
-              />
-              <span
-                className={`absolute left-2 top-2 rounded-full px-2.5 py-1 text-xs font-bold ${
-                  i < 2 ? "bg-accent-lime text-black" : "bg-black/70 text-white"
-                }`}
-              >
-                {i < 2 ? "Aktiv in Galerien" : `#${i + 1}`}
-              </span>
-              <button
-                type="button"
-                onClick={() => remove(img.pathname)}
-                disabled={deletingPath === img.pathname}
-                className="absolute right-2 top-2 rounded-full bg-black/70 px-3 py-1 text-xs font-bold uppercase text-white opacity-0 transition-opacity group-hover:opacity-100 disabled:opacity-100"
-              >
-                {deletingPath === img.pathname ? "..." : "Löschen"}
-              </button>
-              <div className="absolute inset-x-0 bottom-0 flex justify-center gap-2 bg-gradient-to-t from-black/80 to-transparent p-2 opacity-0 transition-opacity group-hover:opacity-100">
+              <div className="relative aspect-[4/3]">
+                <Image
+                  src={img.url}
+                  alt={img.pathname}
+                  fill
+                  className="object-cover"
+                  sizes="(min-width: 640px) 33vw, 50vw"
+                />
+                <span
+                  className={`absolute left-2 top-2 rounded-full px-2.5 py-1 text-xs font-bold ${
+                    i < 2
+                      ? "bg-accent-lime text-black"
+                      : "bg-black/70 text-white"
+                  }`}
+                >
+                  {i < 2 ? "Aktiv in Galerien" : `#${i + 1}`}
+                </span>
                 <button
                   type="button"
-                  onClick={() => move(i, -1)}
-                  disabled={i === 0}
-                  className="rounded-full bg-white/90 px-3 py-1 text-xs font-bold text-black disabled:opacity-30"
+                  onClick={() => remove(img.pathname)}
+                  disabled={deletingPath === img.pathname}
+                  className="absolute right-2 top-2 rounded-full bg-black/70 px-3 py-1 text-xs font-bold uppercase text-white opacity-0 transition-opacity group-hover:opacity-100 disabled:opacity-100"
                 >
-                  ↑
+                  {deletingPath === img.pathname ? "..." : "Löschen"}
                 </button>
-                <button
-                  type="button"
-                  onClick={() => move(i, 1)}
-                  disabled={i === images.length - 1}
-                  className="rounded-full bg-white/90 px-3 py-1 text-xs font-bold text-black disabled:opacity-30"
-                >
-                  ↓
-                </button>
+                <div className="absolute inset-x-0 bottom-0 flex justify-center gap-2 bg-gradient-to-t from-black/80 to-transparent p-2 opacity-0 transition-opacity group-hover:opacity-100">
+                  <button
+                    type="button"
+                    onClick={() => move(i, -1)}
+                    disabled={i === 0}
+                    className="rounded-full bg-white/90 px-3 py-1 text-xs font-bold text-black disabled:opacity-30"
+                  >
+                    ↑
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => move(i, 1)}
+                    disabled={i === images.length - 1}
+                    className="rounded-full bg-white/90 px-3 py-1 text-xs font-bold text-black disabled:opacity-30"
+                  >
+                    ↓
+                  </button>
+                </div>
+              </div>
+              <div className="p-2">
+                <input
+                  value={img.link ?? ""}
+                  onChange={(e) => setLinkValue(img.pathname, e.target.value)}
+                  onBlur={(e) => saveLink(img.pathname, e.target.value)}
+                  placeholder="Ticket-/Event-Link (z.B. /tickets)"
+                  className="w-full rounded-lg border border-foreground/15 bg-background px-3 py-2 text-xs text-foreground outline-none focus:border-accent-lime"
+                />
+                {savingLink === img.pathname && (
+                  <p className="mt-1 text-[11px] text-foreground/40">
+                    Speichert...
+                  </p>
+                )}
               </div>
             </div>
           ))}

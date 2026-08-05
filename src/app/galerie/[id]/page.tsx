@@ -47,7 +47,7 @@ export default async function GalleryPage({
     notFound();
   }
 
-  const [media, flyers] = await Promise.all([
+  const [media, currentFlyers] = await Promise.all([
     getGalleryMedia(id),
     getCurrentFlyers(),
   ]);
@@ -60,15 +60,13 @@ export default async function GalleryPage({
     .slice(0, 20);
 
   // Die zwei aktuellsten Flyer werden mittig eingemischt (nie am Anfang
-  // oder Ende), egal wie alt die Galerie ist - siehe /admin/flyer.
-  if (flyers.length > 0) {
-    const flyerPhotos = flyers.map((f) => ({
-      src: f.url,
-      alt: "Aktueller Flyer – moos.park",
-    }));
-    const insertAt = Math.max(1, Math.min(photos.length - 1, Math.floor(photos.length / 2)));
-    photos.splice(insertAt, 0, ...flyerPhotos);
-  }
+  // oder Ende), egal wie alt die Galerie ist - siehe /admin/flyer. Jeder
+  // Flyer verlinkt auf den zugehoerigen Ticket-/Event-Link (Fallback /tickets).
+  const flyers = currentFlyers.map((f) => ({
+    src: f.url,
+    alt: "Aktueller Flyer – moos.park",
+    href: f.link || "/tickets",
+  }));
 
   return (
     <div className="mx-auto max-w-5xl px-6 pb-16 pt-32">
@@ -83,7 +81,7 @@ export default async function GalleryPage({
         {formatDate(gallery.date)} · {gallery.mediaCount} Fotos
       </p>
 
-      <GalleryMasonry photos={photos} />
+      <GalleryMasonry photos={photos} flyers={flyers} />
     </div>
   );
 }

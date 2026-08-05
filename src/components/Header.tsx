@@ -14,6 +14,7 @@ const NAV_LINKS = [
   { href: "/geburtstag", label: "Geburtstag" },
   { href: "/eventlocation", label: "Eventlocation" },
   { href: "/galerie", label: "Bilder" },
+  { href: "/app", label: "App" },
   { href: "/jobs", label: "Jobs" },
   { href: "/faq", label: "FAQ" },
   { href: "/kontakt", label: "Kontakt" },

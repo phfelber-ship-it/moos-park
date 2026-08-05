@@ -39,6 +39,7 @@ const LINKS_COL_1 = [
   { href: "/", label: "Home" },
   { href: "/events", label: "Events" },
   { href: "/galerie", label: "Bilder" },
+  { href: "/app", label: "App" },
   { href: "/firmenevents", label: "Firmenevents" },
   { href: "/eventlocation-mieten", label: "Eventlocation mieten" },
   { href: "/eventlocation-augsburg", label: "Eventlocation Augsburg" },
