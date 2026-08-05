@@ -9,6 +9,7 @@ import {
   type Reservable,
 } from "@/lib/clubscale";
 import { logInbox } from "@/lib/inbox-client";
+import HoneypotField from "@/components/HoneypotField";
 
 function formatDate(iso: string) {
   return new Date(iso).toLocaleDateString("de-DE", {
@@ -68,6 +69,7 @@ export default function ReservationWizard({
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
+  const [honeypot, setHoneypot] = useState("");
   const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">(
     "idle"
   );
@@ -140,6 +142,10 @@ export default function ReservationWizard({
 
   const submit = async () => {
     if (status === "sending") return;
+    if (honeypot) {
+      setStatus("sent");
+      return;
+    }
     setStatus("sending");
     try {
       await createReservation({
@@ -170,6 +176,7 @@ export default function ReservationWizard({
 
   return (
     <div>
+      <HoneypotField value={honeypot} onChange={setHoneypot} />
       <div className="mx-auto max-w-md">
         <div className="h-2.5 w-full overflow-hidden rounded-full bg-foreground/10">
           <div

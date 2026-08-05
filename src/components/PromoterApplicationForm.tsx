@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { sendContactMail } from "@/lib/clubscale";
 import { logInbox } from "@/lib/inbox-client";
+import HoneypotField from "@/components/HoneypotField";
 
 export default function PromoterApplicationForm() {
   const [vorname, setVorname] = useState("");
@@ -11,6 +12,7 @@ export default function PromoterApplicationForm() {
   const [instagram, setInstagram] = useState("");
   const [follower, setFollower] = useState("");
   const [accepted, setAccepted] = useState(false);
+  const [honeypot, setHoneypot] = useState("");
   const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">(
     "idle"
   );
@@ -26,6 +28,10 @@ export default function PromoterApplicationForm() {
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!canSend || status === "sending") return;
+    if (honeypot) {
+      setStatus("sent");
+      return;
+    }
 
     setStatus("sending");
     try {
@@ -60,6 +66,7 @@ export default function PromoterApplicationForm() {
 
   return (
     <form onSubmit={submit} className="grid gap-4 sm:grid-cols-2">
+      <HoneypotField value={honeypot} onChange={setHoneypot} />
       <input
         value={vorname}
         onChange={(e) => setVorname(e.target.value)}

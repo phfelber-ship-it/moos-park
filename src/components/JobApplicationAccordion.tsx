@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { createJobApplication, type JobPosting } from "@/lib/clubscale";
 import { logInbox } from "@/lib/inbox-client";
+import HoneypotField from "@/components/HoneypotField";
 
 // Clubscale verlangt fuer Bewerbungen zwingend ein Foto (image-Feld), API
 // erwartet reinen Base64-String ohne data:-URL-Praefix.
@@ -65,6 +66,7 @@ function ApplicationForm({
     "idle"
   );
   const [progress, setProgress] = useState(0);
+  const [honeypot, setHoneypot] = useState("");
 
   const canSend =
     firstName.trim() !== "" &&
@@ -76,6 +78,10 @@ function ApplicationForm({
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!canSend || status === "sending" || !photo) return;
+    if (honeypot) {
+      setStatus("sent");
+      return;
+    }
     setStatus("sending");
     setProgress(0);
     try {
@@ -128,6 +134,7 @@ function ApplicationForm({
 
   return (
     <form onSubmit={submit} className="grid gap-3">
+      <HoneypotField value={honeypot} onChange={setHoneypot} />
       <div className="grid gap-3 sm:grid-cols-2">
         <input
           value={firstName}

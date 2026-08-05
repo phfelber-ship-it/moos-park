@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { sendContactMail } from "@/lib/clubscale";
 import { logInbox } from "@/lib/inbox-client";
+import HoneypotField from "@/components/HoneypotField";
 
 export default function ContactForm() {
   const [firstname, setFirstname] = useState("");
@@ -11,6 +12,7 @@ export default function ContactForm() {
   const [mail, setMail] = useState("");
   const [message, setMessage] = useState("");
   const [accepted, setAccepted] = useState(false);
+  const [honeypot, setHoneypot] = useState("");
   const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">(
     "idle"
   );
@@ -25,6 +27,10 @@ export default function ContactForm() {
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!canSend || status === "sending") return;
+    if (honeypot) {
+      setStatus("sent");
+      return;
+    }
 
     setStatus("sending");
     try {
@@ -59,6 +65,7 @@ export default function ContactForm() {
 
   return (
     <form onSubmit={submit} className="grid gap-4">
+      <HoneypotField value={honeypot} onChange={setHoneypot} />
       <input
         value={firstname}
         onChange={(e) => setFirstname(e.target.value)}

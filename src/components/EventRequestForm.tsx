@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { sendContactMail } from "@/lib/clubscale";
 import { logInbox } from "@/lib/inbox-client";
+import HoneypotField from "@/components/HoneypotField";
 
 const LOCATIONS = [
   "Im moos.park",
@@ -20,6 +21,7 @@ export default function EventRequestForm() {
   const [ort, setOrt] = useState(LOCATIONS[0]);
   const [nachricht, setNachricht] = useState("");
   const [accepted, setAccepted] = useState(false);
+  const [honeypot, setHoneypot] = useState("");
   const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">(
     "idle"
   );
@@ -34,6 +36,10 @@ export default function EventRequestForm() {
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!canSend || status === "sending") return;
+    if (honeypot) {
+      setStatus("sent");
+      return;
+    }
 
     setStatus("sending");
     try {
@@ -72,6 +78,7 @@ export default function EventRequestForm() {
 
   return (
     <form onSubmit={submit} className="grid gap-4">
+      <HoneypotField value={honeypot} onChange={setHoneypot} />
       <div className="grid gap-4 sm:grid-cols-2">
         <input
           value={vorname}

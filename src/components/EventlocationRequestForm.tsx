@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { sendContactMail } from "@/lib/clubscale";
 import { logInbox } from "@/lib/inbox-client";
+import HoneypotField from "@/components/HoneypotField";
 
 export default function EventlocationRequestForm() {
   const [firma, setFirma] = useState("");
@@ -13,6 +14,7 @@ export default function EventlocationRequestForm() {
   const [email, setEmail] = useState("");
   const [nachricht, setNachricht] = useState("");
   const [accepted, setAccepted] = useState(false);
+  const [honeypot, setHoneypot] = useState("");
   const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">(
     "idle"
   );
@@ -26,6 +28,10 @@ export default function EventlocationRequestForm() {
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!canSend || status === "sending") return;
+    if (honeypot) {
+      setStatus("sent");
+      return;
+    }
 
     setStatus("sending");
     try {
@@ -64,6 +70,7 @@ export default function EventlocationRequestForm() {
 
   return (
     <form onSubmit={submit} className="mt-8 grid gap-4 sm:grid-cols-2">
+      <HoneypotField value={honeypot} onChange={setHoneypot} />
       <input
         value={firma}
         onChange={(e) => setFirma(e.target.value)}
