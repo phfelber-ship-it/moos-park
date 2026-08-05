@@ -1,14 +1,38 @@
 "use client";
 
-import { useState } from "react";
-import type { DanceEvent } from "@/lib/dance-events";
+import { useMemo, useState } from "react";
+import {
+  type DanceEvent,
+  sortByStartDesc,
+  isPastEvent,
+  isComplete,
+} from "@/lib/dance-events";
 
-const EMPTY_FORM = { title: "", description: "", start: "", end: "" };
+const EMPTY_FORM = { title: "", description: "", start: "", end: "", published: true };
 
-function sortByStart(events: DanceEvent[]): DanceEvent[] {
-  return [...events].sort(
-    (a, b) => new Date(a.start).getTime() - new Date(b.start).getTime()
-  );
+type Tab = "bevorstehend" | "vergangen" | "geplant" | "entwuerfe" | "alle";
+
+const TABS: { key: Tab; label: string }[] = [
+  { key: "bevorstehend", label: "Bevorstehende" },
+  { key: "vergangen", label: "Vergangen" },
+  { key: "geplant", label: "Geplant" },
+  { key: "entwuerfe", label: "Entwürfe" },
+  { key: "alle", label: "Alle" },
+];
+
+function matchesTab(event: DanceEvent, tab: Tab): boolean {
+  switch (tab) {
+    case "bevorstehend":
+      return event.published && !isPastEvent(event);
+    case "vergangen":
+      return event.published && isPastEvent(event);
+    case "geplant":
+      return !event.published && isComplete(event);
+    case "entwuerfe":
+      return !event.published && !isComplete(event);
+    case "alle":
+      return true;
+  }
 }
 
 export default function DanceEventsManager({
@@ -16,12 +40,35 @@ export default function DanceEventsManager({
 }: {
   initialEvents: DanceEvent[];
 }) {
-  const [events, setEvents] = useState(() => sortByStart(initialEvents));
+  const [events, setEvents] = useState(initialEvents);
+  const [tab, setTab] = useState<Tab>("bevorstehend");
   const [editingId, setEditingId] = useState<string | null>(null);
   const [form, setForm] = useState(EMPTY_FORM);
   const [loading, setLoading] = useState(false);
   const [busyId, setBusyId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+
+  const counts = useMemo(() => {
+    const c: Record<Tab, number> = {
+      bevorstehend: 0,
+      vergangen: 0,
+      geplant: 0,
+      entwuerfe: 0,
+      alle: events.length,
+    };
+    for (const e of events) {
+      if (matchesTab(e, "bevorstehend")) c.bevorstehend++;
+      if (matchesTab(e, "vergangen")) c.vergangen++;
+      if (matchesTab(e, "geplant")) c.geplant++;
+      if (matchesTab(e, "entwuerfe")) c.entwuerfe++;
+    }
+    return c;
+  }, [events]);
+
+  const visible = useMemo(
+    () => sortByStartDesc(events.filter((e) => matchesTab(e, tab))),
+    [events, tab]
+  );
 
   const startNew = () => {
     setEditingId(null);
@@ -36,6 +83,7 @@ export default function DanceEventsManager({
       description: event.description,
       start: event.start,
       end: event.end,
+      published: event.published,
     });
     setError(null);
   };
@@ -56,12 +104,10 @@ export default function DanceEventsManager({
 
       if (editingId) {
         setEvents((prev) =>
-          sortByStart(
-            prev.map((ev) => (ev.id === editingId ? data.event : ev))
-          )
+          prev.map((ev) => (ev.id === editingId ? data.event : ev))
         );
       } else {
-        setEvents((prev) => sortByStart([...prev, data.event]));
+        setEvents((prev) => [...prev, data.event]);
       }
       startNew();
     } catch (e) {
@@ -102,11 +148,12 @@ export default function DanceEventsManager({
           description: event.description,
           start: event.start,
           end: event.end,
+          published: event.published,
         }),
       });
       const data = await res.json().catch(() => null);
       if (!res.ok) throw new Error(data?.error ?? "Duplizieren fehlgeschlagen.");
-      setEvents((prev) => sortByStart([...prev, data.event]));
+      setEvents((prev) => [...prev, data.event]);
     } catch (e) {
       setError(e instanceof Error ? e.message : "Duplizieren fehlgeschlagen.");
     } finally {
@@ -129,20 +176,46 @@ export default function DanceEventsManager({
 
   return (
     <div className="mt-8">
-      <ul className="flex flex-col gap-3">
-        {events.length === 0 && (
-          <p className="text-sm text-foreground/50">Noch keine Termine angelegt.</p>
+      <div className="flex flex-wrap gap-2 border-b border-foreground/10 pb-4">
+        {TABS.map((t) => (
+          <button
+            key={t.key}
+            type="button"
+            onClick={() => setTab(t.key)}
+            className={`rounded-lg px-3 py-1.5 text-xs font-black uppercase tracking-wide transition-colors ${
+              tab === t.key
+                ? "bg-accent-lime text-black"
+                : "border border-foreground/20 text-foreground/60 hover:border-accent-lime"
+            }`}
+          >
+            {t.label} ({counts[t.key]})
+          </button>
+        ))}
+      </div>
+
+      <ul className="mt-6 flex flex-col gap-3">
+        {visible.length === 0 && (
+          <p className="text-sm text-foreground/50">
+            Keine Termine in dieser Ansicht.
+          </p>
         )}
-        {events.map((ev) => (
+        {visible.map((ev) => (
           <li
             key={ev.id}
             className="rounded-xl border border-foreground/10 p-4"
           >
             <div className="flex flex-wrap items-start justify-between gap-3">
               <div>
-                <p className="font-black uppercase text-foreground">
-                  {ev.title}
-                </p>
+                <div className="flex items-center gap-2">
+                  <p className="font-black uppercase text-foreground">
+                    {ev.title}
+                  </p>
+                  {!ev.published && (
+                    <span className="rounded bg-foreground/10 px-2 py-0.5 text-[10px] font-bold uppercase text-foreground/50">
+                      {isComplete(ev) ? "Geplant" : "Entwurf"}
+                    </span>
+                  )}
+                </div>
                 <p className="mt-1 text-sm text-foreground/60">
                   {ev.description}
                 </p>
@@ -214,13 +287,24 @@ export default function DanceEventsManager({
           />
         </label>
         <label className="text-xs font-bold uppercase text-foreground/50">
-          Ende (optional)
+          Ende
           <input
             value={form.end}
             onChange={(e) => setForm((f) => ({ ...f, end: e.target.value }))}
             type="datetime-local"
             className="mt-1 w-full rounded-lg border border-foreground/20 bg-background px-4 py-2.5 text-sm text-foreground outline-none focus:border-accent-lime"
           />
+        </label>
+
+        <label className="flex items-center gap-2 text-xs font-bold uppercase text-foreground/50 sm:col-span-2">
+          <input
+            type="checkbox"
+            checked={form.published}
+            onChange={(e) =>
+              setForm((f) => ({ ...f, published: e.target.checked }))
+            }
+          />
+          Veröffentlicht (sonst nur Entwurf/geplant, nicht öffentlich sichtbar)
         </label>
 
         <div className="flex gap-3 sm:col-span-2">

@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { getDanceEvents, sortByStart } from "@/lib/dance-events";
+import { getDanceEvents, visiblePublicEvents } from "@/lib/dance-events";
 
 export const metadata = { title: "Tanzveranstaltungen - moos.park | Eventlocation" };
 export const dynamic = "force-dynamic";
@@ -22,7 +22,7 @@ function formatDateTime(iso: string) {
 }
 
 export default async function TanzabendPage() {
-  const events = sortByStart(await getDanceEvents());
+  const events = visiblePublicEvents(await getDanceEvents());
 
   return (
     <div>

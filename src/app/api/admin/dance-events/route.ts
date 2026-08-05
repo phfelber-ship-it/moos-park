@@ -28,6 +28,7 @@ export async function POST(request: Request) {
     description: body.description?.trim() ?? "",
     start,
     end: body.end?.trim() ?? "",
+    published: body.published ?? true,
   };
 
   const events = await getDanceEvents();
@@ -66,6 +67,7 @@ export async function PUT(request: Request) {
     description: body.description?.trim() ?? "",
     start,
     end: body.end?.trim() ?? "",
+    published: body.published ?? true,
   };
   await saveDanceEvents(events);
 
