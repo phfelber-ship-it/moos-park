@@ -6,7 +6,7 @@ import { logInbox } from "@/lib/inbox-client";
 
 // Clubscale verlangt fuer Bewerbungen zwingend ein Foto (image-Feld), API
 // erwartet reinen Base64-String ohne data:-URL-Praefix.
-function fileToBase64(file: File): Promise<string> {
+function blobToBase64(blob: Blob): Promise<string> {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.onload = () => {
@@ -14,7 +14,37 @@ function fileToBase64(file: File): Promise<string> {
       resolve(result.slice(result.indexOf(",") + 1));
     };
     reader.onerror = () => reject(reader.error);
-    reader.readAsDataURL(file);
+    reader.readAsDataURL(blob);
+  });
+}
+
+// Moderne Handyfotos sind oft mehrere MB groSS - als Base64 kodiert wird
+// daraus schnell ein Payload, an dem die Clubscale-API scheitert (daher
+// "Da ist leider etwas schiefgelaufen" ohne erkennbaren Grund). Vor dem
+// Versand daher auf eine vernuenftige Groesse herunterrechnen.
+async function compressImage(
+  file: File,
+  maxDimension = 1600,
+  quality = 0.82
+): Promise<Blob> {
+  const bitmap = await createImageBitmap(file);
+  const scale = Math.min(1, maxDimension / Math.max(bitmap.width, bitmap.height));
+  const width = Math.round(bitmap.width * scale);
+  const height = Math.round(bitmap.height * scale);
+
+  const canvas = document.createElement("canvas");
+  canvas.width = width;
+  canvas.height = height;
+  const ctx = canvas.getContext("2d");
+  if (!ctx) return file;
+  ctx.drawImage(bitmap, 0, 0, width, height);
+
+  return new Promise((resolve) => {
+    canvas.toBlob(
+      (blob) => resolve(blob ?? file),
+      "image/jpeg",
+      quality
+    );
   });
 }
 
@@ -34,6 +64,7 @@ function ApplicationForm({
   const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">(
     "idle"
   );
+  const [progress, setProgress] = useState(0);
 
   const canSend =
     firstName.trim() !== "" &&
@@ -46,17 +77,22 @@ function ApplicationForm({
     e.preventDefault();
     if (!canSend || status === "sending" || !photo) return;
     setStatus("sending");
+    setProgress(0);
     try {
-      const imageBase64 = await fileToBase64(photo);
-      await createJobApplication({
-        jobPostingId,
-        firstName: firstName.trim(),
-        lastName: lastName.trim(),
-        email: email.trim(),
-        phoneNumber: phoneNumber.trim(),
-        text: text.trim(),
-        imageBase64,
-      });
+      const compressed = await compressImage(photo);
+      const imageBase64 = await blobToBase64(compressed);
+      await createJobApplication(
+        {
+          jobPostingId,
+          firstName: firstName.trim(),
+          lastName: lastName.trim(),
+          email: email.trim(),
+          phoneNumber: phoneNumber.trim(),
+          text: text.trim(),
+          imageBase64,
+        },
+        setProgress
+      );
       logInbox({
         type: "bewerbung",
         name: `${firstName.trim()} ${lastName.trim()}`,
@@ -73,9 +109,20 @@ function ApplicationForm({
 
   if (status === "sent") {
     return (
-      <p className="font-bold text-foreground">
-        Danke für deine Bewerbung! Wir melden uns schnellstmöglich zurück.
-      </p>
+      <div className="flex items-start gap-3 rounded-xl border border-accent-lime/40 bg-accent-lime/10 p-4">
+        <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-accent-lime text-black">
+          ✓
+        </span>
+        <div>
+          <p className="font-black uppercase text-foreground">
+            Bewerbung erfolgreich gesendet!
+          </p>
+          <p className="mt-1 text-sm text-foreground/70">
+            Danke für deine Bewerbung. Wir melden uns schnellstmöglich
+            zurück.
+          </p>
+        </div>
+      </div>
     );
   }
 
@@ -126,6 +173,22 @@ function ApplicationForm({
           className="w-full rounded-lg border border-foreground/20 bg-background px-4 py-2.5 text-sm text-foreground file:mr-3 file:rounded-md file:border-0 file:bg-accent-lime file:px-3 file:py-1.5 file:text-xs file:font-black file:uppercase file:text-black"
         />
       </label>
+
+      {status === "sending" && (
+        <div>
+          <div className="h-2 w-full overflow-hidden rounded-full bg-foreground/10">
+            <div
+              className="h-full rounded-full bg-accent-lime transition-[width] duration-200 ease-out"
+              style={{ width: `${Math.max(progress, 6)}%` }}
+            />
+          </div>
+          <p className="mt-1 text-xs text-foreground/50">
+            {progress < 100
+              ? `Foto wird hochgeladen... ${progress}%`
+              : "Wird verarbeitet..."}
+          </p>
+        </div>
+      )}
 
       {status === "error" && (
         <p className="text-sm text-red-500">

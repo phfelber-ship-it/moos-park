@@ -411,32 +411,59 @@ export async function getJobPostings(): Promise<JobPosting[]> {
 // favorite/apComment sind dort admin/super-only. image ist zusaetzlich
 // Pflicht ("image is required for job applications in this community") -
 // erwartet reinen Base64-String ohne data:-URL-Praefix.
-export async function createJobApplication(input: {
-  jobPostingId: string;
-  firstName: string;
-  lastName: string;
-  email: string;
-  phoneNumber: string;
-  text: string;
-  imageBase64: string;
-}): Promise<void> {
-  const res = await fetch(`${API_BASE}/job-applications`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      jobPostingID: input.jobPostingId,
-      firstName: input.firstName,
-      lastName: input.lastName,
-      email: input.email,
-      phoneNumber: input.phoneNumber,
-      text: input.text,
-      image: input.imageBase64,
-    }),
+//
+// Nutzt XMLHttpRequest statt fetch, damit der Upload-Fortschritt (relevant
+// bei groesseren Fotos) per onProgress-Callback ans UI gemeldet werden
+// kann - das ist mit fetch nicht moeglich.
+export function createJobApplication(
+  input: {
+    jobPostingId: string;
+    firstName: string;
+    lastName: string;
+    email: string;
+    phoneNumber: string;
+    text: string;
+    imageBase64: string;
+  },
+  onProgress?: (percent: number) => void
+): Promise<void> {
+  return new Promise((resolve, reject) => {
+    const xhr = new XMLHttpRequest();
+    xhr.open("POST", `${API_BASE}/job-applications`);
+    xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.upload.onprogress = (e) => {
+      if (onProgress && e.lengthComputable) {
+        onProgress(Math.round((e.loaded / e.total) * 100));
+      }
+    };
+    xhr.onload = () => {
+      if (xhr.status >= 200 && xhr.status < 300) {
+        resolve();
+        return;
+      }
+      let message = "Bewerbung konnte nicht gesendet werden.";
+      try {
+        const data = JSON.parse(xhr.responseText);
+        if (data?.message) message = data.message;
+      } catch {
+        // Antwort war kein JSON - Standardmeldung verwenden.
+      }
+      reject(new Error(message));
+    };
+    xhr.onerror = () =>
+      reject(new Error("Bewerbung konnte nicht gesendet werden."));
+    xhr.send(
+      JSON.stringify({
+        jobPostingID: input.jobPostingId,
+        firstName: input.firstName,
+        lastName: input.lastName,
+        email: input.email,
+        phoneNumber: input.phoneNumber,
+        text: input.text,
+        image: input.imageBase64,
+      })
+    );
   });
-  if (!res.ok) {
-    const data = await res.json().catch(() => null);
-    throw new Error(data?.message ?? "Bewerbung konnte nicht gesendet werden.");
-  }
 }
 
 export type Faq = {
