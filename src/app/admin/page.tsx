@@ -29,6 +29,11 @@ const SECTIONS = [
     text: "Besucher, Seitenaufrufe, Absprungrate & mehr aus Google Analytics.",
   },
   {
+    href: "/admin/ki-assistent",
+    title: "KI-Assistent",
+    text: "Tägliche KI-Analyse: Empfehlungen für mehr Tickets, Reservierungen & App-Downloads.",
+  },
+  {
     href: "/admin/tanzabende",
     title: "Tanzabende",
     text: "Termine für /tanzveranstaltungen anlegen, bearbeiten, duplizieren.",
