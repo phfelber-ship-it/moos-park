@@ -52,6 +52,7 @@ const LINKS_COL_1 = [
 const LINKS_COL_2 = [
   { href: "/jobs", label: "Bewerbung" },
   { href: "/jobs", label: "Jobs" },
+  { href: "/promoter", label: "Promoter werden" },
   { href: "/kontakt", label: "Kontakt" },
   { href: "/faq", label: "FAQ" },
 ];

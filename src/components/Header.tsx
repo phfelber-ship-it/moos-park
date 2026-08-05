@@ -16,6 +16,7 @@ const NAV_LINKS = [
   { href: "/galerie", label: "Bilder" },
   { href: "/app", label: "App" },
   { href: "/jobs", label: "Jobs" },
+  { href: "/promoter", label: "Promoter" },
   { href: "/faq", label: "FAQ" },
   { href: "/kontakt", label: "Kontakt" },
 ];
