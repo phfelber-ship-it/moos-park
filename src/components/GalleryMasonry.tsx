@@ -1,6 +1,7 @@
 "use client";
 
 import GalleryLightbox, { type LightboxPhoto } from "@/components/GalleryLightbox";
+import AppDownloadCta from "@/components/AppDownloadCta";
 
 export default function GalleryMasonry({
   photos,
@@ -30,10 +31,8 @@ export default function GalleryMasonry({
           </button>
         ))}
 
-        <div className="mb-3 flex aspect-[4/3] w-full break-inside-avoid flex-col items-center justify-center rounded-xl bg-accent-lime p-6 text-center">
-          <p className="font-black uppercase leading-tight text-black">
-            Alle Bilder findest du in unserer kostenlosen App.
-          </p>
+        <div className="mb-3 w-full break-inside-avoid">
+          <AppDownloadCta />
         </div>
       </div>
 

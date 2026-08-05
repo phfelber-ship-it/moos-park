@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getGallery, getGalleryMedia } from "@/lib/clubscale";
+import { getCurrentFlyers } from "@/lib/flyer-images";
 import GalleryMasonry from "@/components/GalleryMasonry";
 
 function formatDate(iso: string) {
@@ -46,7 +47,10 @@ export default async function GalleryPage({
     notFound();
   }
 
-  const media = await getGalleryMedia(id);
+  const [media, flyers] = await Promise.all([
+    getGalleryMedia(id),
+    getCurrentFlyers(),
+  ]);
   const photos = media
     .map((item) => ({
       src: item.fullImage?.presignedURL ?? item.thumbnail?.presignedURL,
@@ -54,6 +58,17 @@ export default async function GalleryPage({
     }))
     .filter((p): p is { src: string; alt: string } => Boolean(p.src))
     .slice(0, 20);
+
+  // Die zwei aktuellsten Flyer werden mittig eingemischt (nie am Anfang
+  // oder Ende), egal wie alt die Galerie ist - siehe /admin/flyer.
+  if (flyers.length > 0) {
+    const flyerPhotos = flyers.map((f) => ({
+      src: f.url,
+      alt: "Aktueller Flyer – moos.park",
+    }));
+    const insertAt = Math.max(1, Math.min(photos.length - 1, Math.floor(photos.length / 2)));
+    photos.splice(insertAt, 0, ...flyerPhotos);
+  }
 
   return (
     <div className="mx-auto max-w-5xl px-6 pb-16 pt-32">
