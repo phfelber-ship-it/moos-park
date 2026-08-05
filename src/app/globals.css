@@ -155,11 +155,13 @@ a {
   transform-origin: top;
 }
 
-a:hover .flip-text .flip-front {
+a:hover .flip-text .flip-front,
+button:hover .flip-text .flip-front {
   transform: rotateX(-90deg);
 }
 
-a:hover .flip-text .flip-back {
+a:hover .flip-text .flip-back,
+button:hover .flip-text .flip-back {
   transform: rotateX(0deg);
 }
 
@@ -167,6 +169,7 @@ a:hover .flip-text .flip-back {
   transition: transform 0.4s cubic-bezier(0.65, 0, 0.35, 1);
 }
 
-a:hover .stagger-text .stagger-char {
+a:hover .stagger-text .stagger-char,
+button:hover .stagger-text .stagger-char {
   transform: translateY(-100%);
 }

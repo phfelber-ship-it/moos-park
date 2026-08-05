@@ -10,6 +10,7 @@ import {
 } from "@/lib/clubscale";
 import TicketSelector from "@/components/TicketSelector";
 import ReadMore from "@/components/ReadMore";
+import FlipText from "@/components/FlipText";
 
 function formatTime(iso: string) {
   return new Date(iso).toLocaleTimeString("de-DE", {
@@ -147,7 +148,7 @@ export default async function EventDetailPage({
           href="#tickets"
           className="inline-flex items-center gap-2 rounded-lg bg-accent-lime px-8 py-3 text-sm font-black uppercase tracking-wide text-black transition-transform hover:scale-105"
         >
-          Tickets sichern
+          <FlipText text="Tickets sichern" />
         </a>
       </div>
 
@@ -225,7 +226,7 @@ export default async function EventDetailPage({
               href="/events"
               className="inline-block rounded-lg bg-accent-lime px-8 py-3 text-sm font-black uppercase tracking-wide text-black transition-transform hover:scale-105"
             >
-              Alle Events ansehen
+              <FlipText text="Alle Events ansehen" />
             </Link>
           </div>
         </div>

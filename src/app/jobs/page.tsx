@@ -1,6 +1,7 @@
 import JobAccordion from "@/components/JobAccordion";
 import JobApplicationAccordion from "@/components/JobApplicationAccordion";
 import { getJobPostings } from "@/lib/clubscale";
+import FlipText from "@/components/FlipText";
 
 export const metadata = { title: "Jobs - moos.park | Eventlocation" };
 
@@ -107,7 +108,7 @@ export default async function JobsPage() {
                 href="mailto:kontakt@moos-park.de"
                 className="mt-6 inline-block rounded-lg bg-accent-lime px-8 py-3 text-sm font-black uppercase tracking-wide text-black transition-transform hover:scale-105"
               >
-                Jetzt bewerben
+                <FlipText text="Jetzt bewerben" />
               </a>
             </div>
           </>

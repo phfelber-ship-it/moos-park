@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { getDanceEvents, visiblePublicEvents } from "@/lib/dance-events";
+import FlipText from "@/components/FlipText";
 
 export const metadata = { title: "Tanzveranstaltungen - moos.park | Eventlocation" };
 export const dynamic = "force-dynamic";
@@ -39,7 +40,7 @@ export default async function TanzabendPage() {
           href="/kontakt"
           className="mt-6 inline-block rounded-lg bg-accent-lime px-8 py-3 text-sm font-black uppercase tracking-wide text-black transition-transform hover:scale-105"
         >
-          Hier Tisch reservieren
+          <FlipText text="Hier Tisch reservieren" />
         </a>
       </section>
 

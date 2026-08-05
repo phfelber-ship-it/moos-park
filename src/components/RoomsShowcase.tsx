@@ -5,6 +5,7 @@ import Link from "next/link";
 import { AnimatePresence, motion } from "motion/react";
 import { ROOMS } from "@/lib/rooms";
 import RoomImageRotator from "@/components/RoomImageRotator";
+import FlipText from "@/components/FlipText";
 
 export default function RoomsShowcase({
   roomImages,
@@ -97,7 +98,7 @@ export default function RoomsShowcase({
           href="/eventlocation#raeume"
           className="mt-6 inline-block rounded-lg bg-accent-lime px-8 py-3 text-sm font-black uppercase tracking-wide text-black transition-transform hover:scale-105"
         >
-          Mehr erfahren
+          <FlipText text="Mehr erfahren" />
         </Link>
       </div>
       </div>

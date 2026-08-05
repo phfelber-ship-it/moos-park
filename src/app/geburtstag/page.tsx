@@ -1,4 +1,5 @@
 import StepsTimeline from "@/components/StepsTimeline";
+import FlipText from "@/components/FlipText";
 
 export const metadata = {
   title:
@@ -101,7 +102,7 @@ export default function GeburtstagPage() {
           href="/kontakt"
           className="mt-8 inline-block rounded-lg bg-accent-lime px-8 py-3 text-sm font-black uppercase tracking-wide text-black transition-transform hover:scale-105"
         >
-          Jetzt anfragen
+          <FlipText text="Jetzt anfragen" />
         </a>
         <p className="mt-6 text-sm text-foreground/50">
           ⭐⭐⭐⭐⭐ Hunderte Geburtstage bereits gefeiert – im moos.park.

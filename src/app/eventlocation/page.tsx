@@ -4,6 +4,7 @@ import { ROOMS } from "@/lib/rooms";
 import { getAllRoomImages } from "@/lib/room-images";
 import RoomImageRotator from "@/components/RoomImageRotator";
 import EventlocationRequestForm from "@/components/EventlocationRequestForm";
+import FlipText from "@/components/FlipText";
 
 export const metadata = {
   title: "Eventlocation Pöttmes – Veranstaltungslocation Bayern | moos.park",
@@ -117,7 +118,7 @@ export default async function EventlocationPage() {
             href="#raeume"
             className="mt-8 inline-block rounded-lg bg-accent-lime px-8 py-3 text-sm font-black uppercase tracking-wide text-black transition-transform hover:scale-105"
           >
-            Unvergesslich werden
+            <FlipText text="Unvergesslich werden" />
           </a>
         </div>
       </section>
