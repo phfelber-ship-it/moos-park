@@ -1,6 +1,7 @@
 import Link from "next/link";
 import ClearCacheButton from "@/components/ClearCacheButton";
 import FacebookPixelStatus from "@/components/FacebookPixelStatus";
+import { getInboxEntries } from "@/lib/inbox";
 
 const SECTIONS = [
   {
@@ -45,7 +46,12 @@ const SECTIONS = [
   },
 ];
 
-export default function AdminDashboardPage() {
+export const dynamic = "force-dynamic";
+
+export default async function AdminDashboardPage() {
+  const inbox = await getInboxEntries();
+  const unreadCount = inbox.filter((e) => !e.read).length;
+
   return (
     <div className="mx-auto max-w-3xl px-6 pb-20 pt-32">
       <h1 className="text-2xl font-black uppercase text-foreground">
@@ -60,8 +66,13 @@ export default function AdminDashboardPage() {
           <Link
             key={s.href}
             href={s.href}
-            className="rounded-2xl border border-foreground/10 p-6 transition-colors hover:border-accent-lime"
+            className="relative rounded-2xl border border-foreground/10 p-6 transition-colors hover:border-accent-lime"
           >
+            {s.href === "/admin/postfach" && unreadCount > 0 && (
+              <span className="absolute right-4 top-4 flex h-6 min-w-6 items-center justify-center rounded-full bg-accent-lime px-1.5 text-xs font-black text-black">
+                {unreadCount}
+              </span>
+            )}
             <h2 className="text-lg font-black uppercase text-foreground">
               {s.title}
             </h2>
