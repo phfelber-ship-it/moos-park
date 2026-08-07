@@ -34,7 +34,7 @@ export default function RichtigFeiernPage() {
     <div>
       <section className="px-6 pb-12 pt-32 text-center">
         <p className="text-sm font-bold uppercase tracking-wide text-accent-lime">
-          moos.park erleben
+          Schön, dass du da bist
         </p>
         <h1 className="mx-auto mt-3 max-w-3xl text-4xl font-black uppercase leading-tight text-foreground sm:text-6xl">
           Endlich richtig feiern.
