@@ -37,13 +37,11 @@ export default function RichtigFeiernPage() {
           moos.park erleben
         </p>
         <h1 className="mx-auto mt-3 max-w-3xl text-4xl font-black uppercase leading-tight text-foreground sm:text-6xl">
-          Tanzen.
-          <br />
-          Exklusiv feiern.
+          Endlich richtig feiern.
         </h1>
         <p className="mx-auto mt-4 max-w-xl text-foreground/70">
-          Finde in einem Klick, was zu dir passt – Events, Tanzabende oder
-          deine eigene Feier im moos.park.
+          Wähle aus, was zu dir passt – Events, Tanzabende oder deine
+          eigene Feier im moos.park.
         </p>
       </section>
 
