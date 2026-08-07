@@ -53,12 +53,12 @@ export default function QrCodeWerbungPage() {
             <Reveal key={cat.title} delay={i * 0.1}>
               <Link
                 href={cat.href}
-                className="group flex h-full flex-col rounded-2xl border border-foreground/10 p-8 transition-colors hover:border-accent-lime"
+                className="group flex h-full flex-col items-center rounded-2xl border border-foreground/10 p-8 text-center transition-colors hover:border-accent-lime"
               >
                 <h2 className="text-2xl font-black uppercase text-foreground">
                   {cat.title}
                 </h2>
-                <ul className="mt-6 flex flex-1 flex-col gap-2">
+                <ul className="mt-6 flex flex-1 flex-col items-center gap-2">
                   {cat.items.map((item) => (
                     <li
                       key={item}
@@ -68,8 +68,8 @@ export default function QrCodeWerbungPage() {
                     </li>
                   ))}
                 </ul>
-                <span className="mt-8 inline-block text-xs font-black uppercase tracking-wide text-accent-lime">
-                  <FlipText text={`${cat.cta} →`} />
+                <span className="mt-8 inline-block rounded-lg bg-accent-lime px-6 py-2.5 text-xs font-black uppercase tracking-wide text-black transition-transform group-hover:scale-105">
+                  <FlipText text={cat.cta} />
                 </span>
               </Link>
             </Reveal>
