@@ -89,6 +89,68 @@ export default function InboxManager({
       minute: "2-digit",
     });
 
+  // Oeffnet ein neues Fenster mit nur dieser einen Anfrage, sauber
+  // formatiert, und stoSSt sofort den Druckdialog an - damit man nicht
+  // die ganze Postfach-Seite mit allen anderen Eintraegen mitdruckt.
+  const printEntry = (entry: InboxEntry) => {
+    const escapeHtml = (s: string) =>
+      s.replace(
+        /[&<>"']/g,
+        (c) =>
+          ({
+            "&": "&amp;",
+            "<": "&lt;",
+            ">": "&gt;",
+            '"': "&quot;",
+            "'": "&#39;",
+          })[c] as string
+      );
+
+    const rows = [
+      ["Typ", TYPE_LABELS[entry.type]],
+      ["Datum", formatDate(entry.createdAt)],
+      ["Name", entry.name || "-"],
+      ["E-Mail", entry.email || "-"],
+      ["Telefon", entry.phone || "-"],
+      ...(entry.summary ? [["Details", entry.summary]] : []),
+    ];
+
+    const win = window.open("", "_blank", "width=700,height=900");
+    if (!win) return;
+    win.document.write(`<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8" />
+<title>${escapeHtml(TYPE_LABELS[entry.type])} - ${escapeHtml(entry.name || "Anfrage")}</title>
+<style>
+  body { font-family: -apple-system, Helvetica, Arial, sans-serif; padding: 40px; color: #111; }
+  h1 { font-size: 20px; text-transform: uppercase; margin-bottom: 4px; }
+  .type { display: inline-block; font-size: 11px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.05em; background: #eee; padding: 3px 8px; border-radius: 4px; margin-bottom: 16px; }
+  table { border-collapse: collapse; width: 100%; margin-bottom: 24px; }
+  td { padding: 6px 0; border-bottom: 1px solid #eee; vertical-align: top; }
+  td:first-child { font-weight: bold; width: 140px; color: #555; }
+  .message-label { font-size: 11px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.05em; color: #555; margin-bottom: 6px; }
+  .message { white-space: pre-line; border: 1px solid #eee; border-radius: 8px; padding: 16px; }
+</style>
+</head>
+<body>
+  <span class="type">${escapeHtml(TYPE_LABELS[entry.type])}</span>
+  <h1>${escapeHtml(entry.name || "Ohne Namen")}</h1>
+  <table>
+    ${rows.map(([k, v]) => `<tr><td>${escapeHtml(k)}</td><td>${escapeHtml(v)}</td></tr>`).join("")}
+  </table>
+  ${
+    entry.message
+      ? `<div class="message-label">Nachricht</div><div class="message">${escapeHtml(entry.message)}</div>`
+      : ""
+  }
+</body>
+</html>`);
+    win.document.close();
+    win.focus();
+    win.onload = () => win.print();
+  };
+
   return (
     <div className="mt-8">
       <div className="flex flex-wrap gap-2 border-b border-foreground/10 pb-4">
@@ -168,6 +230,13 @@ export default function InboxManager({
                 )}
               </div>
               <div className="flex shrink-0 flex-col gap-2 text-xs font-bold uppercase">
+                <button
+                  type="button"
+                  onClick={() => printEntry(entry)}
+                  className="rounded-lg border border-foreground/20 px-3 py-1.5 text-foreground/70 hover:border-accent-lime"
+                >
+                  <FlipText text="Drucken" />
+                </button>
                 <button
                   type="button"
                   onClick={() => toggleRead(entry)}
