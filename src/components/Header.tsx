@@ -18,6 +18,7 @@ const NAV_LINKS = [
   { href: "/promoter", label: "Promoter werden" },
   { href: "/jobs", label: "Jetzt bewerben" },
   { href: "/faq", label: "FAQ" },
+  { href: "/blog", label: "Ratgeber" },
   { href: "/kontakt", label: "Kontakt" },
 ];
 

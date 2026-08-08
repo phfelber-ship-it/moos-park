@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 import { getEvents, getGalleries } from "@/lib/clubscale";
+import { getAllBlogSlugs } from "@/lib/blog-posts";
 
 const SITE_URL =
   process.env.NEXT_PUBLIC_SITE_URL ?? "https://moos-park-hmd7.vercel.app";
@@ -23,6 +24,10 @@ const STATIC_ROUTES = [
   "/eventlocation-ingolstadt",
   "/eventlocation-region",
   "/veranstaltungsanfrage",
+  "/app",
+  "/promoter",
+  "/erleben",
+  "/blog",
   "/impressum",
   "/datenschutz",
   "/agb",
@@ -50,5 +55,15 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     lastModified: new Date(gallery.date),
   }));
 
-  return [...staticEntries, ...eventEntries, ...galleryEntries];
+  const blogEntries = getAllBlogSlugs().map((slug) => ({
+    url: `${SITE_URL}/blog/${slug}`,
+    lastModified: new Date(),
+  }));
+
+  return [
+    ...staticEntries,
+    ...eventEntries,
+    ...galleryEntries,
+    ...blogEntries,
+  ];
 }
