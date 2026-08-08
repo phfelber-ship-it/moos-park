@@ -189,48 +189,58 @@ export const BLOG_POSTS: BlogPost[] = [
     ],
   },
   {
-    slug: "ue30-ue40-party-outfit",
-    title: "Was zieht man zu einer Ü30- oder Ü40-Party an?",
-    metaTitle: "Ü30/Ü40-Party Outfit: Was anziehen? | moos.park",
+    slug: "warum-ue30-ue40-party",
+    title: "Warum solltest du auf eine Ü30- oder Ü40-Party gehen?",
+    metaTitle: "Ü30/Ü40-Party: Darum lohnt sich der Besuch | moos.park",
     description:
-      "Outfit-Ideen für Ü30- und Ü40-Partys: was gepflegt und stilsicher wirkt, was du besser lässt – für Damen und Herren.",
+      "Gute Musik, entspannte Atmosphäre und Gleichgesinnte statt Studentenchaos – das spricht für eine Ü30- oder Ü40-Party.",
     excerpt:
-      "Stilsicher statt Studentenparty: So kleidest du dich für eine Ü30/Ü40-Nacht richtig.",
+      "Kein Studentenchaos, dafür Musik, die du wirklich magst – die besten Gründe für eine Ü30/Ü40-Nacht.",
     publishedAt: "2026-02-10",
     sections: [
       {
-        heading: "Der Grundsatz: Gepflegt statt overdressed",
+        heading: "Musik, die du wirklich kennst und liebst",
         paragraphs: [
-          "Ü30- und Ü40-Partys haben einen anderen Dresscode als klassische Studentenpartys – gepflegt, aber nicht steif. Die meisten Locations verlangen kein Anzug-Pflicht, aber Sportbekleidung, Vereinstrikots oder abgetragene Sneaker sind meist tabu.",
+          "Statt aktuellem Charts-Dauerbeschuss läuft auf Ü30- und Ü40-Partys meist ein Mix aus 90ern, 2000ern und den Hits, mit denen du groß geworden bist. Genau die Musik, bei der du jede Textzeile mitsingen kannst – ohne erst googeln zu müssen, wer da gerade läuft.",
         ],
       },
       {
-        heading: "Für Damen",
+        heading: "Gleichgesinnte statt Erstsemester-Chaos",
         paragraphs: [
-          "Ein schickes Kleid, eine elegante Bluse mit Stoffhose oder ein gut sitzendes Business-Casual-Outfit funktionieren fast immer. Absätze sind schön, aber überlegt euch bei langen Tanznächten eine bequeme Alternative für später.",
+          "Auf einer Ü30/Ü40-Party triffst du Leute in einer ähnlichen Lebensphase – beruflich etabliert, oft mit Familie oder festem Freundeskreis. Das sorgt für entspanntere Gespräche und weniger von dem hektischen Trubel klassischer Studentenpartys.",
         ],
       },
       {
-        heading: "Für Herren",
+        heading: "Entspannte Atmosphäre statt Ellbogen-Gedränge",
         paragraphs: [
-          "Ein Hemd (gerne auch ohne Krawatte, oben offen) mit Stoffhose oder dunkler Jeans liegt fast immer richtig. Ein leichtes Sakko rundet den Look ab, ist aber nicht Pflicht. Auf Sneaker mit Sportlook, Cap und Trainingsjacke besser verzichten.",
+          "Weniger Vordrängeln an der Bar, weniger Kampf um jeden Zentimeter Tanzfläche. Viele Ü30/Ü40-Locations legen bewusst Wert auf eine angenehme Gästezahl statt maximaler Auslastung – das merkt man an der Stimmung im Raum.",
         ],
       },
       {
-        heading: "Was du besser vermeidest",
+        heading: "Neue Kontakte in der gleichen Lebensphase",
         paragraphs: [
-          "Sportbekleidung, Motorrad- oder Vereinskleidung, sichtbare Marken-Logos von Fußballvereinen sowie zu freizeitliche Outfits (Badelatschen, zerrissene Jeans) sorgen an vielen Einlässen für Diskussionen. Ein Blick in die konkrete Eventbeschreibung der jeweiligen Party lohnt sich immer.",
+          "Ob Karriere, Beziehung oder einfach neue Freundschaften – auf einer Ü30/Ü40-Party triffst du Menschen, die gerade Ähnliches erleben wie du. Das macht den Einstieg ins Gespräch oft leichter als auf gemischten Partys mit großem Altersunterschied.",
+        ],
+      },
+      {
+        heading: "Planbare Nächte statt Kater am nächsten Tag",
+        paragraphs: [
+          "Ü30/Ü40-Partys starten häufig früher am Abend und sind dadurch auch für alle mit Familie, Frühschicht oder einfach weniger Lust auf Bis-in-den-Morgen-Nächte gut planbar. Trotzdem bleibt genug Zeit für eine richtige Tanznacht.",
         ],
       },
     ],
     faq: [
       {
-        q: "Gibt es bei Ü30/Ü40-Partys eine feste Kleiderordnung?",
-        a: "Meist keine feste Vorschrift, aber die Erwartung eines gepflegten, angemessenen Erscheinungsbilds. Am besten vorab in der Eventbeschreibung nachlesen – dort stehen oft konkrete Hinweise.",
+        q: "Ab welchem Alter darf ich auf eine Ü30-Party?",
+        a: "Das Mindestalter liegt bei den meisten Ü30-Partys bei 25 Jahren, bei Ü40-Partys entsprechend höher. Genaue Altersgrenzen findest du in der jeweiligen Eventbeschreibung.",
       },
       {
-        q: "Werden Gäste am Einlass wegen der Kleidung abgewiesen?",
-        a: "Ja, das kommt vor, vor allem bei Sportbekleidung oder Vereinskleidung. Der Einlass erfolgt grundsätzlich nach Ermessen des Sicherheitspersonals – im Zweifel lieber etwas schicker als zu leger kommen.",
+        q: "Sind Ü30/Ü40-Partys nur etwas für Singles?",
+        a: "Nein – die meisten Gäste kommen mit Partner:in, Freund:innen oder alleine. Der Fokus liegt auf guter Musik und entspannter Stimmung, nicht auf Dating.",
+      },
+      {
+        q: "Ist die Musik auf Ü30/Ü40-Partys wirklich anders als bei normalen Partys?",
+        a: "Ja, meist deutlich - der Fokus liegt auf 90er-, 2000er- und Nuller-Jahre-Hits statt aktuellen Charts, oft ergänzt durch aktuelle Party-Klassiker.",
       },
     ],
     relatedLinks: [
