@@ -16,7 +16,10 @@ const SITE_URL =
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   icons: {
-    icon: "/api/favicon",
+    // Explizite Groesse (Vielfaches von 48px) + Typ, wie von Google fuer
+    // Favicons in den Suchergebnissen verlangt:
+    // https://developers.google.com/search/docs/appearance/favicon-in-search
+    icon: { url: "/api/favicon", sizes: "144x144", type: "image/png" },
   },
   title:
     "moos.park Pöttmes – Eventlocation Bayern | Firmenfeiern, Partys & mehr",
