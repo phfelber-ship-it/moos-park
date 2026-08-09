@@ -4,6 +4,40 @@ import { useRef, useState } from "react";
 import Image from "next/image";
 import FlipText from "@/components/FlipText";
 
+const FAVICON_SIZE = 144;
+
+// Google verlangt fuer Favicons in den Suchergebnissen ein quadratisches
+// Bild mit Kantenlaenge als Vielfaches von 48px. Statt das serverseitig
+// per natives Modul (sharp) zu machen - das auf Vercels Serverless-Runtime
+// zuverlaessig Probleme macht - passiert die Verkleinerung/Zuschnitt hier
+// direkt im Browser per Canvas, bevor die fertige PNG hochgeladen wird.
+async function normalizeToSquarePng(file: File): Promise<Blob> {
+  const bitmap = await createImageBitmap(file);
+  const canvas = document.createElement("canvas");
+  canvas.width = FAVICON_SIZE;
+  canvas.height = FAVICON_SIZE;
+  const ctx = canvas.getContext("2d");
+  if (!ctx) throw new Error("Canvas nicht verfügbar.");
+
+  const scale = Math.min(
+    FAVICON_SIZE / bitmap.width,
+    FAVICON_SIZE / bitmap.height
+  );
+  const w = bitmap.width * scale;
+  const h = bitmap.height * scale;
+  const x = (FAVICON_SIZE - w) / 2;
+  const y = (FAVICON_SIZE - h) / 2;
+  ctx.clearRect(0, 0, FAVICON_SIZE, FAVICON_SIZE);
+  ctx.drawImage(bitmap, x, y, w, h);
+
+  return new Promise((resolve, reject) => {
+    canvas.toBlob(
+      (blob) => (blob ? resolve(blob) : reject(new Error("Konvertierung fehlgeschlagen."))),
+      "image/png"
+    );
+  });
+}
+
 export default function FaviconManager({
   currentUrl,
 }: {
@@ -18,8 +52,9 @@ export default function FaviconManager({
     setUploading(true);
     setError(null);
     try {
+      const normalized = await normalizeToSquarePng(file);
       const formData = new FormData();
-      formData.append("file", file);
+      formData.append("file", normalized, "favicon.png");
       const res = await fetch("/api/admin/favicon", {
         method: "POST",
         body: formData,
@@ -69,8 +104,10 @@ export default function FaviconManager({
 
       {error && <p className="mt-3 text-sm text-red-500">{error}</p>}
       <p className="mt-3 text-xs text-foreground/50">
-        Browser cachen Favicons teils hartnaeckig - falls es im Tab nicht
-        sofort neu aussieht, hilft ein Hard-Refresh (Cmd/Strg+Shift+R).
+        Wird automatisch auf ein quadratisches 144×144-PNG zugeschnitten
+        (Google-Vorgabe für Favicons in der Suche). Browser cachen Favicons
+        teils hartnäckig - falls es im Tab nicht sofort neu aussieht, hilft
+        ein Hard-Refresh (Cmd/Strg+Shift+R).
       </p>
     </div>
   );
