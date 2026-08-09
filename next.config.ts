@@ -4,6 +4,10 @@ const nextConfig: NextConfig = {
   turbopack: {
     root: __dirname,
   },
+  // sharp ist ein natives Modul (Favicon-Verarbeitung in
+  // api/admin/favicon) - ohne diesen Eintrag versucht Next, es mit ins
+  // Server-Bundle zu packen, was auf Vercels Serverless-Runtime fehlschlägt.
+  serverExternalPackages: ["sharp"],
   images: {
     remotePatterns: [
       {
