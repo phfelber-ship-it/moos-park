@@ -123,37 +123,26 @@ export default function AufsichtsformularPage() {
       </section>
 
       <section className="bg-foreground/[0.02] px-6 py-16">
-        <div className="mx-auto max-w-xl">
+        <div className="mx-auto max-w-3xl">
           <h2 className="text-center text-2xl font-black uppercase text-foreground sm:text-3xl">
             Das braucht deine Aufsichtsperson
           </h2>
-          <div className="relative mt-10">
-            <div className="absolute bottom-2 left-1/2 top-2 w-0.5 -translate-x-1/2 bg-foreground/10" />
-            <div className="flex flex-col items-center gap-10">
-              {[
-                "Mindestens 18 Jahre alt",
-                "Einlass mit Aufsichtszettel nur bis 23:59 Uhr möglich",
-                "Den ganzen Abend dabei",
-                "Verlässt am Ende gemeinsam mit der minderjährigen Person das Haus",
-                "Gültiges Ausweisdokument im Original",
-              ].map((item, i) => (
-                <div
-                  key={item}
-                  className="relative flex flex-col items-center text-center"
-                >
-                  <span className="relative z-10 flex h-9 w-9 items-center justify-center rounded-full bg-accent-lime text-sm font-black text-black">
-                    {i + 1}
-                  </span>
-                  <p className="mt-3 max-w-xs text-sm font-bold text-foreground">
-                    {item}
-                  </p>
-                </div>
-              ))}
-            </div>
+          <div className="mt-8 grid gap-4 sm:grid-cols-2">
+            {[
+              "Mindestens 18 Jahre alt",
+              "Einlass mit Aufsichtszettel nur bis 23:59 Uhr möglich",
+              "Den ganzen Abend dabei - und verlässt am Ende gemeinsam mit der minderjährigen Person das Haus",
+              "Gültiges Ausweisdokument im Original",
+              "Nur 1 Person unter 18 Jahren pro Aufsichtsperson",
+            ].map((item) => (
+              <div
+                key={item}
+                className="rounded-xl bg-background px-5 py-4 text-sm font-bold text-foreground"
+              >
+                {item}
+              </div>
+            ))}
           </div>
-          <p className="mt-8 text-center text-xs text-foreground/40">
-            Pro Aufsichtsperson ist nur eine Person unter 18 Jahren zulässig.
-          </p>
         </div>
       </section>
 
