@@ -15,6 +15,7 @@ const STATIC_ROUTES = [
   "/galerie",
   "/jobs",
   "/faq",
+  "/aufsichtsformular",
   "/kontakt",
   "/reservierung",
   "/firmenevents",

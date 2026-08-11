@@ -56,6 +56,7 @@ const LINKS_COL_2 = [
   { href: "/promoter", label: "Promoter werden" },
   { href: "/kontakt", label: "Kontakt" },
   { href: "/faq", label: "FAQ" },
+  { href: "/aufsichtsformular", label: "Aufsicht & Aufsichtszettel" },
 ];
 
 const LINKS_COL_3 = [
