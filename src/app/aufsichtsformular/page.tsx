@@ -24,7 +24,11 @@ const FAQ = [
   },
   {
     q: "Welche Voraussetzungen muss die Aufsichtsperson erfüllen?",
-    a: "Die Aufsichtsperson muss mindestens 18 Jahre alt sein und bis mindestens 23:59 Uhr anwesend bleiben. Pro Aufsichtsperson ist nur eine Person unter 18 Jahren zulässig.",
+    a: "Die Aufsichtsperson muss mindestens 18 Jahre alt sein und den gesamten Abend dabeibleiben. Am Ende des Abends verlässt die Aufsichtsperson gemeinsam mit der minderjährigen Person das Haus - das ist ganz wichtig. Pro Aufsichtsperson ist nur eine Person unter 18 Jahren zulässig.",
+  },
+  {
+    q: "Bis wann kann ich mit Aufsichtszettel noch reinkommen?",
+    a: "Der Einlass mit Aufsichtszettel ist nur bis 23:59 Uhr möglich. Danach ist kein Einlass mit Aufsichtsperson mehr möglich.",
   },
   {
     q: "Was muss ich zusätzlich zum Aufsichtszettel mitbringen?",
@@ -126,7 +130,8 @@ export default function AufsichtsformularPage() {
           <div className="mt-8 grid gap-4 sm:grid-cols-2">
             {[
               "Mindestens 18 Jahre alt",
-              "Bis mindestens 23:59 Uhr anwesend",
+              "Einlass mit Aufsichtszettel nur bis 23:59 Uhr möglich",
+              "Den ganzen Abend dabei - und verlässt am Ende gemeinsam mit der minderjährigen Person das Haus",
               "Gültiges Ausweisdokument im Original",
               "Nur 1 Person unter 18 Jahren pro Aufsichtsperson",
             ].map((item) => (
@@ -193,6 +198,19 @@ export default function AufsichtsformularPage() {
             </Link>
           </p>
         </div>
+      </section>
+
+      <section className="px-6 pb-28 text-center">
+        <p className="mx-auto max-w-xl text-foreground/70">
+          Wie es funktioniert, weißt du jetzt. Dann such dir hier das
+          passende Event aus.
+        </p>
+        <Link
+          href="/events"
+          className="mt-6 inline-block rounded-lg bg-accent-lime px-8 py-3 text-sm font-black uppercase tracking-wide text-black transition-transform hover:scale-105"
+        >
+          <FlipText text="Hier geht's zu unseren Events" />
+        </Link>
       </section>
     </div>
   );
