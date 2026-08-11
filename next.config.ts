@@ -24,10 +24,19 @@ const nextConfig: NextConfig = {
       { source: "/tickets-uebersicht", destination: "/tickets", permanent: true },
       { source: "/tickets-checkout", destination: "/tickets", permanent: true },
       { source: "/purchase-checkout", destination: "/tickets", permanent: true },
+      { source: "/purchase", destination: "/tickets", permanent: true },
+      { source: "/purchase/", destination: "/tickets", permanent: true },
       { source: "/eventtickets", destination: "/tickets", permanent: true },
       { source: "/bilder", destination: "/galerie", permanent: true },
       { source: "/bilder/:id", destination: "/galerie/:id", permanent: true },
+      { source: "/gallery", destination: "/galerie", permanent: true },
+      { source: "/bewerbung", destination: "/jobs", permanent: true },
+      { source: "/bewerbung/", destination: "/jobs", permanent: true },
       { source: "/events/:id", destination: "/eventdetails?id=:id", permanent: true },
+      // Google hat einige eventdetails-Links noch mit abschliessendem
+      // Slash indexiert (alte URL-Struktur) - ohne diesen Redirect 404en
+      // die trotz vorhandenem Ziel (?id= wird automatisch durchgereicht).
+      { source: "/eventdetails/", destination: "/eventdetails", permanent: true },
     ];
   },
 };
