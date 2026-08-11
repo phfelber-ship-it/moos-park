@@ -37,9 +37,7 @@ export default function QrCodeWerbungV1Page() {
           moos.park erleben
         </p>
         <h1 className="mx-auto mt-3 max-w-3xl text-4xl font-black uppercase leading-tight text-foreground sm:text-6xl">
-          Tanzen.
-          <br />
-          Exklusiv feiern.
+          Wähl dir dein Lieblingsevent.
         </h1>
         <p className="mx-auto mt-4 max-w-xl text-foreground/70">
           Finde in einem Klick, was zu dir passt – Events, Ü30-Partys oder
