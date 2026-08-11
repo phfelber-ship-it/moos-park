@@ -1,7 +1,15 @@
 import { getEvents } from "@/lib/clubscale";
 import ReservationWizard from "@/components/ReservationWizard";
 
-export const metadata = { title: "Reservierung - moos.park | Eventlocation" };
+// Canonical bewusst fest auf /reservierung ohne Query - die ?event=...-
+// Variante (aus EventCard "Tisch reservieren"-Links) preselected nur den
+// Wizard, ist inhaltlich sonst identisch. Ohne canonical hat Google jede
+// Event-Variante als eigenstaendiges Duplikat gewertet ("Duplikat - vom
+// Nutzer nicht als kanonisch festgelegt").
+export const metadata = {
+  title: "Reservierung - moos.park | Eventlocation",
+  alternates: { canonical: "/reservierung" },
+};
 
 export default async function ReservierungPage({
   searchParams,

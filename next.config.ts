@@ -30,6 +30,15 @@ const nextConfig: NextConfig = {
       { source: "/bilder", destination: "/galerie", permanent: true },
       { source: "/bilder/:id", destination: "/galerie/:id", permanent: true },
       { source: "/gallery", destination: "/galerie", permanent: true },
+      // Alte Galerie-Links mit Query-Parameter (?id=...) statt Pfad -
+      // Google hat diese als eigenstaendige Duplikate der echten
+      // /galerie/:id-Seite indexiert.
+      {
+        source: "/galerie",
+        has: [{ type: "query", key: "id", value: "(?<id>.*)" }],
+        destination: "/galerie/:id",
+        permanent: true,
+      },
       { source: "/bewerbung", destination: "/jobs", permanent: true },
       { source: "/bewerbung/", destination: "/jobs", permanent: true },
       { source: "/events/:id", destination: "/eventdetails?id=:id", permanent: true },
