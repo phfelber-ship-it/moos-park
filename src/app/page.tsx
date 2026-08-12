@@ -7,11 +7,22 @@ import EventsExplorer from "@/components/EventsExplorer";
 import Hero from "@/components/Hero";
 import Reveal from "@/components/Reveal";
 import AppPhoneReveal from "@/components/AppPhoneReveal";
+import WhatsAppChannelReveal from "@/components/WhatsAppChannelReveal";
 import FanGallery from "@/components/FanGallery";
 import FlipText from "@/components/FlipText";
 import GalleryCard from "@/components/GalleryCard";
 import RoomsShowcase from "@/components/RoomsShowcase";
-import { TicketIcon, CouponIcon, CalendarIcon } from "@/components/AppIcons";
+import {
+  TicketIcon,
+  CouponIcon,
+  CalendarIcon,
+  PhoneInfoIcon,
+  BellIcon,
+  CommunityIcon,
+} from "@/components/AppIcons";
+
+const WHATSAPP_CHANNEL_URL =
+  "https://whatsapp.com/channel/0029VbD72h8KWEKxPE9gr02y";
 
 const TICKER_ITEMS = [
   "Musik",
@@ -207,6 +218,55 @@ export default async function Home() {
                   />
                 </a>
               </div>
+            </Reveal>
+          </div>
+        </div>
+      </section>
+
+      <section className="flex min-h-[640px] items-center px-6 py-24">
+        <div className="mx-auto w-full min-w-0 max-w-6xl">
+          <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
+            <WhatsAppChannelReveal />
+
+            <Reveal direction="right" className="order-1 lg:order-2">
+              <p className="text-xs font-black uppercase tracking-[0.3em] text-accent-lime">
+                WhatsApp Channel
+              </p>
+              <h2 className="mt-4 text-3xl font-black uppercase leading-[1.05] sm:text-4xl">
+                Jetzt dabei sein.
+              </h2>
+              <p className="mt-5 max-w-md text-foreground/70">
+                Unser WhatsApp Channel ist im Aufbau, aber schon startklar –
+                tritt jetzt bei und bekomm alle News direkt aufs Handy, ganz
+                ohne App und ohne Umwege.
+              </p>
+
+              <div className="mt-8 grid grid-cols-3 gap-4 max-w-sm">
+                {[
+                  { label: "Alle Infos immer dabei", icon: PhoneInfoIcon },
+                  { label: "News als Erstes erfahren", icon: BellIcon },
+                  { label: "Teil der Community", icon: CommunityIcon },
+                ].map(({ label, icon: Icon }) => (
+                  <div
+                    key={label}
+                    className="flex flex-col items-center gap-2 text-center"
+                  >
+                    <Icon />
+                    <span className="text-xs font-bold uppercase tracking-wide">
+                      {label}
+                    </span>
+                  </div>
+                ))}
+              </div>
+
+              <a
+                href={WHATSAPP_CHANNEL_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-8 inline-block rounded-lg bg-accent-lime px-8 py-3 text-sm font-black uppercase tracking-wide text-black transition-transform hover:scale-105"
+              >
+                <FlipText text="Channel beitreten" />
+              </a>
             </Reveal>
           </div>
         </div>
