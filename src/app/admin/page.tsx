@@ -25,6 +25,11 @@ const SECTIONS = [
     text: "Das kleine Icon im Browser-Tab austauschen.",
   },
   {
+    href: "/admin/anhaengerwerbung",
+    title: "Anhängerwerbung",
+    text: "Bannerbilder für Werbe-Anhänger verwalten & Scans/Klicks auswerten.",
+  },
+  {
     href: "/admin/statistik",
     title: "Statistik",
     text: "Besucher, Seitenaufrufe, Absprungrate & mehr aus Google Analytics.",
