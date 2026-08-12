@@ -14,10 +14,21 @@ function fmt(d: Date): string {
   return d.toISOString().slice(0, 10);
 }
 
+// Tage-Arithmetik ausschliesslich auf UTC-Basis, da "d" hier immer ein reiner
+// Kalendertag ist (siehe berlinTodayStr) - so bleibt es unabhaengig von der
+// Serverzeitzone und von Sommer-/Winterzeit-Umstellungen stabil.
 function addDays(d: Date, days: number): Date {
   const next = new Date(d);
-  next.setDate(next.getDate() + days);
+  next.setUTCDate(next.getUTCDate() + days);
   return next;
+}
+
+// Der Vercel-Server laeuft in UTC, GA4 (und die Admins) rechnen aber in
+// deutscher Zeit - ohne das wuerde "Heute" zwischen 0 und 2 Uhr deutscher
+// Zeit noch den Vortag zeigen (UTC-Tageswechsel liegt spaeter als der
+// deutsche).
+function berlinTodayStr(): string {
+  return new Intl.DateTimeFormat("en-CA", { timeZone: "Europe/Berlin" }).format(new Date());
 }
 
 // GA4 hat keine Daten vor diesem Datum (offizieller Produktstart).
@@ -28,8 +39,8 @@ export function resolveDateRange(
   from: string | undefined,
   to: string | undefined
 ): DateRange {
-  const today = new Date();
-  const todayStr = fmt(today);
+  const todayStr = berlinTodayStr();
+  const today = new Date(`${todayStr}T00:00:00Z`);
 
   if (range === "today") {
     const yesterday = fmt(addDays(today, -1));

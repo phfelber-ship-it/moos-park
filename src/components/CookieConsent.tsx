@@ -9,21 +9,42 @@ export type Consent = {
   marketing: boolean;
 };
 
+type StoredConsent = Consent & { savedAt: number };
+
 const STORAGE_KEY = "cookie-consent";
 export const CONSENT_EVENT = "cookie-consent-updated";
+
+// Laufzeit der Entscheidung, bevor wir erneut fragen. Bei "nur notwendige"
+// speichern wir keinerlei Statistik-/Marketing-Cookies, daher reicht hier
+// eine kurze Frist (24h) statt einer echten Speicherfrist wie bei Zustimmung
+// (24 Monate, ueblicher Richtwert fuer Cookie-Consent-Banner).
+const ACCEPT_TTL_MS = 24 * 30 * 24 * 60 * 60 * 1000; // 24 Monate
+const REJECT_TTL_MS = 24 * 60 * 60 * 1000; // 24 Stunden
+
+function ttlFor(consent: Consent): number {
+  return consent.statistics || consent.marketing ? ACCEPT_TTL_MS : REJECT_TTL_MS;
+}
 
 export function getStoredConsent(): Consent | null {
   if (typeof window === "undefined") return null;
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
-    return raw ? JSON.parse(raw) : null;
+    if (!raw) return null;
+    const stored = JSON.parse(raw) as Partial<StoredConsent>;
+    // Aeltere gespeicherte Entscheidungen ohne Zeitstempel (vor diesem
+    // Ablauf-Mechanismus) gelten als abgelaufen - Banner erscheint erneut,
+    // statt auf unbestimmte Zeit von einer alten Entscheidung auszugehen.
+    if (typeof stored.savedAt !== "number") return null;
+    if (Date.now() - stored.savedAt > ttlFor(stored as Consent)) return null;
+    return stored as Consent;
   } catch {
     return null;
   }
 }
 
 function saveConsent(consent: Consent) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(consent));
+  const stored: StoredConsent = { ...consent, savedAt: Date.now() };
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(stored));
   window.dispatchEvent(new CustomEvent(CONSENT_EVENT, { detail: consent }));
 }
 
