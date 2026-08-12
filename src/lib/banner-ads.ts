@@ -35,7 +35,9 @@ export async function getBannerAds(): Promise<BannerAd[]> {
     const { blobs } = await list({ prefix: BANNERS_PATH });
     const match = blobs.find((b) => b.pathname === BANNERS_PATH);
     if (!match) return [];
-    const res = await fetch(match.url, { cache: "no-store" });
+    // Cache-Buster, da der Blob-Link trotz haeufigem Ueberschreiben lange
+    // am CDN-Edge gecacht wird (siehe banner-stats.ts fuer Details).
+    const res = await fetch(`${match.url}?v=${Date.now()}`, { cache: "no-store" });
     if (!res.ok) return [];
     const data = (await res.json()) as BannerAd[];
     return Array.isArray(data) ? data : [];
@@ -49,6 +51,7 @@ export async function saveBannerAds(banners: BannerAd[]): Promise<void> {
     access: "public",
     contentType: "application/json",
     allowOverwrite: true,
+    cacheControlMaxAge: 60,
   });
 }
 
