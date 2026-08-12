@@ -15,12 +15,17 @@ function formatDate(iso: string) {
     weekday: "short",
     day: "2-digit",
     month: "long",
+    timeZone: "Europe/Berlin",
   });
 }
 
 function formatTime(iso: string) {
   const d = new Date(iso);
-  return d.toLocaleTimeString("de-DE", { hour: "2-digit", minute: "2-digit" });
+  return d.toLocaleTimeString("de-DE", {
+    hour: "2-digit",
+    minute: "2-digit",
+    timeZone: "Europe/Berlin",
+  });
 }
 
 export default function EventCard({ event }: { event: ClubscaleEvent }) {
