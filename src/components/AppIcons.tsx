@@ -141,6 +141,32 @@ export function PhoneInfoIcon() {
   );
 }
 
+export function CommunityIcon() {
+  return (
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+      <circle cx="9" cy="8" r="3" stroke="currentColor" strokeWidth="2" />
+      <path
+        d="M3.5 19c0-3 2.5-5.5 5.5-5.5s5.5 2.5 5.5 5.5"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+      />
+      <path
+        d="M15.5 5.2c1.4.5 2.5 1.8 2.5 3.3 0 1.5-1 2.8-2.4 3.3"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+      />
+      <path
+        d="M17 13.7c2 .6 3.5 2.6 3.5 5"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
+
 export function BellIcon() {
   return (
     <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
