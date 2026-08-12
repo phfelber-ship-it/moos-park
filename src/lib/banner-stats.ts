@@ -21,7 +21,11 @@ async function getStats(): Promise<BannerStats> {
     const { blobs } = await list({ prefix: STATS_PATH });
     const match = blobs.find((b) => b.pathname === STATS_PATH);
     if (!match) return emptyStats();
-    const res = await fetch(match.url, { cache: "no-store" });
+    // Der Blob-Link wird am CDN-Edge lange gecacht, obwohl wir denselben
+    // Pfad staendig ueberschreiben (siehe cacheControlMaxAge unten) - ohne
+    // den Cache-Buster wuerden Scans/Klicks kurz hintereinander teils eine
+    // veraltete Version lesen und dadurch vorherige Zaehler ueberschreiben.
+    const res = await fetch(`${match.url}?v=${Date.now()}`, { cache: "no-store" });
     if (!res.ok) return emptyStats();
     const data = (await res.json()) as Partial<BannerStats>;
     return { banners: data.banners ?? {}, buttons: data.buttons ?? {} };
@@ -35,6 +39,10 @@ async function saveStats(stats: BannerStats): Promise<void> {
     access: "public",
     contentType: "application/json",
     allowOverwrite: true,
+    // Minimum, das Vercel Blob erlaubt - haelt die Edge-Cache-Zeit so kurz
+    // wie moeglich (der Cache-Buster beim Lesen umgeht sie ohnehin, das ist
+    // nur die zweite Absicherung).
+    cacheControlMaxAge: 60,
   });
 }
 
