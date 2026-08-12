@@ -5,7 +5,7 @@ import crypto from "node:crypto";
 import {
   BANNER_IMAGE_PREFIX,
   deleteBannerImage,
-  findTargetPage,
+  isValidTargetPath,
   getBannerAds,
   newBannerCode,
   saveBannerAds,
@@ -26,9 +26,12 @@ export async function POST(request: Request) {
   if (!name) {
     return NextResponse.json({ error: "Name fehlt." }, { status: 400 });
   }
-  if (!findTargetPage(targetPath)) {
+  if (!isValidTargetPath(targetPath)) {
     return NextResponse.json(
-      { error: "Ungueltige Zielseite." },
+      {
+        error:
+          "Ungueltige Zielseite. Bitte einen eigenen Pfad wie /qrcodewerbung angeben.",
+      },
       { status: 400 }
     );
   }

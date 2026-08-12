@@ -1,5 +1,5 @@
 import { headers } from "next/headers";
-import { getBannerAds, TARGET_PAGES } from "@/lib/banner-ads";
+import { getBannerAds, SUGGESTED_TARGET_PAGES } from "@/lib/banner-ads";
 import { getBannerStats } from "@/lib/banner-stats";
 import BannerAdsManager from "@/components/BannerAdsManager";
 
@@ -26,13 +26,15 @@ export default async function AnhaengerwerbungPage() {
         verknüpfen. Der erzeugte Link (bzw. ein daraus erstellter QR-Code)
         zählt jeden Scan – darunter siehst du, welcher Banner am häufigsten
         gescannt wurde, welche Zielseite die meisten Aufrufe hat und welcher
-        Button dort jeweils am meisten geklickt wurde.
+        Button dort jeweils am meisten geklickt wurde – Button-Klicks werden
+        automatisch erfasst, jede eigene moos-park.de-Seite funktioniert
+        sofort als Ziel, ganz ohne Code-Änderung.
       </p>
 
       <BannerAdsManager
         initialBanners={banners}
         stats={stats}
-        targetPages={TARGET_PAGES}
+        suggestedTargetPages={SUGGESTED_TARGET_PAGES}
         siteOrigin={siteOrigin}
       />
     </div>

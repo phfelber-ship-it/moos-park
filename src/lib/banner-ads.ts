@@ -14,31 +14,20 @@ export type BannerAd = {
   createdAt: string;
 };
 
-// Zielseiten, auf die ein Anhaenger-Banner verlinken darf. Nur eigene
-// Seiten mit Domain moos-park.de - bewusst fest im Code hinterlegt, da nur
-// diese Seiten auch Button-Klick-Tracking eingebaut haben (siehe
-// TrackedCTA-Einsatz in den jeweiligen page.tsx).
-export type TargetPage = {
-  path: string;
-  label: string;
-  buttons: string[];
-};
+// Vorschlaege fuer bereits bekannte Landingpages - nur fuers Dropdown im
+// Admin-Formular, keine Voraussetzung. Button-Klicks werden automatisch per
+// ClickTracker auf jeder oeffentlichen Seite erfasst (siehe
+// components/ClickTracker.tsx), eine neue Zielseite braucht also keine
+// Code-Aenderung.
+export const SUGGESTED_TARGET_PAGES = ["/qrcodewerbung", "/qrcodewerbung_v1"];
 
-export const TARGET_PAGES: TargetPage[] = [
-  {
-    path: "/qrcodewerbung",
-    label: "QR-Code Werbung",
-    buttons: ["Zu den Events", "Zum Tanzabend", "Location entdecken"],
-  },
-  {
-    path: "/qrcodewerbung_v1",
-    label: "QR-Code Werbung v1",
-    buttons: ["Zu den Events", "Tickets sichern", "Zum Tanzabend"],
-  },
-];
-
-export function findTargetPage(path: string): TargetPage | undefined {
-  return TARGET_PAGES.find((p) => p.path === path);
+// Zielseite muss ein eigener, relativer Pfad auf moos-park.de sein - kein
+// externer Link, kein Admin-/API-Bereich.
+export function isValidTargetPath(path: string): boolean {
+  if (!path.startsWith("/")) return false;
+  if (path.startsWith("/admin") || path.startsWith("/api")) return false;
+  if (path.includes("//") || path.includes(" ")) return false;
+  return true;
 }
 
 export async function getBannerAds(): Promise<BannerAd[]> {

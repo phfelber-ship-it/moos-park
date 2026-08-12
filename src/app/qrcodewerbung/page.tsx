@@ -1,6 +1,6 @@
+import Link from "next/link";
 import Reveal from "@/components/Reveal";
 import FlipText from "@/components/FlipText";
-import TrackedCTA from "@/components/TrackedCTA";
 
 export const metadata = {
   title: "moos.park erleben – Tanzen, Events & Exklusivfeiern | moos.park",
@@ -51,10 +51,8 @@ export default function QrCodeWerbungPage() {
         <div className="mx-auto grid max-w-6xl gap-6 sm:grid-cols-3">
           {CATEGORIES.map((cat, i) => (
             <Reveal key={cat.title} delay={i * 0.1}>
-              <TrackedCTA
+              <Link
                 href={cat.href}
-                page="/qrcodewerbung"
-                button={cat.cta}
                 className="group flex h-full flex-col items-center rounded-2xl border border-foreground/10 p-8 text-center transition-colors hover:border-accent-lime"
               >
                 <h2 className="text-2xl font-black uppercase text-foreground">
@@ -73,7 +71,7 @@ export default function QrCodeWerbungPage() {
                 <span className="mt-8 inline-block rounded-lg bg-accent-lime px-6 py-2.5 text-xs font-black uppercase tracking-wide text-black transition-transform group-hover:scale-105">
                   <FlipText text={cat.cta} />
                 </span>
-              </TrackedCTA>
+              </Link>
             </Reveal>
           ))}
         </div>
