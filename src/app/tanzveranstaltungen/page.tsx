@@ -10,6 +10,13 @@ function formatDateTime(iso: string) {
   const d = new Date(iso);
   if (Number.isNaN(d.getTime())) return null;
   return {
+    // Bewusst OHNE explizite timeZone: die Werte kommen als naiver
+    // "datetime-local"-String ohne Zeitzone aus dem Admin-Formular (siehe
+    // lib/dance-events.ts) und werden hier 1:1 als deutsche Wandzeit
+    // interpretiert - Vercel-Funktionen laufen immer in UTC, wodurch
+    // new Date(...) den String bereits unveraendert als "UTC" liest; eine
+    // zusaetzliche Berlin-Konvertierung wuerde die Uhrzeit verfaelschen
+    // (anders als bei echten UTC-Zeitstempeln aus der Clubscale-API).
     date: d.toLocaleDateString("de-DE", {
       day: "2-digit",
       month: "2-digit",

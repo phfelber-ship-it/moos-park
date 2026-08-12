@@ -12,10 +12,15 @@ import TicketSelector from "@/components/TicketSelector";
 import ReadMore from "@/components/ReadMore";
 import FlipText from "@/components/FlipText";
 
+// Server-Komponente - laeuft auf dem Vercel-Server (UTC), nicht im Browser
+// des Besuchers. Ohne explizite timeZone wuerde toLocaleTimeString die
+// Server-Zeitzone nehmen und die Uhrzeit faelschlich 1-2h frueher zeigen als
+// bei Clubscale (deutsche Zeit).
 function formatTime(iso: string) {
   return new Date(iso).toLocaleTimeString("de-DE", {
     hour: "2-digit",
     minute: "2-digit",
+    timeZone: "Europe/Berlin",
   });
 }
 

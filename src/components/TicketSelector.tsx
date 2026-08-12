@@ -10,6 +10,7 @@ function formatSaleDate(iso: string) {
   return new Date(iso).toLocaleDateString("de-DE", {
     day: "2-digit",
     month: "2-digit",
+    timeZone: "Europe/Berlin",
   });
 }
 

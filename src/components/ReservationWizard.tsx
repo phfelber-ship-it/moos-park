@@ -17,6 +17,7 @@ function formatDate(iso: string) {
     weekday: "short",
     day: "2-digit",
     month: "long",
+    timeZone: "Europe/Berlin",
   });
 }
 

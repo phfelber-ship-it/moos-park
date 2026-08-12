@@ -12,6 +12,7 @@ function formatDate(iso: string) {
     weekday: "short",
     day: "2-digit",
     month: "long",
+    timeZone: "Europe/Berlin",
   });
 }
 
@@ -19,6 +20,7 @@ function formatTime(iso: string) {
   return new Date(iso).toLocaleTimeString("de-DE", {
     hour: "2-digit",
     minute: "2-digit",
+    timeZone: "Europe/Berlin",
   });
 }
 
