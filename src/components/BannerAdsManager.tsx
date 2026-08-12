@@ -3,23 +3,23 @@
 import { useRef, useState } from "react";
 import Image from "next/image";
 import FlipText from "@/components/FlipText";
-import type { BannerAd, TargetPage } from "@/lib/banner-ads";
+import type { BannerAd } from "@/lib/banner-ads";
 import type { BannerStats } from "@/lib/banner-stats";
 
 export default function BannerAdsManager({
   initialBanners,
   stats,
-  targetPages,
+  suggestedTargetPages,
   siteOrigin,
 }: {
   initialBanners: BannerAd[];
   stats: BannerStats;
-  targetPages: TargetPage[];
+  suggestedTargetPages: string[];
   siteOrigin: string;
 }) {
   const [banners, setBanners] = useState(initialBanners);
   const [name, setName] = useState("");
-  const [targetPath, setTargetPath] = useState(targetPages[0]?.path ?? "");
+  const [targetPath, setTargetPath] = useState(suggestedTargetPages[0] ?? "/");
   const [uploading, setUploading] = useState(false);
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -89,11 +89,15 @@ export default function BannerAdsManager({
       (stats.banners[b.code]?.views ?? 0) - (stats.banners[a.code]?.views ?? 0)
   );
 
-  const pageViews = targetPages
-    .map((tp) => ({
-      page: tp,
+  // Zielseiten ergeben sich aus den tatsaechlich angelegten Bannern - keine
+  // fixe Liste noetig, jede neue Zielseite taucht automatisch auf.
+  const usedPages = Array.from(new Set(banners.map((b) => b.targetPath)));
+
+  const pageViews = usedPages
+    .map((path) => ({
+      path,
       views: banners
-        .filter((b) => b.targetPath === tp.path)
+        .filter((b) => b.targetPath === path)
         .reduce((sum, b) => sum + (stats.banners[b.code]?.views ?? 0), 0),
     }))
     .sort((a, b) => b.views - a.views);
@@ -113,18 +117,25 @@ export default function BannerAdsManager({
             placeholder="Name, z.B. Bierbank-Anhaenger Sommer"
             className="rounded-lg border border-foreground/15 bg-transparent px-4 py-2.5 text-sm text-foreground placeholder:text-foreground/40"
           />
-          <select
+          <input
+            type="text"
             value={targetPath}
             onChange={(e) => setTargetPath(e.target.value)}
-            className="rounded-lg border border-foreground/15 bg-transparent px-4 py-2.5 text-sm text-foreground"
-          >
-            {targetPages.map((tp) => (
-              <option key={tp.path} value={tp.path}>
-                {tp.label} ({tp.path})
-              </option>
+            placeholder="/qrcodewerbung"
+            list="target-page-suggestions"
+            className="rounded-lg border border-foreground/15 bg-transparent px-4 py-2.5 text-sm text-foreground placeholder:text-foreground/40"
+          />
+          <datalist id="target-page-suggestions">
+            {suggestedTargetPages.map((p) => (
+              <option key={p} value={p} />
             ))}
-          </select>
+          </datalist>
         </div>
+        <p className="mt-2 text-xs text-foreground/50">
+          Pfad einer eigenen moos-park.de-Seite, z.B. /qrcodewerbung – auch
+          eine ganz neue Seite geht, Buttons dort werden automatisch
+          mitgezählt.
+        </p>
         <label className="mt-4 block w-fit cursor-pointer rounded-lg bg-accent-lime px-6 py-2.5 text-xs font-black uppercase tracking-wide text-black transition-transform hover:scale-105">
           <FlipText text={uploading ? "Wird hochgeladen..." : "Bannerbild hochladen"} />
           <input
@@ -231,18 +242,22 @@ export default function BannerAdsManager({
           <h2 className="text-sm font-black uppercase tracking-wide text-foreground">
             Aufrufe je Zielseite
           </h2>
-          <table className="mt-3 w-full text-sm">
-            <tbody>
-              {pageViews.map(({ page, views }) => (
-                <tr key={page.path} className="border-b border-foreground/5">
-                  <td className="py-2 pr-4 text-foreground/80">{page.label}</td>
-                  <td className="py-2 text-right font-bold text-foreground">
-                    {views}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          {pageViews.length === 0 ? (
+            <p className="mt-3 text-sm text-foreground/50">Noch keine Daten.</p>
+          ) : (
+            <table className="mt-3 w-full text-sm">
+              <tbody>
+                {pageViews.map(({ path, views }) => (
+                  <tr key={path} className="border-b border-foreground/5">
+                    <td className="py-2 pr-4 text-foreground/80">{path}</td>
+                    <td className="py-2 text-right font-bold text-foreground">
+                      {views}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
         </div>
       </div>
 
@@ -250,27 +265,51 @@ export default function BannerAdsManager({
         <h2 className="text-sm font-black uppercase tracking-wide text-foreground">
           Button-Klicks je Zielseite
         </h2>
-        <div className="mt-4 grid gap-6 sm:grid-cols-2">
-          {targetPages.map((tp) => (
-            <div key={tp.path}>
-              <p className="text-xs font-bold uppercase tracking-wide text-foreground/50">
-                {tp.label}
-              </p>
-              <table className="mt-2 w-full text-sm">
-                <tbody>
-                  {tp.buttons.map((button) => (
-                    <tr key={button} className="border-b border-foreground/5">
-                      <td className="py-2 pr-4 text-foreground/80">{button}</td>
-                      <td className="py-2 text-right font-bold text-foreground">
-                        {stats.buttons[tp.path]?.[button]?.clicks ?? 0}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          ))}
-        </div>
+        <p className="mt-1 text-xs text-foreground/50">
+          Wird automatisch erfasst – jeder Link/Button-Klick auf den unten
+          angelegten Zielseiten zählt mit, ohne dass jemand einzelne Buttons
+          pflegen muss.
+        </p>
+        {usedPages.length === 0 ? (
+          <p className="mt-3 text-sm text-foreground/50">
+            Noch keine Zielseite über einen Banner angelegt.
+          </p>
+        ) : (
+          <div className="mt-4 grid gap-6 sm:grid-cols-2">
+            {usedPages.map((path) => {
+              const buttons = Object.entries(stats.buttons[path] ?? {}).sort(
+                (a, b) => b[1].clicks - a[1].clicks
+              );
+              return (
+                <div key={path}>
+                  <p className="text-xs font-bold uppercase tracking-wide text-foreground/50">
+                    {path}
+                  </p>
+                  {buttons.length === 0 ? (
+                    <p className="mt-2 text-sm text-foreground/50">
+                      Noch keine Klicks.
+                    </p>
+                  ) : (
+                    <table className="mt-2 w-full text-sm">
+                      <tbody>
+                        {buttons.map(([button, data]) => (
+                          <tr key={button} className="border-b border-foreground/5">
+                            <td className="py-2 pr-4 text-foreground/80">
+                              {button}
+                            </td>
+                            <td className="py-2 text-right font-bold text-foreground">
+                              {data.clicks}
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        )}
       </div>
     </div>
   );

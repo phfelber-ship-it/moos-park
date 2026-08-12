@@ -1,12 +1,12 @@
 import { NextResponse } from "next/server";
-import { findTargetPage } from "@/lib/banner-ads";
+import { isValidTargetPath } from "@/lib/banner-ads";
 import { recordButtonClick } from "@/lib/banner-stats";
 
-// Oeffentlicher Tracking-Endpunkt fuer Button-Klicks auf den
-// Anhaenger-Zielseiten (siehe TARGET_PAGES in lib/banner-ads.ts). Nur
-// bekannte Seite/Button-Kombinationen werden gezaehlt, alles andere wird
-// stillschweigend verworfen statt einen Fehler zu werfen (sendBeacon
-// erwartet keine Antwort).
+// Oeffentlicher Tracking-Endpunkt fuer Button-/Link-Klicks, die der
+// ClickTracker automatisch auf jeder oeffentlichen Seite meldet (siehe
+// components/ClickTracker.tsx). Absichtlich ohne Whitelist einzelner
+// Buttons - jede eigene Seite (nicht /admin, nicht /api) darf mitzaehlen,
+// damit neue Anhaenger-Zielseiten ohne Code-Aenderung funktionieren.
 export async function POST(request: Request) {
   let body: { page?: string; button?: string };
   try {
@@ -16,11 +16,10 @@ export async function POST(request: Request) {
   }
 
   const page = body.page?.trim();
-  const button = body.button?.trim();
-  const targetPage = page ? findTargetPage(page) : undefined;
+  const button = body.button?.trim().slice(0, 120);
 
-  if (targetPage && button && targetPage.buttons.includes(button)) {
-    await recordButtonClick(page!, button);
+  if (page && isValidTargetPath(page) && button) {
+    await recordButtonClick(page, button);
   }
 
   return NextResponse.json({ ok: true });
