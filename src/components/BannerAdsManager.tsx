@@ -230,15 +230,6 @@ export default function BannerAdsManager({
   // fixe Liste noetig, jede neue Zielseite taucht automatisch auf.
   const usedPages = Array.from(new Set(banners.map((b) => b.targetPath)));
 
-  const pageViews = usedPages
-    .map((path) => ({
-      path,
-      views: banners
-        .filter((b) => b.targetPath === path)
-        .reduce((sum, b) => sum + (stats.banners[b.code]?.views ?? 0), 0),
-    }))
-    .sort((a, b) => b.views - a.views);
-
   return (
     <div className="mt-6">
       {/* Neuer Banner */}
@@ -382,50 +373,27 @@ export default function BannerAdsManager({
       </div>
 
       {/* Statistik */}
-      <div className="mt-12 grid gap-6 sm:grid-cols-2">
-        <div className="rounded-2xl border border-foreground/10 p-6">
-          <h2 className="text-sm font-black uppercase tracking-wide text-foreground">
-            Meistgescannte Banner
-          </h2>
-          {bannersSortedByViews.length === 0 ? (
-            <p className="mt-3 text-sm text-foreground/50">Noch keine Daten.</p>
-          ) : (
-            <table className="mt-3 w-full text-sm">
-              <tbody>
-                {bannersSortedByViews.map((b) => (
-                  <tr key={b.id} className="border-b border-foreground/5">
-                    <td className="py-2 pr-4 text-foreground/80">{b.name}</td>
-                    <td className="py-2 text-right font-bold text-foreground">
-                      {stats.banners[b.code]?.views ?? 0}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          )}
-        </div>
-
-        <div className="rounded-2xl border border-foreground/10 p-6">
-          <h2 className="text-sm font-black uppercase tracking-wide text-foreground">
-            Aufrufe je Zielseite
-          </h2>
-          {pageViews.length === 0 ? (
-            <p className="mt-3 text-sm text-foreground/50">Noch keine Daten.</p>
-          ) : (
-            <table className="mt-3 w-full text-sm">
-              <tbody>
-                {pageViews.map(({ path, views }) => (
-                  <tr key={path} className="border-b border-foreground/5">
-                    <td className="py-2 pr-4 text-foreground/80">{path}</td>
-                    <td className="py-2 text-right font-bold text-foreground">
-                      {views}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          )}
-        </div>
+      <div className="mt-12 rounded-2xl border border-foreground/10 p-6">
+        <h2 className="text-sm font-black uppercase tracking-wide text-foreground">
+          Meistgescannte Banner
+        </h2>
+        {bannersSortedByViews.length === 0 ? (
+          <p className="mt-3 text-sm text-foreground/50">Noch keine Daten.</p>
+        ) : (
+          <div className="mt-3 flex flex-col">
+            {bannersSortedByViews.map((b) => (
+              <div
+                key={b.id}
+                className="flex items-center justify-between gap-4 border-b border-foreground/5 py-2.5"
+              >
+                <span className="text-sm text-foreground/80">{b.name}</span>
+                <span className="text-sm font-bold text-foreground">
+                  {stats.banners[b.code]?.views ?? 0}
+                </span>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
 
       <div className="mt-6 rounded-2xl border border-foreground/10 p-6">
