@@ -3,6 +3,7 @@ import RentalLandingTemplate, {
 } from "@/components/RentalLandingTemplate";
 
 export const metadata = {
+  alternates: { canonical: "/firmenevents" },
   title: "Firmenevents Bayern – Betriebsfeier & Weihnachtsfeier Location | moos.park",
 };
 

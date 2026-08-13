@@ -2,6 +2,7 @@ import StepsTimeline from "@/components/StepsTimeline";
 import FlipText from "@/components/FlipText";
 
 export const metadata = {
+  alternates: { canonical: "/geburtstag" },
   title:
     "Geburtstag feiern Bayern – Location mieten für 18., 30., 40., 50. Geburtstag | moos.park",
 };

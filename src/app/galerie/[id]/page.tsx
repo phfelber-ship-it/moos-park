@@ -30,6 +30,7 @@ export async function generateMetadata({
     description: `Fotos von ${gallery.name} im moos.park Pöttmes am ${formatDate(
       gallery.date
     )}.`,
+    alternates: { canonical: `/galerie/${id}` },
     openGraph: cover ? { images: [{ url: cover }] } : undefined,
   };
 }

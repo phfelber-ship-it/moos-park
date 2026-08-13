@@ -4,6 +4,7 @@ import Accordion from "@/components/Accordion";
 import FlipText from "@/components/FlipText";
 
 export const metadata = {
+  alternates: { canonical: "/aufsichtsformular" },
   title: "Aufsicht im moos.park - Aufsichtszettel & Einlassalter | moos.park",
   description:
     "Alles zum Thema Aufsicht im moos.park: Einlassalter je Veranstaltung, Anforderungen an die Aufsichtsperson und den Aufsichtszettel direkt in der App ausfüllen.",

@@ -1,6 +1,7 @@
 import EventRequestForm from "@/components/EventRequestForm";
 
 export const metadata = {
+  alternates: { canonical: "/veranstaltungsanfrage" },
   title: "Veranstaltungsanfragen - moos.park | Eventlocation",
 };
 

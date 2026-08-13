@@ -2,6 +2,7 @@ import { getEvents } from "@/lib/clubscale";
 import QuickTicketFlow from "@/components/QuickTicketFlow";
 
 export const metadata = {
+  alternates: { canonical: "/tickets" },
   title: "Event-Tickets - moos.park | Eventlocation",
 };
 

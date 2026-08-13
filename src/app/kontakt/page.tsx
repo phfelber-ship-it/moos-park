@@ -1,6 +1,9 @@
 import ContactForm from "@/components/ContactForm";
 
-export const metadata = { title: "Kontakt - moos.park | Eventlocation" };
+export const metadata = {
+  alternates: { canonical: "/kontakt" },
+  title: "Kontakt - moos.park | Eventlocation",
+};
 
 export default function KontaktPage() {
   return (

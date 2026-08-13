@@ -3,6 +3,7 @@ import RentalLandingTemplate, {
 } from "@/components/RentalLandingTemplate";
 
 export const metadata = {
+  alternates: { canonical: "/eventlocation-bayern" },
   title: "Eventlocation Bayern mieten – bis 2400 Personen | moos.park Pöttmes",
 };
 

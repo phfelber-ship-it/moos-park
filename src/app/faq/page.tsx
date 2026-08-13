@@ -2,7 +2,10 @@ import JobAccordion from "@/components/JobAccordion";
 import ContactForm from "@/components/ContactForm";
 import { getFaqs } from "@/lib/clubscale";
 
-export const metadata = { title: "FAQ - moos.park | Eventlocation" };
+export const metadata = {
+  alternates: { canonical: "/faq" },
+  title: "FAQ - moos.park | Eventlocation",
+};
 
 // Fallback-Texte, falls im Clubscale-Adminpanel (noch) keine FAQs gepflegt
 // sind. Sobald echte FAQs existieren, werden diese bevorzugt angezeigt.

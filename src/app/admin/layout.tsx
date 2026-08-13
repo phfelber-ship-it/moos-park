@@ -1,4 +1,5 @@
 import AdminTopBar from "@/components/AdminTopBar";
+import SeoCheckPrompt from "@/components/SeoCheckPrompt";
 
 export default function AdminLayout({
   children,
@@ -8,6 +9,7 @@ export default function AdminLayout({
   return (
     <>
       <AdminTopBar />
+      <SeoCheckPrompt />
       {children}
     </>
   );

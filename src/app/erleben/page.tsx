@@ -3,6 +3,7 @@ import Reveal from "@/components/Reveal";
 import FlipText from "@/components/FlipText";
 
 export const metadata = {
+  alternates: { canonical: "/erleben" },
   title: "moos.park erleben – Tanzen, Events & Exklusivfeiern | moos.park",
   description:
     "Events, Tanzabende und Exklusivfeiern im moos.park Pöttmes – finde in einem Klick, was zu dir passt.",

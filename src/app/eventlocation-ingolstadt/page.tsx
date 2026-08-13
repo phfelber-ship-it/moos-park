@@ -3,6 +3,7 @@ import RentalLandingTemplate, {
 } from "@/components/RentalLandingTemplate";
 
 export const metadata = {
+  alternates: { canonical: "/eventlocation-ingolstadt" },
   title: "Eventlocation Ingolstadt – Location mieten bei Ingolstadt | moos.park Pöttmes",
 };
 

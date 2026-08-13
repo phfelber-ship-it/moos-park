@@ -3,6 +3,7 @@ import RentalLandingTemplate, {
 } from "@/components/RentalLandingTemplate";
 
 export const metadata = {
+  alternates: { canonical: "/eventlocation-augsburg" },
   title: "Eventlocation Augsburg – Location mieten bei Augsburg | moos.park Pöttmes",
 };
 

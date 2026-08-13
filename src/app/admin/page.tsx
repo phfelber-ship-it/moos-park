@@ -30,6 +30,11 @@ const SECTIONS = [
     text: "Bannerbilder für Werbe-Anhänger verwalten & Scans/Klicks auswerten.",
   },
   {
+    href: "/admin/seo-tool",
+    title: "SEO-Tool",
+    text: "Gesamte Website auf Überschriften, Inhalte & technisches SEO prüfen.",
+  },
+  {
     href: "/admin/statistik",
     title: "Statistik",
     text: "Besucher, Seitenaufrufe, Absprungrate & mehr aus Google Analytics.",

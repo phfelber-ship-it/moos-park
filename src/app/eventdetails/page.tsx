@@ -46,6 +46,7 @@ export async function generateMetadata({
   return {
     title: `${event.name} - moos.park Pöttmes`,
     description,
+    alternates: { canonical: `/eventdetails?id=${id}` },
     openGraph: {
       title: event.name,
       description,

@@ -1,7 +1,10 @@
 import { getGalleries } from "@/lib/clubscale";
 import GalleryCard from "@/components/GalleryCard";
 
-export const metadata = { title: "Bilder - moos.park | Eventlocation" };
+export const metadata = {
+  alternates: { canonical: "/galerie" },
+  title: "Bilder - moos.park | Eventlocation",
+};
 
 export default async function BilderPage() {
   const galleries = await getGalleries();

@@ -5,6 +5,7 @@ import Accordion from "@/components/Accordion";
 import { ROOMS } from "@/lib/rooms";
 
 export const metadata = {
+  alternates: { canonical: "/eventlocation-region" },
   title:
     "Eventlocation mieten für Hochzeit, Firmenevent & Club-Feier – Region Augsburg, Ingolstadt, Regensburg | moos.park",
   description:

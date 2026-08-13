@@ -4,6 +4,7 @@ import "./globals.css";
 import SiteChrome from "@/components/SiteChrome";
 import GoogleTagManager from "@/components/GoogleTagManager";
 import ClickTracker from "@/components/ClickTracker";
+import StructuredDataInjector from "@/components/StructuredDataInjector";
 
 const montserrat = Montserrat({
   variable: "--font-montserrat",
@@ -62,6 +63,12 @@ export default function RootLayout({
         <SiteChrome>{children}</SiteChrome>
         <GoogleTagManager />
         <ClickTracker />
+        {/* Strukturierte Daten (JSON-LD) laufen bewusst client-seitig statt
+            im Server-Rendering - ein Blob-Fetch im Layout/einer Seite
+            haengt sonst zuverlaessig jede statische Seite beim Build fest
+            (siehe lib/seo-overrides.ts). So kann das SEO-Tool
+            (/admin/seo-tool) sie trotzdem per Knopfdruck umschalten. */}
+        <StructuredDataInjector />
       </body>
     </html>
   );
