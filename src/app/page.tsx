@@ -40,9 +40,25 @@ export default async function Home() {
   const galleries = allGalleries.slice(0, 4);
   const heroImages = await getHeroImages();
   const roomImages = await getAllRoomImages();
+  // Individuelle Alt-Texte statt generischem "moos.park" - beschreiben, was
+  // auf dem jeweiligen Foto tatsaechlich zu sehen ist (gut fuer SEO/
+  // Barrierefreiheit).
+  const FAN_PHOTO_ALT_TEXTS = [
+    "Vollbesetzte Tanzfläche von oben mit rotem Bühnenlicht und LED-Lichtwand",
+    "Tanzfläche in blau-violettem Scheinwerferlicht mit dichtem Publikum",
+    "Lachende junge Frau mit rot gesträhntem Haar auf der Tanzfläche",
+    "Gruppe junger Frauen tanzt gemeinsam im warmen Clublicht",
+    "DJ-Auftritt auf der Terrasse unter beleuchtetem Traversenbogen bei Nacht",
+    "Schwarz-weiß-Aufnahme einer lächelnden Frau im Scheinwerferlicht der Tanzfläche",
+    "Schwarz-weiß-Nahaufnahme einer Frau, die mit den Händen ein Herz formt",
+    "Junge Frau im warmen Bühnenlicht, umgeben von tanzenden Gästen",
+    "Gruppe von Freundinnen lacht und tanzt gemeinsam, Schwarz-weiß-Aufnahme",
+    "Lachende Frau im Spitzentop unterhält sich mit Freunden an der Bar",
+    "Publikum mit erhobenen Händen unter blauem Bühnenlicht",
+  ];
   const fanPhotos = Array.from({ length: 11 }, (_, i) => ({
     src: `/images/fan-${i + 1}.jpg`,
-    alt: "moos.park",
+    alt: FAN_PHOTO_ALT_TEXTS[i],
   }));
 
   return (
