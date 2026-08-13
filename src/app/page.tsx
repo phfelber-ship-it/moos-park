@@ -21,6 +21,10 @@ import {
   CommunityIcon,
 } from "@/components/AppIcons";
 
+export const metadata = {
+  alternates: { canonical: "/" },
+};
+
 const WHATSAPP_CHANNEL_URL =
   "https://whatsapp.com/channel/0029VbD72h8KWEKxPE9gr02y";
 

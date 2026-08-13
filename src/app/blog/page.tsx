@@ -2,6 +2,7 @@ import Link from "next/link";
 import { BLOG_POSTS } from "@/lib/blog-posts";
 
 export const metadata = {
+  alternates: { canonical: "/blog" },
   title: "Ratgeber & Blog - moos.park | Eventlocation Pöttmes",
   description:
     "Tipps rund um Eventlocation mieten, Firmenfeiern, Hochzeiten, Geburtstage und Partys – der moos.park Ratgeber.",

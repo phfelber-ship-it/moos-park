@@ -3,6 +3,7 @@ import StepsTimeline from "@/components/StepsTimeline";
 import FlipText from "@/components/FlipText";
 
 export const metadata = {
+  alternates: { canonical: "/promoter" },
   title: "Promoter werden - moos.park | Eventlocation Pöttmes",
   description:
     "Werde Promoter im moos.park: Sonderkonditionen, freier Eintritt und Provision für Social-Media-Creator mit mindestens 1.000 Instagram-Followern.",

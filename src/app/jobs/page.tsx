@@ -3,7 +3,10 @@ import JobApplicationAccordion from "@/components/JobApplicationAccordion";
 import { getJobPostings } from "@/lib/clubscale";
 import FlipText from "@/components/FlipText";
 
-export const metadata = { title: "Jobs - moos.park | Eventlocation" };
+export const metadata = {
+  alternates: { canonical: "/jobs" },
+  title: "Jobs - moos.park | Eventlocation",
+};
 
 // Fallback-Texte, falls im Clubscale-Adminpanel (noch) keine JobPostings
 // gepflegt sind - dann zumindest informativ mit generischem Bewerbungs-CTA,

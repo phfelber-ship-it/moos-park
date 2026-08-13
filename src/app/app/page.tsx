@@ -12,6 +12,7 @@ import {
 } from "@/components/AppIcons";
 
 export const metadata = {
+  alternates: { canonical: "/app" },
   title: "moos.park App - Tickets, Coupons & Punkte sammeln | moos.park",
   description:
     "Die moos.park App: Tickets direkt in der Hosentasche, Coupon-Codes einlösen, Punkte sammeln und einlösen, Geschenke abholen, Fastline-Eingang und immer als Erstes von neuen Veranstaltungen erfahren.",

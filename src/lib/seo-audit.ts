@@ -2,6 +2,7 @@ import { list, put } from "@vercel/blob";
 import { STATIC_ROUTES } from "@/app/sitemap";
 import { getEvents, getGalleries } from "@/lib/clubscale";
 import { getAllBlogSlugs } from "@/lib/blog-posts";
+import { getSeoSettings } from "@/lib/seo-overrides";
 
 const RESULT_PATH = "admin/seo-audit.json";
 
@@ -42,6 +43,20 @@ export type PageAuditResult = {
   issues: SeoIssue[];
 };
 
+// Ein automatisch umsetzbarer Verbesserungsvorschlag - bewusst nur fuer
+// rein technische Punkte ohne inhaltliche Bewertung (siehe
+// lib/seo-overrides.ts). "id" entspricht dem Feld in SeoSettings, das beim
+// Umsetzen auf true gesetzt wird.
+export type SeoFixProposal = {
+  id: "structuredData";
+  title: string;
+  whatChanges: string;
+  tradeoff: string;
+  benefit: string;
+  affectedPaths: string[];
+  alreadyApplied: boolean;
+};
+
 export type SeoAuditResult = {
   runAt: string;
   siteOrigin: string;
@@ -57,6 +72,7 @@ export type SeoAuditResult = {
   duplicateDescriptions: string[][];
   robotsOk: boolean;
   sitemapOk: boolean;
+  fixProposals: SeoFixProposal[];
 };
 
 // Seiten, die geprueft werden: alle statischen Routen aus der Sitemap plus
@@ -445,6 +461,22 @@ export async function runSeoAudit(siteOrigin: string): Promise<SeoAuditResult> {
     Math.round(100 - errors * 4 - warnings * 1.5 - infos * 0.5)
   );
 
+  const settings = await getSeoSettings();
+  const fixProposals: SeoFixProposal[] = [
+    {
+      id: "structuredData",
+      title: "Strukturierte Daten (JSON-LD) ergänzen",
+      whatChanges:
+        "Auf jeder Seite wird unsichtbar ein kleiner Datenblock mit Name, Adresse, Telefonnummer und Social-Media-Links von moos.park ergänzt (Schema.org, Typ „NightClub“).",
+      tradeoff:
+        "Nichts wird entfernt oder ersetzt - rein ergänzend, kein sichtbarer Unterschied für Besucher, kein Risiko.",
+      benefit:
+        "Google kann daraus Rich-Snippets (z.B. Adresse, Öffnungszeiten-Box) direkt in den Suchergebnissen anzeigen - erhöht die Klickrate und ist ein anerkannter Rankingfaktor.",
+      affectedPaths: pages.map((p) => p.path),
+      alreadyApplied: settings.structuredDataEnabled,
+    },
+  ];
+
   return {
     runAt: new Date().toISOString(),
     siteOrigin,
@@ -460,6 +492,7 @@ export async function runSeoAudit(siteOrigin: string): Promise<SeoAuditResult> {
     duplicateDescriptions,
     robotsOk,
     sitemapOk,
+    fixProposals,
   };
 }
 
@@ -472,7 +505,10 @@ export async function getLastSeoAuditResult(): Promise<SeoAuditResult | null> {
     // CDN-Edge gecacht wird (siehe banner-stats.ts fuer den Hintergrund).
     const res = await fetch(`${match.url}?v=${Date.now()}`, { cache: "no-store" });
     if (!res.ok) return null;
-    return (await res.json()) as SeoAuditResult;
+    const data = (await res.json()) as SeoAuditResult;
+    // Absicherung falls ein aelterer gespeicherter Stand (vor Einfuehrung
+    // der Verbesserungsvorschlaege) geladen wird.
+    return { ...data, fixProposals: data.fixProposals ?? [] };
   } catch {
     return null;
   }

@@ -2,7 +2,10 @@ import Image from "next/image";
 import { getDanceEvents, visiblePublicEvents } from "@/lib/dance-events";
 import FlipText from "@/components/FlipText";
 
-export const metadata = { title: "Tanzveranstaltungen - moos.park | Eventlocation" };
+export const metadata = {
+  alternates: { canonical: "/tanzveranstaltungen" },
+  title: "Tanzveranstaltungen - moos.park | Eventlocation",
+};
 export const dynamic = "force-dynamic";
 
 function formatDateTime(iso: string) {

@@ -1,6 +1,9 @@
 import LegalPage from "@/components/LegalPage";
 
-export const metadata = { title: "Impressum - moos.park | Eventlocation" };
+export const metadata = {
+  alternates: { canonical: "/impressum" },
+  title: "Impressum - moos.park | Eventlocation",
+};
 
 export default function ImpressumPage() {
   return (

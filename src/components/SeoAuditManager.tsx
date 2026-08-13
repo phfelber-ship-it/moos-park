@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import FlipText from "@/components/FlipText";
+import SeoFixReviewDialog from "@/components/SeoFixReviewDialog";
 import type { SeoAuditResult, SeoSeverity } from "@/lib/seo-audit";
 
 const SEVERITY_LABEL: Record<SeoSeverity, string> = {
@@ -45,17 +46,24 @@ export default function SeoAuditManager({
   const [result, setResult] = useState(initialResult);
   const [running, setRunning] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [showReview, setShowReview] = useState(false);
+  const [justApplied, setJustApplied] = useState<string[] | null>(null);
   const started = useRef(false);
   const searchParams = useSearchParams();
 
   const runCheck = async () => {
     setRunning(true);
     setError(null);
+    setJustApplied(null);
     try {
       const res = await fetch("/api/admin/seo-audit", { method: "POST" });
       if (!res.ok) throw new Error("Prüfung fehlgeschlagen.");
       const data = (await res.json()) as { result: SeoAuditResult };
       setResult(data.result);
+      const openProposals = data.result.fixProposals.filter(
+        (p) => !p.alreadyApplied
+      );
+      if (openProposals.length > 0) setShowReview(true);
     } catch (e) {
       setError(e instanceof Error ? e.message : "Prüfung fehlgeschlagen.");
     } finally {
@@ -103,6 +111,51 @@ export default function SeoAuditManager({
         )}
       </div>
       {error && <p className="mt-3 text-sm text-red-500">{error}</p>}
+      {justApplied && (
+        <p className="mt-3 text-sm text-accent-lime">
+          ✓ Übernommen: {justApplied.join(", ")}.
+        </p>
+      )}
+
+      {result && !running && result.fixProposals.some((p) => !p.alreadyApplied) && (
+        <button
+          type="button"
+          onClick={() => setShowReview(true)}
+          className="mt-3 text-xs font-bold text-foreground/60 underline"
+        >
+          Offene Verbesserungsvorschläge anzeigen
+        </button>
+      )}
+
+      {showReview && result && (
+        <SeoFixReviewDialog
+          proposals={result.fixProposals}
+          onClose={() => setShowReview(false)}
+          onApplied={(appliedIds) => {
+            const applied = result.fixProposals
+              .filter((p) => appliedIds.includes(p.id))
+              .map((p) => p.title);
+            setJustApplied(applied);
+            setShowReview(false);
+            // Proposals lokal als uebernommen markieren statt gleich einen
+            // neuen (bis zu minutenlangen) Scan anzustossen - der naechste
+            // "Jetzt pruefen"-Lauf bestaetigt es dann ohnehin aus den echten
+            // Seiten.
+            setResult((r) =>
+              r
+                ? {
+                    ...r,
+                    fixProposals: r.fixProposals.map((p) =>
+                      appliedIds.includes(p.id)
+                        ? { ...p, alreadyApplied: true }
+                        : p
+                    ),
+                  }
+                : r
+            );
+          }}
+        />
+      )}
 
       {!result && !running && (
         <p className="mt-8 text-sm text-foreground/50">

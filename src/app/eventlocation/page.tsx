@@ -7,6 +7,7 @@ import EventlocationRequestForm from "@/components/EventlocationRequestForm";
 import FlipText from "@/components/FlipText";
 
 export const metadata = {
+  alternates: { canonical: "/eventlocation" },
   title: "Eventlocation Pöttmes – Veranstaltungslocation Bayern | moos.park",
 };
 

@@ -2,6 +2,7 @@ import { getEvents } from "@/lib/clubscale";
 import EventsExplorer from "@/components/EventsExplorer";
 
 export const metadata = {
+  alternates: { canonical: "/events" },
   title: "Events - moos.park | Eventlocation",
 };
 
