@@ -33,7 +33,12 @@ export default function HeroBackground({ images }: { images: string[] }) {
         >
           <Image
             src={src}
-            alt="moos.park"
+            // Rotierende Slideshow aus fest hinterlegten und im Adminpanel
+            // hochgeladenen Bildern (letztere ohne Beschreibungstext) - ein
+            // generischer, aber inhaltlich zutreffender Alt-Text statt
+            // reinem Markennamen, echte Bildunterschrift ist technisch
+            // erst mit Caption-Feld im Adminpanel moeglich.
+            alt="Partystimmung im moos.park Pöttmes"
             fill
             priority={i === 0}
             className="object-cover"

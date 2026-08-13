@@ -55,7 +55,7 @@ export default async function TanzabendPage() {
         <div className="relative aspect-[1024/379] w-full overflow-hidden rounded-xl bg-foreground/5">
           <Image
             src="/images/tanzabend-banner.png"
-            alt="Tanzen im moospark"
+            alt="Tanzen im moos.park"
             fill
             className="object-cover"
             sizes="100vw"

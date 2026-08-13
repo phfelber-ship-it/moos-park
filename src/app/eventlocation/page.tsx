@@ -39,7 +39,7 @@ export default async function EventlocationPage() {
       <section className="relative flex min-h-[70vh] items-end overflow-hidden text-center text-white sm:min-h-[85vh]">
         <Image
           src="/images/eventlocation-hero.png"
-          alt="moos.park Eventlocation"
+          alt="Leere Haupthalle im moos.park mit Bar, Tanzfläche und bunter Bühnenbeleuchtung"
           fill
           priority
           className="object-cover"
