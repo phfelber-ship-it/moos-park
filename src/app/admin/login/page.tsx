@@ -26,6 +26,12 @@ function LoginForm() {
       setError("Falscher Benutzername oder falsches Passwort.");
       return;
     }
+    try {
+      sessionStorage.setItem("admin-just-logged-in", "1");
+    } catch {
+      // sessionStorage evtl. blockiert - dann erscheint einfach keine
+      // SEO-Check-Nachfrage, der Login selbst funktioniert trotzdem.
+    }
     router.push(params.get("next") ?? "/admin/hero-bilder");
     router.refresh();
   };

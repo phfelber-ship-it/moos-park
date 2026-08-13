@@ -5,7 +5,7 @@ import { getAllBlogSlugs } from "@/lib/blog-posts";
 const SITE_URL =
   process.env.NEXT_PUBLIC_SITE_URL ?? "https://moos-park-hmd7.vercel.app";
 
-const STATIC_ROUTES = [
+export const STATIC_ROUTES = [
   "",
   "/events",
   "/tickets",
