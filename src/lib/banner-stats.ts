@@ -10,10 +10,15 @@ export type BannerStats = {
     string,
     Record<string, { clicks: number; lastClickAt: string }>
   >;
+  // Direkte Seitenaufrufe je Zielseite - faengt Scans auf, deren gedruckter
+  // QR-Code (aelterer Anhaenger, nicht mehr aenderbar) direkt auf die Seite
+  // statt auf /r/[code] zeigt. Wird einem Banner nur zugerechnet, wenn genau
+  // ein Banner auf diese Seite zeigt (siehe BannerAdsManager).
+  pageViews: Record<string, { views: number; lastViewAt: string }>;
 };
 
 function emptyStats(): BannerStats {
-  return { banners: {}, buttons: {} };
+  return { banners: {}, buttons: {}, pageViews: {} };
 }
 
 async function getStats(): Promise<BannerStats> {
@@ -28,7 +33,11 @@ async function getStats(): Promise<BannerStats> {
     const res = await fetch(`${match.url}?v=${Date.now()}`, { cache: "no-store" });
     if (!res.ok) return emptyStats();
     const data = (await res.json()) as Partial<BannerStats>;
-    return { banners: data.banners ?? {}, buttons: data.buttons ?? {} };
+    return {
+      banners: data.banners ?? {},
+      buttons: data.buttons ?? {},
+      pageViews: data.pageViews ?? {},
+    };
   } catch {
     return emptyStats();
   }
@@ -57,6 +66,16 @@ export async function recordBannerView(code: string): Promise<void> {
   const stats = await getStats();
   const current = stats.banners[code] ?? { views: 0, lastViewAt: "" };
   stats.banners[code] = {
+    views: current.views + 1,
+    lastViewAt: new Date().toISOString(),
+  };
+  await saveStats(stats);
+}
+
+export async function recordPageView(page: string): Promise<void> {
+  const stats = await getStats();
+  const current = stats.pageViews[page] ?? { views: 0, lastViewAt: "" };
+  stats.pageViews[page] = {
     views: current.views + 1,
     lastViewAt: new Date().toISOString(),
   };

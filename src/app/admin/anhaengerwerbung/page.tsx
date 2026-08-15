@@ -25,10 +25,15 @@ export default async function AnhaengerwerbungPage() {
         Bannerbilder für Werbe-Anhänger hochladen und mit einer Zielseite
         verknüpfen. Der erzeugte Link (bzw. ein daraus erstellter QR-Code)
         zählt jeden Scan – darunter siehst du, welcher Banner am häufigsten
-        gescannt wurde, welche Zielseite die meisten Aufrufe hat und welcher
-        Button dort jeweils am meisten geklickt wurde – Button-Klicks werden
-        automatisch erfasst, jede eigene moos-park.de-Seite funktioniert
-        sofort als Ziel, ganz ohne Code-Änderung.
+        gescannt wurde und welcher Button auf der jeweiligen Zielseite am
+        meisten geklickt wurde. Zeigt der gedruckte QR-Code eines Banners
+        (z.B. weil er schon gedruckt ist und nicht mehr geändert werden
+        kann) direkt auf die Zielseite statt auf diesen Link, zählen wir
+        zusätzlich normale Seitenaufrufe mit – solange nur ein Banner auf
+        diese Seite zeigt, wird das automatisch diesem Banner zugerechnet.
+        Button-Klicks werden automatisch erfasst, jede eigene
+        moos-park.de-Seite funktioniert sofort als Ziel, ganz ohne
+        Code-Änderung.
       </p>
 
       <BannerAdsManager

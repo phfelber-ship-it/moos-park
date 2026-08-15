@@ -8,8 +8,37 @@ import { usePathname } from "next/navigation";
 // eine neue Landingpage direkt als Anhaenger-Zielseite genutzt werden, ohne
 // dass jemand im Code eine Buttonliste pflegen muss (siehe
 // /admin/anhaengerwerbung).
+function sendBeaconOrFetch(url: string, payload: string) {
+  try {
+    if (navigator.sendBeacon) {
+      navigator.sendBeacon(url, new Blob([payload], { type: "application/json" }));
+    } else {
+      fetch(url, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: payload,
+        keepalive: true,
+      });
+    }
+  } catch {
+    // Tracking darf die Navigation nie stoeren.
+  }
+}
+
 export default function ClickTracker() {
   const pathname = usePathname();
+
+  // Direkter Seitenaufruf, einmal je Seitenwechsel - faengt Anhaenger-Scans
+  // ab, deren gedruckter QR-Code nicht (mehr aenderbar) ueber /r/[code]
+  // laeuft, sondern direkt auf die Zielseite zeigt (siehe
+  // /admin/anhaengerwerbung).
+  useEffect(() => {
+    if (pathname.startsWith("/admin")) return;
+    sendBeaconOrFetch(
+      "/api/track/pageview",
+      JSON.stringify({ page: pathname })
+    );
+  }, [pathname]);
 
   useEffect(() => {
     if (pathname.startsWith("/admin")) return;
@@ -24,27 +53,10 @@ export default function ClickTracker() {
         "";
       if (!label) return;
 
-      const payload = JSON.stringify({
-        page: pathname,
-        button: label.slice(0, 120),
-      });
-      try {
-        if (navigator.sendBeacon) {
-          navigator.sendBeacon(
-            "/api/track/click",
-            new Blob([payload], { type: "application/json" })
-          );
-        } else {
-          fetch("/api/track/click", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: payload,
-            keepalive: true,
-          });
-        }
-      } catch {
-        // Tracking darf die Navigation nie stoeren.
-      }
+      sendBeaconOrFetch(
+        "/api/track/click",
+        JSON.stringify({ page: pathname, button: label.slice(0, 120) })
+      );
     };
 
     document.addEventListener("click", onClick, { capture: true });

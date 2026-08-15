@@ -221,9 +221,24 @@ export default function BannerAdsManager({
     }
   };
 
+  // Wie viele Banner zeigen auf dieselbe Zielseite? Nur wenn genau einer,
+  // koennen wir direkte Seitenaufrufe (QR-Code zeigt nicht auf /r/[code],
+  // z.B. weil der Druck nicht mehr aenderbar ist) diesem Banner eindeutig
+  // zurechnen.
+  const bannersPerPage = new Map<string, number>();
+  for (const b of banners) {
+    bannersPerPage.set(b.targetPath, (bannersPerPage.get(b.targetPath) ?? 0) + 1);
+  }
+
+  const bannerViewBreakdown = (b: BannerAd) => {
+    const qrScans = stats.banners[b.code]?.views ?? 0;
+    const attributable = bannersPerPage.get(b.targetPath) === 1;
+    const directViews = attributable ? stats.pageViews[b.targetPath]?.views ?? 0 : 0;
+    return { qrScans, directViews, total: qrScans + directViews, attributable };
+  };
+
   const bannersSortedByViews = [...banners].sort(
-    (a, b) =>
-      (stats.banners[b.code]?.views ?? 0) - (stats.banners[a.code]?.views ?? 0)
+    (a, b) => bannerViewBreakdown(b).total - bannerViewBreakdown(a).total
   );
 
   // Zielseiten ergeben sich aus den tatsaechlich angelegten Bannern - keine
@@ -321,7 +336,8 @@ export default function BannerAdsManager({
           <div className="mt-4 grid gap-4 sm:grid-cols-2">
             {banners.map((b) => {
               const link = `${siteOrigin}/r/${b.code}`;
-              const views = stats.banners[b.code]?.views ?? 0;
+              const { qrScans, directViews, total, attributable } =
+                bannerViewBreakdown(b);
               return (
                 <div
                   key={b.id}
@@ -341,9 +357,18 @@ export default function BannerAdsManager({
                       {b.name}
                     </p>
                     <p className="mt-0.5 text-xs text-foreground/50">
-                      → {b.targetPath} · {views}{" "}
-                      {views === 1 ? "Aufruf" : "Aufrufe"}
+                      → {b.targetPath} · {total} {total === 1 ? "Aufruf" : "Aufrufe"}
+                      {directViews > 0 && (
+                        <> ({qrScans} über QR-Link, {directViews} direkt)</>
+                      )}
                     </p>
+                    {!attributable && (bannersPerPage.get(b.targetPath) ?? 0) > 1 && (
+                      <p className="mt-0.5 text-xs text-amber-500">
+                        Zielseite wird von mehreren Bannern genutzt – direkte
+                        Seitenaufrufe (ohne /r/-Link) können hier nicht
+                        eindeutig zugeordnet werden.
+                      </p>
+                    )}
                     <div className="mt-2 flex items-center gap-2">
                       <code className="min-w-0 flex-1 truncate rounded bg-foreground/[0.04] px-2 py-1 text-xs text-foreground/70">
                         {link}
@@ -381,17 +406,18 @@ export default function BannerAdsManager({
           <p className="mt-3 text-sm text-foreground/50">Noch keine Daten.</p>
         ) : (
           <div className="mt-3 flex flex-col">
-            {bannersSortedByViews.map((b) => (
-              <div
-                key={b.id}
-                className="flex items-center justify-between gap-4 border-b border-foreground/5 py-2.5"
-              >
-                <span className="text-sm text-foreground/80">{b.name}</span>
-                <span className="text-sm font-bold text-foreground">
-                  {stats.banners[b.code]?.views ?? 0}
-                </span>
-              </div>
-            ))}
+            {bannersSortedByViews.map((b) => {
+              const { total } = bannerViewBreakdown(b);
+              return (
+                <div
+                  key={b.id}
+                  className="flex items-center justify-between gap-4 border-b border-foreground/5 py-2.5"
+                >
+                  <span className="text-sm text-foreground/80">{b.name}</span>
+                  <span className="text-sm font-bold text-foreground">{total}</span>
+                </div>
+              );
+            })}
           </div>
         )}
       </div>
