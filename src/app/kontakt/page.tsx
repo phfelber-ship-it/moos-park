@@ -3,6 +3,8 @@ import ContactForm from "@/components/ContactForm";
 export const metadata = {
   alternates: { canonical: "/kontakt" },
   title: "Kontakt - moos.park | Eventlocation",
+  description:
+    "Kontakt zum moos.park Pöttmes – Adresse, Telefonnummer, E-Mail und Anfahrt zu deiner Eventlocation in Aichach-Friedberg.",
 };
 
 export default function KontaktPage() {

@@ -3,6 +3,8 @@ import LegalPage from "@/components/LegalPage";
 export const metadata = {
   alternates: { canonical: "/impressum" },
   title: "Impressum - moos.park | Eventlocation",
+  description:
+    "Impressum der moos-park Gastronomie GmbH – Anbieterkennzeichnung, Kontaktdaten und rechtliche Angaben zu moos.park Pöttmes.",
 };
 
 export default function ImpressumPage() {

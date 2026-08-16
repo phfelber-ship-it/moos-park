@@ -5,6 +5,8 @@ import RentalLandingTemplate, {
 export const metadata = {
   alternates: { canonical: "/eventlocation-mieten" },
   title: "Eventlocation mieten Bayern – 5 Säle für 80–2400 Personen | moos.park",
+  description:
+    "Eventlocation in Bayern mieten – 5 Säle für 80 bis 2400 Personen, Technik und Gastronomie inklusive. Einfach mieten, einfach feiern.",
 };
 
 const data: RentalPageData = {

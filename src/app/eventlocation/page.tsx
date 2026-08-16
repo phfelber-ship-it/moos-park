@@ -9,6 +9,8 @@ import FlipText from "@/components/FlipText";
 export const metadata = {
   alternates: { canonical: "/eventlocation" },
   title: "Eventlocation Pöttmes – Veranstaltungslocation Bayern | moos.park",
+  description:
+    "Eventlocation in Pöttmes für bis zu 2200 Gäste – sechs kombinierbare Räume für Konzerte, Firmenfeiern, Hochzeiten und private Feiern.",
 };
 
 function PersonIcon() {

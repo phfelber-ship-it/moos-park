@@ -8,6 +8,8 @@ import ReservationWizard from "@/components/ReservationWizard";
 // Nutzer nicht als kanonisch festgelegt").
 export const metadata = {
   title: "Reservierung - moos.park | Eventlocation",
+  description:
+    "Tisch im moos.park Pöttmes reservieren – wähl dein Event, deine Wunschzeit und sichere dir bequem online deinen Platz.",
   alternates: { canonical: "/reservierung" },
 };
 

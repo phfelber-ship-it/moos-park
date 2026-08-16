@@ -5,6 +5,8 @@ import RentalLandingTemplate, {
 export const metadata = {
   alternates: { canonical: "/eventlocation-augsburg" },
   title: "Eventlocation Augsburg – Location mieten bei Augsburg | moos.park Pöttmes",
+  description:
+    "Eventlocation nur 40 Minuten von Augsburg – große Kapazität, eigene Gastronomie und Technik inklusive.",
 };
 
 const data: RentalPageData = {

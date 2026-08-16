@@ -5,6 +5,8 @@ import RentalLandingTemplate, {
 export const metadata = {
   alternates: { canonical: "/firmenevents" },
   title: "Firmenevents Bayern – Betriebsfeier & Weihnachtsfeier Location | moos.park",
+  description:
+    "Firmenevents in Bayern – Weihnachtsfeier, Betriebsfest, Kick-off oder Produktlaunch für bis zu 2400 Personen, alles aus einer Hand.",
 };
 
 const data: RentalPageData = {

@@ -3,6 +3,8 @@ import EventRequestForm from "@/components/EventRequestForm";
 export const metadata = {
   alternates: { canonical: "/veranstaltungsanfrage" },
   title: "Veranstaltungsanfragen - moos.park | Eventlocation",
+  description:
+    "Veranstaltung im moos.park Pöttmes anfragen – Eckdaten senden, Angebot innerhalb 24 Stunden erhalten.",
 };
 
 export default function VeranstaltungsanfragePage() {
