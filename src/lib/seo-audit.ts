@@ -41,6 +41,10 @@ export type PageAuditResult = {
   hasViewport: boolean;
   htmlLang: string | null;
   issues: SeoIssue[];
+  // 0-100, nur fuer diese eine Seite - wird erst final gesetzt, nachdem
+  // auch seitenuebergreifende Befunde (z.B. doppelte Title-Tags) mit
+  // eingerechnet sind, siehe computePageScore() in runSeoAudit().
+  pageScore: number;
 };
 
 // Ein automatisch umsetzbarer Verbesserungsvorschlag - bewusst nur fuer
@@ -356,7 +360,22 @@ async function auditPage(origin: string, path: string): Promise<PageAuditResult>
     hasViewport,
     htmlLang,
     issues,
+    pageScore: 100, // wird in runSeoAudit() final berechnet
   };
+}
+
+// Score einer einzelnen Seite (0-100), unabhaengig davon wie viele andere
+// Seiten mitgeprueft wurden - vermeidet, dass der Gesamt-Score allein durch
+// mehr geprüfte Seiten immer schlechter wird (fruehere Version hat Punkte
+// pro Einzelbefund ueber ALLE Seiten summiert abgezogen).
+function computePageScore(issues: SeoIssue[]): number {
+  let score = 100;
+  for (const issue of issues) {
+    if (issue.severity === "error") score -= 15;
+    else if (issue.severity === "warning") score -= 5;
+    else score -= 1;
+  }
+  return Math.max(0, Math.round(score));
 }
 
 async function checkUrlOk(url: string): Promise<boolean> {
@@ -447,6 +466,7 @@ export async function runSeoAudit(siteOrigin: string): Promise<SeoAuditResult> {
   let warnings = 0;
   let infos = 0;
   for (const page of pages) {
+    page.pageScore = computePageScore(page.issues);
     for (const issue of page.issues) {
       if (issue.severity === "error") errors++;
       else if (issue.severity === "warning") warnings++;
@@ -456,10 +476,16 @@ export async function runSeoAudit(siteOrigin: string): Promise<SeoAuditResult> {
   if (!robotsOk) errors++;
   if (!sitemapOk) errors++;
 
-  const score = Math.max(
-    0,
-    Math.round(100 - errors * 4 - warnings * 1.5 - infos * 0.5)
-  );
+  // Gesamt-Score = Durchschnitt der Einzel-Seiten-Scores, nicht die Summe
+  // aller Einzelbefunde ueber alle Seiten - sonst sinkt der Score allein
+  // dadurch, dass mehr Seiten geprueft werden, auch wenn jede einzelne
+  // Seite fuer sich genommen okay ist.
+  const avgPageScore =
+    pages.length > 0
+      ? pages.reduce((sum, p) => sum + p.pageScore, 0) / pages.length
+      : 100;
+  const siteWidePenalty = (robotsOk ? 0 : 10) + (sitemapOk ? 0 : 10);
+  const score = Math.max(0, Math.round(avgPageScore - siteWidePenalty));
 
   const settings = await getSeoSettings();
   const fixProposals: SeoFixProposal[] = [

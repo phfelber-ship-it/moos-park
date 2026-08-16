@@ -247,6 +247,9 @@ export default function SeoAuditManager({
                         {page.path || "/"}
                       </span>
                       <span className="flex items-center gap-2 text-xs">
+                        <span className="rounded-full bg-foreground/[0.06] px-2 py-0.5 font-bold text-foreground/70">
+                          {page.pageScore}/100
+                        </span>
                         {counts.errors > 0 && (
                           <span className="rounded-full bg-red-500/15 px-2 py-0.5 font-bold text-red-500">
                             {counts.errors} Fehler
