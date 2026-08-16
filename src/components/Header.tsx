@@ -137,7 +137,8 @@ export default function Header() {
           open ? "" : "pointer-events-none"
         }`}
       >
-        <div
+        <nav
+          aria-label="Hauptnavigation"
           className={`flex flex-col items-center gap-5 overflow-y-auto transition-opacity duration-300 ${
             open ? "opacity-100 delay-300" : "opacity-0"
           }`}
@@ -165,7 +166,7 @@ export default function Header() {
               </Link>
             );
           })}
-        </div>
+        </nav>
       </div>
 
       <div className="fixed left-[62px] top-[29px] z-50 sm:left-[80px] sm:top-[37px]">
