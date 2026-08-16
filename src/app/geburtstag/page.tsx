@@ -5,6 +5,8 @@ export const metadata = {
   alternates: { canonical: "/geburtstag" },
   title:
     "Geburtstag feiern Bayern – Location mieten für 18., 30., 40., 50. Geburtstag | moos.park",
+  description:
+    "Geburtstag feiern im moos.park Pöttmes – exklusive Location und unvergessliche Stimmung für deinen großen Tag.",
 };
 
 const STEPS = [

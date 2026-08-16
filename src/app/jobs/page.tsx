@@ -6,6 +6,8 @@ import FlipText from "@/components/FlipText";
 export const metadata = {
   alternates: { canonical: "/jobs" },
   title: "Jobs - moos.park | Eventlocation",
+  description:
+    "Jobs im moos.park Pöttmes – wir suchen laufend neue Persönlichkeiten fürs Team. Jetzt offene Stellen entdecken und bewerben.",
 };
 
 // Fallback-Texte, falls im Clubscale-Adminpanel (noch) keine JobPostings

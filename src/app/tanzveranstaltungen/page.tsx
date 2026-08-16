@@ -5,6 +5,8 @@ import FlipText from "@/components/FlipText";
 export const metadata = {
   alternates: { canonical: "/tanzveranstaltungen" },
   title: "Tanzveranstaltungen - moos.park | Eventlocation",
+  description:
+    "Tanzabende im moos.park Pöttmes – Discofox, Schlager und Boogie jeden 2. und 4. Freitag im Monat.",
 };
 export const dynamic = "force-dynamic";
 

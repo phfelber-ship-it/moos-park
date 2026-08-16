@@ -4,6 +4,8 @@ import QuickTicketFlow from "@/components/QuickTicketFlow";
 export const metadata = {
   alternates: { canonical: "/tickets" },
   title: "Event-Tickets - moos.park | Eventlocation",
+  description:
+    "Tickets für Events im moos.park Pöttmes – Event auswählen, Ticket wählen, sichern. Schnell und einfach online kaufen.",
 };
 
 export default async function EventTicketsPage() {

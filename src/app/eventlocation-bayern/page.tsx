@@ -5,6 +5,8 @@ import RentalLandingTemplate, {
 export const metadata = {
   alternates: { canonical: "/eventlocation-bayern" },
   title: "Eventlocation Bayern mieten – bis 2400 Personen | moos.park Pöttmes",
+  description:
+    "Eventlocation in Bayern für Firmenevents, Hochzeiten, Geburtstage und Club-Events – bis zu 2400 Personen, alles inklusive.",
 };
 
 const data: RentalPageData = {

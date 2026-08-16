@@ -5,6 +5,8 @@ import { getFaqs } from "@/lib/clubscale";
 export const metadata = {
   alternates: { canonical: "/faq" },
   title: "FAQ - moos.park | Eventlocation",
+  description:
+    "Häufig gestellte Fragen zu Einlass, Tickets, Reservierung und Anfahrt im moos.park Pöttmes – die wichtigsten Antworten auf einen Blick.",
 };
 
 // Fallback-Texte, falls im Clubscale-Adminpanel (noch) keine FAQs gepflegt

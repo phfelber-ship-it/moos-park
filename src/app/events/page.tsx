@@ -4,6 +4,8 @@ import EventsExplorer from "@/components/EventsExplorer";
 export const metadata = {
   alternates: { canonical: "/events" },
   title: "Events - moos.park | Eventlocation",
+  description:
+    "Alle kommenden Events im moos.park Pöttmes – Partys, Konzerte und Open Airs auf einen Blick, Tickets direkt online sichern.",
 };
 
 export default async function EventsPage() {

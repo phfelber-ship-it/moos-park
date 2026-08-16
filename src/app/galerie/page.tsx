@@ -4,6 +4,8 @@ import GalleryCard from "@/components/GalleryCard";
 export const metadata = {
   alternates: { canonical: "/galerie" },
   title: "Bilder - moos.park | Eventlocation",
+  description:
+    "Impressionen vergangener Events im moos.park Pöttmes – stöbere durch unsere Fotogalerien von Partys, Konzerten und Open-Air-Events.",
 };
 
 export default async function BilderPage() {

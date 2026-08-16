@@ -5,6 +5,8 @@ import RentalLandingTemplate, {
 export const metadata = {
   alternates: { canonical: "/eventlocation-ingolstadt" },
   title: "Eventlocation Ingolstadt – Location mieten bei Ingolstadt | moos.park Pöttmes",
+  description:
+    "Eventlocation nur 35 Minuten von Ingolstadt – große Kapazität, eigene Gastronomie und Technik inklusive.",
 };
 
 const data: RentalPageData = {
