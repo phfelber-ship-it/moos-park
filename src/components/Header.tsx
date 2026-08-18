@@ -14,6 +14,7 @@ const NAV_LINKS = [
   { href: "/tanzveranstaltungen", label: "Tanzabend" },
   { href: "/eventlocation", label: "Eventlocation" },
   { href: "/geburtstag", label: "Geburtstag" },
+  { href: "/member", label: "Member Card" },
   { href: "/app", label: "Unsere App" },
   { href: "/promoter", label: "Promoter werden" },
   { href: "/jobs", label: "Jetzt bewerben" },
