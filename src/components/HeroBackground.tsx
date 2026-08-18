@@ -8,7 +8,15 @@ const SLIDE_DURATION = 8000;
 
 export default function HeroBackground({ images }: { images: string[] }) {
   const slides = images.length > 0 ? images : ["/images/hero-bg.jpg"];
-  const [index, setIndex] = useState(0);
+  // Jeden Tag startet ein anderes Bild als erstes (Reihenfolge bleibt
+  // gleich, nur der Einstiegspunkt rotiert taeglich weiter) - Server- und
+  // Client-Render laufen praktisch immer am selben Kalendertag, daher kein
+  // Hydration-Mismatch zu erwarten.
+  const [startIndex] = useState(() => {
+    const daysSinceEpoch = Math.floor(Date.now() / 86_400_000);
+    return slides.length > 0 ? daysSinceEpoch % slides.length : 0;
+  });
+  const [index, setIndex] = useState(startIndex);
 
   useEffect(() => {
     if (slides.length < 2) return;
@@ -40,7 +48,7 @@ export default function HeroBackground({ images }: { images: string[] }) {
             // erst mit Caption-Feld im Adminpanel moeglich.
             alt="Partystimmung im moos.park Pöttmes"
             fill
-            priority={i === 0}
+            priority={i === startIndex}
             className="object-cover"
             sizes="100vw"
           />
@@ -62,7 +70,10 @@ export default function HeroBackground({ images }: { images: string[] }) {
                   style={{ animation: `hero-progress ${SLIDE_DURATION}ms linear` }}
                 />
               )}
-              {i < index && <div className="h-full rounded-full bg-accent-lime" />}
+              {((i - startIndex + slides.length) % slides.length) <
+                ((index - startIndex + slides.length) % slides.length) && (
+                <div className="h-full rounded-full bg-accent-lime" />
+              )}
             </div>
           ))}
         </div>
