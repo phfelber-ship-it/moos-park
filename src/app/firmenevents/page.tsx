@@ -1,6 +1,8 @@
 import RentalLandingTemplate, {
   type RentalPageData,
 } from "@/components/RentalLandingTemplate";
+import CompanyEventRequestForm from "@/components/CompanyEventRequestForm";
+import Reveal from "@/components/Reveal";
 
 export const metadata = {
   alternates: { canonical: "/firmenevents" },
@@ -114,6 +116,91 @@ const data: RentalPageData = {
     "Wir erstellen Ihnen innerhalb von 24 Stunden ein maßgeschneidertes Angebot. Kostenlos, unverbindlich, konkret.",
 };
 
+const SIZE_STEPS = [
+  {
+    range: "50–100 Personen",
+    fit: "Kleine Firmenfeier",
+    text: "Kompakter Rahmen für Team oder Abteilung – persönlich und unkompliziert.",
+  },
+  {
+    range: "100–250 Personen",
+    fit: "Sommerfest / Weihnachtsfeier",
+    text: "Der Klassiker unter den Firmenfeiern – genug Platz für Programm, Buffet und Tanzfläche.",
+  },
+  {
+    range: "250–500 Personen",
+    fit: "Größeres Mitarbeiterevent",
+    text: "Mehrere Abteilungen oder Standorte gemeinsam – Bühne, Technik und Catering sind darauf ausgelegt.",
+  },
+  {
+    range: "500–1.000 Personen",
+    fit: "Große Betriebsfeier",
+    text: "Exklusivbuchung empfehlenswert – volle Location, volles Programm.",
+  },
+  {
+    range: "1.000–2.396 Personen",
+    fit: "Großveranstaltung",
+    text: "Behördlich zugelassene Gesamtkapazität – für die größten Betriebsveranstaltungen der Region.",
+  },
+];
+
 export default function FirmeneventsPage() {
-  return <RentalLandingTemplate data={data} />;
+  return (
+    <div>
+      <RentalLandingTemplate data={data} />
+
+      <section className="px-6 py-20">
+        <div className="mx-auto max-w-5xl">
+          <Reveal>
+            <p className="text-center text-xs font-black uppercase tracking-[0.3em] text-accent-lime">
+              Von klein bis groß
+            </p>
+            <h2 className="mx-auto mt-3 max-w-2xl text-center text-2xl font-black uppercase leading-tight text-foreground sm:text-3xl">
+              Für jede Firmengröße die passende Veranstaltung.
+            </h2>
+            <p className="mx-auto mt-4 max-w-xl text-center text-foreground/70">
+              Behördlich zugelassene Gesamtkapazität: bis zu 2.396 Personen.
+            </p>
+          </Reveal>
+
+          <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
+            {SIZE_STEPS.map((step, i) => (
+              <Reveal key={step.range} delay={i * 0.06}>
+                <div className="h-full rounded-2xl border border-foreground/10 p-5">
+                  <p className="text-sm font-black uppercase text-accent-lime">
+                    {step.range}
+                  </p>
+                  <p className="mt-2 font-black uppercase text-foreground">
+                    {step.fit}
+                  </p>
+                  <p className="mt-2 text-sm text-foreground/60">{step.text}</p>
+                </div>
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section id="firmenanfrage" className="bg-foreground/[0.02] px-6 py-20">
+        <div className="mx-auto max-w-2xl">
+          <Reveal>
+            <p className="text-center text-xs font-black uppercase tracking-[0.3em] text-accent-lime">
+              Jetzt anfragen
+            </p>
+            <h2 className="mx-auto mt-3 max-w-xl text-center text-2xl font-black uppercase leading-tight text-foreground sm:text-3xl">
+              Ihre Firmenfeier – unverbindlich anfragen.
+            </h2>
+            <p className="mx-auto mt-4 max-w-md text-center text-foreground/70">
+              Firma, Ansprechpartner, Personenzahl und Wunschtermin genügen –
+              wir melden uns mit einem passenden Konzept.
+            </p>
+          </Reveal>
+
+          <Reveal delay={0.1} className="mt-10">
+            <CompanyEventRequestForm />
+          </Reveal>
+        </div>
+      </section>
+    </div>
+  );
 }
