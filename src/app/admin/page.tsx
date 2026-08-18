@@ -10,6 +10,11 @@ const SECTIONS = [
     text: "Eingehende Kontaktanfragen, Bewerbungen, Reservierungen & mehr.",
   },
   {
+    href: "/admin/firmen",
+    title: "Firmen",
+    text: "Firmenanfragen von /firmenevents, Leads & Status verwalten.",
+  },
+  {
     href: "/admin/hero-bilder",
     title: "Hero-Bilder",
     text: "Hintergrund-Slideshow auf Startseite und /links verwalten.",
