@@ -13,13 +13,14 @@ export default async function FirmenAdminPage() {
   }
 
   return (
-    <div className="mx-auto max-w-3xl px-6 pb-20 pt-32">
+    <div className="mx-auto max-w-7xl px-6 pb-20 pt-32">
       <h1 className="text-2xl font-black uppercase text-foreground">
         Firmen
       </h1>
       <p className="mt-2 text-sm text-foreground/60">
-        Firmenanfragen von /firmenevents – nach Lead Score sortiert. Klick auf
-        eine Firma zeigt alle eingegangenen Anfragen.
+        Firmenanfragen von /firmenevents – als Pipeline nach Status
+        sortiert. Karten per Drag & Drop in eine andere Spalte ziehen oder
+        über &bdquo;Details&ldquo; den Status manuell setzen.
       </p>
       {loadError ? (
         <p className="mt-8 rounded-xl border border-red-500/30 bg-red-500/10 p-4 text-sm text-red-400">
