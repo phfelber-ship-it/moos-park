@@ -3,19 +3,24 @@
 import Image from "next/image";
 import { motion } from "motion/react";
 
-// Angelehnt an schwebende, leicht gedrehte Kartenstapel (siehe
-// shop.club-savoy.com) - vier liegende Clubcards in Bronze/Silber/Gold/
-// Premium, die dauerhaft sanft schweben und sich leicht drehen
-// (2D-Wackeln + 3D-Kippen fuers Licht-/Glanz-Gefuehl), mit dem
-// Ankuendigungstext darunter.
+// Choreografierte Endlosschleife (angelehnt an shop.club-savoy.com): die
+// vier Clubcards (Bronze/Silber/Gold/Premium) kommen aus der Mitte
+// zusammen, beruehren sich mit den Ecken, faechern sich dann auf ihre
+// Position auf und stellen sich - leicht zeitversetzt je Karte - einzeln
+// vor, bevor die Schleife von vorne beginnt. Das leichte Kippen
+// (rotateY) fuer den Glanzeffekt laeuft unabhaengig und schneller weiter.
 type CardConfig = {
   key: string;
   label: string;
   gradient: string;
   shine: string;
   dark?: boolean;
-  base: { x: number; y: number; rotate: number; scale: number; z: number };
-  duration: number;
+  // Position, wenn die Karten in der Mitte zusammenkommen und sich mit
+  // den Ecken beruehren.
+  cluster: { x: number; y: number; rotate: number };
+  // Aufgefaecherte Ruheposition.
+  fan: { x: number; y: number; rotate: number; scale: number; z: number };
+  delay: number;
 };
 
 const CARDS: CardConfig[] = [
@@ -24,24 +29,27 @@ const CARDS: CardConfig[] = [
     label: "SILBER",
     gradient: "linear-gradient(135deg, #9aa1a8 0%, #e8ebee 35%, #6b7278 65%, #cfd3d7 100%)",
     shine: "rgba(255,255,255,0.55)",
-    base: { x: -168, y: -8, rotate: -15, scale: 0.8, z: 5 },
-    duration: 7,
+    cluster: { x: -16, y: -6, rotate: -10 },
+    fan: { x: -168, y: -8, rotate: -15, scale: 0.8, z: 5 },
+    delay: 0,
   },
   {
     key: "bronze",
     label: "BRONZE",
     gradient: "linear-gradient(135deg, #6b3e21 0%, #c98a52 35%, #7c4a2d 65%, #e3a86a 100%)",
     shine: "rgba(255,214,170,0.5)",
-    base: { x: -60, y: 8, rotate: -6, scale: 0.9, z: 10 },
-    duration: 6,
+    cluster: { x: 8, y: -4, rotate: 5 },
+    fan: { x: -60, y: 8, rotate: -6, scale: 0.9, z: 10 },
+    delay: 0.55,
   },
   {
     key: "gold",
     label: "GOLD",
     gradient: "linear-gradient(135deg, #8a6a12 0%, #f5d580 35%, #96731a 65%, #ffe9a8 100%)",
     shine: "rgba(255,241,196,0.6)",
-    base: { x: 112, y: -14, rotate: 9, scale: 0.85, z: 8 },
-    duration: 6.5,
+    cluster: { x: -6, y: 8, rotate: -6 },
+    fan: { x: 112, y: -14, rotate: 9, scale: 0.85, z: 8 },
+    delay: 1.1,
   },
   {
     key: "premium",
@@ -49,13 +57,20 @@ const CARDS: CardConfig[] = [
     gradient: "linear-gradient(135deg, #050505 0%, #2b2b2b 35%, #000000 65%, #1c1c1c 100%)",
     shine: "rgba(185,206,173,0.4)",
     dark: true,
-    base: { x: 22, y: 42, rotate: 2, scale: 1, z: 20 },
-    duration: 5.5,
+    cluster: { x: 10, y: 10, rotate: 11 },
+    fan: { x: 22, y: 42, rotate: 2, scale: 1, z: 20 },
+    delay: 1.65,
   },
 ];
 
+// Zeitpunkte (0-1) fuer eine Schleife: zusammenkommen -> beruehren ->
+// auffaechern -> kurz halten -> zurueck zur Mitte (naht sich fuer den
+// nahtlosen Loop-Neustart wieder an den Startzustand an).
+const TIMES = [0, 0.16, 0.2, 0.42, 0.75, 1];
+const CYCLE_DURATION = 9;
+
 function MemberCard({ card }: { card: CardConfig }) {
-  const { base, gradient, shine, label, duration, dark } = card;
+  const { cluster, fan, gradient, shine, label, delay, dark } = card;
   const textStrong = dark ? "text-white" : "text-black/85";
   const textMid = dark ? "text-white/70" : "text-black/70";
   const textSoft = dark ? "text-white/50" : "text-black/50";
@@ -63,21 +78,29 @@ function MemberCard({ card }: { card: CardConfig }) {
 
   return (
     <motion.div
-      initial={{ opacity: 0, x: base.x, y: base.y + 40, rotate: base.rotate, scale: base.scale }}
-      whileInView={{ opacity: 1, y: base.y }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
       className="absolute left-1/2 top-1/2"
-      style={{ zIndex: base.z, perspective: 800 }}
+      style={{ zIndex: fan.z, perspective: 800 }}
     >
       <motion.div
         animate={{
-          y: [base.y, base.y - 12, base.y],
-          rotate: [base.rotate, base.rotate + 2.5, base.rotate],
+          x: [cluster.x, cluster.x, cluster.x, fan.x, fan.x, cluster.x],
+          y: [cluster.y + 60, cluster.y, cluster.y, fan.y, fan.y - 10, cluster.y + 60],
+          rotate: [cluster.rotate, cluster.rotate, cluster.rotate, fan.rotate, fan.rotate + 2, cluster.rotate],
+          scale: [0.6, 0.72, 0.72, fan.scale, fan.scale, 0.6],
+          opacity: [0, 1, 1, 1, 1, 0],
           rotateY: [-16, 16, -16],
         }}
-        transition={{ duration, repeat: Infinity, ease: "easeInOut" }}
-        style={{ x: base.x, scale: base.scale, transformStyle: "preserve-3d" }}
+        transition={{
+          default: {
+            duration: CYCLE_DURATION,
+            times: TIMES,
+            repeat: Infinity,
+            ease: "easeInOut",
+            delay,
+          },
+          rotateY: { duration: 6, repeat: Infinity, ease: "easeInOut" },
+        }}
+        style={{ transformStyle: "preserve-3d" }}
         className="relative -ml-32 -mt-20 h-40 w-64 overflow-hidden rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.45)] sm:h-44 sm:w-72"
       >
         <div className="absolute inset-0" style={{ background: gradient }} />
