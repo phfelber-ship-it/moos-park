@@ -15,7 +15,9 @@ export async function getUsers(): Promise<AdminUser[]> {
     const { blobs } = await list({ prefix: USERS_PATH });
     const match = blobs.find((b) => b.pathname === USERS_PATH);
     if (!match) return [];
-    const res = await fetch(match.url, { cache: "no-store" });
+    // Cache-Buster gegen die CDN-Edge-Cache-Falle bei ueberschriebenen
+    // Blobs (siehe banner-stats.ts).
+    const res = await fetch(`${match.url}?v=${Date.now()}`, { cache: "no-store" });
     if (!res.ok) return [];
     const data = (await res.json()) as AdminUser[];
     return Array.isArray(data) ? data : [];
@@ -29,6 +31,7 @@ export async function saveUsers(users: AdminUser[]): Promise<void> {
     access: "public",
     contentType: "application/json",
     allowOverwrite: true,
+    cacheControlMaxAge: 60,
   });
 }
 

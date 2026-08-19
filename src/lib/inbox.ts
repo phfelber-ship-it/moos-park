@@ -34,7 +34,10 @@ export async function getInboxEntries(): Promise<InboxEntry[]> {
     const { blobs } = await list({ prefix: INBOX_PATH });
     const match = blobs.find((b) => b.pathname === INBOX_PATH);
     if (!match) return [];
-    const res = await fetch(match.url, { cache: "no-store" });
+    // Cache-Buster, da der Blob-Link trotz Ueberschreiben lange am
+    // CDN-Edge gecacht wird - sonst fehlen im Adminpanel frisch
+    // eingegangene Eintraege (siehe banner-stats.ts fuer den Hintergrund).
+    const res = await fetch(`${match.url}?v=${Date.now()}`, { cache: "no-store" });
     if (!res.ok) return [];
     const data = (await res.json()) as InboxEntry[];
     return Array.isArray(data) ? data : [];
@@ -48,6 +51,7 @@ async function saveInboxEntries(entries: InboxEntry[]): Promise<void> {
     access: "public",
     contentType: "application/json",
     allowOverwrite: true,
+    cacheControlMaxAge: 60,
   });
 }
 
