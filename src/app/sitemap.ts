@@ -11,7 +11,7 @@ export const STATIC_ROUTES = [
   "/tickets",
   "/tanzveranstaltungen",
   "/geburtstag",
-  "/member",
+  "/clubcard",
   "/eventlocation",
   "/galerie",
   "/jobs",
