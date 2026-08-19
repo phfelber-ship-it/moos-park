@@ -18,6 +18,7 @@ const TIERS = [
     text: "Mit Bronze sparst du bei jedem regulären Besuch 2 €.",
     audience:
       "Für alle, die regelmäßig feiern und bei jedem Besuch sparen möchten.",
+    highlight: false,
   },
   {
     emoji: "🥈",
@@ -28,6 +29,7 @@ const TIERS = [
     text: "Mit Silber sparst du bei jedem regulären Besuch 4 €.",
     audience:
       "Für alle, die regelmäßig im MOOS.PARK sind und deutlich weniger Eintritt zahlen möchten.",
+    highlight: false,
   },
   {
     emoji: "🥇",
@@ -38,6 +40,18 @@ const TIERS = [
     text: "Einmal zahlen und bei allen regulären MOOS.PARK Events bis Mai 2027 keinen Eintritt mehr bezahlen.",
     audience:
       "Für echte MOOS.PARK Fans: reguläre Events die komplette Saison ohne Eintritt.",
+    highlight: false,
+  },
+  {
+    emoji: "💎",
+    name: "Premium",
+    earlyBird: 129,
+    regular: 149,
+    headline: "Alle Events inklusive – auch Sonderevents",
+    text: "Mit Premium bist du bei jedem MOOS.PARK Event dabei, auch bei Sonderevents, ohne zusätzlichen Eintritt.",
+    audience:
+      "Für alle, die keine einzige Party verpassen wollen – inklusive Sonderevents.",
+    highlight: true,
   },
 ];
 
@@ -83,12 +97,21 @@ export default function ClubcardPage() {
       {/* Preis-Karten */}
       <section className="px-6 py-20">
         <div className="mx-auto max-w-6xl">
-          <div className="grid gap-6 sm:grid-cols-3">
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {TIERS.map((tier) => (
               <div
                 key={tier.name}
-                className="flex flex-col rounded-2xl border border-foreground/8 bg-foreground/[0.025] p-8 text-center"
+                className={`flex flex-col rounded-2xl border p-8 text-center ${
+                  tier.highlight
+                    ? "border-accent-lime bg-accent-lime/[0.06]"
+                    : "border-foreground/8 bg-foreground/[0.025]"
+                }`}
               >
+                {tier.highlight && (
+                  <span className="mx-auto -mt-4 mb-3 w-fit rounded-full bg-accent-lime px-3 py-1 text-[10px] font-black uppercase tracking-wide text-black">
+                    Alles inklusive
+                  </span>
+                )}
                 <span className="text-4xl">{tier.emoji}</span>
                 <h2 className="mt-3 text-2xl font-black uppercase text-foreground">
                   {tier.name}
@@ -120,8 +143,9 @@ export default function ClubcardPage() {
             ))}
           </div>
           <p className="mt-6 text-center text-xs text-foreground/40">
-            Die Clubcard-Vorteile gelten bei unseren regulären Veranstaltungen.
-            Sonderevents sind ausgenommen.
+            Die Bronze-, Silber- und Gold-Vorteile gelten bei unseren
+            regulären Veranstaltungen, Sonderevents sind ausgenommen – nur
+            mit Premium bist du auch bei Sonderevents ohne Eintritt dabei.
           </p>
         </div>
       </section>
@@ -139,7 +163,7 @@ export default function ClubcardPage() {
           <p className="mx-auto mt-4 max-w-xl font-bold text-black/80">
             Ab dem Reopening sind die Clubcards weiterhin im MOOS.PARK
             erhältlich – allerdings zum teureren regulären Preis: Bronze
-            49 € · Silber 79 € · Gold 129 €.
+            49 € · Silber 79 € · Gold 129 € · Premium 149 €.
           </p>
           <p className="mx-auto mt-4 max-w-xl text-black/80">
             <span className="font-black uppercase">Dein Vorteil:</span> Du
@@ -165,7 +189,7 @@ export default function ClubcardPage() {
           <p className="mt-2 text-center text-foreground/60">
             Einmal sichern. Die ganze Saison profitieren.
           </p>
-          <div className="mt-10 grid gap-6 sm:grid-cols-3">
+          <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {TIERS.map((tier) => (
               <div
                 key={tier.name}
