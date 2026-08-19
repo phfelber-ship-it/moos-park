@@ -46,6 +46,9 @@ const nextConfig: NextConfig = {
       // Slash indexiert (alte URL-Struktur) - ohne diesen Redirect 404en
       // die trotz vorhandenem Ziel (?id= wird automatisch durchgereicht).
       { source: "/eventdetails/", destination: "/eventdetails", permanent: true },
+      // /member war kurzzeitig live, bevor die Seite in /clubcard
+      // umbenannt wurde.
+      { source: "/member", destination: "/clubcard", permanent: true },
     ];
   },
 };
