@@ -9,11 +9,16 @@ const STORAGE_KEY = "clubcard-popup-dismissed-at";
 // nerven - fuer eine zeitlich begrenzte Aktion reicht das, um trotzdem
 // immer wieder sichtbar zu sein.
 const REAPPEAR_AFTER_MS = 24 * 60 * 60 * 1000;
+// Aktion laeuft nur bis zum Reopening - danach zeigt sich das Popup von
+// selbst nicht mehr, ohne dass jemand daran denken muss, es abzuschalten.
+const CAMPAIGN_END = new Date("2026-09-30T23:59:59+02:00");
 
 export default function ClubcardPopup() {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
+    if (Date.now() > CAMPAIGN_END.getTime()) return;
+
     let dismissedAt = 0;
     try {
       dismissedAt = Number(localStorage.getItem(STORAGE_KEY) ?? 0);
