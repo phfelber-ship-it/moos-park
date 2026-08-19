@@ -12,6 +12,7 @@ import FanGallery from "@/components/FanGallery";
 import FlipText from "@/components/FlipText";
 import GalleryCard from "@/components/GalleryCard";
 import RoomsShowcase from "@/components/RoomsShowcase";
+import ClubcardPopup from "@/components/ClubcardPopup";
 import {
   TicketIcon,
   CouponIcon,
@@ -67,6 +68,7 @@ export default async function Home() {
 
   return (
     <div>
+      <ClubcardPopup />
       <Hero images={heroImages} />
 
       <div className="overflow-hidden bg-accent-lime py-3">
