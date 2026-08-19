@@ -24,7 +24,9 @@ export async function getAiInsights(): Promise<AiInsights | null> {
     const { blobs } = await list({ prefix: INSIGHTS_PATH });
     const match = blobs.find((b) => b.pathname === INSIGHTS_PATH);
     if (!match) return null;
-    const res = await fetch(match.url, { cache: "no-store" });
+    // Cache-Buster gegen die CDN-Edge-Cache-Falle bei ueberschriebenen
+    // Blobs (siehe banner-stats.ts).
+    const res = await fetch(`${match.url}?v=${Date.now()}`, { cache: "no-store" });
     if (!res.ok) return null;
     return (await res.json()) as AiInsights;
   } catch {
@@ -37,6 +39,7 @@ async function saveAiInsights(insights: AiInsights): Promise<void> {
     access: "public",
     contentType: "application/json",
     allowOverwrite: true,
+    cacheControlMaxAge: 60,
   });
 }
 

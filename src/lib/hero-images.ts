@@ -18,7 +18,9 @@ async function getOrder(): Promise<string[]> {
     const { blobs } = await list({ prefix: HERO_ORDER_PATH });
     const orderBlob = blobs.find((b) => b.pathname === HERO_ORDER_PATH);
     if (!orderBlob) return [];
-    const res = await fetch(orderBlob.url, { cache: "no-store" });
+    // Cache-Buster gegen die CDN-Edge-Cache-Falle bei ueberschriebenen
+    // Blobs (siehe banner-stats.ts).
+    const res = await fetch(`${orderBlob.url}?v=${Date.now()}`, { cache: "no-store" });
     if (!res.ok) return [];
     const data = (await res.json()) as string[];
     return Array.isArray(data) ? data : [];

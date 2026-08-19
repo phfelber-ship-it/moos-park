@@ -88,7 +88,9 @@ export async function getDanceEvents(): Promise<DanceEvent[]> {
     const { blobs } = await list({ prefix: EVENTS_PATH });
     const match = blobs.find((b) => b.pathname === EVENTS_PATH);
     if (!match) return FALLBACK_DANCE_EVENTS;
-    const res = await fetch(match.url, { cache: "no-store" });
+    // Cache-Buster gegen die CDN-Edge-Cache-Falle bei ueberschriebenen
+    // Blobs (siehe banner-stats.ts).
+    const res = await fetch(`${match.url}?v=${Date.now()}`, { cache: "no-store" });
     if (!res.ok) return FALLBACK_DANCE_EVENTS;
     const data = (await res.json()) as DanceEvent[];
     return Array.isArray(data) && data.length > 0
@@ -104,6 +106,7 @@ export async function saveDanceEvents(events: DanceEvent[]): Promise<void> {
     access: "public",
     contentType: "application/json",
     allowOverwrite: true,
+    cacheControlMaxAge: 60,
   });
 }
 

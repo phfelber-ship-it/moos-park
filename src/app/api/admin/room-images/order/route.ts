@@ -19,6 +19,7 @@ export async function PUT(request: Request) {
     access: "public",
     contentType: "application/json",
     allowOverwrite: true,
+    cacheControlMaxAge: 60,
   });
 
   revalidatePath("/");
