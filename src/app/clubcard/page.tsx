@@ -1,5 +1,5 @@
 import FlipText from "@/components/FlipText";
-import MemberCardsHero from "@/components/MemberCardsHero";
+import ClubCard3D from "@/components/ClubCard3D";
 
 export const metadata = {
   alternates: { canonical: "/clubcard" },
@@ -61,7 +61,7 @@ export default function ClubcardPage() {
   return (
     <div>
       <section className="px-6 pb-12 pt-28 text-center sm:pt-32">
-        <MemberCardsHero />
+        <ClubCard3D />
         <p className="mt-6 text-xs font-black uppercase tracking-[0.3em] text-foreground/50">
           Jetzt verfügbar
         </p>
