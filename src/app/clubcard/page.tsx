@@ -55,7 +55,7 @@ const TIERS = [
   },
 ];
 
-const CTA_HREF = "/kontakt";
+const CTA_HREF = "/eventdetails?id=6a886f1217bd5c162550c2e4";
 
 export default function ClubcardPage() {
   return (
