@@ -201,10 +201,8 @@ export default function ClubCard3D() {
         shadows
         dpr={[1, 2]}
         camera={{ position: [0, 0.15, 5.2], fov: 34 }}
-        gl={{ antialias: true }}
+        gl={{ antialias: true, alpha: true }}
       >
-        <color attach="background" args={["#0a0a0a"]} />
-        <fog attach="fog" args={["#0a0a0a", 6.5, 12]} />
         <ambientLight intensity={0.45} />
         <directionalLight
           position={[3, 4, 4]}
