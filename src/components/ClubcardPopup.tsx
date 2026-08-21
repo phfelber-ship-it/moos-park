@@ -96,7 +96,7 @@ export default function ClubcardPopup() {
                 Early-Bird-Preis.
               </p>
               <a
-                href="/clubcard"
+                href="/eventdetails?id=6a886f1217bd5c162550c2e4"
                 onClick={dismiss}
                 className="mt-5 inline-block w-full rounded-lg bg-accent-lime px-6 py-3 text-sm font-black uppercase tracking-wide text-black transition-transform hover:scale-105"
               >
