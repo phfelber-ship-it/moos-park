@@ -78,11 +78,11 @@ export default function Hero({ images }: { images: string[] }) {
           variants={item}
           className="mt-8 flex flex-col items-center gap-3 text-white/70 sm:mt-14"
         >
-          <span className="text-[11px] font-bold uppercase tracking-[0.3em]">
+          <span className="text-xs font-bold uppercase tracking-[0.3em]">
             Scroll
           </span>
-          <span className="flex h-9 w-5 items-start justify-center rounded-full border-2 border-white/40 p-1.5">
-            <span className="h-1.5 w-1.5 animate-scroll-dot rounded-full bg-accent-lime" />
+          <span className="flex h-10 w-6 items-start justify-center rounded-full border-2 border-white/40 p-1.5">
+            <span className="h-2 w-2 animate-scroll-dot rounded-full bg-accent-lime" />
           </span>
         </motion.div>
       </motion.div>
