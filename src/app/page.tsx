@@ -29,16 +29,6 @@ export const metadata = {
 const WHATSAPP_CHANNEL_URL =
   "https://whatsapp.com/channel/0029VbD72h8KWEKxPE9gr02y";
 
-const TICKER_ITEMS = [
-  "Musik",
-  "Eventlocation",
-  "Kultur",
-  "Festival",
-  "Unvergessliche Events",
-  "Tagungen",
-  "Raum für mehr",
-];
-
 export default async function Home() {
   const events = await getEvents();
   const allGalleries = await getGalleries();
@@ -70,21 +60,6 @@ export default async function Home() {
     <div>
       <ClubcardPopup />
       <Hero images={heroImages} />
-
-      <div className="overflow-hidden bg-accent-lime py-3">
-        <div className="flex animate-marquee gap-8 whitespace-nowrap">
-          {[...TICKER_ITEMS, ...TICKER_ITEMS, ...TICKER_ITEMS].map(
-            (item, i) => (
-              <span
-                key={i}
-                className="flex items-center gap-2 text-sm font-black uppercase tracking-wide text-black"
-              >
-                <span className="inline-block animate-spin-slow">✔</span> {item}
-              </span>
-            )
-          )}
-        </div>
-      </div>
 
       <section className="flex min-h-[720px] items-center px-6 py-24">
         <div className="mx-auto w-full min-w-0 max-w-7xl">
