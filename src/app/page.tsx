@@ -61,26 +61,24 @@ export default async function Home() {
       <ClubcardPopup />
       <Hero images={heroImages} />
 
-      <section className="flex min-h-[720px] items-center px-6 py-24">
+      <section className="px-6 pb-24 pt-12 lg:pt-6">
         <div className="mx-auto w-full min-w-0 max-w-7xl">
-          <Reveal>
-            <h2 className="text-center text-3xl font-black uppercase text-foreground sm:text-4xl">
-              Aktuelle Events
-            </h2>
-          </Reveal>
+          <h2 className="text-center text-3xl font-black uppercase text-foreground sm:text-4xl">
+            Aktuelle Events
+          </h2>
 
-          <Reveal delay={0.1} className="mt-12">
+          <div className="mt-12">
             <EventsExplorer events={events} limit={3} columns={3} />
-          </Reveal>
+          </div>
 
-          <Reveal delay={0.2} className="mt-12 text-center">
+          <div className="mt-12 text-center">
             <Link
               href="/events"
               className="inline-block rounded-lg bg-accent-lime px-8 py-3 text-sm font-black uppercase tracking-wide text-black transition-transform hover:scale-105"
             >
               <FlipText text="Alle Events ansehen" />
             </Link>
-          </Reveal>
+          </div>
         </div>
       </section>
 
