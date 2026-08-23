@@ -90,7 +90,7 @@ export default async function Home() {
         <div className="mx-auto w-full min-w-0 max-w-7xl">
           <Reveal>
             <h2 className="text-center text-3xl font-black uppercase text-foreground sm:text-4xl">
-              Kommende Events
+              Aktuelle Events
             </h2>
           </Reveal>
 
