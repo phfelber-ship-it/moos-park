@@ -76,16 +76,16 @@ export default function EventCard({ event }: { event: ClubscaleEvent }) {
         {formatDate(event.start)} · {formatTime(event.start)} Uhr
       </p>
 
-      <div className="mt-4 flex w-full max-w-[220px] flex-col gap-2">
+      <div className="mt-4 flex w-full max-w-[280px] gap-2">
         <MotionLink
           href={`/eventdetails?id=${event.id}#tickets`}
-          className="block rounded-lg bg-foreground px-6 py-2.5 text-center text-xs font-black uppercase tracking-wide text-background"
+          className="block flex-1 whitespace-nowrap rounded-lg bg-foreground px-2 py-2 text-center text-[9px] font-black uppercase tracking-wide text-background sm:text-[10px]"
         >
           Tickets kaufen
         </MotionLink>
         <MotionLink
           href={`/reservierung?event=${event.id}`}
-          className="block rounded-lg border border-foreground/25 px-6 py-2.5 text-center text-xs font-black uppercase tracking-wide text-foreground transition-colors hover:border-foreground/60"
+          className="block flex-1 whitespace-nowrap rounded-lg border border-foreground/25 px-2 py-2 text-center text-[9px] font-black uppercase tracking-wide text-foreground transition-colors hover:border-foreground/60 sm:text-[10px]"
         >
           Jetzt reservieren
         </MotionLink>
