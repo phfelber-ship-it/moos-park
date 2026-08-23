@@ -14,7 +14,7 @@ export default async function EventsPage() {
   return (
     <div className="mx-auto max-w-7xl px-6 pb-20 pt-32">
       <h1 className="text-center text-4xl font-black uppercase text-foreground sm:text-5xl">
-        Kommende Events
+        Aktuelle Events
       </h1>
 
       <div className="mt-12">
