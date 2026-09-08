@@ -123,21 +123,27 @@ export default function EventExperiencePage() {
             </p>
           </div>
 
+          {/* Vertikale Zeitstrahl-Grafik (Linie + Knotenpunkte) statt
+              einfacher Liste - angelehnt an klassische
+              "Dark-Timeline"-Infografiken. */}
           <Reveal>
-            <div className="mt-14 divide-y divide-foreground/8">
-              {TIMETABLE.map((t) => (
-                <div
-                  key={t.time}
-                  className="flex flex-col gap-1 py-6 sm:flex-row sm:items-baseline sm:gap-8 sm:py-8"
-                >
-                  <span className="text-3xl font-black text-accent-lime sm:w-32 sm:shrink-0 sm:text-4xl">
-                    {t.time}
-                  </span>
-                  <span className="text-xl font-bold text-foreground sm:text-2xl">
-                    {t.label}
-                  </span>
-                </div>
-              ))}
+            <div className="relative mx-auto mt-14 max-w-xl">
+              <div className="absolute bottom-2 left-[3px] top-2 w-0.5 bg-accent-lime/25 sm:left-1" />
+              <div className="flex flex-col gap-10">
+                {TIMETABLE.map((t) => (
+                  <div key={t.time} className="relative flex gap-6 pl-8 sm:pl-10">
+                    <span className="absolute left-0 top-1.5 h-2.5 w-2.5 rounded-full bg-accent-lime ring-4 ring-accent-lime/20 sm:h-3 sm:w-3" />
+                    <div>
+                      <p className="text-2xl font-black text-accent-lime sm:text-3xl">
+                        {t.time}
+                      </p>
+                      <p className="mt-1 text-lg font-bold text-foreground sm:text-xl">
+                        {t.label}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
           </Reveal>
         </section>

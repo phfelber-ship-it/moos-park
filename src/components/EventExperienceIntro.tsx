@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import Image from "next/image";
 
-const SHOW_DURATION = 3000;
+const SHOW_DURATION = 1500;
 
 // Auffaellige Intro-Animation, die vor dem eigentlichen Hero kurz
 // aufblitzt (kraeftige Marken-Flaeche in Lime, Logo faehrt pulsierend ein,
