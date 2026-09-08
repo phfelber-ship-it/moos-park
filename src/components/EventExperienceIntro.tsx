@@ -16,6 +16,14 @@ export default function EventExperienceIntro() {
   const [visible, setVisible] = useState(true);
 
   useEffect(() => {
+    // Seite soll beim Aufruf immer ganz oben starten - auch wenn der Link
+    // einen #anmeldung-Anker enthaelt (z.B. geteilter Link) oder der
+    // Browser eine alte Scrollposition wiederherstellen will.
+    if ("scrollRestoration" in window.history) {
+      window.history.scrollRestoration = "manual";
+    }
+    window.scrollTo(0, 0);
+
     document.body.style.overflow = "hidden";
     const timer = setTimeout(() => setVisible(false), SHOW_DURATION);
     return () => {
