@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import Image from "next/image";
 
-const SHOW_DURATION = 1500;
+const SHOW_DURATION = 5000;
 
 // Kurze Intro-Animation, die vor dem eigentlichen Hero einmal kurz
 // aufblitzt (Logo faehrt ein, Titel folgt) und sich dann als Vorhang nach
@@ -53,9 +53,9 @@ export default function EventExperienceIntro() {
             <Image
               src="/images/logo.png"
               alt="moos.park"
-              width={72}
-              height={72}
-              className="w-16 sm:w-[72px]"
+              width={160}
+              height={160}
+              className="w-28 sm:w-40"
               priority
             />
           </motion.div>
@@ -63,7 +63,7 @@ export default function EventExperienceIntro() {
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.35, ease: "easeOut" }}
-            className="text-sm font-black uppercase tracking-[0.3em] text-accent-lime"
+            className="text-xl font-black uppercase tracking-[0.3em] text-accent-lime sm:text-2xl"
           >
             THE EVENT EXPERIENCE
           </motion.p>
