@@ -104,12 +104,12 @@ export default function EventExperiencePage() {
         </p>
       </section>
 
-      {/* Ab hier: jeder Themenblock bekommt eine eigene Kennnummer +
-          Eyebrow-Label und abwechselnd einen dezenten Hintergrund, damit
-          die Seite klar in einzelne, gut unterscheidbare Blöcke zerfaellt
-          statt als durchlaufender Fließtext zu wirken. */}
-      <section className="border-t border-foreground/8 px-6 py-24 sm:py-28">
-        <div className="mx-auto max-w-3xl">
+      {/* Ab hier: jeder Themenblock ist eine eigene "schwebende" Karte
+          (abgerundet, mit Abstand zu den Nachbarbloecken) statt eines
+          randlosen, volle Breite einnehmenden Streifens - dadurch wirken
+          alle Themenbereiche einheitlich und klar voneinander getrennt. */}
+      <div className="mx-auto flex max-w-4xl flex-col gap-6 px-6 py-10 sm:gap-8 sm:py-16">
+        <section className="rounded-3xl border border-foreground/8 bg-foreground/[0.025] p-8 sm:p-14">
           <div className="text-center">
             <p className="text-xs font-black uppercase tracking-[0.2em] text-accent-lime">
               01 · Programm
@@ -140,11 +140,9 @@ export default function EventExperiencePage() {
               ))}
             </div>
           </Reveal>
-        </div>
-      </section>
+        </section>
 
-      <section className="border-t border-foreground/8 bg-foreground/[0.02] px-6 py-24 sm:py-28">
-        <div className="mx-auto max-w-5xl">
+        <section className="rounded-3xl border border-foreground/8 bg-foreground/[0.025] p-8 sm:p-14">
           <div className="text-center">
             <p className="text-xs font-black uppercase tracking-[0.2em] text-accent-lime">
               02 · Ablauf
@@ -176,14 +174,12 @@ export default function EventExperiencePage() {
               ))}
             </div>
           </Reveal>
-        </div>
-      </section>
+        </section>
 
-      <section
-        id="anmeldung"
-        className="border-t border-foreground/8 px-6 py-24 sm:py-28"
-      >
-        <div className="mx-auto max-w-3xl">
+        <section
+          id="anmeldung"
+          className="rounded-3xl border border-foreground/8 bg-foreground/[0.025] p-8 sm:p-14"
+        >
           <div className="text-center">
             <p className="text-xs font-black uppercase tracking-[0.2em] text-accent-lime">
               03 · Anmeldung
@@ -197,15 +193,13 @@ export default function EventExperiencePage() {
             </p>
           </div>
           <Reveal>
-            <div className="mt-10 rounded-2xl border border-foreground/8 bg-foreground/[0.025] p-8 sm:p-10">
+            <div className="mt-10 rounded-2xl border border-foreground/8 bg-background p-8 sm:p-10">
               <EventExperienceForm />
             </div>
           </Reveal>
-        </div>
-      </section>
+        </section>
 
-      <section className="border-t border-foreground/8 bg-foreground/[0.02] px-6 py-24 sm:pb-28 sm:pt-28">
-        <div className="mx-auto max-w-3xl">
+        <section className="rounded-3xl border border-foreground/8 bg-foreground/[0.025] p-8 sm:p-14">
           <div className="text-center">
             <p className="text-xs font-black uppercase tracking-[0.2em] text-accent-lime">
               04 · Fragen
@@ -240,8 +234,8 @@ export default function EventExperiencePage() {
               <FlipText text="Kontakt aufnehmen" />
             </a>
           </div>
-        </div>
-      </section>
+        </section>
+      </div>
     </div>
   );
 }
