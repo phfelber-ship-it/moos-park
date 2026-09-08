@@ -1,7 +1,9 @@
+import Image from "next/image";
 import StepsTimeline from "@/components/StepsTimeline";
 import FlipText from "@/components/FlipText";
 import Reveal from "@/components/Reveal";
 import EventExperienceForm from "@/components/EventExperienceForm";
+import EventExperienceIntro from "@/components/EventExperienceIntro";
 
 export const metadata = {
   alternates: { canonical: "/event-experience" },
@@ -10,29 +12,6 @@ export const metadata = {
   description:
     "Mittwoch, 14. Oktober 2026, 17–22 Uhr: Erleben Sie im moos.park einen inspirierenden Abend für Ihre nächste Firmenveranstaltung – Sommerfest, Weihnachtsfeier, Team- und Kundenevent. Plätze sind begrenzt – jetzt anmelden.",
 };
-
-const HIGHLIGHTS = [
-  {
-    title: "Persönlicher Empfang",
-    text: "Sie werden an diesem Abend persönlich von uns empfangen und durch die moos.park Eventlocation begleitet.",
-  },
-  {
-    title: "Sehen, wie Ihre Veranstaltung aussehen könnte",
-    text: "Erleben Sie live verschiedene Event-Setups – von elegant bis Party – als konkrete Inspiration für Ihre eigene Firmenfeier.",
-  },
-  {
-    title: "Event-Erlebnis auf mehreren Ebenen",
-    text: "Interaktive Formate, Musik und Entertainment zeigen Ihnen, wie vielseitig ein Event im moos.park gestaltet werden kann.",
-  },
-  {
-    title: "Kulinarische Highlights",
-    text: "Genießen Sie ausgewählte Speisen und Getränke, wie sie auch bei Ihrer Veranstaltung möglich sind.",
-  },
-  {
-    title: "Ein besonderer Abend – nur für geladene Unternehmer",
-    text: "Ein exklusiver Kreis aus geladenen Geschäftsführern und Entscheidern aus der Region – Networking auf Augenhöhe.",
-  },
-];
 
 const TIMETABLE = [
   { time: "17:00", label: "Empfang aller Gäste" },
@@ -86,11 +65,20 @@ const FAQ = [
 export default function EventExperiencePage() {
   return (
     <div>
+      <EventExperienceIntro />
+
       {/* Hero: fuellt einen kompletten Bildschirm (100svh statt 100vh wegen
           mobiler Adressleiste) und ist bewusst groesser/auffaelliger als
           eine normale Hero-Section - das Erste, was Besucher sehen. */}
       <section className="flex min-h-[100svh] flex-col items-center justify-center px-6 py-16 text-center">
-        <p className="text-sm font-black uppercase tracking-[0.15em] text-accent-lime sm:text-base">
+        <Image
+          src="/images/logo.png"
+          alt="moos.park – Dein Hotspot für Tag und Nacht"
+          width={64}
+          height={64}
+          className="w-14 sm:w-16"
+        />
+        <p className="mt-6 text-sm font-black uppercase tracking-[0.15em] text-accent-lime sm:text-base">
           🗓️ Mittwoch, 14. Oktober 2026 · 17:00–22:00 Uhr
         </p>
         <h1 className="mt-5 text-6xl font-black uppercase leading-[0.95] tracking-tight text-foreground sm:text-8xl lg:text-9xl">
@@ -122,7 +110,7 @@ export default function EventExperiencePage() {
           die Seite klar in einzelne, gut unterscheidbare Blöcke zerfaellt
           statt als durchlaufender Fließtext zu wirken. */}
       <section className="border-t border-foreground/8 px-6 py-24 sm:py-28">
-        <div className="mx-auto max-w-6xl">
+        <div className="mx-auto max-w-3xl">
           <div className="text-center">
             <p className="text-xs font-black uppercase tracking-[0.2em] text-accent-lime">
               01 · Programm
@@ -135,39 +123,22 @@ export default function EventExperiencePage() {
               Events, Kundenevents und mehr.
             </p>
           </div>
-          <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {HIGHLIGHTS.map((h) => (
-              <Reveal key={h.title}>
-                <div className="h-full rounded-xl border border-foreground/8 bg-foreground/[0.025] p-8">
-                  <h3 className="text-lg font-black uppercase text-foreground">
-                    {h.title}
-                  </h3>
-                  <p className="mt-3 text-sm text-foreground/60">{h.text}</p>
-                </div>
-              </Reveal>
-            ))}
-          </div>
 
           <Reveal>
-            <div className="mx-auto mt-14 max-w-2xl rounded-xl border border-foreground/8 bg-foreground/[0.025] p-8 sm:p-10">
-              <p className="text-center text-xs font-black uppercase tracking-[0.2em] text-foreground/50">
-                Ablaufplan
-              </p>
-              <div className="mt-6 divide-y divide-foreground/8">
-                {TIMETABLE.map((t) => (
-                  <div
-                    key={t.time}
-                    className="flex items-baseline gap-4 py-3 first:pt-0 last:pb-0"
-                  >
-                    <span className="w-16 shrink-0 font-black text-accent-lime">
-                      {t.time}
-                    </span>
-                    <span className="text-sm font-bold text-foreground">
-                      {t.label}
-                    </span>
-                  </div>
-                ))}
-              </div>
+            <div className="mt-14 divide-y divide-foreground/8">
+              {TIMETABLE.map((t) => (
+                <div
+                  key={t.time}
+                  className="flex flex-col gap-1 py-6 sm:flex-row sm:items-baseline sm:gap-8 sm:py-8"
+                >
+                  <span className="text-3xl font-black text-accent-lime sm:w-32 sm:shrink-0 sm:text-4xl">
+                    {t.time}
+                  </span>
+                  <span className="text-xl font-bold text-foreground sm:text-2xl">
+                    {t.label}
+                  </span>
+                </div>
+              ))}
             </div>
           </Reveal>
         </div>
