@@ -1,8 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { sendContactMail } from "@/lib/clubscale";
-import { logInbox } from "@/lib/inbox-client";
 import HoneypotField from "@/components/HoneypotField";
 import FlipText from "@/components/FlipText";
 
@@ -40,27 +38,25 @@ export default function EventExperienceForm() {
 
     setStatus("sending");
     try {
-      await sendContactMail({
-        firstname: vorname.trim(),
-        lastname: nachname.trim(),
-        mail: email.trim(),
-        phone: telefon.trim(),
-        subject: `Anmeldung THE EVENT EXPERIENCE – ${firma.trim()}`,
-        body:
-          `Firma: ${firma.trim()}\n` +
-          `Anrede: ${anrede}\n` +
-          `Ansprechpartner: ${vorname.trim()} ${nachname.trim()}\n` +
-          (nachricht.trim() ? `Nachricht: ${nachricht.trim()}\n` : "") +
-          `\nTermin: Mittwoch, 14. Oktober 2026, 17:00–22:00 Uhr\nmoos.park Eventlocation, Rudolf-Diesel-Straße 23, 86554 Pöttmes`,
+      // Anmeldungen landen direkt im Adminpanel (/admin/event-experience) -
+      // kein Versand mehr ueber Clubscale, da es hier ein eigenes internes
+      // CRM mit Status-Pipeline (Neu/Bestätigt/Nachfrage) gibt.
+      const res = await fetch("/api/event-experience/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          company: firma.trim(),
+          salutation: anrede,
+          lastName: nachname.trim(),
+          firstName: vorname.trim(),
+          email: email.trim(),
+          phone: telefon.trim(),
+          message: nachricht.trim(),
+          consent: accepted,
+          honeypot,
+        }),
       });
-      logInbox({
-        type: "eventexperience",
-        name: `${anrede} ${vorname.trim()} ${nachname.trim()} (${firma.trim()})`,
-        email: email.trim(),
-        phone: telefon.trim(),
-        summary: firma.trim(),
-        message: nachricht.trim(),
-      });
+      if (!res.ok) throw new Error("failed");
       setStatus("sent");
     } catch {
       setStatus("error");
