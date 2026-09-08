@@ -6,21 +6,14 @@ import { logInbox } from "@/lib/inbox-client";
 import HoneypotField from "@/components/HoneypotField";
 import FlipText from "@/components/FlipText";
 
-const INTERESSEN = [
-  "Sommerfest",
-  "Weihnachtsfeier",
-  "Team Event",
-  "Kundenevent",
-  "Noch offen",
-];
+const ANREDEN = ["Herr", "Frau", "Divers"];
 
 export default function EventExperienceForm() {
   const [firma, setFirma] = useState("");
+  const [anrede, setAnrede] = useState(ANREDEN[0]);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [telefon, setTelefon] = useState("");
-  const [interesse, setInteresse] = useState(INTERESSEN[0]);
-  const [begleitpersonen, setBegleitpersonen] = useState("0");
   const [nachricht, setNachricht] = useState("");
   const [accepted, setAccepted] = useState(false);
   const [honeypot, setHoneypot] = useState("");
@@ -53,18 +46,17 @@ export default function EventExperienceForm() {
         subject: `Anmeldung THE EVENT EXPERIENCE – ${firma.trim()}`,
         body:
           `Firma: ${firma.trim()}\n` +
+          `Anrede: ${anrede}\n` +
           `Ansprechpartner: ${name.trim()}\n` +
-          `Interesse an: ${interesse}\n` +
-          `Begleitpersonen: ${begleitpersonen || "0"}\n` +
           (nachricht.trim() ? `Nachricht: ${nachricht.trim()}\n` : "") +
-          `\nTermin: Dienstag, 13. Oktober 2026, 17:00–22:00 Uhr\nmoos.park Eventlocation, Rudolf-Diesel-Straße 23, 86554 Pöttmes`,
+          `\nTermin: Mittwoch, 14. Oktober 2026, 17:00–22:00 Uhr\nmoos.park Eventlocation, Rudolf-Diesel-Straße 23, 86554 Pöttmes`,
       });
       logInbox({
         type: "eventexperience",
-        name: `${name.trim()} (${firma.trim()})`,
+        name: `${anrede} ${name.trim()} (${firma.trim()})`,
         email: email.trim(),
         phone: telefon.trim(),
-        summary: `${interesse} · ${begleitpersonen || "0"} Begleitpersonen`,
+        summary: firma.trim(),
         message: nachricht.trim(),
       });
       setStatus("sent");
@@ -80,8 +72,8 @@ export default function EventExperienceForm() {
           Platz gesichert! 🎉
         </p>
         <p className="mt-2 text-sm text-foreground/70">
-          Danke für deine Anmeldung zu THE EVENT EXPERIENCE. Wir bestätigen
-          deine Teilnahme in Kürze per E-Mail an{" "}
+          Vielen Dank für Ihre Anmeldung zu THE EVENT EXPERIENCE. Wir
+          bestätigen Ihre Teilnahme in Kürze per E-Mail an{" "}
           <span className="font-bold">{email}</span>.
         </p>
       </div>
@@ -91,20 +83,48 @@ export default function EventExperienceForm() {
   return (
     <form onSubmit={submit} className="grid gap-4">
       <HoneypotField value={honeypot} onChange={setHoneypot} />
-      <div className="grid gap-4 sm:grid-cols-2">
-        <input
-          value={firma}
-          onChange={(e) => setFirma(e.target.value)}
-          placeholder="Unternehmen"
-          className="w-full rounded-xl border border-foreground/15 bg-foreground/5 px-4 py-3 text-foreground placeholder-foreground/40 outline-none focus:border-accent-lime"
-        />
-        <input
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          placeholder="Ansprechpartner (Vor- und Nachname)"
-          className="w-full rounded-xl border border-foreground/15 bg-foreground/5 px-4 py-3 text-foreground placeholder-foreground/40 outline-none focus:border-accent-lime"
-        />
+      <input
+        value={firma}
+        onChange={(e) => setFirma(e.target.value)}
+        placeholder="Unternehmen"
+        className="w-full rounded-xl border border-foreground/15 bg-foreground/5 px-4 py-3 text-foreground placeholder-foreground/40 outline-none focus:border-accent-lime"
+      />
+
+      <div>
+        <p className="mb-2 text-sm font-bold text-foreground">
+          Ansprechpartner
+        </p>
+        <div className="grid gap-4 sm:grid-cols-[auto_1fr]">
+          <div className="grid grid-cols-3 gap-2 sm:w-auto">
+            {ANREDEN.map((a) => (
+              <label
+                key={a}
+                className={`flex items-center justify-center gap-2 rounded-xl border px-4 py-3 text-sm cursor-pointer transition-colors ${
+                  anrede === a
+                    ? "border-accent-lime bg-accent-lime/10"
+                    : "border-foreground/15 text-foreground/70"
+                }`}
+              >
+                <input
+                  type="radio"
+                  name="anrede"
+                  checked={anrede === a}
+                  onChange={() => setAnrede(a)}
+                  className="accent-[var(--accent-lime)]"
+                />
+                {a}
+              </label>
+            ))}
+          </div>
+          <input
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder="Name (Vor- und Nachname)"
+            className="w-full rounded-xl border border-foreground/15 bg-foreground/5 px-4 py-3 text-foreground placeholder-foreground/40 outline-none focus:border-accent-lime"
+          />
+        </div>
       </div>
+
       <div className="grid gap-4 sm:grid-cols-2">
         <input
           value={email}
@@ -118,46 +138,6 @@ export default function EventExperienceForm() {
           onChange={(e) => setTelefon(e.target.value)}
           placeholder="Telefonnummer"
           className="w-full rounded-xl border border-foreground/15 bg-foreground/5 px-4 py-3 text-foreground placeholder-foreground/40 outline-none focus:border-accent-lime"
-        />
-      </div>
-
-      <div>
-        <p className="mb-2 text-sm font-bold text-foreground">
-          Ich interessiere mich vor allem für
-        </p>
-        <div className="grid gap-2 sm:grid-cols-3">
-          {INTERESSEN.map((i) => (
-            <label
-              key={i}
-              className={`flex items-center gap-2 rounded-xl border px-4 py-3 text-sm cursor-pointer transition-colors ${
-                interesse === i
-                  ? "border-accent-lime bg-accent-lime/10"
-                  : "border-foreground/15 text-foreground/70"
-              }`}
-            >
-              <input
-                type="radio"
-                name="interesse"
-                checked={interesse === i}
-                onChange={() => setInteresse(i)}
-                className="accent-[var(--accent-lime)]"
-              />
-              {i}
-            </label>
-          ))}
-        </div>
-      </div>
-
-      <div>
-        <label className="mb-2 block text-sm font-bold text-foreground">
-          Begleitpersonen (optional)
-        </label>
-        <input
-          value={begleitpersonen}
-          onChange={(e) => setBegleitpersonen(e.target.value.replace(/[^0-9]/g, ""))}
-          inputMode="numeric"
-          placeholder="0"
-          className="w-full max-w-[160px] rounded-xl border border-foreground/15 bg-foreground/5 px-4 py-3 text-foreground placeholder-foreground/40 outline-none focus:border-accent-lime"
         />
       </div>
 
@@ -182,8 +162,8 @@ export default function EventExperienceForm() {
 
       {status === "error" && (
         <p className="text-sm text-red-500">
-          Da ist leider etwas schiefgelaufen. Schreib uns stattdessen gerne
-          direkt an{" "}
+          Da ist leider etwas schiefgelaufen. Schreiben Sie uns stattdessen
+          gerne direkt an{" "}
           <a href="mailto:s.geisler@moos-park.de" className="underline">
             s.geisler@moos-park.de
           </a>
