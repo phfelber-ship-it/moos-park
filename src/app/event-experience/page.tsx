@@ -1,5 +1,4 @@
 import Image from "next/image";
-import StepsTimeline from "@/components/StepsTimeline";
 import FlipText from "@/components/FlipText";
 import Reveal from "@/components/Reveal";
 import EventExperienceForm from "@/components/EventExperienceForm";
@@ -105,12 +104,12 @@ export default function EventExperiencePage() {
         </p>
       </section>
 
-      {/* Ab hier: jeder Themenblock bekommt eine eigene Kennnummer +
-          Eyebrow-Label und abwechselnd einen dezenten Hintergrund, damit
-          die Seite klar in einzelne, gut unterscheidbare Blöcke zerfaellt
-          statt als durchlaufender Fließtext zu wirken. */}
-      <section className="border-t border-foreground/8 px-6 py-24 sm:py-28">
-        <div className="mx-auto max-w-3xl">
+      {/* Ab hier: jeder Themenblock ist eine eigene "schwebende" Karte
+          (abgerundet, mit Abstand zu den Nachbarbloecken) statt eines
+          randlosen, volle Breite einnehmenden Streifens - dadurch wirken
+          alle Themenbereiche einheitlich und klar voneinander getrennt. */}
+      <div className="mx-auto flex max-w-4xl flex-col gap-6 px-6 py-10 sm:gap-8 sm:py-16">
+        <section className="rounded-3xl border border-foreground/8 bg-foreground/[0.025] p-8 sm:p-14">
           <div className="text-center">
             <p className="text-xs font-black uppercase tracking-[0.2em] text-accent-lime">
               01 · Programm
@@ -141,11 +140,9 @@ export default function EventExperiencePage() {
               ))}
             </div>
           </Reveal>
-        </div>
-      </section>
+        </section>
 
-      <section className="border-t border-foreground/8 bg-foreground/[0.02] px-6 py-24 sm:py-28">
-        <div className="mx-auto max-w-5xl">
+        <section className="rounded-3xl border border-foreground/8 bg-foreground/[0.025] p-8 sm:p-14">
           <div className="text-center">
             <p className="text-xs font-black uppercase tracking-[0.2em] text-accent-lime">
               02 · Ablauf
@@ -157,17 +154,32 @@ export default function EventExperiencePage() {
               In 3 Schritten von der Anmeldung zur fertigen Eventidee.
             </p>
           </div>
-          <div className="mt-14">
-            <StepsTimeline steps={STEPS} />
-          </div>
-        </div>
-      </section>
+          <Reveal>
+            <div className="mt-14 divide-y divide-foreground/8">
+              {STEPS.map((s) => (
+                <div
+                  key={s.num}
+                  className="flex flex-col gap-1 py-6 sm:flex-row sm:items-baseline sm:gap-8 sm:py-8"
+                >
+                  <span className="text-3xl font-black text-accent-lime sm:w-32 sm:shrink-0 sm:text-4xl">
+                    {s.num}
+                  </span>
+                  <div>
+                    <p className="text-xl font-bold text-foreground sm:text-2xl">
+                      {s.title}
+                    </p>
+                    <p className="mt-1 text-sm text-foreground/60">{s.text}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </Reveal>
+        </section>
 
-      <section
-        id="anmeldung"
-        className="border-t border-foreground/8 px-6 py-24 sm:py-28"
-      >
-        <div className="mx-auto max-w-3xl">
+        <section
+          id="anmeldung"
+          className="rounded-3xl border border-foreground/8 bg-foreground/[0.025] p-8 sm:p-14"
+        >
           <div className="text-center">
             <p className="text-xs font-black uppercase tracking-[0.2em] text-accent-lime">
               03 · Anmeldung
@@ -181,15 +193,13 @@ export default function EventExperiencePage() {
             </p>
           </div>
           <Reveal>
-            <div className="mt-10 rounded-2xl border border-foreground/8 bg-foreground/[0.025] p-8 sm:p-10">
+            <div className="mt-10 rounded-2xl border border-foreground/8 bg-background p-8 sm:p-10">
               <EventExperienceForm />
             </div>
           </Reveal>
-        </div>
-      </section>
+        </section>
 
-      <section className="border-t border-foreground/8 bg-foreground/[0.02] px-6 py-24 sm:pb-28 sm:pt-28">
-        <div className="mx-auto max-w-3xl">
+        <section className="rounded-3xl border border-foreground/8 bg-foreground/[0.025] p-8 sm:p-14">
           <div className="text-center">
             <p className="text-xs font-black uppercase tracking-[0.2em] text-accent-lime">
               04 · Fragen
@@ -224,8 +234,8 @@ export default function EventExperiencePage() {
               <FlipText text="Kontakt aufnehmen" />
             </a>
           </div>
-        </div>
-      </section>
+        </section>
+      </div>
     </div>
   );
 }
