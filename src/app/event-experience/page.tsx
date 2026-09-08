@@ -34,6 +34,14 @@ const HIGHLIGHTS = [
   },
 ];
 
+const TIMETABLE = [
+  { time: "17:00", label: "Empfang aller Gäste" },
+  { time: "18:00", label: "Herzliches Willkommen durch die Veranstalter" },
+  { time: "18:30", label: "Kulinarische Verwöhnung" },
+  { time: "20:00", label: "Inspirationen" },
+  { time: "22:00", label: "Veranstaltungsende" },
+];
+
 const STEPS = [
   {
     num: "01",
@@ -139,6 +147,29 @@ export default function EventExperiencePage() {
               </Reveal>
             ))}
           </div>
+
+          <Reveal>
+            <div className="mx-auto mt-14 max-w-2xl rounded-xl border border-foreground/8 bg-foreground/[0.025] p-8 sm:p-10">
+              <p className="text-center text-xs font-black uppercase tracking-[0.2em] text-foreground/50">
+                Ablaufplan
+              </p>
+              <div className="mt-6 divide-y divide-foreground/8">
+                {TIMETABLE.map((t) => (
+                  <div
+                    key={t.time}
+                    className="flex items-baseline gap-4 py-3 first:pt-0 last:pb-0"
+                  >
+                    <span className="w-16 shrink-0 font-black text-accent-lime">
+                      {t.time}
+                    </span>
+                    <span className="text-sm font-bold text-foreground">
+                      {t.label}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </Reveal>
         </div>
       </section>
 
