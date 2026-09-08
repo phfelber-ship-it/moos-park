@@ -11,7 +11,8 @@ const ANREDEN = ["Herr", "Frau", "Divers"];
 export default function EventExperienceForm() {
   const [firma, setFirma] = useState("");
   const [anrede, setAnrede] = useState(ANREDEN[0]);
-  const [name, setName] = useState("");
+  const [nachname, setNachname] = useState("");
+  const [vorname, setVorname] = useState("");
   const [email, setEmail] = useState("");
   const [telefon, setTelefon] = useState("");
   const [nachricht, setNachricht] = useState("");
@@ -23,7 +24,8 @@ export default function EventExperienceForm() {
 
   const canSend =
     firma.trim() !== "" &&
-    name.trim() !== "" &&
+    nachname.trim() !== "" &&
+    vorname.trim() !== "" &&
     email.trim() !== "" &&
     telefon.trim() !== "" &&
     accepted;
@@ -39,21 +41,21 @@ export default function EventExperienceForm() {
     setStatus("sending");
     try {
       await sendContactMail({
-        firstname: name.trim(),
-        lastname: "",
+        firstname: vorname.trim(),
+        lastname: nachname.trim(),
         mail: email.trim(),
         phone: telefon.trim(),
         subject: `Anmeldung THE EVENT EXPERIENCE – ${firma.trim()}`,
         body:
           `Firma: ${firma.trim()}\n` +
           `Anrede: ${anrede}\n` +
-          `Ansprechpartner: ${name.trim()}\n` +
+          `Ansprechpartner: ${vorname.trim()} ${nachname.trim()}\n` +
           (nachricht.trim() ? `Nachricht: ${nachricht.trim()}\n` : "") +
           `\nTermin: Mittwoch, 14. Oktober 2026, 17:00–22:00 Uhr\nmoos.park Eventlocation, Rudolf-Diesel-Straße 23, 86554 Pöttmes`,
       });
       logInbox({
         type: "eventexperience",
-        name: `${anrede} ${name.trim()} (${firma.trim()})`,
+        name: `${anrede} ${vorname.trim()} ${nachname.trim()} (${firma.trim()})`,
         email: email.trim(),
         phone: telefon.trim(),
         summary: firma.trim(),
@@ -90,39 +92,31 @@ export default function EventExperienceForm() {
         className="w-full rounded-xl border border-foreground/15 bg-foreground/5 px-4 py-3 text-foreground placeholder-foreground/40 outline-none focus:border-accent-lime"
       />
 
-      <div>
-        <p className="mb-2 text-sm font-bold text-foreground">
-          Ansprechpartner
-        </p>
-        <div className="grid gap-4 sm:grid-cols-[auto_1fr]">
-          <div className="grid grid-cols-3 gap-2 sm:w-auto">
-            {ANREDEN.map((a) => (
-              <label
-                key={a}
-                className={`flex items-center justify-center gap-2 rounded-xl border px-4 py-3 text-sm cursor-pointer transition-colors ${
-                  anrede === a
-                    ? "border-accent-lime bg-accent-lime/10"
-                    : "border-foreground/15 text-foreground/70"
-                }`}
-              >
-                <input
-                  type="radio"
-                  name="anrede"
-                  checked={anrede === a}
-                  onChange={() => setAnrede(a)}
-                  className="accent-[var(--accent-lime)]"
-                />
-                {a}
-              </label>
-            ))}
-          </div>
-          <input
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            placeholder="Name (Vor- und Nachname)"
-            className="w-full rounded-xl border border-foreground/15 bg-foreground/5 px-4 py-3 text-foreground placeholder-foreground/40 outline-none focus:border-accent-lime"
-          />
-        </div>
+      <select
+        value={anrede}
+        onChange={(e) => setAnrede(e.target.value)}
+        className="w-full rounded-xl border border-foreground/15 bg-foreground/5 px-4 py-3 text-foreground outline-none focus:border-accent-lime"
+      >
+        {ANREDEN.map((a) => (
+          <option key={a} value={a}>
+            {a}
+          </option>
+        ))}
+      </select>
+
+      <div className="grid gap-4 sm:grid-cols-2">
+        <input
+          value={nachname}
+          onChange={(e) => setNachname(e.target.value)}
+          placeholder="Name"
+          className="w-full rounded-xl border border-foreground/15 bg-foreground/5 px-4 py-3 text-foreground placeholder-foreground/40 outline-none focus:border-accent-lime"
+        />
+        <input
+          value={vorname}
+          onChange={(e) => setVorname(e.target.value)}
+          placeholder="Vorname"
+          className="w-full rounded-xl border border-foreground/15 bg-foreground/5 px-4 py-3 text-foreground placeholder-foreground/40 outline-none focus:border-accent-lime"
+        />
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2">

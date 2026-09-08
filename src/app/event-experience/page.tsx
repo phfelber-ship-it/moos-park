@@ -42,7 +42,7 @@ const STEPS = [
 const FAQ = [
   {
     q: "Für wen ist der Tag gedacht?",
-    a: "Für Geschäftsführung, Assistenz der Geschäftsführung, Eventverantwortliche sowie Marketing- und Personalverantwortliche.",
+    a: "Für die Geschäftsführung, Assistenz der Geschäftsführung, Eventverantwortliche sowie Marketing- und Personalverantwortliche.",
   },
   {
     q: "Was kostet die Teilnahme?",
@@ -194,11 +194,11 @@ export default function EventExperiencePage() {
             <p className="text-xs font-black uppercase tracking-[0.2em] text-accent-lime">
               04 · Fragen
             </p>
-            <h2 className="mt-3 text-4xl font-black uppercase text-foreground sm:text-5xl">
+            <h2 className="mt-3 text-5xl font-black uppercase text-foreground sm:text-6xl">
               Häufige Fragen
             </h2>
             <p className="mx-auto mt-3 max-w-xl text-foreground/60">
-              Alles, was Sie zu THE EVENT EXPERIENCE wissen möchten.
+              Alles, was Sie zu THE EVENT EXPERIENCE wissen müssen.
             </p>
           </div>
           <div className="mt-14 divide-y divide-foreground/8 rounded-xl border border-foreground/8 bg-background">
