@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { AnimatePresence, motion } from "motion/react";
 import HoneypotField from "@/components/HoneypotField";
 import FlipText from "@/components/FlipText";
 
@@ -63,23 +64,36 @@ export default function EventExperienceForm() {
     }
   };
 
-  if (status === "sent") {
-    return (
-      <div className="rounded-xl border border-accent-lime/30 bg-accent-lime/10 p-6">
-        <p className="font-black uppercase text-foreground">
-          Platz gesichert! 🎉
-        </p>
-        <p className="mt-2 text-sm text-foreground/70">
-          Vielen Dank für Ihre Anmeldung zu THE EVENT EXPERIENCE. Wir
-          bestätigen Ihre Teilnahme in Kürze per E-Mail an{" "}
-          <span className="font-bold">{email}</span>.
-        </p>
-      </div>
-    );
-  }
-
   return (
-    <form onSubmit={submit} className="grid gap-4">
+    <>
+      <AnimatePresence>
+        {status === "sent" && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 px-6"
+          >
+            <motion.div
+              initial={{ opacity: 0, y: 30, scale: 0.95 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 20, scale: 0.95 }}
+              transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+              className="w-full max-w-sm rounded-2xl border border-accent-lime/30 bg-background p-8 text-center shadow-2xl sm:p-10"
+            >
+              <p className="text-3xl font-black uppercase text-foreground sm:text-4xl">
+                Platz gesichert! 🎉
+              </p>
+              <p className="mt-4 text-sm text-foreground/70">
+                Vielen Dank für Ihre Anmeldung zu THE EVENT EXPERIENCE. Wir
+                melden uns in Kürze bei Ihnen.
+              </p>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <form onSubmit={submit} className="grid gap-4">
       <HoneypotField value={honeypot} onChange={setHoneypot} />
       <input
         value={firma}
@@ -170,6 +184,7 @@ export default function EventExperienceForm() {
           text={status === "sending" ? "Wird gesendet..." : "Platz sichern"}
         />
       </button>
-    </form>
+      </form>
+    </>
   );
 }
