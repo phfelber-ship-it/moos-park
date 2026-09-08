@@ -3,6 +3,7 @@ import ClearCacheButton from "@/components/ClearCacheButton";
 import FacebookPixelStatus from "@/components/FacebookPixelStatus";
 import { getInboxEntries } from "@/lib/inbox";
 import { getCompaniesWithLeads } from "@/lib/companies";
+import { getRegistrations } from "@/lib/event-experience";
 
 const SECTIONS = [
   {
@@ -14,6 +15,11 @@ const SECTIONS = [
     href: "/admin/firmen",
     title: "Firmen",
     text: "Firmenanfragen von /firmenevents, Leads & Status verwalten.",
+  },
+  {
+    href: "/admin/event-experience",
+    title: "Event Experience",
+    text: "Anmeldungen von /event-experience, Status & Excel-Export.",
   },
   {
     href: "/admin/hero-bilder",
@@ -79,6 +85,18 @@ export default async function AdminDashboardPage() {
     newCompaniesCount = 0;
   }
 
+  // Event-Experience-Anmeldungen mit Status "NEU" - noch nicht
+  // gesichtet/bearbeitet. Best-effort, analog zu newCompaniesCount.
+  let newRegistrationsCount = 0;
+  try {
+    const registrations = await getRegistrations();
+    newRegistrationsCount = registrations.filter(
+      (r) => r.status === "NEU"
+    ).length;
+  } catch {
+    newRegistrationsCount = 0;
+  }
+
   return (
     <div className="mx-auto max-w-3xl px-6 pb-20 pt-32">
       <h1 className="text-2xl font-black uppercase text-foreground">
@@ -105,6 +123,12 @@ export default async function AdminDashboardPage() {
                 {newCompaniesCount}
               </span>
             )}
+            {s.href === "/admin/event-experience" &&
+              newRegistrationsCount > 0 && (
+                <span className="absolute right-4 top-4 flex h-6 min-w-6 items-center justify-center rounded-full bg-accent-lime px-1.5 text-xs font-black text-black">
+                  {newRegistrationsCount}
+                </span>
+              )}
             <h2 className="text-lg font-black uppercase text-foreground">
               {s.title}
             </h2>
