@@ -78,16 +78,19 @@ const FAQ = [
 export default function EventExperiencePage() {
   return (
     <div>
-      <section className="px-6 pb-12 pt-20 text-center">
-        <p className="text-sm font-bold uppercase tracking-wide text-accent-lime">
+      {/* Hero: fuellt einen kompletten Bildschirm (100svh statt 100vh wegen
+          mobiler Adressleiste) und ist bewusst groesser/auffaelliger als
+          eine normale Hero-Section - das Erste, was Besucher sehen. */}
+      <section className="flex min-h-[100svh] flex-col items-center justify-center px-6 py-16 text-center">
+        <p className="text-sm font-black uppercase tracking-[0.15em] text-accent-lime sm:text-base">
           🗓️ Mittwoch, 14. Oktober 2026 · 17:00–22:00 Uhr
         </p>
-        <h1 className="mt-3 text-4xl font-black uppercase leading-tight text-foreground sm:text-6xl">
+        <h1 className="mt-5 text-6xl font-black uppercase leading-[0.95] tracking-tight text-foreground sm:text-8xl lg:text-9xl">
           THE EVENT
           <br />
           EXPERIENCE
         </h1>
-        <p className="mx-auto mt-4 max-w-2xl text-lg font-bold text-foreground/80">
+        <p className="mx-auto mt-6 max-w-2xl text-xl font-bold text-foreground/80 sm:text-2xl">
           Erleben. Inspirieren. Ihr nächstes Event entdecken.
         </p>
         <p className="mx-auto mt-4 max-w-xl text-foreground/70">
@@ -97,7 +100,7 @@ export default function EventExperiencePage() {
         </p>
         <a
           href="#anmeldung"
-          className="mt-8 inline-block rounded-lg bg-accent-lime px-8 py-3 text-sm font-black uppercase tracking-wide text-black transition-transform hover:scale-105"
+          className="mt-10 inline-block rounded-lg bg-accent-lime px-10 py-4 text-base font-black uppercase tracking-wide text-black transition-transform hover:scale-105"
         >
           <FlipText text="Jetzt Platz sichern" />
         </a>
@@ -106,16 +109,25 @@ export default function EventExperiencePage() {
         </p>
       </section>
 
-      <section className="px-6 py-20">
+      {/* Ab hier: jeder Themenblock bekommt eine eigene Kennnummer +
+          Eyebrow-Label und abwechselnd einen dezenten Hintergrund, damit
+          die Seite klar in einzelne, gut unterscheidbare Blöcke zerfaellt
+          statt als durchlaufender Fließtext zu wirken. */}
+      <section className="border-t border-foreground/8 px-6 py-24 sm:py-28">
         <div className="mx-auto max-w-6xl">
-          <h2 className="text-center text-3xl font-black uppercase text-foreground">
-            Das erwartet Sie
-          </h2>
-          <p className="mt-2 text-center text-foreground/60">
-            Ein Abend voller Ideen für Sommerfeste, Weihnachtsfeiern, Team
-            Events, Kundenevents und mehr.
-          </p>
-          <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="text-center">
+            <p className="text-xs font-black uppercase tracking-[0.2em] text-accent-lime">
+              01 · Programm
+            </p>
+            <h2 className="mt-3 text-4xl font-black uppercase text-foreground sm:text-5xl">
+              Das erwartet Sie
+            </h2>
+            <p className="mx-auto mt-3 max-w-xl text-foreground/60">
+              Ein Abend voller Ideen für Sommerfeste, Weihnachtsfeiern, Team
+              Events, Kundenevents und mehr.
+            </p>
+          </div>
+          <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {HIGHLIGHTS.map((h) => (
               <Reveal key={h.title}>
                 <div className="h-full rounded-xl border border-foreground/8 bg-foreground/[0.025] p-8">
@@ -130,51 +142,64 @@ export default function EventExperiencePage() {
         </div>
       </section>
 
-      <section className="px-6 py-20">
+      <section className="border-t border-foreground/8 bg-foreground/[0.02] px-6 py-24 sm:py-28">
         <div className="mx-auto max-w-5xl">
-          <h2 className="text-center text-3xl font-black uppercase text-foreground">
-            So läuft Ihre Anmeldung.
-          </h2>
-          <p className="mt-2 text-center text-foreground/60">
-            In 3 Schritten von der Anmeldung zur fertigen Eventidee.
-          </p>
-          <div className="mt-10">
+          <div className="text-center">
+            <p className="text-xs font-black uppercase tracking-[0.2em] text-accent-lime">
+              02 · Ablauf
+            </p>
+            <h2 className="mt-3 text-4xl font-black uppercase text-foreground sm:text-5xl">
+              So läuft Ihre Anmeldung.
+            </h2>
+            <p className="mx-auto mt-3 max-w-xl text-foreground/60">
+              In 3 Schritten von der Anmeldung zur fertigen Eventidee.
+            </p>
+          </div>
+          <div className="mt-14">
             <StepsTimeline steps={STEPS} />
           </div>
         </div>
       </section>
 
-      <section id="anmeldung" className="px-6 py-20">
+      <section
+        id="anmeldung"
+        className="border-t border-foreground/8 px-6 py-24 sm:py-28"
+      >
         <div className="mx-auto max-w-3xl">
+          <div className="text-center">
+            <p className="text-xs font-black uppercase tracking-[0.2em] text-accent-lime">
+              03 · Anmeldung
+            </p>
+            <h2 className="mt-3 text-4xl font-black uppercase text-foreground sm:text-5xl">
+              Jetzt Platz sichern
+            </h2>
+            <p className="mx-auto mt-3 max-w-xl text-foreground/60">
+              Die Teilnehmerzahl ist begrenzt – melden Sie sich jetzt
+              kostenlos und unverbindlich an.
+            </p>
+          </div>
           <Reveal>
-            <div className="rounded-2xl border border-foreground/8 bg-foreground/[0.025] p-8 sm:p-10">
-              <p className="text-sm font-bold uppercase tracking-wide text-accent-lime">
-                Jetzt Platz sichern
-              </p>
-              <h2 className="mt-2 text-3xl font-black uppercase text-foreground">
-                Anmeldung THE EVENT EXPERIENCE
-              </h2>
-              <p className="mt-3 text-sm text-foreground/60">
-                Die Teilnehmerzahl ist begrenzt – melden Sie sich jetzt
-                kostenlos und unverbindlich an.
-              </p>
-              <div className="mt-8">
-                <EventExperienceForm />
-              </div>
+            <div className="mt-10 rounded-2xl border border-foreground/8 bg-foreground/[0.025] p-8 sm:p-10">
+              <EventExperienceForm />
             </div>
           </Reveal>
         </div>
       </section>
 
-      <section className="px-6 pb-28">
+      <section className="border-t border-foreground/8 bg-foreground/[0.02] px-6 py-24 sm:pb-28 sm:pt-28">
         <div className="mx-auto max-w-3xl">
-          <h2 className="text-center text-3xl font-black uppercase text-foreground">
-            Häufige Fragen
-          </h2>
-          <p className="mt-2 text-center text-foreground/60">
-            Alles, was Sie zu THE EVENT EXPERIENCE wissen möchten.
-          </p>
-          <div className="mt-10 divide-y divide-foreground/8 rounded-xl border border-foreground/8 bg-foreground/[0.025]">
+          <div className="text-center">
+            <p className="text-xs font-black uppercase tracking-[0.2em] text-accent-lime">
+              04 · Fragen
+            </p>
+            <h2 className="mt-3 text-4xl font-black uppercase text-foreground sm:text-5xl">
+              Häufige Fragen
+            </h2>
+            <p className="mx-auto mt-3 max-w-xl text-foreground/60">
+              Alles, was Sie zu THE EVENT EXPERIENCE wissen möchten.
+            </p>
+          </div>
+          <div className="mt-14 divide-y divide-foreground/8 rounded-xl border border-foreground/8 bg-background">
             {FAQ.map((f) => (
               <div key={f.q} className="px-6 py-5">
                 <p className="font-bold text-foreground">{f.q}</p>
@@ -182,7 +207,7 @@ export default function EventExperiencePage() {
               </div>
             ))}
           </div>
-          <div className="mt-10 rounded-xl border border-foreground/8 bg-foreground/[0.025] p-8 text-center">
+          <div className="mt-10 rounded-xl border border-foreground/8 bg-background p-8 text-center">
             <p className="font-bold text-foreground">
               Sie haben noch Fragen?
             </p>
