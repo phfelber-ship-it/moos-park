@@ -5,7 +5,8 @@ export type InboxLogInput = {
     | "veranstaltung"
     | "promoter"
     | "bewerbung"
-    | "reservierung";
+    | "reservierung"
+    | "eventexperience";
   name: string;
   email: string;
   phone?: string;

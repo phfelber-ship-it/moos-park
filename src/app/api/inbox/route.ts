@@ -8,6 +8,7 @@ const VALID_TYPES: InboxType[] = [
   "promoter",
   "bewerbung",
   "reservierung",
+  "eventexperience",
 ];
 
 // Oeffentlicher, schreibgeschuetzter Endpunkt: legt eine Kopie jeder

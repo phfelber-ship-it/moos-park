@@ -10,7 +10,8 @@ export type InboxType =
   | "veranstaltung"
   | "promoter"
   | "bewerbung"
-  | "reservierung";
+  | "reservierung"
+  | "eventexperience";
 
 export type InboxEntry = {
   id: string;

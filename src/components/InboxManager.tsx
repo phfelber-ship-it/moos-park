@@ -11,6 +11,7 @@ const TYPE_LABELS: Record<InboxType, string> = {
   promoter: "Promoter",
   bewerbung: "Bewerbung",
   reservierung: "Reservierung",
+  eventexperience: "Event Experience",
 };
 
 const TYPE_COLORS: Record<InboxType, string> = {
@@ -20,6 +21,7 @@ const TYPE_COLORS: Record<InboxType, string> = {
   promoter: "bg-orange-500/15 text-orange-400",
   bewerbung: "bg-accent-lime/15 text-accent-lime",
   reservierung: "bg-cyan-500/15 text-cyan-400",
+  eventexperience: "bg-emerald-500/15 text-emerald-400",
 };
 
 type Filter = "alle" | InboxType;
@@ -42,6 +44,7 @@ export default function InboxManager({
       promoter: 0,
       bewerbung: 0,
       reservierung: 0,
+      eventexperience: 0,
     };
     for (const e of entries) c[e.type]++;
     return c;
@@ -163,6 +166,7 @@ export default function InboxManager({
             "promoter",
             "bewerbung",
             "reservierung",
+            "eventexperience",
           ] as Filter[]
         ).map((f) => (
           <button
