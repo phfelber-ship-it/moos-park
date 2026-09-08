@@ -1,5 +1,4 @@
 import Image from "next/image";
-import StepsTimeline from "@/components/StepsTimeline";
 import FlipText from "@/components/FlipText";
 import Reveal from "@/components/Reveal";
 import EventExperienceForm from "@/components/EventExperienceForm";
@@ -157,9 +156,26 @@ export default function EventExperiencePage() {
               In 3 Schritten von der Anmeldung zur fertigen Eventidee.
             </p>
           </div>
-          <div className="mt-14">
-            <StepsTimeline steps={STEPS} />
-          </div>
+          <Reveal>
+            <div className="mt-14 divide-y divide-foreground/8">
+              {STEPS.map((s) => (
+                <div
+                  key={s.num}
+                  className="flex flex-col gap-1 py-6 sm:flex-row sm:items-baseline sm:gap-8 sm:py-8"
+                >
+                  <span className="text-3xl font-black text-accent-lime sm:w-32 sm:shrink-0 sm:text-4xl">
+                    {s.num}
+                  </span>
+                  <div>
+                    <p className="text-xl font-bold text-foreground sm:text-2xl">
+                      {s.title}
+                    </p>
+                    <p className="mt-1 text-sm text-foreground/60">{s.text}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </Reveal>
         </div>
       </section>
 
