@@ -12,6 +12,7 @@ const STATUSES: { key: RegistrationStatus; label: string }[] = [
   { key: "BESTAETIGT", label: "Bestätigt" },
   { key: "NACHFRAGE", label: "Nachfrage" },
   { key: "ABGELEHNT", label: "Abgelehnt" },
+  { key: "ABGESAGT", label: "Abgesagt" },
 ];
 
 export default function EventExperienceManager({
@@ -176,6 +177,21 @@ export default function EventExperienceManager({
                           <p className="mt-2 text-xs text-foreground/70">
                             {r.message}
                           </p>
+                        )}
+
+                        {r.cancelledAttendees && r.cancelledAttendees.length > 0 && (
+                          <div className="mt-2 rounded-lg border border-red-500/20 bg-red-500/5 p-2">
+                            <p className="text-[10px] font-bold uppercase text-red-400">
+                              Können nicht teilnehmen:
+                            </p>
+                            <ul className="mt-1 text-[11px] text-foreground/70">
+                              {r.cancelledAttendees.map((a, i) => (
+                                <li key={i}>
+                                  {a.salutation} {a.firstName} {a.lastName}
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
                         )}
 
                         {key === "BESTAETIGT" && (

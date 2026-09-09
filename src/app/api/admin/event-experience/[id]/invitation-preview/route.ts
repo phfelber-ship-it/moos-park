@@ -24,7 +24,11 @@ export async function GET(
   return NextResponse.json({
     subject: applyTemplatePlaceholders(template.subject, reg),
     body,
-    html: buildInvitationEmailHtml({ bodyText: body, ticketCount: attendees.length }),
+    html: buildInvitationEmailHtml({
+      bodyText: body,
+      ticketCount: attendees.length,
+      registrationId: id,
+    }),
     ticketCount: attendees.length,
     attendees,
     email: reg.email,

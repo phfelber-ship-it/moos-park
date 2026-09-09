@@ -21,16 +21,27 @@ const CARD_BG = "#18181b";
 const TEXT = "#f2f2f2";
 const MUTED = "#9a9a9e";
 
+const SITE_URL =
+  process.env.NEXT_PUBLIC_SITE_URL ?? "https://moos-park-hmd7.vercel.app";
+
 // Baut eine tabellenbasierte, inline-gestylte HTML-Mail (E-Mail-Clients
 // unterstuetzen kein modernes CSS zuverlaessig) im moos.park-Look fuer die
 // Einladung - der individuell im Adminpanel editierbare Vorlagentext wird
 // eingebettet, alle Eckdaten der Veranstaltung stehen zusaetzlich immer
-// vollstaendig darunter, egal was im Vorlagentext steht.
+// vollstaendig darunter, egal was im Vorlagentext steht. Der
+// Absagen-Hinweis+Button steht ebenfalls immer fest in der Mail (nicht Teil
+// des editierbaren Texts), damit er nie versehentlich fehlt.
+export function buildCancelUrl(registrationId: string): string {
+  return `${SITE_URL}/event-experience/absagen/${registrationId}`;
+}
+
 export function buildInvitationEmailHtml(params: {
   bodyText: string;
   ticketCount: number;
+  registrationId: string;
 }): string {
   const bodyHtml = escapeHtml(params.bodyText).replace(/\n/g, "<br>");
+  const cancelUrl = buildCancelUrl(params.registrationId);
 
   const timetableRows = TIMETABLE.map(
     (t) => `
@@ -102,6 +113,20 @@ export function buildInvitationEmailHtml(params: {
               <div style="margin-top:18px;padding-top:14px;border-top:1px solid #2a2a2e;font:700 13px/1.5 Helvetica,Arial,sans-serif;color:${TEXT};">
                 🎟 ${params.ticketCount} Ticket${params.ticketCount === 1 ? "" : "s"} im Anhang dieser E-Mail (PDF)
               </div>
+            </td>
+          </tr>
+
+          <tr><td style="height:16px;"></td></tr>
+
+          <tr>
+            <td align="center" style="border:1px dashed #3a3a3e;border-radius:16px;padding:22px 24px;">
+              <div style="font:400 13px/1.5 Helvetica,Arial,sans-serif;color:${MUTED};">
+                Sie haben leider keine Zeit? Bitte sagen Sie kurz ab, damit
+                wir Ihren Platz weitergeben können.
+              </div>
+              <a href="${cancelUrl}" style="display:inline-block;margin-top:14px;padding:11px 22px;border-radius:8px;border:1px solid ${MUTED};font:700 12px Helvetica,Arial,sans-serif;letter-spacing:0.5px;color:${TEXT};text-decoration:none;text-transform:uppercase;">
+                Teilnahme absagen
+              </a>
             </td>
           </tr>
 

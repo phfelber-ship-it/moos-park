@@ -8,13 +8,15 @@ export type RegistrationStatus =
   | "NEU"
   | "BESTAETIGT"
   | "NACHFRAGE"
-  | "ABGELEHNT";
+  | "ABGELEHNT"
+  | "ABGESAGT";
 
 export const REGISTRATION_STATUSES: RegistrationStatus[] = [
   "NEU",
   "BESTAETIGT",
   "NACHFRAGE",
   "ABGELEHNT",
+  "ABGESAGT",
 ];
 
 export type Companion = {
@@ -44,6 +46,10 @@ export type EventExperienceRegistration = {
   createdAt: string;
   invitationSentAt: string | null;
   tickets: Ticket[];
+  cancelledAt: string | null;
+  // Personen, die laut Gast NICHT teilnehmen koennen (Absage-Formular) -
+  // leer/null, solange (noch) keine Absage eingegangen ist.
+  cancelledAttendees: Companion[] | null;
 };
 
 export type RegistrationInput = {
@@ -85,6 +91,8 @@ export async function getRegistrations(): Promise<
           companions: e.companions ?? [],
           invitationSentAt: e.invitationSentAt ?? null,
           tickets: e.tickets ?? [],
+          cancelledAt: e.cancelledAt ?? null,
+          cancelledAttendees: e.cancelledAttendees ?? null,
         }) as EventExperienceRegistration)
       : [];
   } catch {
@@ -114,6 +122,8 @@ export async function addRegistration(
     createdAt: new Date().toISOString(),
     invitationSentAt: null,
     tickets: [],
+    cancelledAt: null,
+    cancelledAttendees: null,
   };
   entries.unshift(entry);
   await saveRegistrations(entries);
@@ -171,6 +181,29 @@ export async function saveSentTickets(
     ...entries[idx],
     tickets,
     invitationSentAt: new Date().toISOString(),
+  };
+  await saveRegistrations(entries);
+  return entries[idx];
+}
+
+// Absage durch den Gast (ueber /event-experience/absagen/[id]) - setzt den
+// Status auf ABGESAGT und speichert, welche Personen laut Gast nicht
+// teilnehmen koennen (kann auch nur ein Teil der angemeldeten Personen
+// sein - die ganze Anmeldung landet trotzdem in der Abgesagt-Spalte, damit
+// sie im Adminpanel nicht uebersehen wird).
+export async function cancelRegistration(
+  id: string,
+  cancelledAttendees: Companion[]
+): Promise<EventExperienceRegistration | null> {
+  const entries = await getRegistrations();
+  const idx = entries.findIndex((e) => e.id === id);
+  if (idx === -1) return null;
+
+  entries[idx] = {
+    ...entries[idx],
+    status: "ABGESAGT",
+    cancelledAt: new Date().toISOString(),
+    cancelledAttendees,
   };
   await saveRegistrations(entries);
   return entries[idx];

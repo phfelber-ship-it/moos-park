@@ -10,7 +10,7 @@ import {
   sendInvitationMail,
 } from "@/lib/event-experience-mailer";
 import { generateTicketPdf } from "@/lib/event-experience-tickets";
-import { buildInvitationEmailHtml } from "@/lib/event-experience-email";
+import { buildInvitationEmailHtml, buildCancelUrl } from "@/lib/event-experience-email";
 
 // Erzeugt beim Versand fuer Hauptperson + jede Begleitperson ein
 // individuelles PDF-Ticket (mit Code/QR) und verschickt sie zusammen mit
@@ -33,10 +33,19 @@ export async function POST(
 
     const template = await getInvitationTemplate();
     const subject = applyTemplatePlaceholders(template.subject, reg);
-    const body = applyTemplatePlaceholders(template.body, reg);
+    const templateBody = applyTemplatePlaceholders(template.body, reg);
+    // Absage-Hinweis + Link stehen fest am Ende des Text-Bodys (fuer
+    // Mail-Clients ohne HTML-Darstellung) - im HTML-Body gibt es dafuer
+    // zusaetzlich einen eigenen, auffaelligen Button (siehe
+    // buildInvitationEmailHtml).
+    const cancelUrl = buildCancelUrl(id);
+    const body =
+      templateBody +
+      `\n\nSie haben leider keine Zeit? Bitte sagen Sie kurz ab, damit wir Ihren Platz weitergeben können: ${cancelUrl}`;
     const html = buildInvitationEmailHtml({
-      bodyText: body,
+      bodyText: templateBody,
       ticketCount: tickets.length,
+      registrationId: id,
     });
 
     const attachments = await Promise.all(
