@@ -4,6 +4,7 @@ import { useState } from "react";
 import {
   FORM_KINDS,
   FORM_KIND_LABELS,
+  FORM_KIND_SMTP_ENABLED,
   type FailureEntry,
   type FormKind,
 } from "@/lib/form-notification-routing";
@@ -103,22 +104,43 @@ export default function FormularMailSettings({
 
       <div className="mt-6 rounded-2xl border border-foreground/10 p-6">
         <h2 className="text-lg font-black uppercase text-foreground">Zieladressen</h2>
+        <p className="mt-1 text-xs text-foreground/50">
+          Mehrere Empfaenger durch Komma trennen, z.B. „kontakt@moos-park.de,
+          s.geisler@moos-park.de&quot;.
+        </p>
         <div className="mt-4 flex flex-col gap-4">
-          {FORM_KINDS.map((kind) => (
-            <label key={kind} className="flex flex-col gap-1">
-              <span className="text-xs font-black uppercase tracking-wide text-foreground/60">
-                {FORM_KIND_LABELS[kind]}
-              </span>
-              <input
-                type="email"
-                value={destinations[kind] ?? ""}
-                onChange={(e) =>
-                  setDestinations((prev) => ({ ...prev, [kind]: e.target.value }))
-                }
-                className="rounded-lg border border-foreground/20 bg-transparent px-4 py-2 text-sm text-foreground"
-              />
-            </label>
-          ))}
+          {FORM_KINDS.map((kind) =>
+            FORM_KIND_SMTP_ENABLED[kind] ? (
+              <label key={kind} className="flex flex-col gap-1">
+                <span className="text-xs font-black uppercase tracking-wide text-foreground/60">
+                  {FORM_KIND_LABELS[kind]}
+                </span>
+                <input
+                  type="text"
+                  value={destinations[kind] ?? ""}
+                  onChange={(e) =>
+                    setDestinations((prev) => ({ ...prev, [kind]: e.target.value }))
+                  }
+                  className="rounded-lg border border-foreground/20 bg-transparent px-4 py-2 text-sm text-foreground"
+                />
+              </label>
+            ) : (
+              <div key={kind} className="flex flex-col gap-1 opacity-40">
+                <span className="text-xs font-black uppercase tracking-wide text-foreground/60">
+                  {FORM_KIND_LABELS[kind]}
+                </span>
+                <input
+                  type="text"
+                  value="—"
+                  disabled
+                  className="cursor-not-allowed rounded-lg border border-foreground/20 bg-transparent px-4 py-2 text-sm text-foreground"
+                />
+                <span className="text-xs italic text-foreground/50">
+                  läuft ausschließlich über Clubscale
+                </span>
+              </div>
+            )
+          )}
         </div>
         <button
           type="button"

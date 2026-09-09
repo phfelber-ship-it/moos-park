@@ -30,16 +30,32 @@ export const FORM_KIND_LABELS: Record<FormKind, string> = {
   "event-experience": "Event-Experience-Anmeldung",
 };
 
+// Reservierung und Jobs/Bewerbung laufen bewusst ausschliesslich ueber
+// Clubscale - fuer diese beiden Formular-Arten wird nirgends SMTP verschickt
+// (siehe INBOX_TO_FORM_KIND in api/inbox/route.ts). Sie bleiben trotzdem Teil
+// von FORM_KINDS/FORM_KIND_LABELS (z.B. fuer Failure-Log-Anzeige), werden im
+// Adminpanel aber ausgegraut mit Hinweis dargestellt statt editierbar.
+export const FORM_KIND_SMTP_ENABLED: Record<FormKind, boolean> = {
+  kontakt: true,
+  reservierung: false,
+  jobs: false,
+  veranstaltungsanfrage: true,
+  firmenanfrage: true,
+  "event-experience": true,
+};
+
 // Sinnvolle Vorgaben, bis ein Admin sie ueberschreibt - entspricht den
 // bereits im Code verwendeten Mitarbeiter-Adressen (siehe kontakt@moos-park.de
 // bzw. s.geisler@moos-park.de in ContactForm.tsx, event-experience-mailer.ts
-// & Co).
+// & Co). Mehrere Zieladressen werden als kommagetrennte Liste in einem
+// einzelnen String gespeichert (siehe isPlausibleEmail/sendSmtpMail, das
+// einen kommagetrennten "to"-String direkt an nodemailer durchreicht).
 export const DEFAULT_DESTINATIONS: Record<FormKind, string> = {
   kontakt: "kontakt@moos-park.de",
   reservierung: "kontakt@moos-park.de",
   jobs: "kontakt@moos-park.de",
   veranstaltungsanfrage: "kontakt@moos-park.de",
-  firmenanfrage: "s.geisler@moos-park.de",
+  firmenanfrage: "kontakt@moos-park.de, s.geisler@moos-park.de",
   "event-experience": "s.geisler@moos-park.de",
 };
 
@@ -102,8 +118,18 @@ export async function getFormNotificationRouting(): Promise<Record<FormKind, str
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-export function isPlausibleEmail(email: string): boolean {
+function isPlausibleSingleEmail(email: string): boolean {
   return EMAIL_REGEX.test(email.trim());
+}
+
+// Akzeptiert sowohl eine einzelne Adresse als auch eine kommagetrennte Liste
+// (z.B. fuer firmenanfrage: kontakt@... UND s.geisler@...). Jeder Eintrag
+// muss fuer sich plausibel sein, leere Eintraege (doppeltes Komma, trailing
+// Komma) sind nicht erlaubt.
+export function isPlausibleEmail(value: string): boolean {
+  const parts = value.split(",").map((p) => p.trim());
+  if (parts.length === 0 || parts.some((p) => p.length === 0)) return false;
+  return parts.every(isPlausibleSingleEmail);
 }
 
 // Aktualisiert die Zieladresse einer einzelnen Formular-Art. Kein
