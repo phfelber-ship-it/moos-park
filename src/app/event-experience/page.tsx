@@ -101,7 +101,7 @@ export default function EventExperiencePage() {
           (abgerundet, mit Abstand zu den Nachbarbloecken) statt eines
           randlosen, volle Breite einnehmenden Streifens - dadurch wirken
           alle Themenbereiche einheitlich und klar voneinander getrennt. */}
-      <div className="mx-auto flex max-w-4xl flex-col gap-6 px-6 py-10 sm:gap-8 sm:py-16">
+      <div className="mx-auto flex w-[90%] max-w-[1600px] flex-col gap-6 py-10 sm:gap-8 sm:py-16">
         <section className="rounded-3xl border border-foreground/8 bg-foreground/[0.025] p-8 sm:p-14">
           <div className="text-center">
             <p className="text-xs font-black uppercase tracking-[0.2em] text-accent-lime">

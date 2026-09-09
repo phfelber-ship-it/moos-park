@@ -14,6 +14,7 @@ const STATUS_LABELS: Record<string, string> = {
   NEU: "Neu",
   BESTAETIGT: "Bestätigt",
   NACHFRAGE: "Nachfrage",
+  ABGELEHNT: "Abgelehnt",
 };
 
 export async function GET() {

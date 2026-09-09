@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import {
   getRegistrations,
   updateRegistrationStatus,
+  deleteRegistration,
   REGISTRATION_STATUSES,
   type RegistrationStatus,
 } from "@/lib/event-experience";
@@ -44,6 +45,25 @@ export async function PATCH(request: Request) {
     console.error("Status konnte nicht aktualisiert werden:", err);
     return NextResponse.json(
       { error: "Status konnte nicht aktualisiert werden." },
+      { status: 500 }
+    );
+  }
+}
+
+export async function DELETE(request: Request) {
+  const { searchParams } = new URL(request.url);
+  const id = searchParams.get("id");
+  if (!id) {
+    return NextResponse.json({ error: "id ist Pflicht." }, { status: 400 });
+  }
+
+  try {
+    await deleteRegistration(id);
+    return NextResponse.json({ ok: true });
+  } catch (err) {
+    console.error("Anmeldung konnte nicht gelöscht werden:", err);
+    return NextResponse.json(
+      { error: "Anmeldung konnte nicht gelöscht werden." },
       { status: 500 }
     );
   }

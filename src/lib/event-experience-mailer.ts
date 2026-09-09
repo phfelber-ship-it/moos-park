@@ -39,6 +39,7 @@ export async function sendInvitationMail(input: {
   to: string;
   subject: string;
   body: string;
+  html: string;
   attachments: MailAttachment[];
 }): Promise<void> {
   const apiKey = process.env.RESEND_API_KEY;
@@ -59,8 +60,13 @@ export async function sendInvitationMail(input: {
     body: JSON.stringify({
       from,
       to: [input.to],
+      // Kopie geht bei jedem Versand automatisch an s.geisler@moos-park.de
+      // mit, damit im Team immer nachvollziehbar ist, welche Einladung
+      // wann rausgegangen ist.
+      cc: ["s.geisler@moos-park.de"],
       subject: input.subject,
       text: input.body,
+      html: input.html,
       attachments: input.attachments.map((a) => ({
         filename: a.filename,
         content: a.content,

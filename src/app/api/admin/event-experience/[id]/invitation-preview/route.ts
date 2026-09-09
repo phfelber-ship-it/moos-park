@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { getRegistration } from "@/lib/event-experience";
 import { getInvitationTemplate } from "@/lib/event-experience-template";
 import { applyTemplatePlaceholders } from "@/lib/event-experience-mailer";
+import { buildInvitationEmailHtml } from "@/lib/event-experience-email";
 
 export async function GET(
   _request: Request,
@@ -18,10 +19,12 @@ export async function GET(
     { salutation: reg.salutation, firstName: reg.firstName, lastName: reg.lastName },
     ...reg.companions,
   ];
+  const body = applyTemplatePlaceholders(template.body, reg);
 
   return NextResponse.json({
     subject: applyTemplatePlaceholders(template.subject, reg),
-    body: applyTemplatePlaceholders(template.body, reg),
+    body,
+    html: buildInvitationEmailHtml({ bodyText: body, ticketCount: attendees.length }),
     ticketCount: attendees.length,
     attendees,
     email: reg.email,
