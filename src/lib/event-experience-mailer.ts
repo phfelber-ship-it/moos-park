@@ -43,7 +43,9 @@ export async function sendInvitationMail(input: {
   attachments: MailAttachment[];
 }): Promise<void> {
   const apiKey = process.env.RESEND_API_KEY;
-  const from = process.env.RESEND_FROM_EMAIL || "moos.park <onboarding@resend.dev>";
+  const from =
+    process.env.RESEND_FROM_EMAIL ||
+    "moos.park <s.geisler@moos-park.de>";
 
   if (!apiKey) {
     throw new Error(
