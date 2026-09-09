@@ -68,12 +68,12 @@ export default function FormularMailSettings({
     <div className="mx-auto max-w-3xl px-6 pb-20 pt-32">
       <h1 className="text-2xl font-black uppercase text-foreground">Formular-Mail</h1>
       <p className="mt-2 text-sm text-foreground/60">
-        Ziel-Mailadresse je Formular fuer die SMTP-Benachrichtigung -
-        zusaetzlich zum Postfach & CRM, unabhaengig von Clubscale.
+        Ziel-Mailadresse je Formular fuer die Mail-Benachrichtigung (ueber
+        Resend) - zusaetzlich zum Postfach & CRM, unabhaengig von Clubscale.
       </p>
 
       <div className="mt-8 rounded-2xl border border-foreground/10 p-6">
-        <h2 className="text-lg font-black uppercase text-foreground">SMTP-Verbindung</h2>
+        <h2 className="text-lg font-black uppercase text-foreground">Mailversand (Resend)</h2>
         <div className="mt-3 flex items-center gap-3">
           <span
             className={`h-3 w-3 shrink-0 rounded-full ${
@@ -156,7 +156,7 @@ export default function FormularMailSettings({
       {failures.length > 0 && (
         <div className="mt-6 rounded-2xl border border-foreground/10 p-6">
           <h2 className="text-lg font-black uppercase text-foreground">
-            Letzte SMTP-Fehler
+            Letzte Mail-Fehler
           </h2>
           <p className="mt-2 text-xs text-foreground/50">
             Nur ein Hinweis - Postfach/CRM sind davon nicht betroffen.
