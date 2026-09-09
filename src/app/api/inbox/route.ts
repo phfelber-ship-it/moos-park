@@ -17,16 +17,16 @@ const VALID_TYPES: InboxType[] = [
   "eventexperience",
 ];
 
-// Nur diese beiden Inbox-Typen bekommen hier eine SMTP-Benachrichtigung:
 // "reservierung" und "bewerbung" laufen bewusst ausschliesslich ueber
 // Clubscale (siehe FORM_KIND_SMTP_ENABLED in form-notification-routing.ts) -
-// kein SMTP-Versand fuer diese beiden. "eventlocation" und "promoter" haben
-// (noch) kein eigenes SMTP-Ziel, "eventexperience" wird hier aktuell von
-// keinem Formular genutzt (eigene Route mit eigener Benachrichtigung, siehe
+// kein SMTP-Versand fuer diese beiden. "eventlocation" hat (noch) kein
+// eigenes SMTP-Ziel, "eventexperience" wird hier aktuell von keinem
+// Formular genutzt (eigene Route mit eigener Benachrichtigung, siehe
 // api/event-experience/register).
 const INBOX_TO_FORM_KIND: Partial<Record<InboxType, FormKind>> = {
   kontakt: "kontakt",
   veranstaltung: "veranstaltungsanfrage",
+  promoter: "promoter",
 };
 
 // Oeffentlicher, schreibgeschuetzter Endpunkt: legt eine Kopie jeder

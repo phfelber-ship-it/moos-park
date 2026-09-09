@@ -8,11 +8,11 @@ import {
 // Woechentlicher Vercel-Cron-Job (siehe vercel.json, montags fruehmorgens):
 // prueft alle oeffentlichen Formulare der Webseite (siehe
 // lib/form-health-check.ts) und meldet Fehler per Mail an
-// ph.felber@moos-park.de + s.geisler@moos-park.de.
+// ph.felber@moos-park.de + kontakt@moos-park.de.
 // Gleiches CRON_SECRET-Auth-Muster wie api/cron/event-reminders.
 export const maxDuration = 60;
 
-const ALERT_RECIPIENTS = ["ph.felber@moos-park.de", "s.geisler@moos-park.de"];
+const ALERT_RECIPIENTS = ["ph.felber@moos-park.de", "kontakt@moos-park.de"];
 
 async function sendAlertMail(report: FormHealthCheckReport) {
   const apiKey = process.env.RESEND_API_KEY;

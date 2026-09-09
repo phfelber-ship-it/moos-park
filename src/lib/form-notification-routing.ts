@@ -10,7 +10,8 @@ export type FormKind =
   | "jobs"
   | "veranstaltungsanfrage"
   | "firmenanfrage"
-  | "event-experience";
+  | "event-experience"
+  | "promoter";
 
 export const FORM_KINDS: FormKind[] = [
   "kontakt",
@@ -19,6 +20,7 @@ export const FORM_KINDS: FormKind[] = [
   "veranstaltungsanfrage",
   "firmenanfrage",
   "event-experience",
+  "promoter",
 ];
 
 export const FORM_KIND_LABELS: Record<FormKind, string> = {
@@ -28,6 +30,7 @@ export const FORM_KIND_LABELS: Record<FormKind, string> = {
   veranstaltungsanfrage: "Veranstaltungsanfrage",
   firmenanfrage: "Firmenevent-Anfrage",
   "event-experience": "Event-Experience-Anmeldung",
+  promoter: "Promoter-Bewerbung",
 };
 
 // Reservierung und Jobs/Bewerbung laufen bewusst ausschliesslich ueber
@@ -42,6 +45,7 @@ export const FORM_KIND_SMTP_ENABLED: Record<FormKind, boolean> = {
   veranstaltungsanfrage: true,
   firmenanfrage: true,
   "event-experience": true,
+  promoter: true,
 };
 
 // Sinnvolle Vorgaben, bis ein Admin sie ueberschreibt - entspricht den
@@ -57,6 +61,7 @@ export const DEFAULT_DESTINATIONS: Record<FormKind, string> = {
   veranstaltungsanfrage: "kontakt@moos-park.de",
   firmenanfrage: "kontakt@moos-park.de, s.geisler@moos-park.de",
   "event-experience": "s.geisler@moos-park.de",
+  promoter: "kontakt@moos-park.de",
 };
 
 export type FailureEntry = {

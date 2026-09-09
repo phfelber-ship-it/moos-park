@@ -82,10 +82,12 @@ async function postJson(url: string, body: unknown) {
 //    Die neuen generischen /[eventSlug]-Landingpages (company-events.ts)
 //    nutzen dieselbe Komponente/Route mit anderer eventId, werden also durch
 //    denselben Check mitabgedeckt.
+// 7. Promoter-Bewerbung (/promoter, PromoterApplicationForm.tsx) - sendet wie
+//    1-4 direkt an die externe Clubscale-API, daher page-load-Fallback (b).
 //
 // NICHT als Formular gezaehlt (kein echtes Absenden von Nutzerdaten):
 // - /kontakt: Telefon/E-Mail sind mailto:/tel:-Links, kein Formular fuer die.
-// - /qrcodewerbung, /qrcodewerbung_v1, /promoter, /r/[code]: reine
+// - /qrcodewerbung, /qrcodewerbung_v1, /r/[code]: reine
 //   Redirect-/Tracking-Landingpages ohne <form>, kein POST irgendwohin.
 // - /tickets, /tickets-data: Ticketkauf laeuft ueber Stripe/Clubscale-Direkt-
 //   Checkout-Widgets, kein eigenes Formular-Backend zum Testen.
@@ -134,6 +136,12 @@ const CHECKS: CheckDef[] = [
     pageUrl: "/veranstaltungsanfrage",
     kind: "page-load",
     run: (origin) => checkPageHasForm(origin, "/veranstaltungsanfrage", /anfrage|nachricht/i),
+  },
+  {
+    name: "Promoter-Bewerbung",
+    pageUrl: "/promoter",
+    kind: "page-load",
+    run: (origin) => checkPageHasForm(origin, "/promoter", /Follower-Anzahl/i),
   },
   {
     name: "Firmenevent-Anfrage",
