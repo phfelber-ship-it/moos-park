@@ -161,7 +161,7 @@ export default async function AdminDashboardPage() {
 
       {SECTION_GROUPS.map((group) => (
         <div key={group.title} className="mt-10">
-          <h2 className="text-xs font-black uppercase tracking-[0.2em] text-foreground/40">
+          <h2 className="text-xs font-black uppercase tracking-[0.2em] text-accent-lime">
             {group.title}
           </h2>
           <div className="mt-3 flex flex-col gap-3">
