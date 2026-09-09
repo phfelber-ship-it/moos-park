@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { createJobApplication, type JobPosting } from "@/lib/clubscale";
-import { logInboxAwaited } from "@/lib/inbox-client";
 import HoneypotField from "@/components/HoneypotField";
 import FlipText from "@/components/FlipText";
 
@@ -95,23 +94,11 @@ function ApplicationForm({
       setStatus("error");
       return;
     }
-    // WICHTIG: anders als bei Kontakt/Veranstaltungsanfrage/Promoter/
-    // Eventlocation ist Clubscale hier NICHT nur ein Benachrichtigungs-
-    // kanal, sondern das eigentliche Bewerbermanagement-System - die
-    // Erfolgsanzeige muss also ehrlich am tatsaechlichen Clubscale-Ergebnis
-    // haengen bleiben (sonst denkt die Person, die Bewerbung sei
-    // angekommen, obwohl sie es nicht ist). Der Postfach-Eintrag passiert
-    // trotzdem IMMER zusaetzlich, unabhaengig vom Ergebnis, damit die
-    // Bewerbung bei einem Clubscale-Ausfall wenigstens sichtbar bleibt und
-    // nicht spurlos verloren geht.
-    void logInboxAwaited({
-      type: "bewerbung",
-      name: `${firstName.trim()} ${lastName.trim()}`,
-      email: email.trim(),
-      phone: phoneNumber.trim(),
-      summary: jobTitle,
-      message: text.trim(),
-    });
+    // Bewerbungen laufen bewusst NICHT (mehr) durchs Postfach - App- und
+    // Website-Bewerbungen landen sonst nur zur Haelfte dort (App-Bewerbungen
+    // gehen direkt an Clubscale, ohne ueber unseren Code zu laufen), das war
+    // verwirrender als gar keine Postfach-Kopie. Clubscale-Adminpanel ist
+    // hier die einzige, vollstaendige Quelle - fuer beide Kanaele.
     try {
       await createJobApplication(
         {

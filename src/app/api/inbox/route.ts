@@ -7,13 +7,13 @@ import {
   type FormKind,
 } from "@/lib/form-notification-routing";
 
+// "bewerbung" und "reservierung" bewusst NICHT (mehr) hier - laufen
+// ausschliesslich ueber Clubscale, siehe HIDDEN_TYPES in lib/inbox.ts.
 const VALID_TYPES: InboxType[] = [
   "kontakt",
   "eventlocation",
   "veranstaltung",
   "promoter",
-  "bewerbung",
-  "reservierung",
   "eventexperience",
 ];
 
