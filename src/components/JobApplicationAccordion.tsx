@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { createJobApplication, type JobPosting } from "@/lib/clubscale";
-import { logInbox } from "@/lib/inbox-client";
+import { logInboxAwaited } from "@/lib/inbox-client";
 import HoneypotField from "@/components/HoneypotField";
 import FlipText from "@/components/FlipText";
 
@@ -85,9 +85,34 @@ function ApplicationForm({
     }
     setStatus("sending");
     setProgress(0);
+    let imageBase64: string;
     try {
       const compressed = await compressImage(photo);
-      const imageBase64 = await blobToBase64(compressed);
+      imageBase64 = await blobToBase64(compressed);
+    } catch {
+      // Lokale Bildverarbeitung fehlgeschlagen - hier gibt es wirklich
+      // nichts zu retten, ohne Foto kein sinnvoller Postfach-Eintrag.
+      setStatus("error");
+      return;
+    }
+    // WICHTIG: anders als bei Kontakt/Veranstaltungsanfrage/Promoter/
+    // Eventlocation ist Clubscale hier NICHT nur ein Benachrichtigungs-
+    // kanal, sondern das eigentliche Bewerbermanagement-System - die
+    // Erfolgsanzeige muss also ehrlich am tatsaechlichen Clubscale-Ergebnis
+    // haengen bleiben (sonst denkt die Person, die Bewerbung sei
+    // angekommen, obwohl sie es nicht ist). Der Postfach-Eintrag passiert
+    // trotzdem IMMER zusaetzlich, unabhaengig vom Ergebnis, damit die
+    // Bewerbung bei einem Clubscale-Ausfall wenigstens sichtbar bleibt und
+    // nicht spurlos verloren geht.
+    void logInboxAwaited({
+      type: "bewerbung",
+      name: `${firstName.trim()} ${lastName.trim()}`,
+      email: email.trim(),
+      phone: phoneNumber.trim(),
+      summary: jobTitle,
+      message: text.trim(),
+    });
+    try {
       await createJobApplication(
         {
           jobPostingId,
@@ -100,14 +125,6 @@ function ApplicationForm({
         },
         setProgress
       );
-      logInbox({
-        type: "bewerbung",
-        name: `${firstName.trim()} ${lastName.trim()}`,
-        email: email.trim(),
-        phone: phoneNumber.trim(),
-        summary: jobTitle,
-        message: text.trim(),
-      });
       setStatus("sent");
     } catch {
       setStatus("error");
