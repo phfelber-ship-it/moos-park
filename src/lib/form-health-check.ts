@@ -36,12 +36,27 @@ type CheckDef = {
 
 // --- Hilfsfunktionen -------------------------------------------------
 
+// Vercel-Preview-Deployments sind standardmaessig durch "Deployment
+// Protection" geschuetzt (Vercel Authentication) - ohne diesen Bypass
+// bekaeme der Formular-Check bei jedem Selbstaufruf ein 401 "Protected
+// deployment" statt der echten Antwort. Der Bypass gilt NUR fuer unsere
+// eigenen automatisierten Checks, der Schutz fuer alle anderen Besucher
+// bleibt bestehen. Secret liegt in Vercel -> Project Settings ->
+// Deployment Protection -> Protection Bypass for Automation.
+function bypassHeaders(): Record<string, string> {
+  const secret = process.env.VERCEL_AUTOMATION_BYPASS_SECRET;
+  return secret ? { "x-vercel-protection-bypass": secret } : {};
+}
+
 async function checkPageHasForm(
   origin: string,
   path: string,
   formHint: RegExp
 ): Promise<{ ok: boolean; message: string }> {
-  const res = await fetch(`${origin}${path}`, { cache: "no-store" });
+  const res = await fetch(`${origin}${path}`, {
+    cache: "no-store",
+    headers: bypassHeaders(),
+  });
   if (!res.ok) {
     return { ok: false, message: `Seite antwortet mit Status ${res.status}.` };
   }
@@ -58,7 +73,7 @@ async function checkPageHasForm(
 async function postJson(url: string, body: unknown) {
   const res = await fetch(url, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: { "Content-Type": "application/json", ...bypassHeaders() },
     body: JSON.stringify(body),
   });
   // Rohtext IMMER mitlesen (nicht nur versuchtes JSON-Parsing) - falls die
