@@ -19,7 +19,7 @@ type Contact = {
 
 const emptyForm = {
   company: "",
-  salutation: ANREDEN[0],
+  salutation: "",
   lastName: "",
   firstName: "",
   street: "",
@@ -107,6 +107,7 @@ export default function EventExperienceContactsPanel({
               onChange={(e) => set({ salutation: e.target.value })}
               className="rounded-xl border border-foreground/15 bg-foreground/5 px-4 py-2.5 text-sm text-foreground outline-none focus:border-accent-lime"
             >
+              <option value="">Anrede (optional)</option>
               {ANREDEN.map((a) => (
                 <option key={a} value={a}>
                   {a}
