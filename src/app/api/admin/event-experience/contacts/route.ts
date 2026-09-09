@@ -20,9 +20,11 @@ export async function POST(request: Request) {
   const email = String(body.email ?? "").trim();
   const phone = String(body.phone ?? "").trim();
 
-  if (!company || !lastName || !street || !zip || !city) {
+  // Alle Felder sind optional - was ausgefuellt wird, wird uebernommen.
+  // Nur komplett leer wird abgelehnt.
+  if (![company, salutation, lastName, firstName, street, zip, city, email, phone].some(Boolean)) {
     return NextResponse.json(
-      { error: "Firma, Name, Straße, PLZ und Ort sind Pflichtfelder." },
+      { error: "Bitte mindestens ein Feld ausfüllen." },
       { status: 400 }
     );
   }

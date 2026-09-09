@@ -43,12 +43,9 @@ export default function EventExperienceContactsPanel({
   const set = (patch: Partial<typeof form>) =>
     setForm((cur) => ({ ...cur, ...patch }));
 
-  const canSave =
-    form.company.trim() !== "" &&
-    form.lastName.trim() !== "" &&
-    form.street.trim() !== "" &&
-    form.zip.trim() !== "" &&
-    form.city.trim() !== "";
+  // Alle Felder sind optional - was ausgefuellt wird, wird uebernommen.
+  // Nur komplett leer darf das Formular nicht abgeschickt werden.
+  const canSave = Object.values(form).some((v) => v.trim() !== "");
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -102,7 +99,7 @@ export default function EventExperienceContactsPanel({
             <input
               value={form.company}
               onChange={(e) => set({ company: e.target.value })}
-              placeholder="Firma"
+              placeholder="Firma (optional)"
               className="rounded-xl border border-foreground/15 bg-foreground/5 px-4 py-2.5 text-sm text-foreground placeholder-foreground/40 outline-none focus:border-accent-lime sm:col-span-2"
             />
             <select
@@ -119,7 +116,7 @@ export default function EventExperienceContactsPanel({
             <input
               value={form.lastName}
               onChange={(e) => set({ lastName: e.target.value })}
-              placeholder="Name"
+              placeholder="Name (optional)"
               className="rounded-xl border border-foreground/15 bg-foreground/5 px-4 py-2.5 text-sm text-foreground placeholder-foreground/40 outline-none focus:border-accent-lime"
             />
             <input
@@ -131,20 +128,20 @@ export default function EventExperienceContactsPanel({
             <input
               value={form.street}
               onChange={(e) => set({ street: e.target.value })}
-              placeholder="Straße + Hausnummer"
+              placeholder="Straße + Hausnummer (optional)"
               className="rounded-xl border border-foreground/15 bg-foreground/5 px-4 py-2.5 text-sm text-foreground placeholder-foreground/40 outline-none focus:border-accent-lime"
             />
             <div className="grid grid-cols-[100px_1fr] gap-3">
               <input
                 value={form.zip}
                 onChange={(e) => set({ zip: e.target.value })}
-                placeholder="PLZ"
+                placeholder="PLZ (optional)"
                 className="rounded-xl border border-foreground/15 bg-foreground/5 px-4 py-2.5 text-sm text-foreground placeholder-foreground/40 outline-none focus:border-accent-lime"
               />
               <input
                 value={form.city}
                 onChange={(e) => set({ city: e.target.value })}
-                placeholder="Ort"
+                placeholder="Ort (optional)"
                 className="rounded-xl border border-foreground/15 bg-foreground/5 px-4 py-2.5 text-sm text-foreground placeholder-foreground/40 outline-none focus:border-accent-lime"
               />
             </div>
@@ -192,9 +189,11 @@ export default function EventExperienceContactsPanel({
                       : "border-foreground/10 hover:border-foreground/25"
                   }`}
                 >
-                  <span className="font-bold text-foreground">{c.company}</span>
+                  <span className="font-bold text-foreground">
+                    {c.company || c.lastName || "Ohne Namen"}
+                  </span>
                   <span className="text-foreground/40">
-                    {c.lastName}, {c.city}
+                    {[c.lastName, c.city].filter(Boolean).join(", ")}
                   </span>
                 </button>
               ))}
@@ -216,13 +215,17 @@ export default function EventExperienceContactsPanel({
             <div className="mt-3 grid gap-3">
               <div>
                 <p className="text-sm font-bold text-foreground">
-                  {selected.company}
+                  {selected.company || selected.lastName || "Ohne Namen"}
                 </p>
                 <p className="text-xs text-foreground/50">
-                  {selected.salutation} {selected.firstName} {selected.lastName}
+                  {[selected.salutation, selected.firstName, selected.lastName]
+                    .filter(Boolean)
+                    .join(" ")}
                 </p>
                 <p className="text-xs text-foreground/40">
-                  {selected.street}, {selected.zip} {selected.city}
+                  {[selected.street, [selected.zip, selected.city].filter(Boolean).join(" ")]
+                    .filter(Boolean)
+                    .join(", ")}
                 </p>
               </div>
 
