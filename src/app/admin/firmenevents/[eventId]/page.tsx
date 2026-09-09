@@ -46,38 +46,60 @@ export default async function CompanyEventAdminPage({
         {event.locationName}
       </p>
 
-      <CompanyEventReminderEditor
-        eventId={eventId}
-        initial={event.reminderWorkflow}
-        hasEventDateTime={Boolean(event.eventDateTime)}
-      />
+      <section className="mt-10">
+        <h2 className="text-lg font-black uppercase tracking-wide text-accent-lime">
+          CRM
+        </h2>
+        <EventExperienceManager
+          initialRegistrations={registrations}
+          apiBase={`${apiBase}/registrations`}
+          exportUrl={`${apiBase}/export`}
+          eventId={eventId}
+        />
+      </section>
 
-      <EventExperienceContactsPanel
-        initialContacts={manualContacts}
-        companyContacts={companyContacts}
-        contactsApiUrl={`${apiBase}/contacts`}
-        lettersExportUrl={`${apiBase}/letters/export`}
-        letterBaseUrl={`${apiBase}/registrations`}
-      />
-      <EventExperienceLetterTemplateEditor initialTemplate={letterTemplate} />
-      <CompanyEventTemplateEditor
-        eventId={eventId}
-        kind="BESTAETIGUNG"
-        title="Bestätigungs-/Einladungs-E-Mail-Vorlage"
-        initialTemplate={bestaetigungTemplate}
-      />
-      <CompanyEventTemplateEditor
-        eventId={eventId}
-        kind="ERINNERUNG"
-        title="Erinnerungs-E-Mail-Vorlage"
-        initialTemplate={erinnerungTemplate}
-      />
-      <EventExperienceManager
-        initialRegistrations={registrations}
-        apiBase={`${apiBase}/registrations`}
-        exportUrl={`${apiBase}/export`}
-        eventId={eventId}
-      />
+      <section className="mt-12">
+        <h2 className="text-lg font-black uppercase tracking-wide text-accent-lime">
+          Kontakte
+        </h2>
+        <p className="mt-1 text-xs text-foreground/50">
+          Kontakte &amp; Einladungsbriefe
+        </p>
+        <EventExperienceContactsPanel
+          initialContacts={manualContacts}
+          companyContacts={companyContacts}
+          contactsApiUrl={`${apiBase}/contacts`}
+          lettersExportUrl={`${apiBase}/letters/export`}
+          letterBaseUrl={`${apiBase}/registrations`}
+        />
+      </section>
+
+      <section className="mt-12">
+        <h2 className="text-lg font-black uppercase tracking-wide text-accent-lime">
+          E-Mail-Vorlagen
+        </h2>
+        <p className="mt-1 text-xs text-foreground/50">
+          Einladungsbrief, Bestätigungs- und Erinnerungsvorlage
+        </p>
+        <EventExperienceLetterTemplateEditor initialTemplate={letterTemplate} />
+        <CompanyEventTemplateEditor
+          eventId={eventId}
+          kind="BESTAETIGUNG"
+          title="Bestätigungs-/Einladungs-E-Mail-Vorlage"
+          initialTemplate={bestaetigungTemplate}
+        />
+        <CompanyEventTemplateEditor
+          eventId={eventId}
+          kind="ERINNERUNG"
+          title="Erinnerungs-E-Mail-Vorlage"
+          initialTemplate={erinnerungTemplate}
+        />
+        <CompanyEventReminderEditor
+          eventId={eventId}
+          initial={event.reminderWorkflow}
+          initialEventDateTime={event.eventDateTime}
+        />
+      </section>
     </div>
   );
 }

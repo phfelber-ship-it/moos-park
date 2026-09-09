@@ -7,17 +7,32 @@ import FlipText from "@/components/FlipText";
 // Konfiguration der EINEN hart codierten Workflow-Regel ("Erinnerung N
 // Stunden vor dem Event") - siehe api/cron/event-reminders. Bewusst kein
 // generisches Workflow-UI, nur enabled + hoursBefore.
+// Wandelt ein ISO-Datum in den Wert um, den ein <input type="datetime-local">
+// erwartet (lokale Zeit, kein "Z"/Offset) - und umgekehrt beim Speichern.
+function isoToLocalInputValue(iso: string | null): string {
+  if (!iso) return "";
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return "";
+  const pad = (n: number) => String(n).padStart(2, "0");
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(
+    d.getHours()
+  )}:${pad(d.getMinutes())}`;
+}
+
 export default function CompanyEventReminderEditor({
   eventId,
   initial,
-  hasEventDateTime,
+  initialEventDateTime,
 }: {
   eventId: string;
   initial: ReminderWorkflow;
-  hasEventDateTime: boolean;
+  initialEventDateTime: string | null;
 }) {
   const [enabled, setEnabled] = useState(initial.enabled);
   const [hoursBefore, setHoursBefore] = useState(initial.hoursBefore);
+  const [eventDateTime, setEventDateTime] = useState(
+    isoToLocalInputValue(initialEventDateTime)
+  );
   const [status, setStatus] = useState<"idle" | "saving" | "saved" | "error">("idle");
 
   const save = async () => {
@@ -26,7 +41,10 @@ export default function CompanyEventReminderEditor({
       const res = await fetch(`/api/admin/company-events/${eventId}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ reminderWorkflow: { enabled, hoursBefore } }),
+        body: JSON.stringify({
+          reminderWorkflow: { enabled, hoursBefore },
+          eventDateTime: eventDateTime ? new Date(eventDateTime).toISOString() : null,
+        }),
       });
       if (!res.ok) throw new Error("failed");
       setStatus("saved");
@@ -36,7 +54,7 @@ export default function CompanyEventReminderEditor({
   };
 
   return (
-    <div className="mt-8 rounded-2xl border border-foreground/10 bg-foreground/[0.015] p-5">
+    <div className="mt-6 rounded-2xl border border-foreground/10 bg-foreground/[0.015] p-5">
       <p className="text-sm font-black uppercase tracking-wide text-foreground">
         Erinnerungs-Mail
       </p>
@@ -45,12 +63,23 @@ export default function CompanyEventReminderEditor({
         an alle bestätigten Anmeldungen, die noch keine Erinnerung erhalten
         haben.
       </p>
-      {!hasEventDateTime && (
-        <p className="mt-2 text-xs font-bold text-orange-400">
-          Kein genauer Termin (Datum/Uhrzeit als ISO) hinterlegt - Workflow
-          kann erst greifen, wenn eventDateTime gesetzt ist.
-        </p>
-      )}
+      <div className="mt-4">
+        <label className="mb-1 block text-xs font-bold uppercase text-foreground/50">
+          Termin (Datum/Uhrzeit, für die Berechnung "X Stunden vorher")
+        </label>
+        <input
+          type="datetime-local"
+          value={eventDateTime}
+          onChange={(e) => setEventDateTime(e.target.value)}
+          className="rounded-xl border border-foreground/15 bg-foreground/5 px-4 py-2.5 text-sm text-foreground outline-none focus:border-accent-lime"
+        />
+        {!eventDateTime && (
+          <p className="mt-2 text-xs font-bold text-orange-400">
+            Kein genauer Termin hinterlegt - Workflow kann erst greifen, wenn
+            hier Datum/Uhrzeit gesetzt sind.
+          </p>
+        )}
+      </div>
       <div className="mt-4 flex flex-wrap items-center gap-4">
         <label className="flex items-center gap-2 text-sm text-foreground">
           <input
