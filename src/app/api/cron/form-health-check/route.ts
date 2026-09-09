@@ -25,7 +25,7 @@ async function sendAlertMail(report: FormHealthCheckReport) {
     );
     return;
   }
-  const from = process.env.RESEND_FROM_EMAIL || "moos.park <s.geisler@moos-park.de>";
+  const from = process.env.RESEND_FROM_EMAIL || "moos.park <noreply@moos-park.de>";
   const failed = report.results.filter((r) => !r.ok);
 
   const lines = failed.map(
