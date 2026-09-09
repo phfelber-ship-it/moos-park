@@ -9,10 +9,16 @@ import EventExperienceInviteDialog from "@/components/EventExperienceInviteDialo
 
 const STATUSES: { key: RegistrationStatus; label: string }[] = [
   { key: "NEU", label: "Neu" },
-  { key: "BESTAETIGT", label: "Bestätigt" },
+  { key: "BESTAETIGT", label: "Einladen" },
+  { key: "EMAIL_VERSCHICKT", label: "E-Mail verschickt" },
+  { key: "ANGERUFEN", label: "Angerufen" },
+  { key: "TEILNAHME_BESTAETIGT", label: "Bestätigt" },
   { key: "NACHFRAGE", label: "Nachfrage" },
   { key: "ABGELEHNT", label: "Abgelehnt" },
+  { key: "ABGESAGT", label: "Abgesagt" },
 ];
+
+const REMINDER_AFTER_MS = 24 * 60 * 60 * 1000;
 
 export default function EventExperienceManager({
   initialRegistrations,
@@ -47,7 +53,11 @@ export default function EventExperienceManager({
 
   const markInvitationSent = (id: string, invitationSentAt: string) => {
     setRegistrations((cur) =>
-      cur.map((r) => (r.id === id ? { ...r, invitationSentAt } : r))
+      cur.map((r) =>
+        r.id === id
+          ? { ...r, invitationSentAt, status: "EMAIL_VERSCHICKT" }
+          : r
+      )
     );
   };
 
@@ -178,6 +188,21 @@ export default function EventExperienceManager({
                           </p>
                         )}
 
+                        {r.cancelledAttendees && r.cancelledAttendees.length > 0 && (
+                          <div className="mt-2 rounded-lg border border-red-500/20 bg-red-500/5 p-2">
+                            <p className="text-[10px] font-bold uppercase text-red-400">
+                              Können nicht teilnehmen:
+                            </p>
+                            <ul className="mt-1 text-[11px] text-foreground/70">
+                              {r.cancelledAttendees.map((a, i) => (
+                                <li key={i}>
+                                  {a.salutation} {a.firstName} {a.lastName}
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        )}
+
                         {key === "BESTAETIGT" && (
                           <button
                             type="button"
@@ -194,6 +219,42 @@ export default function EventExperienceManager({
                             Verschickt am{" "}
                             {new Date(r.invitationSentAt).toLocaleString("de-DE")}
                           </p>
+                        )}
+
+                        {key === "EMAIL_VERSCHICKT" &&
+                          r.invitationSentAt &&
+                          Date.now() - new Date(r.invitationSentAt).getTime() >
+                            REMINDER_AFTER_MS && (
+                            <p className="mt-2 rounded-lg border border-orange-500/30 bg-orange-500/10 px-2 py-1.5 text-[10px] font-bold text-orange-400">
+                              ⚠ Nachfrage: Ist die E-Mail angekommen?
+                            </p>
+                          )}
+                        {key === "EMAIL_VERSCHICKT" && (
+                          <button
+                            type="button"
+                            onClick={() => changeStatus(r.id, "ANGERUFEN")}
+                            className="mt-2 w-full rounded-lg border border-foreground/15 px-3 py-2 text-[11px] font-bold uppercase tracking-wide text-foreground transition-colors hover:border-accent-lime"
+                          >
+                            Als angerufen markieren
+                          </button>
+                        )}
+                        {key === "ANGERUFEN" && (
+                          <div className="mt-2 grid grid-cols-2 gap-2">
+                            <button
+                              type="button"
+                              onClick={() => changeStatus(r.id, "TEILNAHME_BESTAETIGT")}
+                              className="rounded-lg bg-accent-lime px-2 py-2 text-[10px] font-black uppercase tracking-wide text-black transition-transform hover:scale-105"
+                            >
+                              Teilnahme bestätigt
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => changeStatus(r.id, "ABGESAGT")}
+                              className="rounded-lg border border-red-500/30 px-2 py-2 text-[10px] font-bold uppercase tracking-wide text-red-400 transition-colors hover:bg-red-500/10"
+                            >
+                              Abgesagt
+                            </button>
+                          </div>
                         )}
 
                         <div className="mt-2 flex items-center justify-between gap-2">

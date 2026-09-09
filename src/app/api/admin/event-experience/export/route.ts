@@ -12,9 +12,13 @@ function csvEscape(value: string): string {
 
 const STATUS_LABELS: Record<string, string> = {
   NEU: "Neu",
-  BESTAETIGT: "Bestätigt",
+  BESTAETIGT: "Einladen",
+  EMAIL_VERSCHICKT: "E-Mail verschickt",
+  ANGERUFEN: "Angerufen",
+  TEILNAHME_BESTAETIGT: "Bestätigt",
   NACHFRAGE: "Nachfrage",
   ABGELEHNT: "Abgelehnt",
+  ABGESAGT: "Abgesagt",
 };
 
 export async function GET() {
