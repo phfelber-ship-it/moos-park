@@ -61,8 +61,36 @@ async function postJson(url: string, body: unknown) {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(body),
   });
-  const data = await res.json().catch(() => null);
-  return { res, data };
+  // Rohtext IMMER mitlesen (nicht nur versuchtes JSON-Parsing) - falls die
+  // Antwort z.B. von einer vorgelagerten Ebene (Vercel-Protection, Proxy)
+  // statt von unserer eigenen Route kommt, ist es meist gar kein JSON. Ohne
+  // den Rohtext sehen wir im Fehlerfall nur "[object Object]" und koennen
+  // die eigentliche Ursache nicht diagnostizieren.
+  const rawText = await res.text();
+  let data: unknown = null;
+  try {
+    data = JSON.parse(rawText);
+  } catch {
+    data = null;
+  }
+  return { res, data, rawText };
+}
+
+// Extrahiert eine lesbare Fehlermeldung aus einer API-Antwort, egal ob sie
+// wie erwartet { error: "..." } ist, ein anderes JSON-Objekt (z.B. von einer
+// vorgelagerten Ebene) oder gar kein JSON (HTML-Fehlerseite o.ae.).
+function extractErrorMessage(data: unknown, rawText: string): string {
+  if (data && typeof data === "object" && "error" in data) {
+    const err = (data as { error?: unknown }).error;
+    if (typeof err === "string") return err;
+    if (err) return JSON.stringify(err);
+  }
+  if (rawText.trim()) {
+    // Rohtext kuerzen, damit die Fehlermeldung nicht ausufert (z.B. bei
+    // einer kompletten HTML-Fehlerseite).
+    return rawText.trim().slice(0, 300);
+  }
+  return "unbekannter Fehler (leere Antwort)";
 }
 
 // --- Formular-Inventar -------------------------------------------------
@@ -148,7 +176,7 @@ const CHECKS: CheckDef[] = [
     pageUrl: "/firmenevents",
     kind: "submission",
     run: async (origin) => {
-      const { res, data } = await postJson(`${origin}/api/firmenanfrage`, {
+      const { res, data, rawText } = await postJson(`${origin}/api/firmenanfrage`, {
         company: `${TEST_MARKER} GmbH`,
         contactName: TEST_MARKER,
         email: "healthcheck@moos-park.de",
@@ -158,12 +186,13 @@ const CHECKS: CheckDef[] = [
         consent: true,
         isHealthCheck: true,
       });
-      if (!res.ok || data?.error) {
+      if (!res.ok || (data as { error?: unknown } | null)?.error) {
         return {
           ok: false,
-          message: `POST /api/firmenanfrage fehlgeschlagen (Status ${res.status}): ${
-            data?.error ?? "unbekannter Fehler"
-          }`,
+          message: `POST /api/firmenanfrage fehlgeschlagen (Status ${res.status}): ${extractErrorMessage(
+            data,
+            rawText
+          )}`,
         };
       }
       return { ok: true, message: "Testeinreichung an /api/firmenanfrage wurde akzeptiert." };
@@ -174,7 +203,7 @@ const CHECKS: CheckDef[] = [
     pageUrl: "/event-experience",
     kind: "submission",
     run: async (origin) => {
-      const { res, data } = await postJson(`${origin}/api/event-experience/register`, {
+      const { res, data, rawText } = await postJson(`${origin}/api/event-experience/register`, {
         company: `${TEST_MARKER} GmbH`,
         salutation: "Divers",
         lastName: TEST_MARKER,
@@ -186,12 +215,13 @@ const CHECKS: CheckDef[] = [
         companions: [],
         isHealthCheck: true,
       });
-      if (!res.ok || data?.error) {
+      if (!res.ok || (data as { error?: unknown } | null)?.error) {
         return {
           ok: false,
-          message: `POST /api/event-experience/register fehlgeschlagen (Status ${res.status}): ${
-            data?.error ?? "unbekannter Fehler"
-          }`,
+          message: `POST /api/event-experience/register fehlgeschlagen (Status ${res.status}): ${extractErrorMessage(
+            data,
+            rawText
+          )}`,
         };
       }
       return {
