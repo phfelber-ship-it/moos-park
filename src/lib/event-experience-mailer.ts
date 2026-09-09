@@ -39,6 +39,7 @@ export async function sendInvitationMail(input: {
   to: string;
   subject: string;
   body: string;
+  html: string;
   attachments: MailAttachment[];
 }): Promise<void> {
   const apiKey = process.env.RESEND_API_KEY;
@@ -65,6 +66,7 @@ export async function sendInvitationMail(input: {
       cc: ["s.geisler@moos-park.de"],
       subject: input.subject,
       text: input.body,
+      html: input.html,
       attachments: input.attachments.map((a) => ({
         filename: a.filename,
         content: a.content,

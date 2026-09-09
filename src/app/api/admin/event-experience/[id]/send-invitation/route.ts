@@ -10,6 +10,7 @@ import {
   sendInvitationMail,
 } from "@/lib/event-experience-mailer";
 import { generateTicketPdf } from "@/lib/event-experience-tickets";
+import { buildInvitationEmailHtml } from "@/lib/event-experience-email";
 
 // Erzeugt beim Versand fuer Hauptperson + jede Begleitperson ein
 // individuelles PDF-Ticket (mit Code/QR) und verschickt sie zusammen mit
@@ -33,6 +34,10 @@ export async function POST(
     const template = await getInvitationTemplate();
     const subject = applyTemplatePlaceholders(template.subject, reg);
     const body = applyTemplatePlaceholders(template.body, reg);
+    const html = buildInvitationEmailHtml({
+      bodyText: body,
+      ticketCount: tickets.length,
+    });
 
     const attachments = await Promise.all(
       tickets.map(async (ticket, i) => {
@@ -48,6 +53,7 @@ export async function POST(
       to: reg.email,
       subject,
       body,
+      html,
       attachments,
     });
 
