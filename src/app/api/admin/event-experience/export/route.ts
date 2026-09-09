@@ -27,7 +27,10 @@ export async function GET() {
     "Vorname",
     "E-Mail",
     "Telefon",
+    "Begleitpersonen",
+    "Begleitpersonen-Namen",
     "Nachricht",
+    "Einladung verschickt am",
     "Angemeldet am",
   ];
 
@@ -39,7 +42,14 @@ export async function GET() {
     r.firstName,
     r.email,
     r.phone,
+    String(r.companions.length),
+    r.companions
+      .map((c) => `${c.salutation} ${c.firstName} ${c.lastName}`)
+      .join(", "),
     r.message,
+    r.invitationSentAt
+      ? new Date(r.invitationSentAt).toLocaleString("de-DE")
+      : "",
     new Date(r.createdAt).toLocaleString("de-DE"),
   ]);
 

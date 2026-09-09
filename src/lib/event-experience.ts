@@ -12,6 +12,19 @@ export const REGISTRATION_STATUSES: RegistrationStatus[] = [
   "NACHFRAGE",
 ];
 
+export type Companion = {
+  salutation: string;
+  lastName: string;
+  firstName: string;
+};
+
+export type Ticket = {
+  code: string;
+  salutation: string;
+  lastName: string;
+  firstName: string;
+};
+
 export type EventExperienceRegistration = {
   id: string;
   company: string;
@@ -21,8 +34,11 @@ export type EventExperienceRegistration = {
   email: string;
   phone: string;
   message: string;
+  companions: Companion[];
   status: RegistrationStatus;
   createdAt: string;
+  invitationSentAt: string | null;
+  tickets: Ticket[];
 };
 
 export type RegistrationInput = {
@@ -33,6 +49,7 @@ export type RegistrationInput = {
   email: string;
   phone: string;
   message: string;
+  companions: Companion[];
 };
 
 // Anmeldungen fuer /event-experience liegen als JSON im Blob-Store (gleiches
@@ -53,8 +70,18 @@ export async function getRegistrations(): Promise<
       cache: "no-store",
     });
     if (!res.ok) return [];
-    const data = (await res.json()) as EventExperienceRegistration[];
-    return Array.isArray(data) ? data : [];
+    const data = (await res.json()) as Partial<EventExperienceRegistration>[];
+    // Aeltere Eintraege (vor Begleitpersonen/Tickets) auf vollstaendige
+    // Form normalisieren, damit alte Anmeldungen im Adminpanel nicht
+    // crashen.
+    return Array.isArray(data)
+      ? data.map((e) => ({
+          ...e,
+          companions: e.companions ?? [],
+          invitationSentAt: e.invitationSentAt ?? null,
+          tickets: e.tickets ?? [],
+        }) as EventExperienceRegistration)
+      : [];
   } catch {
     return [];
   }
@@ -80,6 +107,8 @@ export async function addRegistration(
     id: crypto.randomUUID(),
     status: "NEU",
     createdAt: new Date().toISOString(),
+    invitationSentAt: null,
+    tickets: [],
   };
   entries.unshift(entry);
   await saveRegistrations(entries);
@@ -95,4 +124,49 @@ export async function updateRegistrationStatus(
   if (idx === -1) return;
   entries[idx] = { ...entries[idx], status };
   await saveRegistrations(entries);
+}
+
+export async function getRegistration(
+  id: string
+): Promise<EventExperienceRegistration | null> {
+  const entries = await getRegistrations();
+  return entries.find((e) => e.id === id) ?? null;
+}
+
+// Erzeugt fuer Hauptperson + jede Begleitperson ein Ticket mit
+// individuellem, kurzem Code (fuer QR/Einlasskontrolle) - rein im
+// Speicher, wird bewusst noch NICHT persistiert: erst wenn der Mailversand
+// (siehe send-invitation-Route) tatsaechlich geklappt hat, sollen die
+// Tickets als verschickt gelten (saveSentTickets()).
+export function buildTicketsForRegistration(
+  reg: EventExperienceRegistration
+): Ticket[] {
+  const attendees: Companion[] = [
+    { salutation: reg.salutation, lastName: reg.lastName, firstName: reg.firstName },
+    ...reg.companions,
+  ];
+  return attendees.map((a) => ({
+    ...a,
+    code: crypto.randomBytes(5).toString("hex").toUpperCase(),
+  }));
+}
+
+// Persistiert Tickets + Versandzeitpunkt - erst NACH erfolgreichem
+// Mailversand aufrufen, sonst gilt eine Anmeldung faelschlich als
+// "Einladung verschickt", obwohl die Mail nie ankam.
+export async function saveSentTickets(
+  id: string,
+  tickets: Ticket[]
+): Promise<EventExperienceRegistration | null> {
+  const entries = await getRegistrations();
+  const idx = entries.findIndex((e) => e.id === id);
+  if (idx === -1) return null;
+
+  entries[idx] = {
+    ...entries[idx],
+    tickets,
+    invitationSentAt: new Date().toISOString(),
+  };
+  await saveRegistrations(entries);
+  return entries[idx];
 }

@@ -3,6 +3,7 @@ import FlipText from "@/components/FlipText";
 import Reveal from "@/components/Reveal";
 import EventExperienceForm from "@/components/EventExperienceForm";
 import EventExperienceIntro from "@/components/EventExperienceIntro";
+import { TIMETABLE } from "@/lib/event-experience-info";
 
 export const metadata = {
   alternates: { canonical: "/event-experience" },
@@ -11,14 +12,6 @@ export const metadata = {
   description:
     "Mittwoch, 14. Oktober 2026, 17–22 Uhr: Erleben Sie im moos.park einen inspirierenden Abend für Ihre nächste Firmenveranstaltung – Sommerfest, Weihnachtsfeier, Team- und Kundenevent. Plätze sind begrenzt – jetzt anmelden.",
 };
-
-const TIMETABLE = [
-  { time: "17:00", label: "Empfang aller Gäste" },
-  { time: "18:00", label: "Herzliches Willkommen durch die Veranstalter" },
-  { time: "18:30", label: "Kulinarische Verwöhnung" },
-  { time: "20:00", label: "Inspirationen" },
-  { time: "22:00", label: "Veranstaltungsende" },
-];
 
 const STEPS = [
   {
