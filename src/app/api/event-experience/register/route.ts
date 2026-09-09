@@ -44,6 +44,15 @@ export async function POST(request: Request) {
     );
   }
 
+  // Maximal 4 Personen insgesamt (Hauptperson + max. 3 Begleitpersonen) -
+  // serverseitig durchgesetzt, nicht nur im Formular.
+  if (companions.length > 3) {
+    return NextResponse.json(
+      { error: "Maximal 4 Personen pro Anmeldung (Hauptperson + 3 Begleitpersonen)." },
+      { status: 400 }
+    );
+  }
+
   try {
     await addRegistration({
       company,

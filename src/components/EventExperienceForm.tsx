@@ -31,7 +31,9 @@ export default function EventExperienceForm() {
   const [status, setStatus] = useState<"idle" | "sending" | "error">("idle");
 
   const setCompanionCount = (raw: string) => {
-    const n = Math.max(0, Math.min(20, Number(raw.replace(/[^0-9]/g, "")) || 0));
+    // Maximal 4 Personen insgesamt pro Anmeldung (Hauptperson + max. 3
+    // Begleitpersonen).
+    const n = Math.max(0, Math.min(3, Number(raw.replace(/[^0-9]/g, "")) || 0));
     setBegleitpersonenCount(n);
     setCompanions((cur) => {
       const next = [...cur];
@@ -158,7 +160,10 @@ export default function EventExperienceForm() {
 
       <div>
         <label className="mb-2 block text-sm font-bold text-foreground">
-          Begleitpersonen
+          Begleitpersonen{" "}
+          <span className="font-normal text-foreground/40">
+            (max. 3 – insgesamt max. 4 Personen)
+          </span>
         </label>
         <input
           value={begleitpersonenCount || ""}
