@@ -218,6 +218,17 @@ export async function updateCompanyEvent(
   );
 }
 
+export async function deleteCompanyEvent(id: string): Promise<boolean> {
+  return mutateEvents(
+    (events) => {
+      const exists = events.some((e) => e.id === id);
+      if (!exists) return { events, result: false };
+      return { events: events.filter((e) => e.id !== id), result: true };
+    },
+    (verify) => !verify.some((e) => e.id === id)
+  );
+}
+
 const RESERVED_SLUGS = new Set(["admin", "api"]);
 
 export function isSlugReserved(slug: string, blocklist: string[]): boolean {

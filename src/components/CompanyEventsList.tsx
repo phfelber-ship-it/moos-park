@@ -38,6 +38,36 @@ export default function CompanyEventsList({
   const [status, setStatus] = useState<"idle" | "saving" | "error">("idle");
   const [error, setError] = useState<string | null>(null);
 
+  // Loeschen: pro Karte eigener Bestaetigungs-Zustand (welche Karte gerade
+  // im Bestaetigungs-Modus ist + eingegebener Text) - Sicherheitsnetz per
+  // Tippen von "DELETE", zusaetzlich serverseitig in der API-Route
+  // erzwungen (nicht nur hier im UI).
+  const [confirmingId, setConfirmingId] = useState<string | null>(null);
+  const [confirmText, setConfirmText] = useState("");
+  const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [deleteError, setDeleteError] = useState<string | null>(null);
+
+  const deleteEvent = async (id: string) => {
+    setDeletingId(id);
+    setDeleteError(null);
+    try {
+      const res = await fetch(`/api/admin/company-events/${id}`, {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ confirm: "DELETE" }),
+      });
+      const data = await res.json().catch(() => null);
+      if (!res.ok) throw new Error(data?.error || "Event konnte nicht gelöscht werden.");
+      setEvents((cur) => cur.filter((e) => e.id !== id));
+      setConfirmingId(null);
+      setConfirmText("");
+    } catch (err) {
+      setDeleteError(err instanceof Error ? err.message : "Event konnte nicht gelöscht werden.");
+    } finally {
+      setDeletingId(null);
+    }
+  };
+
   const onNameChange = (value: string) => {
     setName(value);
     if (!slugTouched) setSlug(slugify(value));
@@ -250,27 +280,86 @@ export default function CompanyEventsList({
 
       <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {events.map((ev) => (
-          <Link
+          <div
             key={ev.id}
-            href={`/admin/firmenevents/${ev.id}`}
-            className="rounded-2xl border border-foreground/10 p-5 transition-colors hover:border-accent-lime"
+            className="relative rounded-2xl border border-foreground/10 p-5 transition-colors hover:border-accent-lime"
           >
-            <div className="flex items-center justify-between">
-              <p className="text-sm font-black uppercase text-foreground">{ev.name}</p>
-              <span
-                className={`rounded-full px-2 py-0.5 text-[10px] font-black uppercase ${
-                  ev.status === "AKTIV"
-                    ? "bg-accent-lime/20 text-accent-lime"
-                    : "bg-foreground/10 text-foreground/50"
-                }`}
+            <Link href={`/admin/firmenevents/${ev.id}`} className="block">
+              <div className="flex items-center justify-between pr-6">
+                <p className="text-sm font-black uppercase text-foreground">{ev.name}</p>
+                <span
+                  className={`rounded-full px-2 py-0.5 text-[10px] font-black uppercase ${
+                    ev.status === "AKTIV"
+                      ? "bg-accent-lime/20 text-accent-lime"
+                      : "bg-foreground/10 text-foreground/50"
+                  }`}
+                >
+                  {ev.status}
+                </span>
+              </div>
+              <p className="mt-1 text-xs text-foreground/50">/{ev.slug}</p>
+              <p className="mt-2 text-xs text-foreground/60">{ev.dateLabel}</p>
+              <p className="text-xs text-foreground/60">{ev.locationName}</p>
+            </Link>
+
+            <button
+              type="button"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                setConfirmingId(ev.id);
+                setConfirmText("");
+                setDeleteError(null);
+              }}
+              title="Event löschen"
+              className="absolute right-4 top-4 text-foreground/30 transition-colors hover:text-red-500"
+            >
+              ✕
+            </button>
+
+            {confirmingId === ev.id && (
+              <div
+                onClick={(e) => e.preventDefault()}
+                className="mt-4 rounded-xl border border-red-500/30 bg-red-500/5 p-4"
               >
-                {ev.status}
-              </span>
-            </div>
-            <p className="mt-1 text-xs text-foreground/50">/{ev.slug}</p>
-            <p className="mt-2 text-xs text-foreground/60">{ev.dateLabel}</p>
-            <p className="text-xs text-foreground/60">{ev.locationName}</p>
-          </Link>
+                <p className="text-xs font-bold text-red-400">
+                  Unwiderruflich löschen - Anmeldungen bleiben als Daten
+                  bestehen, verlieren aber ihre Event-Zuordnung. Zur
+                  Bestätigung <strong>DELETE</strong> eingeben:
+                </p>
+                <input
+                  value={confirmText}
+                  onChange={(e) => setConfirmText(e.target.value)}
+                  placeholder="DELETE"
+                  className="mt-2 w-full rounded-lg border border-red-500/30 bg-foreground/5 px-3 py-2 text-sm text-foreground outline-none focus:border-red-500"
+                />
+                {deleteError && (
+                  <p className="mt-2 text-xs text-red-500">{deleteError}</p>
+                )}
+                <div className="mt-3 flex gap-2">
+                  <button
+                    type="button"
+                    disabled={confirmText !== "DELETE" || deletingId === ev.id}
+                    onClick={() => deleteEvent(ev.id)}
+                    className="rounded-lg bg-red-500 px-4 py-2 text-xs font-black uppercase tracking-wide text-white disabled:opacity-40"
+                  >
+                    {deletingId === ev.id ? "Wird gelöscht..." : "Endgültig löschen"}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setConfirmingId(null);
+                      setConfirmText("");
+                      setDeleteError(null);
+                    }}
+                    className="rounded-lg border border-foreground/20 px-4 py-2 text-xs font-black uppercase tracking-wide text-foreground/70"
+                  >
+                    Abbrechen
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
         ))}
       </div>
     </div>
