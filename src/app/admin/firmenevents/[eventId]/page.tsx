@@ -33,6 +33,15 @@ export default async function CompanyEventAdminPage({
   const manualContacts = registrations.filter((r) => r.source === "MANUAL");
   const apiBase = `/api/admin/company-events/${eventId}`;
 
+  // Kleines Dashboard oben auf der Seite: schneller Ueberblick ueber
+  // Einladungen/Tickets, ohne erst ins CRM-Board oder die
+  // Scanner-Uebersicht wechseln zu muessen.
+  const invitationsSent = registrations.filter((r) => r.invitationSentAt).length;
+  const allTickets = registrations.flatMap((r) => r.tickets);
+  const ticketsTotal = allTickets.length;
+  const ticketsScanned = allTickets.filter((t) => t.checkedInAt).length;
+  const ticketsOpen = ticketsTotal - ticketsScanned;
+
   return (
     <div className="mx-auto max-w-7xl px-6 pb-20 pt-32">
       <p className="text-xs font-black uppercase tracking-wide text-accent-lime">
@@ -45,6 +54,33 @@ export default async function CompanyEventAdminPage({
         Öffentliche Seite: <code>/{event.slug}</code> · {event.dateLabel} ·{" "}
         {event.locationName}
       </p>
+
+      <div className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-4">
+        <div className="rounded-2xl border border-foreground/10 p-4 text-center">
+          <p className="text-2xl font-black text-foreground">{invitationsSent}</p>
+          <p className="mt-1 text-[11px] font-bold uppercase tracking-wide text-foreground/50">
+            Einladungen verschickt
+          </p>
+        </div>
+        <div className="rounded-2xl border border-foreground/10 p-4 text-center">
+          <p className="text-2xl font-black text-foreground">{ticketsTotal}</p>
+          <p className="mt-1 text-[11px] font-bold uppercase tracking-wide text-foreground/50">
+            Tickets gesamt
+          </p>
+        </div>
+        <div className="rounded-2xl border border-accent-lime/30 bg-accent-lime/10 p-4 text-center">
+          <p className="text-2xl font-black text-accent-lime">{ticketsScanned}</p>
+          <p className="mt-1 text-[11px] font-bold uppercase tracking-wide text-foreground/50">
+            Bereits gescannt
+          </p>
+        </div>
+        <div className="rounded-2xl border border-foreground/10 p-4 text-center">
+          <p className="text-2xl font-black text-foreground">{ticketsOpen}</p>
+          <p className="mt-1 text-[11px] font-bold uppercase tracking-wide text-foreground/50">
+            Noch offen
+          </p>
+        </div>
+      </div>
 
       <section className="mt-10">
         <h2 className="text-lg font-black uppercase tracking-wide text-accent-lime">
