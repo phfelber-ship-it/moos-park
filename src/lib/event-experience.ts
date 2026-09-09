@@ -130,11 +130,16 @@ export async function getRegistrations(): Promise<
 async function saveRegistrations(
   entries: EventExperienceRegistration[]
 ): Promise<void> {
+  // cacheControlMaxAge bewusst auf 0 (kein Caching) - bei 60s konnte ein
+  // geloeschter/geaenderter Eintrag am CDN-Edge fuer bis zu einer Minute
+  // wieder auftauchen, selbst mit Cache-Buster auf dem Read (manche CDN-
+  // Ebenen normalisieren Query-Parameter weg). Diese Datei ist klein und
+  // wird selten genug gelesen, dass fehlendes Caching keine Rolle spielt.
   await put(REGISTRATIONS_PATH, JSON.stringify(entries.slice(0, MAX_ENTRIES)), {
     access: "public",
     contentType: "application/json",
     allowOverwrite: true,
-    cacheControlMaxAge: 60,
+    cacheControlMaxAge: 0,
   });
 }
 

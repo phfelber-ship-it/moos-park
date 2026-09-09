@@ -10,6 +10,8 @@ import {
 // Geschuetzt durch src/proxy.ts (Matcher /api/admin/:path*) - kein
 // zusaetzlicher Auth-Check hier noetig, analog zu den bestehenden
 // Admin-API-Routen (z.B. /api/admin/firmen).
+export const dynamic = "force-dynamic";
+
 export async function GET() {
   try {
     const registrations = await getRegistrations();
