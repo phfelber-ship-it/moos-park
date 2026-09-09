@@ -4,6 +4,14 @@ import crypto from "node:crypto";
 const REGISTRATIONS_PATH = "admin/event-experience-registrations.json";
 const MAX_ENTRIES = 2000;
 
+// Anmeldungen aus der Zeit vor dem Firmenevents-Plattform-Umbau (nur EIN
+// Event moeglich) haben kein eventId-Feld - beim Lesen wird es automatisch
+// auf diese Konstante gesetzt, damit alte Produktivdaten ohne Migration
+// weiter funktionieren (siehe normalize()). Entspricht der id/slug des
+// beim ersten Zugriff automatisch angelegten CompanyEvent (siehe
+// lib/company-events.ts).
+export const LEGACY_EVENT_EXPERIENCE_ID = "event-experience";
+
 // Ablauf: NEU -> BESTAETIGT (Admin will einladen, Button "Einladung
 // verschicken" erscheint) -> EMAIL_VERSCHICKT (automatisch nach
 // erfolgreichem Versand) -> nach 24h ohne Rueckmeldung zeigt das
@@ -42,10 +50,15 @@ export type Ticket = {
   salutation: string;
   lastName: string;
   firstName: string;
+  // Einlasskontrolle per QR-Scan an der Tuer (siehe /scanner) - null,
+  // solange das Ticket noch nicht gescannt wurde.
+  checkedInAt: string | null;
+  checkedInBy: string | null;
 };
 
 export type EventExperienceRegistration = {
   id: string;
+  eventId: string;
   company: string;
   salutation: string;
   lastName: string;
@@ -69,6 +82,10 @@ export type EventExperienceRegistration = {
   street: string;
   zip: string;
   city: string;
+  // Zeitpunkt, an dem die ERINNERUNG-Mail verschickt wurde (Cron-Workflow,
+  // siehe api/cron/event-reminders) - null solange keine Erinnerung raus
+  // ist bzw. das Event keinen Reminder-Workflow hat.
+  reminderSentAt: string | null;
 };
 
 export type RegistrationInput = {
@@ -90,15 +107,21 @@ function normalize(
   // Adminpanel nicht crashen.
   return data.map((e) => ({
     ...e,
+    eventId: e.eventId ?? LEGACY_EVENT_EXPERIENCE_ID,
+    reminderSentAt: e.reminderSentAt ?? null,
     companions: e.companions ?? [],
     invitationSentAt: e.invitationSentAt ?? null,
-    tickets: e.tickets ?? [],
     cancelledAt: e.cancelledAt ?? null,
     cancelledAttendees: e.cancelledAttendees ?? null,
     source: e.source ?? "WEB",
     street: e.street ?? "",
     zip: e.zip ?? "",
     city: e.city ?? "",
+    tickets: (e.tickets ?? []).map((t) => ({
+      ...t,
+      checkedInAt: t.checkedInAt ?? null,
+      checkedInBy: t.checkedInBy ?? null,
+    })),
   })) as EventExperienceRegistration[];
 }
 
@@ -169,7 +192,17 @@ async function mutateRegistrations<T>(
   return result!;
 }
 
+// Anmeldungen eines bestimmten Events - fuer die pro-Event CRM-Ansichten
+// (/admin/firmenevents/[eventId]) statt der globalen Liste.
+export async function getRegistrationsForEvent(
+  eventId: string
+): Promise<EventExperienceRegistration[]> {
+  const entries = await getRegistrations();
+  return entries.filter((e) => e.eventId === eventId);
+}
+
 export async function addRegistration(
+  eventId: string,
   input: RegistrationInput
 ): Promise<EventExperienceRegistration> {
   const id = crypto.randomUUID();
@@ -178,11 +211,13 @@ export async function addRegistration(
       const entry: EventExperienceRegistration = {
         ...input,
         id,
+        eventId,
         status: "NEU",
         createdAt: new Date().toISOString(),
         invitationSentAt: null,
         tickets: [],
         cancelledAt: null,
+        reminderSentAt: null,
         cancelledAttendees: null,
         source: "WEB",
         street: "",
@@ -212,6 +247,7 @@ export type ManualContactInput = {
 // landet wie eine echte Anmeldung im selben CRM/Kanban (Status NEU), damit
 // spaeter dieselbe Status-Pipeline greift, sobald sich die Firma meldet.
 export async function addManualContact(
+  eventId: string,
   input: ManualContactInput
 ): Promise<EventExperienceRegistration> {
   const id = crypto.randomUUID();
@@ -222,12 +258,14 @@ export async function addManualContact(
         message: "",
         companions: [],
         id,
+        eventId,
         status: "NEU",
         createdAt: new Date().toISOString(),
         invitationSentAt: null,
         tickets: [],
         cancelledAt: null,
         cancelledAttendees: null,
+        reminderSentAt: null,
         source: "MANUAL",
       };
       return { entries: [entry, ...entries], result: entry };
@@ -286,7 +324,69 @@ export function buildTicketsForRegistration(
   return attendees.map((a) => ({
     ...a,
     code: crypto.randomBytes(5).toString("hex").toUpperCase(),
+    checkedInAt: null,
+    checkedInBy: null,
   }));
+}
+
+export type CheckInResult =
+  | { status: "OK"; registration: EventExperienceRegistration; ticket: Ticket }
+  | { status: "ALREADY_CHECKED_IN"; registration: EventExperienceRegistration; ticket: Ticket }
+  | { status: "NOT_FOUND" };
+
+// Markiert ein einzelnes Ticket (per QR-Code) als eingecheckt - fuer die
+// Einlasskontrolle an der Tuer (siehe /scanner). Nutzt dasselbe
+// Read-Modify-Write-Verify-Retry-Muster wie die uebrigen Mutationen, damit
+// mehrere gleichzeitig scannende Handys sich nicht gegenseitig
+// ueberschreiben. Ein bereits eingechecktes Ticket wird NICHT erneut
+// markiert (der urspruengliche Zeitpunkt/Scanner bleibt erhalten) - der
+// Aufrufer bekommt stattdessen ALREADY_CHECKED_IN zurueck.
+export async function checkInTicket(
+  eventId: string,
+  code: string,
+  scannedBy: string
+): Promise<CheckInResult> {
+  const checkedInAt = new Date().toISOString();
+  let outcome: "OK" | "ALREADY_CHECKED_IN" | "NOT_FOUND" = "NOT_FOUND";
+
+  const result = await mutateRegistrations(
+    (entries) => {
+      // Ticket muss zu DIESEM Event gehoeren - ein am Empfang von Event A
+      // gescannter Code aus Event B ist immer "unbekannt", nie ein
+      // fremdes Ticket ausversehen abstempeln.
+      const regIdx = entries.findIndex(
+        (e) => e.eventId === eventId && e.tickets.some((t) => t.code === code)
+      );
+      if (regIdx === -1) {
+        outcome = "NOT_FOUND";
+        return { entries, result: null as EventExperienceRegistration | null };
+      }
+      const reg = entries[regIdx];
+      const ticketIdx = reg.tickets.findIndex((t) => t.code === code);
+      const ticket = reg.tickets[ticketIdx];
+      if (ticket.checkedInAt) {
+        // Bereits gescannt - Duplikat-Versuch wird nicht als Fehler
+        // behandelt, sondern nur unveraendert zurueckgegeben.
+        outcome = "ALREADY_CHECKED_IN";
+        return { entries, result: reg };
+      }
+      outcome = "OK";
+      const nextTickets = [...reg.tickets];
+      nextTickets[ticketIdx] = { ...ticket, checkedInAt, checkedInBy: scannedBy };
+      const next = [...entries];
+      next[regIdx] = { ...reg, tickets: nextTickets };
+      return { entries: next, result: next[regIdx] };
+    },
+    (verify) => {
+      if (outcome !== "OK") return true; // nichts zu verifizieren
+      const reg = verify.find((e) => e.tickets.some((t) => t.code === code));
+      return reg?.tickets.find((t) => t.code === code)?.checkedInAt === checkedInAt;
+    }
+  );
+
+  if (outcome === "NOT_FOUND" || !result) return { status: "NOT_FOUND" };
+  const ticket = result.tickets.find((t) => t.code === code)!;
+  return { status: outcome, registration: result, ticket };
 }
 
 // Persistiert Tickets + Versandzeitpunkt - erst NACH erfolgreichem
@@ -335,6 +435,23 @@ export async function cancelRegistration(
       return { entries: next, result: next[idx] };
     },
     (verify) => verify.find((e) => e.id === id)?.cancelledAt === cancelledAt
+  );
+}
+
+// Markiert, dass die ERINNERUNG-Mail fuer eine Anmeldung verschickt wurde
+// (Cron-Workflow, siehe api/cron/event-reminders) - verhindert doppelten
+// Versand bei jedem stuendlichen Cron-Lauf.
+export async function markReminderSent(id: string): Promise<void> {
+  const reminderSentAt = new Date().toISOString();
+  await mutateRegistrations(
+    (entries) => {
+      const idx = entries.findIndex((e) => e.id === id);
+      if (idx === -1) return { entries, result: undefined };
+      const next = [...entries];
+      next[idx] = { ...next[idx], reminderSentAt };
+      return { entries: next, result: undefined };
+    },
+    (verify) => verify.find((e) => e.id === id)?.reminderSentAt === reminderSentAt
   );
 }
 

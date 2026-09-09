@@ -3,12 +3,7 @@ import QRCode from "qrcode";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import type { EventExperienceRegistration } from "@/lib/event-experience";
-import {
-  EVENT_ADDRESS,
-  EVENT_DATE_LABEL,
-  EVENT_LOCATION_NAME,
-  EVENT_TIME_LABEL,
-} from "@/lib/event-experience-info";
+import { LEGACY_EVENT_INFO, type EventInfo } from "@/lib/event-experience-info";
 import {
   DEFAULT_LETTER_TEMPLATE,
   type LetterTemplate,
@@ -65,7 +60,8 @@ function drawParagraph(
 // des Platzhaltertexts "Link/QR Code".
 export async function generateInvitationLetterPdf(
   contact: EventExperienceRegistration,
-  template: LetterTemplate = DEFAULT_LETTER_TEMPLATE
+  template: LetterTemplate = DEFAULT_LETTER_TEMPLATE,
+  info: EventInfo = LEGACY_EVENT_INFO
 ): Promise<Uint8Array> {
   const doc = await PDFDocument.create();
   const page = doc.addPage([595.28, 841.89]); // A4
@@ -133,7 +129,7 @@ export async function generateInvitationLetterPdf(
 
   y -= 16;
   {
-    const title = "THE EVENT EXPERIENCE";
+    const title = info.heroTitle;
     const subtitle = "Erleben. Inspirieren. Ihr nächstes Event entdecken.";
     page.drawText(title, { x: (width - bold.widthOfTextAtSize(title, 15)) / 2, y, size: 15, font: bold, color: BLACK });
     y -= 18;
@@ -146,7 +142,7 @@ export async function generateInvitationLetterPdf(
   });
 
   y -= 20;
-  const eventLines = [EVENT_DATE_LABEL, EVENT_TIME_LABEL, EVENT_LOCATION_NAME, EVENT_ADDRESS];
+  const eventLines = [info.dateLabel, info.timeLabel, info.locationName, info.address];
   for (const line of eventLines) {
     const w = bold.widthOfTextAtSize(line, 12);
     page.drawText(line, { x: (width - w) / 2, y, size: 12, font: bold, color: BLACK });
@@ -200,11 +196,12 @@ export async function generateInvitationLetterPdf(
 // manuell angelegten Kontakte im Adminpanel.
 export async function generateInvitationLettersBundle(
   contacts: EventExperienceRegistration[],
-  template: LetterTemplate = DEFAULT_LETTER_TEMPLATE
+  template: LetterTemplate = DEFAULT_LETTER_TEMPLATE,
+  info: EventInfo = LEGACY_EVENT_INFO
 ): Promise<Uint8Array> {
   const mergedDoc = await PDFDocument.create();
   for (const contact of contacts) {
-    const singleBytes = await generateInvitationLetterPdf(contact, template);
+    const singleBytes = await generateInvitationLetterPdf(contact, template, info);
     const singleDoc = await PDFDocument.load(singleBytes);
     const [copiedPage] = await mergedDoc.copyPages(singleDoc, [0]);
     mergedDoc.addPage(copiedPage);

@@ -1,15 +1,33 @@
 import { NextResponse } from "next/server";
 import { appendInboxEntry, type InboxType } from "@/lib/inbox";
+import { sendSmtpMail } from "@/lib/smtp-mailer";
+import {
+  getFormNotificationRouting,
+  recordSmtpFailure,
+  type FormKind,
+} from "@/lib/form-notification-routing";
 
+// "bewerbung" und "reservierung" bewusst NICHT (mehr) hier - laufen
+// ausschliesslich ueber Clubscale, siehe HIDDEN_TYPES in lib/inbox.ts.
 const VALID_TYPES: InboxType[] = [
   "kontakt",
   "eventlocation",
   "veranstaltung",
   "promoter",
-  "bewerbung",
-  "reservierung",
   "eventexperience",
 ];
+
+// "reservierung" und "bewerbung" laufen bewusst ausschliesslich ueber
+// Clubscale (siehe FORM_KIND_SMTP_ENABLED in form-notification-routing.ts) -
+// kein SMTP-Versand fuer diese beiden. "eventexperience" wird hier aktuell
+// von keinem Formular genutzt (eigene Route mit eigener Benachrichtigung,
+// siehe api/event-experience/register).
+const INBOX_TO_FORM_KIND: Partial<Record<InboxType, FormKind>> = {
+  kontakt: "kontakt",
+  veranstaltung: "veranstaltungsanfrage",
+  promoter: "promoter",
+  eventlocation: "eventlocation",
+};
 
 // Oeffentlicher, schreibgeschuetzter Endpunkt: legt eine Kopie jeder
 // Formular-Einsendung im Adminpanel-Postfach ab. Best-effort - schlaegt das
@@ -30,14 +48,48 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Ungueltiger Typ." }, { status: 400 });
   }
 
-  await appendInboxEntry({
+  const entry = {
     type: body.type as InboxType,
     name: body.name?.trim() ?? "",
     email: body.email?.trim() ?? "",
     phone: body.phone?.trim() ?? "",
     summary: body.summary?.trim() ?? "",
     message: body.message?.trim() ?? "",
-  });
+  };
+
+  // Postfach-Eintrag ist die eigentliche Zustellgarantie - passiert
+  // unbedingt und unabhaengig davon, ob die SMTP-Benachrichtigung unten
+  // klappt.
+  await appendInboxEntry(entry);
+
+  // Best-effort SMTP-Benachrichtigung an die im Adminpanel hinterlegte
+  // Zieladresse - darf den obigen Postfach-Speichervorgang niemals
+  // beeinflussen, deshalb in eigenem try/catch und erst danach.
+  const formKind = INBOX_TO_FORM_KIND[entry.type];
+  if (formKind) {
+    try {
+      const routing = await getFormNotificationRouting();
+      const to = routing[formKind];
+      const text =
+        `Neue Formular-Einsendung (${formKind})\n\n` +
+        `Name: ${entry.name}\n` +
+        `E-Mail: ${entry.email}\n` +
+        (entry.phone ? `Telefon: ${entry.phone}\n` : "") +
+        (entry.summary ? `Zusammenfassung: ${entry.summary}\n` : "") +
+        (entry.message ? `Nachricht:\n${entry.message}\n` : "");
+      const result = await sendSmtpMail({
+        to,
+        subject: `Neue Formular-Einsendung: ${entry.summary || entry.name || formKind}`,
+        text,
+      });
+      if (!result.ok) {
+        console.error(`SMTP-Benachrichtigung fuer ${formKind} fehlgeschlagen:`, result.error);
+        await recordSmtpFailure(formKind, result.error);
+      }
+    } catch (err) {
+      console.error(`SMTP-Benachrichtigung fuer ${formKind} fehlgeschlagen:`, err);
+    }
+  }
 
   return NextResponse.json({ ok: true });
 }

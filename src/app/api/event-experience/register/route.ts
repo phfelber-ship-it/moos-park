@@ -1,5 +1,12 @@
 import { NextResponse } from "next/server";
-import { addRegistration, type Companion } from "@/lib/event-experience";
+import {
+  addRegistration,
+  LEGACY_EVENT_EXPERIENCE_ID,
+  type Companion,
+} from "@/lib/event-experience";
+import { getCompanyEvent } from "@/lib/company-events";
+import { sendSmtpMail } from "@/lib/smtp-mailer";
+import { getFormNotificationRouting, recordSmtpFailure } from "@/lib/form-notification-routing";
 
 function parseCompanions(raw: unknown): Companion[] {
   if (!Array.isArray(raw)) return [];
@@ -36,6 +43,11 @@ export async function POST(request: Request) {
   const message = String(body.message ?? "").trim();
   const consent = Boolean(body.consent);
   const companions = parseCompanions(body.companions);
+  // eventId ist optional - fehlt es (bestehendes /event-experience-Formular,
+  // das dieses Feld noch nicht mitschickt), gilt weiterhin das urspruengliche
+  // Legacy-Event. Neue Firmenevent-Landingpages (/[eventSlug]) schicken ihre
+  // eigene eventId mit.
+  const eventId = String(body.eventId ?? "").trim() || LEGACY_EVENT_EXPERIENCE_ID;
 
   if (!company || !lastName || !firstName || !email || !phone || !consent) {
     return NextResponse.json(
@@ -44,17 +56,32 @@ export async function POST(request: Request) {
     );
   }
 
-  // Maximal 4 Personen insgesamt (Hauptperson + max. 3 Begleitpersonen) -
+  const event = await getCompanyEvent(eventId);
+  const maxCompanions = event ? Math.max(0, event.maxCompanions - 1) : 3;
+
+  // Maximal maxCompanions Begleitpersonen zusaetzlich zur Hauptperson -
   // serverseitig durchgesetzt, nicht nur im Formular.
-  if (companions.length > 3) {
+  if (companions.length > maxCompanions) {
     return NextResponse.json(
-      { error: "Maximal 4 Personen pro Anmeldung (Hauptperson + 3 Begleitpersonen)." },
+      {
+        error: `Maximal ${maxCompanions + 1} Personen pro Anmeldung (Hauptperson + ${maxCompanions} Begleitpersonen).`,
+      },
       { status: 400 }
     );
   }
 
+  // Health-Check-Sonderfall: der taegliche Formular-Check (siehe
+  // lib/form-health-check.ts) schickt eine echte, vollstaendig validierte
+  // Anmeldung rein - alle Pflichtfeld- und Kapazitaets-Checks oben laufen
+  // normal durch. Ab hier brechen wir aber bewusst VOR dem Speichern der
+  // Anmeldung ab, damit im Event-Experience-CRM keine Fake-Anmeldung
+  // auftaucht und keine Bestaetigungsmail an eine echte Adresse rausgeht.
+  if (body.isHealthCheck === true) {
+    return NextResponse.json({ ok: true, healthCheck: true });
+  }
+
   try {
-    await addRegistration({
+    await addRegistration(eventId, {
       company,
       salutation,
       lastName,
@@ -70,6 +97,33 @@ export async function POST(request: Request) {
       { error: "Anmeldung konnte nicht gespeichert werden. Bitte versuchen Sie es erneut." },
       { status: 500 }
     );
+  }
+
+  // Best-effort SMTP-Benachrichtigung an die im Adminpanel hinterlegte
+  // Zieladresse - darf das oben bereits erfolgreiche Speichern der
+  // Anmeldung nicht mehr beeinflussen.
+  try {
+    const routing = await getFormNotificationRouting();
+    const ticketCount = 1 + companions.length;
+    const text =
+      `Neue Event-Experience-Anmeldung\n\n` +
+      `Firma: ${company}\n` +
+      `Name: ${salutation} ${firstName} ${lastName}\n` +
+      `E-Mail: ${email}\n` +
+      `Telefon: ${phone}\n` +
+      `Tickets: ${ticketCount}\n` +
+      (message ? `Nachricht: ${message}\n` : "");
+    const result = await sendSmtpMail({
+      to: routing["event-experience"],
+      subject: `Event-Experience-Anmeldung: ${company}`,
+      text,
+    });
+    if (!result.ok) {
+      console.error("SMTP-Benachrichtigung fuer event-experience fehlgeschlagen:", result.error);
+      await recordSmtpFailure("event-experience", result.error);
+    }
+  } catch (err) {
+    console.error("SMTP-Benachrichtigung fuer event-experience fehlgeschlagen:", err);
   }
 
   return NextResponse.json({ ok: true });

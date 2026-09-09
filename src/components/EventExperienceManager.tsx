@@ -22,8 +22,21 @@ const REMINDER_AFTER_MS = 24 * 60 * 60 * 1000;
 
 export default function EventExperienceManager({
   initialRegistrations,
+  apiBase = "/api/admin/event-experience",
+  exportUrl = "/api/admin/event-experience/export",
+  eventId,
 }: {
   initialRegistrations: EventExperienceRegistration[];
+  // Basis-URL der Admin-API fuer dieses Event - Default ist die Legacy-Route
+  // (/event-experience). Neue Firmenevents uebergeben
+  // "/api/admin/company-events/<eventId>/registrations" (siehe
+  // app/admin/firmenevents/[eventId]/page.tsx).
+  apiBase?: string;
+  exportUrl?: string;
+  // eventId der Firmenevents-Plattform (undefined = Legacy-Event) - wird an
+  // die Invite-Dialog-URLs durchgereicht, damit Vorschau/Versand die
+  // richtigen Eckdaten/Vorlagen des jeweiligen Events verwenden.
+  eventId?: string;
 }) {
   const [registrations, setRegistrations] = useState(initialRegistrations);
   const [draggingId, setDraggingId] = useState<string | null>(null);
@@ -38,7 +51,7 @@ export default function EventExperienceManager({
       cur.map((r) => (r.id === id ? { ...r, status } : r))
     );
     try {
-      const res = await fetch("/api/admin/event-experience", {
+      const res = await fetch(apiBase, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ id, status }),
@@ -68,7 +81,7 @@ export default function EventExperienceManager({
     const prev = registrations;
     setRegistrations((cur) => cur.filter((r) => r.id !== id));
     try {
-      const res = await fetch(`/api/admin/event-experience?id=${id}`, {
+      const res = await fetch(`${apiBase}?id=${id}`, {
         method: "DELETE",
       });
       if (!res.ok) throw new Error("failed");
@@ -86,7 +99,7 @@ export default function EventExperienceManager({
           {registrations.length === 1 ? "" : "en"} insgesamt.
         </p>
         <a
-          href="/api/admin/event-experience/export"
+          href={exportUrl}
           className="rounded-lg bg-accent-lime px-5 py-2.5 text-xs font-black uppercase tracking-wide text-black transition-transform hover:scale-105"
         >
           Excel-Export (CSV)
@@ -145,9 +158,24 @@ export default function EventExperienceManager({
                           draggingId === r.id ? "opacity-40" : ""
                         }`}
                       >
-                        <p className="text-sm font-black uppercase text-foreground">
-                          {r.company || r.lastName || "Ohne Namen"}
-                        </p>
+                        <div className="flex items-center justify-between gap-2">
+                          <p className="text-sm font-black uppercase text-foreground">
+                            {r.company || r.lastName || "Ohne Namen"}
+                          </p>
+                          {r.tickets.length > 0 && (
+                            <span
+                              className={`shrink-0 rounded-full px-2 py-0.5 text-[10px] font-black uppercase tracking-wide ${
+                                r.tickets.every((t) => t.checkedInAt)
+                                  ? "bg-accent-lime/20 text-accent-lime"
+                                  : "bg-foreground/10 text-foreground/60"
+                              }`}
+                              title="Am Einlass gescannte Tickets"
+                            >
+                              {r.tickets.filter((t) => t.checkedInAt).length}/
+                              {r.tickets.length} eingecheckt
+                            </span>
+                          )}
+                        </div>
                         <div className="mt-1.5 grid gap-0.5 text-[11px] text-foreground/60">
                           <p>
                             <span className="text-foreground/40">Name: </span>
@@ -307,6 +335,16 @@ export default function EventExperienceManager({
           onClose={() => setInviteDialogId(null)}
           onSent={(invitationSentAt) =>
             markInvitationSent(inviteDialogId, invitationSentAt)
+          }
+          previewUrl={
+            eventId
+              ? `/api/admin/event-experience/${inviteDialogId}/invitation-preview?eventId=${eventId}`
+              : undefined
+          }
+          sendUrl={
+            eventId
+              ? `/api/admin/company-events/${eventId}/registrations/${inviteDialogId}/send-invitation`
+              : undefined
           }
         />
       )}

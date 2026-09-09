@@ -52,7 +52,7 @@ export default function FacebookPixelStatus() {
         };
 
   return (
-    <div className="mt-8 border-t border-foreground/10 pt-8">
+    <div>
       <h2 className="text-lg font-black uppercase text-foreground">
         Facebook Pixel (über GTM)
       </h2>

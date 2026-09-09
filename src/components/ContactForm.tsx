@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { sendContactMail } from "@/lib/clubscale";
-import { logInbox } from "@/lib/inbox-client";
+import { logInboxAwaited } from "@/lib/inbox-client";
 import HoneypotField from "@/components/HoneypotField";
 import FlipText from "@/components/FlipText";
 
@@ -34,26 +34,29 @@ export default function ContactForm() {
     }
 
     setStatus("sending");
-    try {
-      await sendContactMail({
-        firstname: firstname.trim(),
-        lastname: lastname.trim(),
-        mail: mail.trim(),
-        phone: phone.trim(),
-        subject: "Kontaktanfrage über moos-park.de",
-        body: message.trim(),
-      });
-      logInbox({
-        type: "kontakt",
-        name: `${firstname.trim()} ${lastname.trim()}`,
-        email: mail.trim(),
-        phone: phone.trim(),
-        message: message.trim(),
-      });
-      setStatus("sent");
-    } catch {
-      setStatus("error");
-    }
+    // Postfach + die daran gekoppelte SMTP-Benachrichtigung sind der
+    // garantierte Zustellweg - der zaehlt fuer Erfolg/Fehler in der UI.
+    // Clubscale laeuft nur noch bestmoeglich nebenher (siehe unten): faellt
+    // Clubscale aus (z.B. Kontoproblem dort), landet die Anfrage trotzdem
+    // sicher bei uns, statt komplett verloren zu gehen.
+    const ok = await logInboxAwaited({
+      type: "kontakt",
+      name: `${firstname.trim()} ${lastname.trim()}`,
+      email: mail.trim(),
+      phone: phone.trim(),
+      message: message.trim(),
+    });
+    sendContactMail({
+      firstname: firstname.trim(),
+      lastname: lastname.trim(),
+      mail: mail.trim(),
+      phone: phone.trim(),
+      subject: "Kontaktanfrage über moos-park.de",
+      body: message.trim(),
+    }).catch((err) => {
+      console.error("Clubscale-Mail (Kontaktformular) fehlgeschlagen:", err);
+    });
+    setStatus(ok ? "sent" : "error");
   };
 
   if (status === "sent") {

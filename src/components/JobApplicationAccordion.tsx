@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { createJobApplication, type JobPosting } from "@/lib/clubscale";
-import { logInbox } from "@/lib/inbox-client";
 import HoneypotField from "@/components/HoneypotField";
 import FlipText from "@/components/FlipText";
 
@@ -85,9 +84,22 @@ function ApplicationForm({
     }
     setStatus("sending");
     setProgress(0);
+    let imageBase64: string;
     try {
       const compressed = await compressImage(photo);
-      const imageBase64 = await blobToBase64(compressed);
+      imageBase64 = await blobToBase64(compressed);
+    } catch {
+      // Lokale Bildverarbeitung fehlgeschlagen - hier gibt es wirklich
+      // nichts zu retten, ohne Foto kein sinnvoller Postfach-Eintrag.
+      setStatus("error");
+      return;
+    }
+    // Bewerbungen laufen bewusst NICHT (mehr) durchs Postfach - App- und
+    // Website-Bewerbungen landen sonst nur zur Haelfte dort (App-Bewerbungen
+    // gehen direkt an Clubscale, ohne ueber unseren Code zu laufen), das war
+    // verwirrender als gar keine Postfach-Kopie. Clubscale-Adminpanel ist
+    // hier die einzige, vollstaendige Quelle - fuer beide Kanaele.
+    try {
       await createJobApplication(
         {
           jobPostingId,
@@ -100,14 +112,6 @@ function ApplicationForm({
         },
         setProgress
       );
-      logInbox({
-        type: "bewerbung",
-        name: `${firstName.trim()} ${lastName.trim()}`,
-        email: email.trim(),
-        phone: phoneNumber.trim(),
-        summary: jobTitle,
-        message: text.trim(),
-      });
       setStatus("sent");
     } catch {
       setStatus("error");

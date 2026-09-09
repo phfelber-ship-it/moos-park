@@ -1,13 +1,4 @@
-import {
-  EVENT_ADDRESS,
-  EVENT_DATE_LABEL,
-  EVENT_LOCATION_NAME,
-  EVENT_TIME_LABEL,
-  TIMETABLE,
-} from "@/lib/event-experience-info";
-import type { Ticket } from "@/lib/event-experience";
-import { isAppleWalletConfigured } from "@/lib/apple-wallet";
-import { isGoogleWalletConfigured } from "@/lib/google-wallet";
+import { LEGACY_EVENT_INFO, type EventInfo } from "@/lib/event-experience-info";
 
 // Escaped Text fuer den Einsatz in HTML - der Vorlagentext kommt aus dem
 // Adminpanel (freies Textfeld), daher nicht ungeprueft als HTML einsetzen.
@@ -42,41 +33,13 @@ export function buildInvitationEmailHtml(params: {
   bodyText: string;
   ticketCount: number;
   registrationId: string;
-  tickets?: Ticket[];
+  info?: EventInfo;
 }): string {
+  const info = params.info ?? LEGACY_EVENT_INFO;
   const bodyHtml = escapeHtml(params.bodyText).replace(/\n/g, "<br>");
   const cancelUrl = buildCancelUrl(params.registrationId);
 
-  const appleOn = isAppleWalletConfigured();
-  const googleOn = isGoogleWalletConfigured();
-  const walletRows =
-    (appleOn || googleOn) && params.tickets?.length
-      ? params.tickets
-          .map((t) => {
-            const name = `${t.firstName} ${t.lastName}`.trim();
-            const appleUrl = `${SITE_URL}/api/event-experience/${params.registrationId}/wallet/apple?code=${t.code}`;
-            const googleUrl = `${SITE_URL}/api/event-experience/${params.registrationId}/wallet/google?code=${t.code}`;
-            return `
-              <tr>
-                <td style="padding:10px 0;border-top:1px solid #2a2a2e;">
-                  <div style="font:700 13px Helvetica,Arial,sans-serif;color:${TEXT};margin-bottom:8px;">${name}</div>
-                  ${
-                    appleOn
-                      ? `<a href="${appleUrl}" style="display:inline-block;margin-right:8px;margin-bottom:6px;padding:9px 16px;border-radius:8px;background:#000000;font:700 11px Helvetica,Arial,sans-serif;color:#ffffff;text-decoration:none;">🍎 Apple Wallet</a>`
-                      : ""
-                  }
-                  ${
-                    googleOn
-                      ? `<a href="${googleUrl}" style="display:inline-block;margin-bottom:6px;padding:9px 16px;border-radius:8px;background:#1a73e8;font:700 11px Helvetica,Arial,sans-serif;color:#ffffff;text-decoration:none;">G Google Wallet</a>`
-                      : ""
-                  }
-                </td>
-              </tr>`;
-          })
-          .join("")
-      : "";
-
-  const timetableRows = TIMETABLE.map(
+  const timetableRows = info.timetable.map(
     (t) => `
       <tr>
         <td style="padding:6px 0;font:700 13px Helvetica,Arial,sans-serif;color:${LIME};width:56px;">${t.time}</td>
@@ -127,16 +90,16 @@ export function buildInvitationEmailHtml(params: {
                 Ihre Veranstaltung
               </div>
               <div style="font:900 20px/1.3 Helvetica,Arial,sans-serif;color:${TEXT};">
-                ${EVENT_DATE_LABEL}
+                ${info.dateLabel}
               </div>
               <div style="font:400 14px/1.4 Helvetica,Arial,sans-serif;color:${MUTED};margin-top:2px;">
-                ${EVENT_TIME_LABEL}
+                ${info.timeLabel}
               </div>
               <div style="font:700 14px/1.4 Helvetica,Arial,sans-serif;color:${TEXT};margin-top:14px;">
-                ${EVENT_LOCATION_NAME}
+                ${info.locationName}
               </div>
               <div style="font:400 13px/1.4 Helvetica,Arial,sans-serif;color:${MUTED};">
-                ${EVENT_ADDRESS}
+                ${info.address}
               </div>
 
               <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-top:20px;border-top:1px solid #2a2a2e;padding-top:14px;">
@@ -146,17 +109,6 @@ export function buildInvitationEmailHtml(params: {
               <div style="margin-top:18px;padding-top:14px;border-top:1px solid #2a2a2e;font:700 13px/1.5 Helvetica,Arial,sans-serif;color:${TEXT};">
                 🎟 ${params.ticketCount} Ticket${params.ticketCount === 1 ? "" : "s"} im Anhang dieser E-Mail (PDF)
               </div>
-
-              ${
-                walletRows
-                  ? `<div style="margin-top:16px;font:900 10px/1 Helvetica,Arial,sans-serif;letter-spacing:2px;color:${LIME};text-transform:uppercase;">
-                      Direkt zur Wallet hinzufügen
-                    </div>
-                    <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
-                      ${walletRows}
-                    </table>`
-                  : ""
-              }
             </td>
           </tr>
 

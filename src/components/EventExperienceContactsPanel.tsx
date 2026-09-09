@@ -45,9 +45,18 @@ type CompanyContact = {
 export default function EventExperienceContactsPanel({
   initialContacts,
   companyContacts = [],
+  contactsApiUrl = "/api/admin/event-experience/contacts",
+  lettersExportUrl = "/api/admin/event-experience/letters/export",
+  letterBaseUrl = "/api/admin/event-experience",
 }: {
   initialContacts: Contact[];
   companyContacts?: CompanyContact[];
+  // Firmenevents uebergeben ihre eigenen, event-spezifischen Routen (siehe
+  // app/admin/firmenevents/[eventId]/page.tsx); Default bleibt das
+  // Legacy-Event.
+  contactsApiUrl?: string;
+  lettersExportUrl?: string;
+  letterBaseUrl?: string;
 }) {
   const [contacts, setContacts] = useState(initialContacts);
   const [form, setForm] = useState(emptyForm);
@@ -87,7 +96,7 @@ export default function EventExperienceContactsPanel({
     setStatus("saving");
     setError(null);
     try {
-      const res = await fetch("/api/admin/event-experience/contacts", {
+      const res = await fetch(contactsApiUrl, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),
@@ -132,7 +141,7 @@ export default function EventExperienceContactsPanel({
           </p>
         </div>
         <a
-          href="/api/admin/event-experience/letters/export"
+          href={lettersExportUrl}
           className="rounded-lg border border-foreground/15 px-4 py-2 text-xs font-black uppercase tracking-wide text-foreground transition-colors hover:border-accent-lime"
         >
           Alle Briefe als PDF exportieren
@@ -310,13 +319,13 @@ export default function EventExperienceContactsPanel({
               <div className="aspect-[210/297] w-full overflow-hidden rounded-lg border border-foreground/10">
                 <iframe
                   title="Brief-Vorschau"
-                  src={`/api/admin/event-experience/${selected.id}/letter`}
+                  src={`${letterBaseUrl}/${selected.id}/letter`}
                   className="h-full w-full"
                 />
               </div>
 
               <a
-                href={`/api/admin/event-experience/${selected.id}/letter`}
+                href={`${letterBaseUrl}/${selected.id}/letter`}
                 target="_blank"
                 rel="noreferrer"
                 className="w-full rounded-lg bg-accent-lime px-4 py-2.5 text-center text-xs font-black uppercase tracking-wide text-black transition-transform hover:scale-105"
@@ -324,7 +333,7 @@ export default function EventExperienceContactsPanel({
                 <FlipText text="PDF öffnen / drucken" />
               </a>
               <a
-                href={`/api/admin/event-experience/${selected.id}/letter?dl=1`}
+                href={`${letterBaseUrl}/${selected.id}/letter?dl=1`}
                 className="w-full rounded-lg border border-foreground/15 px-4 py-2.5 text-center text-xs font-black uppercase tracking-wide text-foreground transition-colors hover:border-accent-lime"
               >
                 PDF herunterladen

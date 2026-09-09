@@ -157,6 +157,9 @@ export default function InboxManager({
   return (
     <div className="mt-8">
       <div className="flex flex-wrap gap-2 border-b border-foreground/10 pb-4">
+        {/* "bewerbung"/"reservierung" bewusst kein eigener Tab mehr - siehe
+            HIDDEN_TYPES in lib/inbox.ts, laufen ausschliesslich ueber
+            Clubscale. */}
         {(
           [
             "alle",
@@ -164,8 +167,6 @@ export default function InboxManager({
             "eventlocation",
             "veranstaltung",
             "promoter",
-            "bewerbung",
-            "reservierung",
             "eventexperience",
           ] as Filter[]
         ).map((f) => (

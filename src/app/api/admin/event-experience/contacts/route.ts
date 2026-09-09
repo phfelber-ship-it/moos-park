@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { addManualContact } from "@/lib/event-experience";
+import { addManualContact, LEGACY_EVENT_EXPERIENCE_ID } from "@/lib/event-experience";
 
 // Legt einen Kontakt fuer den postalischen Einladungsbrief an (Adminpanel
 // -> /admin/event-experience) - landet als Anmeldung mit Status NEU und
@@ -30,7 +30,7 @@ export async function POST(request: Request) {
   }
 
   try {
-    const contact = await addManualContact({
+    const contact = await addManualContact(LEGACY_EVENT_EXPERIENCE_ID, {
       company,
       salutation,
       lastName,

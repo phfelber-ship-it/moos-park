@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { createCompanyRequest } from "@/lib/companies";
 import { sendContactMail } from "@/lib/clubscale";
+import { sendSmtpMail } from "@/lib/smtp-mailer";
+import { getFormNotificationRouting, recordSmtpFailure } from "@/lib/form-notification-routing";
 
 export async function POST(request: Request) {
   const body = await request.json().catch(() => null);
@@ -29,6 +31,16 @@ export async function POST(request: Request) {
   }
 
   const guestCount = body.guestCount ? Number(body.guestCount) : null;
+
+  // Health-Check-Sonderfall: der taegliche Formular-Check (siehe
+  // lib/form-health-check.ts) schickt hier eine echte, vollstaendig
+  // validierte Anfrage rein, damit die komplette Validierungslogik oben
+  // durchlaufen wird. Ab hier brechen wir aber bewusst VOR dem Anlegen des
+  // Leads und vor der Mail ab, damit im Firmen-CRM/Postfach kein Fake-Eintrag
+  // auftaucht, den Mitarbeitende faelschlich bearbeiten koennten.
+  if (body.isHealthCheck === true) {
+    return NextResponse.json({ ok: true, healthCheck: true });
+  }
 
   try {
     await createCompanyRequest({
@@ -76,6 +88,36 @@ export async function POST(request: Request) {
     });
   } catch (err) {
     console.error("Firmenanfrage-Mail konnte nicht gesendet werden:", err);
+  }
+
+  // Zusaetzlich best-effort SMTP-Benachrichtigung an die im Adminpanel
+  // hinterlegte Zieladresse - unabhaengig von Clubscale, darf das oben
+  // bereits erfolgreiche Anlegen des Leads nicht mehr beeinflussen.
+  try {
+    const routing = await getFormNotificationRouting();
+    const text =
+      `Neue Firmenanfrage\n\n` +
+      `Firma: ${company}\n` +
+      `Ansprechpartner: ${contactName}\n` +
+      `E-Mail: ${email}\n` +
+      `Telefon: ${phone}\n` +
+      `Veranstaltungsart: ${eventType}\n` +
+      (guestCount ? `Personenanzahl: ${guestCount}\n` : "") +
+      (body.preferredDate ? `Wunschtermin: ${body.preferredDate}\n` : "") +
+      (body.budget ? `Budget: ${body.budget}\n` : "") +
+      (body.requestedServices ? `Gewünschte Leistungen: ${body.requestedServices}\n` : "") +
+      (body.message ? `Nachricht: ${body.message}\n` : "");
+    const result = await sendSmtpMail({
+      to: routing.firmenanfrage,
+      subject: `Firmenanfrage: ${company} – ${eventType}`,
+      text,
+    });
+    if (!result.ok) {
+      console.error("SMTP-Benachrichtigung fuer firmenanfrage fehlgeschlagen:", result.error);
+      await recordSmtpFailure("firmenanfrage", result.error);
+    }
+  } catch (err) {
+    console.error("SMTP-Benachrichtigung fuer firmenanfrage fehlgeschlagen:", err);
   }
 
   return NextResponse.json({ ok: true });

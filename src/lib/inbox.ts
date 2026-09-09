@@ -30,6 +30,16 @@ export type InboxEntry = {
 // die eigentliche Nachricht geht weiterhin direkt an die Clubscale-API
 // (sendContactMail/createReservation/createJobApplication), das hier ist
 // nur eine zusaetzliche, im Adminpanel einsehbare Kopie.
+// Bewerbungen und Reservierungen werden hier bewusst rausgefiltert - App-
+// und Website-Einsendungen landeten sonst nur zur Haelfte im Postfach (App-
+// Einsendungen gehen direkt an Clubscale, ohne ueber unseren Code zu
+// laufen), das war verwirrender als gar keine Postfach-Kopie. Fuer beide
+// ist Clubscale die einzige vollstaendige Quelle. Neue Eintraege dieser
+// beiden Typen werden inzwischen auch gar nicht mehr geschrieben (siehe
+// JobApplicationAccordion.tsx/ReservationWizard.tsx) - der Filter hier
+// blendet zusaetzlich noch bereits gespeicherte Alt-Eintraege aus.
+const HIDDEN_TYPES: InboxType[] = ["bewerbung", "reservierung"];
+
 export async function getInboxEntries(): Promise<InboxEntry[]> {
   try {
     const { blobs } = await list({ prefix: INBOX_PATH });
@@ -41,7 +51,8 @@ export async function getInboxEntries(): Promise<InboxEntry[]> {
     const res = await fetch(`${match.url}?v=${Date.now()}`, { cache: "no-store" });
     if (!res.ok) return [];
     const data = (await res.json()) as InboxEntry[];
-    return Array.isArray(data) ? data : [];
+    if (!Array.isArray(data)) return [];
+    return data.filter((e) => !HIDDEN_TYPES.includes(e.type));
   } catch {
     return [];
   }

@@ -46,7 +46,6 @@ export async function POST(
       bodyText: templateBody,
       ticketCount: tickets.length,
       registrationId: id,
-      tickets,
     });
 
     const attachments = await Promise.all(

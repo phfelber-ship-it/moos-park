@@ -4,12 +4,7 @@ import QRCode from "qrcode";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import type { Ticket } from "@/lib/event-experience";
-import {
-  EVENT_ADDRESS,
-  EVENT_DATE_LABEL,
-  EVENT_LOCATION_NAME,
-  EVENT_TIME_LABEL,
-} from "@/lib/event-experience-info";
+import { LEGACY_EVENT_INFO, type EventInfo } from "@/lib/event-experience-info";
 
 // Montserrat Black (900) - dieselbe Schnittstaerke, die die Website fuer
 // "font-black"-Ueberschriften nutzt (siehe layout.tsx). Lokal im Repo
@@ -38,7 +33,8 @@ const STUB_X = WIDTH - STUB_WIDTH;
 // verschickt.
 export async function generateTicketPdf(
   ticket: Ticket,
-  company: string
+  company: string,
+  info: EventInfo = LEGACY_EVENT_INFO
 ): Promise<Uint8Array> {
   const doc = await PDFDocument.create();
   doc.registerFontkit(fontkit);
@@ -81,14 +77,14 @@ export async function generateTicketPdf(
     color: WHITE,
   });
 
-  page.drawText(EVENT_LOCATION_NAME, {
+  page.drawText(info.locationName, {
     x: padX,
     y: HEIGHT - 142,
     size: 11,
     font: bold,
     color: GREY,
   });
-  page.drawText(EVENT_ADDRESS, {
+  page.drawText(info.address, {
     x: padX,
     y: HEIGHT - 158,
     size: 9,
@@ -107,14 +103,14 @@ export async function generateTicketPdf(
 
   // Untere Zeile: Datum / Uhrzeit / Gast - im Stil "12.30.2020 / General
   // Admission" der Vorlage.
-  page.drawText(EVENT_DATE_LABEL.toUpperCase(), {
+  page.drawText(info.dateLabel.toUpperCase(), {
     x: padX,
     y: HEIGHT - 202,
     size: 15,
     font: bold,
     color: LIME,
   });
-  page.drawText(EVENT_TIME_LABEL, {
+  page.drawText(info.timeLabel, {
     x: padX,
     y: HEIGHT - 220,
     size: 9,
