@@ -187,6 +187,12 @@ const CHECKS: CheckDef[] = [
     run: (origin) => checkPageHasForm(origin, "/promoter", /Follower-Anzahl/i),
   },
   {
+    name: "Eventlocation-Anfrage",
+    pageUrl: "/eventlocation",
+    kind: "page-load",
+    run: (origin) => checkPageHasForm(origin, "/eventlocation", /Veranstaltungsort/i),
+  },
+  {
     name: "Firmenevent-Anfrage",
     pageUrl: "/firmenevents",
     kind: "submission",
@@ -283,6 +289,14 @@ async function discoverNewForms(origin: string): Promise<FormCheckResult[]> {
     "/faq",
     "/clubcard",
     "/erleben",
+    // Nutzen alle dieselbe CompanyEventRequestForm-Komponente + dieselbe
+    // /api/firmenanfrage-Route wie /firmenevents (siehe Firmenevent-Anfrage
+    // oben in CHECKS) - kein eigener Submission-Test noetig, sonst wuerden
+    // sie bei jedem Lauf faelschlich als "neu entdeckt" gemeldet.
+    "/eventlocation-augsburg",
+    "/eventlocation-bayern",
+    "/eventlocation-ingolstadt",
+    "/eventlocation-mieten",
   ]);
 
   let routes: string[];
