@@ -33,6 +33,15 @@ export default async function CompanyEventAdminPage({
   const manualContacts = registrations.filter((r) => r.source === "MANUAL");
   const apiBase = `/api/admin/company-events/${eventId}`;
 
+  // Kleines Dashboard oben auf der Seite: schneller Ueberblick ueber
+  // Einladungen/Tickets, ohne erst ins CRM-Board oder die
+  // Scanner-Uebersicht wechseln zu muessen.
+  const invitationsSent = registrations.filter((r) => r.invitationSentAt).length;
+  const allTickets = registrations.flatMap((r) => r.tickets);
+  const ticketsTotal = allTickets.length;
+  const ticketsScanned = allTickets.filter((t) => t.checkedInAt).length;
+  const ticketsOpen = ticketsTotal - ticketsScanned;
+
   return (
     <div className="mx-auto max-w-7xl px-6 pb-20 pt-32">
       <p className="text-xs font-black uppercase tracking-wide text-accent-lime">
@@ -46,38 +55,87 @@ export default async function CompanyEventAdminPage({
         {event.locationName}
       </p>
 
-      <CompanyEventReminderEditor
-        eventId={eventId}
-        initial={event.reminderWorkflow}
-        hasEventDateTime={Boolean(event.eventDateTime)}
-      />
+      <div className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-4">
+        <div className="rounded-2xl border border-foreground/10 p-4 text-center">
+          <p className="text-2xl font-black text-foreground">{invitationsSent}</p>
+          <p className="mt-1 text-[11px] font-bold uppercase tracking-wide text-foreground/50">
+            Einladungen verschickt
+          </p>
+        </div>
+        <div className="rounded-2xl border border-foreground/10 p-4 text-center">
+          <p className="text-2xl font-black text-foreground">{ticketsTotal}</p>
+          <p className="mt-1 text-[11px] font-bold uppercase tracking-wide text-foreground/50">
+            Tickets gesamt
+          </p>
+        </div>
+        <div className="rounded-2xl border border-accent-lime/30 bg-accent-lime/10 p-4 text-center">
+          <p className="text-2xl font-black text-accent-lime">{ticketsScanned}</p>
+          <p className="mt-1 text-[11px] font-bold uppercase tracking-wide text-foreground/50">
+            Bereits gescannt
+          </p>
+        </div>
+        <div className="rounded-2xl border border-foreground/10 p-4 text-center">
+          <p className="text-2xl font-black text-foreground">{ticketsOpen}</p>
+          <p className="mt-1 text-[11px] font-bold uppercase tracking-wide text-foreground/50">
+            Noch offen
+          </p>
+        </div>
+      </div>
 
-      <EventExperienceContactsPanel
-        initialContacts={manualContacts}
-        companyContacts={companyContacts}
-        contactsApiUrl={`${apiBase}/contacts`}
-        lettersExportUrl={`${apiBase}/letters/export`}
-        letterBaseUrl={`${apiBase}/registrations`}
-      />
-      <EventExperienceLetterTemplateEditor initialTemplate={letterTemplate} />
-      <CompanyEventTemplateEditor
-        eventId={eventId}
-        kind="BESTAETIGUNG"
-        title="Bestätigungs-/Einladungs-E-Mail-Vorlage"
-        initialTemplate={bestaetigungTemplate}
-      />
-      <CompanyEventTemplateEditor
-        eventId={eventId}
-        kind="ERINNERUNG"
-        title="Erinnerungs-E-Mail-Vorlage"
-        initialTemplate={erinnerungTemplate}
-      />
-      <EventExperienceManager
-        initialRegistrations={registrations}
-        apiBase={`${apiBase}/registrations`}
-        exportUrl={`${apiBase}/export`}
-        eventId={eventId}
-      />
+      <section className="mt-10">
+        <h2 className="text-lg font-black uppercase tracking-wide text-accent-lime">
+          CRM
+        </h2>
+        <EventExperienceManager
+          initialRegistrations={registrations}
+          apiBase={`${apiBase}/registrations`}
+          exportUrl={`${apiBase}/export`}
+          eventId={eventId}
+        />
+      </section>
+
+      <section className="mt-12">
+        <h2 className="text-lg font-black uppercase tracking-wide text-accent-lime">
+          Kontakte
+        </h2>
+        <p className="mt-1 text-xs text-foreground/50">
+          Kontakte &amp; Einladungsbriefe
+        </p>
+        <EventExperienceContactsPanel
+          initialContacts={manualContacts}
+          companyContacts={companyContacts}
+          contactsApiUrl={`${apiBase}/contacts`}
+          lettersExportUrl={`${apiBase}/letters/export`}
+          letterBaseUrl={`${apiBase}/registrations`}
+        />
+      </section>
+
+      <section className="mt-12">
+        <h2 className="text-lg font-black uppercase tracking-wide text-accent-lime">
+          E-Mail-Vorlagen
+        </h2>
+        <p className="mt-1 text-xs text-foreground/50">
+          Einladungsbrief, Bestätigungs- und Erinnerungsvorlage
+        </p>
+        <EventExperienceLetterTemplateEditor initialTemplate={letterTemplate} />
+        <CompanyEventTemplateEditor
+          eventId={eventId}
+          kind="BESTAETIGUNG"
+          title="Bestätigungs-/Einladungs-E-Mail-Vorlage"
+          initialTemplate={bestaetigungTemplate}
+        />
+        <CompanyEventTemplateEditor
+          eventId={eventId}
+          kind="ERINNERUNG"
+          title="Erinnerungs-E-Mail-Vorlage"
+          initialTemplate={erinnerungTemplate}
+        />
+        <CompanyEventReminderEditor
+          eventId={eventId}
+          initial={event.reminderWorkflow}
+          initialEventDateTime={event.eventDateTime}
+        />
+      </section>
     </div>
   );
 }

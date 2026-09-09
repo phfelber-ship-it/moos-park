@@ -1,23 +1,16 @@
 import { NextResponse } from "next/server";
-import { cookies } from "next/headers";
-import { SCANNER_COOKIE, verifyScannerSessionToken } from "@/lib/scanner-session";
 import { checkInTicket } from "@/lib/event-experience";
 
 // Einlasskontrolle per QR-Scan: nimmt den gescannten Ticket-Code entgegen,
 // prueft ihn gegen die Anmeldungen DIESES Events und markiert das Ticket
-// als eingecheckt. Liegt bewusst NICHT unter /api/admin (eigener,
-// leichtgewichtiger Scanner-Login statt Adminpanel-Session - siehe
-// lib/scanner-session.ts), prueft die Session deshalb selbst.
+// als eingecheckt. Bewusst oeffentlich erreichbar (kein Login mehr, siehe
+// scanner/[eventId]/page.tsx) - das Geraet am Einlass ist physisch
+// kontrolliert, ein Passwort war dort nur Reibung.
 export async function POST(
   request: Request,
   { params }: { params: Promise<{ eventId: string }> }
 ) {
   const { eventId } = await params;
-  const session = (await cookies()).get(SCANNER_COOKIE)?.value;
-  const scannerUser = await verifyScannerSessionToken(session);
-  if (!scannerUser) {
-    return NextResponse.json({ error: "Nicht angemeldet." }, { status: 401 });
-  }
 
   const { code } = (await request.json()) as { code?: string };
   if (!code || typeof code !== "string") {
@@ -30,7 +23,7 @@ export async function POST(
   // normalisieren.
   const cleanCode = code.trim().split(/[/?#]/).pop()?.trim().toUpperCase() ?? "";
 
-  const result = await checkInTicket(eventId, cleanCode, scannerUser);
+  const result = await checkInTicket(eventId, cleanCode, "Scanner");
 
   if (result.status === "NOT_FOUND") {
     return NextResponse.json(

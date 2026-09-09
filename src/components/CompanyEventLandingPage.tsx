@@ -64,7 +64,7 @@ export default function CompanyEventLandingPage({ event }: { event: CompanyEvent
         <p className="mt-6 text-sm font-black uppercase tracking-[0.15em] text-accent-lime sm:text-base">
           🗓️ {event.dateLabel} · {event.timeLabel}
         </p>
-        <h1 className="mt-5 text-6xl font-black uppercase leading-[0.95] tracking-tight text-foreground sm:text-8xl lg:text-9xl">
+        <h1 className="mt-5 px-2 text-4xl font-black uppercase leading-[0.95] tracking-tight text-foreground sm:px-0 sm:text-8xl lg:text-9xl">
           {event.heroTitle}
         </h1>
         {event.heroSubtitle && (

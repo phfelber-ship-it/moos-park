@@ -10,7 +10,13 @@ type ScanState =
   | { kind: "DUPLICATE"; name: string; company: string; checkedInAt: string | null }
   | { kind: "ERROR"; message: string };
 
-const RESULT_DISPLAY_MS = 2500;
+// Ergebnis bleibt bis zu 10s stehen (aus der Distanz an der Tuer gut
+// lesbar) oder bis manuell per X geschlossen - danach automatisch wieder
+// Kamera/Scan-Modus.
+const RESULT_DISPLAY_MS = 10000;
+// Verhindert, dass derselbe Code in Folgeframes sofort erneut ausgewertet
+// wird (kurzes Fenster, unabhaengig von RESULT_DISPLAY_MS).
+const DUPLICATE_SCAN_GUARD_MS = 3000;
 
 // Mobile Kamera-Scanner fuers Einlasspersonal - liest QR-Codes live per
 // jsQR (leichtgewichtig, reines JS, kein natives Paket) aus dem
@@ -23,11 +29,19 @@ export default function ScannerApp({ eventId }: { eventId: string }) {
   const rafRef = useRef<number | null>(null);
   const lastCodeRef = useRef<{ code: string; at: number } | null>(null);
   const busyRef = useRef(false);
+  const dismissTimerRef = useRef<number | null>(null);
+  const trackRef = useRef<MediaStreamTrack | null>(null);
 
   const [state, setState] = useState<ScanState>({ kind: "SCANNING" });
   const [cameraError, setCameraError] = useState<string | null>(null);
+  const [torchSupported, setTorchSupported] = useState(false);
+  const [torchOn, setTorchOn] = useState(false);
 
   const resumeScanning = useCallback(() => {
+    if (dismissTimerRef.current) {
+      window.clearTimeout(dismissTimerRef.current);
+      dismissTimerRef.current = null;
+    }
     busyRef.current = false;
     setState({ kind: "SCANNING" });
   }, []);
@@ -41,7 +55,7 @@ export default function ScannerApp({ eventId }: { eventId: string }) {
       if (
         lastCodeRef.current &&
         lastCodeRef.current.code === code &&
-        now - lastCodeRef.current.at < RESULT_DISPLAY_MS
+        now - lastCodeRef.current.at < DUPLICATE_SCAN_GUARD_MS
       ) {
         return;
       }
@@ -56,11 +70,6 @@ export default function ScannerApp({ eventId }: { eventId: string }) {
           body: JSON.stringify({ code }),
         });
         const data = await res.json();
-
-        if (res.status === 401) {
-          window.location.reload();
-          return;
-        }
 
         if (data.status === "OK") {
           setState({ kind: "OK", name: data.name, company: data.company });
@@ -81,7 +90,7 @@ export default function ScannerApp({ eventId }: { eventId: string }) {
         setState({ kind: "ERROR", message: "Verbindungsfehler – bitte erneut versuchen." });
       }
 
-      window.setTimeout(resumeScanning, RESULT_DISPLAY_MS);
+      dismissTimerRef.current = window.setTimeout(resumeScanning, RESULT_DISPLAY_MS);
     },
     [eventId, resumeScanning]
   );
@@ -99,6 +108,17 @@ export default function ScannerApp({ eventId }: { eventId: string }) {
         if (cancelled || !videoRef.current) return;
         videoRef.current.srcObject = stream;
         await videoRef.current.play();
+
+        // Taschenlampe: nur auf manchen Geraeten/Browsern ueber die
+        // "torch"-Constraint verfuegbar (v.a. Android Chrome) - iOS Safari
+        // unterstuetzt das bislang nicht, Button erscheint dann nicht.
+        const track = stream.getVideoTracks()[0] ?? null;
+        trackRef.current = track;
+        const capabilities = track?.getCapabilities?.() as
+          | (MediaTrackCapabilities & { torch?: boolean })
+          | undefined;
+        setTorchSupported(Boolean(capabilities?.torch));
+
         tick();
       } catch {
         setCameraError(
@@ -141,13 +161,26 @@ export default function ScannerApp({ eventId }: { eventId: string }) {
     };
   }, [handleCode]);
 
-  const logout = async () => {
-    await fetch("/api/scanner/logout", { method: "POST" });
-    window.location.reload();
+  const toggleTorch = async () => {
+    const track = trackRef.current;
+    if (!track) return;
+    try {
+      const next = !torchOn;
+      await track.applyConstraints({
+        advanced: [{ torch: next } as MediaTrackConstraintSet],
+      });
+      setTorchOn(next);
+    } catch {
+      // Manche Geraete melden Unterstuetzung, lehnen die Constraint dann
+      // aber doch ab - einfach stillschweigend ignorieren, kein kritischer
+      // Pfad.
+    }
   };
 
   // Grosse Vollbild-Erfolgs-/Fehlerzustaende - an der Tuer soll man das
-  // Ergebnis auch aus einigen Metern Entfernung erkennen koennen.
+  // Ergebnis auch aus einigen Metern Entfernung erkennen koennen. Per X
+  // manuell schliessbar, sonst nach RESULT_DISPLAY_MS automatisch zurueck
+  // zur Kamera.
   if (state.kind === "OK" || state.kind === "DUPLICATE" || state.kind === "ERROR") {
     const isOk = state.kind === "OK";
     const isDuplicate = state.kind === "DUPLICATE";
@@ -157,6 +190,13 @@ export default function ScannerApp({ eventId }: { eventId: string }) {
           isOk ? "bg-green-600" : "bg-red-600"
         }`}
       >
+        <button
+          onClick={resumeScanning}
+          aria-label="Schließen"
+          className="absolute right-4 top-4 flex h-11 w-11 items-center justify-center rounded-full bg-black/25 text-2xl font-black text-white"
+        >
+          ✕
+        </button>
         <p className="text-6xl">{isOk ? "✓" : "✕"}</p>
         {isOk && (
           <>
@@ -207,12 +247,17 @@ export default function ScannerApp({ eventId }: { eventId: string }) {
         <p className="rounded-full bg-black/60 px-3 py-1.5 text-[11px] font-bold uppercase tracking-wide text-white">
           {eventId}
         </p>
-        <button
-          onClick={logout}
-          className="rounded-full bg-black/60 px-3 py-1.5 text-[11px] font-bold uppercase tracking-wide text-white"
-        >
-          Abmelden
-        </button>
+        {torchSupported && (
+          <button
+            onClick={toggleTorch}
+            className={`flex h-9 w-9 items-center justify-center rounded-full text-lg ${
+              torchOn ? "bg-accent-lime text-black" : "bg-black/60 text-white"
+            }`}
+            aria-label="Taschenlampe"
+          >
+            💡
+          </button>
+        )}
       </div>
 
       {state.kind === "LOADING" && (

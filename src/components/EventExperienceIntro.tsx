@@ -67,7 +67,7 @@ export default function EventExperienceIntro({
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.4, ease: "easeOut" }}
-            className="text-2xl font-black uppercase tracking-[0.25em] text-black sm:text-4xl"
+            className="px-6 text-center text-2xl font-black uppercase tracking-[0.15em] text-black sm:tracking-[0.25em] sm:text-4xl"
           >
             {title}
           </motion.p>
