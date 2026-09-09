@@ -5,73 +5,115 @@ import { getInboxEntries } from "@/lib/inbox";
 import { getCompaniesWithLeads } from "@/lib/companies";
 import { getRegistrations } from "@/lib/event-experience";
 
-const SECTIONS = [
+// Admin-Panel gruppiert nach Themenbereichen (statt einer flachen Liste),
+// je Block eine eigene Zeile fuer bessere Lesbarkeit auf allen
+// Bildschirmgroessen. Reihenfolge/Gruppierung siehe SECTION_GROUPS unten.
+type Section = {
+  href: string;
+  title: string;
+  text: string;
+};
+
+type SectionGroup = {
+  title: string;
+  sections: Section[];
+};
+
+const SECTION_GROUPS: SectionGroup[] = [
   {
-    href: "/admin/postfach",
-    title: "Postfach",
-    text: "Eingehende Kontaktanfragen, Bewerbungen, Reservierungen & mehr.",
+    title: "Nachrichten",
+    sections: [
+      {
+        href: "/admin/postfach",
+        title: "Postfach",
+        text: "Eingehende Kontaktanfragen, Bewerbungen, Reservierungen & mehr.",
+      },
+    ],
   },
   {
-    href: "/admin/firmen",
-    title: "Firmen",
-    text: "Firmenanfragen von /firmenevents, Leads & Status verwalten.",
-  },
-  {
-    href: "/admin/firmenevents",
     title: "Firmenevents",
-    text: "Alle Firmenevents (inkl. THE EVENT EXPERIENCE) verwalten: Landingpage, CRM, Vorlagen & Erinnerungen.",
+    sections: [
+      {
+        href: "/admin/firmen",
+        title: "Firmen",
+        text: "Firmenanfragen von /firmenevents, Leads & Status verwalten.",
+      },
+      {
+        href: "/admin/firmenevents",
+        title: "Firmenevents",
+        text: "Alle Firmenevents (inkl. THE EVENT EXPERIENCE) verwalten: Landingpage, CRM, Vorlagen & Erinnerungen.",
+      },
+      {
+        href: "/admin/firmenkontakte",
+        title: "Firmenkontakte",
+        text: "Zentrale Firmenkunden-Datenbank fuer beliebige Einladungen & Aktionen.",
+      },
+    ],
   },
   {
-    href: "/admin/firmenkontakte",
-    title: "Firmenkontakte",
-    text: "Zentrale Firmenkunden-Datenbank für beliebige Einladungen & Aktionen.",
+    title: "Webseite bearbeiten",
+    sections: [
+      {
+        href: "/admin/hero-bilder",
+        title: "Hero-Bilder",
+        text: "Hintergrund-Slideshow auf Startseite und /links verwalten.",
+      },
+      {
+        href: "/admin/raeume",
+        title: "Räume",
+        text: "Bilder je Raum (Main-Halle, Terrasse, Lounge, ...) verwalten.",
+      },
+      {
+        href: "/admin/favicon",
+        title: "Favicon",
+        text: "Das kleine Icon im Browser-Tab austauschen.",
+      },
+      {
+        href: "/admin/tanzabende",
+        title: "Tanzabende",
+        text: "Termine für /tanzveranstaltungen anlegen, bearbeiten, duplizieren.",
+      },
+    ],
   },
   {
-    href: "/admin/hero-bilder",
-    title: "Hero-Bilder",
-    text: "Hintergrund-Slideshow auf Startseite und /links verwalten.",
+    title: "Analytics",
+    sections: [
+      {
+        href: "/admin/seo-tool",
+        title: "SEO-Tool",
+        text: "Gesamte Website auf Überschriften, Inhalte & technisches SEO prüfen.",
+      },
+      {
+        href: "/admin/statistik",
+        title: "Statistik",
+        text: "Besucher, Seitenaufrufe, Absprungrate & mehr aus Google Analytics.",
+      },
+      {
+        href: "/admin/anhaengerwerbung",
+        title: "Anhängerwerbung",
+        text: "Bannerbilder für Werbe-Anhänger verwalten & Scans/Klicks auswerten.",
+      },
+      {
+        href: "/admin/ki-assistent",
+        title: "KI-Assistent",
+        text: "Tägliche KI-Analyse: Empfehlungen für mehr Tickets, Reservierungen & App-Downloads.",
+      },
+    ],
   },
   {
-    href: "/admin/raeume",
-    title: "Räume",
-    text: "Bilder je Raum (Main-Halle, Terrasse, Lounge, ...) verwalten.",
-  },
-  {
-    href: "/admin/favicon",
-    title: "Favicon",
-    text: "Das kleine Icon im Browser-Tab austauschen.",
-  },
-  {
-    href: "/admin/anhaengerwerbung",
-    title: "Anhängerwerbung",
-    text: "Bannerbilder für Werbe-Anhänger verwalten & Scans/Klicks auswerten.",
-  },
-  {
-    href: "/admin/seo-tool",
-    title: "SEO-Tool",
-    text: "Gesamte Website auf Überschriften, Inhalte & technisches SEO prüfen.",
-  },
-  {
-    href: "/admin/statistik",
-    title: "Statistik",
-    text: "Besucher, Seitenaufrufe, Absprungrate & mehr aus Google Analytics.",
-  },
-  {
-    href: "/admin/ki-assistent",
-    title: "KI-Assistent",
-    text: "Tägliche KI-Analyse: Empfehlungen für mehr Tickets, Reservierungen & App-Downloads.",
-  },
-  {
-    href: "/admin/tanzabende",
-    title: "Tanzabende",
-    text: "Termine für /tanzveranstaltungen anlegen, bearbeiten, duplizieren.",
-  },
-  {
-    href: "/admin/benutzer",
-    title: "Benutzer",
-    text: "Weitere Admin-Zugänge anlegen oder entfernen.",
+    title: "Einstellungen",
+    sections: [
+      {
+        href: "/admin/benutzer",
+        title: "Benutzer",
+        text: "Weitere Admin-Zugänge anlegen oder entfernen.",
+      },
+    ],
   },
 ];
+
+// Cache und Pixel sind keine reinen Link-Karten (Button bzw. Live-Status),
+// werden aber optisch wie die anderen "Einstellungen"-Karten dargestellt.
 
 export const dynamic = "force-dynamic";
 
@@ -102,6 +144,12 @@ export default async function AdminDashboardPage() {
     newRegistrationsCount = 0;
   }
 
+  const badgeCounts: Record<string, number> = {
+    "/admin/postfach": unreadCount,
+    "/admin/firmen": newCompaniesCount,
+    "/admin/firmenevents": newRegistrationsCount,
+  };
+
   return (
     <div className="mx-auto max-w-3xl px-6 pb-20 pt-32">
       <h1 className="text-2xl font-black uppercase text-foreground">
@@ -111,49 +159,53 @@ export default async function AdminDashboardPage() {
         Interne Verwaltung fuer moos.park - nicht oeffentlich verlinkt.
       </p>
 
-      <div className="mt-8 grid gap-4 sm:grid-cols-2">
-        {SECTIONS.map((s) => (
-          <Link
-            key={s.href}
-            href={s.href}
-            className="relative rounded-2xl border border-foreground/10 p-6 transition-colors hover:border-accent-lime"
-          >
-            {s.href === "/admin/postfach" && unreadCount > 0 && (
-              <span className="absolute right-4 top-4 flex h-6 min-w-6 items-center justify-center rounded-full bg-accent-lime px-1.5 text-xs font-black text-black">
-                {unreadCount}
-              </span>
+      {SECTION_GROUPS.map((group) => (
+        <div key={group.title} className="mt-10">
+          <h2 className="text-xs font-black uppercase tracking-[0.2em] text-foreground/40">
+            {group.title}
+          </h2>
+          <div className="mt-3 flex flex-col gap-3">
+            {group.sections.map((s) => {
+              const badge = badgeCounts[s.href] ?? 0;
+              return (
+                <Link
+                  key={s.href}
+                  href={s.href}
+                  className="relative rounded-2xl border border-foreground/10 p-6 transition-colors hover:border-accent-lime"
+                >
+                  {badge > 0 && (
+                    <span className="absolute right-4 top-4 flex h-6 min-w-6 items-center justify-center rounded-full bg-accent-lime px-1.5 text-xs font-black text-black">
+                      {badge}
+                    </span>
+                  )}
+                  <h3 className="text-lg font-black uppercase text-foreground">
+                    {s.title}
+                  </h3>
+                  <p className="mt-2 text-sm text-foreground/60">{s.text}</p>
+                </Link>
+              );
+            })}
+            {group.title === "Einstellungen" && (
+              <>
+                <div className="rounded-2xl border border-foreground/10 p-6">
+                  <h3 className="text-lg font-black uppercase text-foreground">
+                    Cache
+                  </h3>
+                  <p className="mt-2 text-sm text-foreground/60">
+                    Erzwingt eine sofortige Aktualisierung aller Seiten
+                    (statt bis zu 5 Minuten zu warten).
+                  </p>
+                  <ClearCacheButton />
+                </div>
+                <div className="rounded-2xl border border-foreground/10 p-6">
+                  <FacebookPixelStatus />
+                </div>
+              </>
             )}
-            {s.href === "/admin/firmen" && newCompaniesCount > 0 && (
-              <span className="absolute right-4 top-4 flex h-6 min-w-6 items-center justify-center rounded-full bg-accent-lime px-1.5 text-xs font-black text-black">
-                {newCompaniesCount}
-              </span>
-            )}
-            {s.href === "/admin/firmenevents" &&
-              newRegistrationsCount > 0 && (
-                <span className="absolute right-4 top-4 flex h-6 min-w-6 items-center justify-center rounded-full bg-accent-lime px-1.5 text-xs font-black text-black">
-                  {newRegistrationsCount}
-                </span>
-              )}
-            <h2 className="text-lg font-black uppercase text-foreground">
-              {s.title}
-            </h2>
-            <p className="mt-2 text-sm text-foreground/60">{s.text}</p>
-          </Link>
-        ))}
-      </div>
+          </div>
+        </div>
+      ))}
 
-      <div className="mt-12 border-t border-foreground/10 pt-8">
-        <h2 className="text-lg font-black uppercase text-foreground">
-          Cache
-        </h2>
-        <p className="mt-2 text-sm text-foreground/60">
-          Erzwingt eine sofortige Aktualisierung aller Seiten (statt bis zu
-          5 Minuten zu warten).
-        </p>
-        <ClearCacheButton />
-      </div>
-
-      <FacebookPixelStatus />
     </div>
   );
 }
