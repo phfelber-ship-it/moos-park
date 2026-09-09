@@ -158,7 +158,8 @@ export async function generateInvitationLetterPdf(
   y -= 20;
   page.drawText("Jetzt Platz sichern:", { x: marginX, y, size: 12, font: bold, color: BLACK });
 
-  const qrDataUrl = await QRCode.toDataURL(`${SITE_URL}/event-experience`, {
+  const qrTargetUrl = `${SITE_URL}/event-experience`;
+  const qrDataUrl = await QRCode.toDataURL(qrTargetUrl, {
     margin: 0,
     width: 300,
   });
@@ -167,7 +168,19 @@ export async function generateInvitationLetterPdf(
   const qrSize = 90;
   page.drawImage(qrImage, { x: marginX, y: y - qrSize - 10, width: qrSize, height: qrSize });
 
-  y = y - qrSize - 30;
+  // Website-Adresse als Klartext unter dem QR-Code - fuer alle, die den
+  // Code nicht scannen koennen/wollen, aber trotzdem manuell zur Seite
+  // gelangen sollen.
+  const qrUrlText = qrTargetUrl.replace(/^https?:\/\//, "");
+  page.drawText(qrUrlText, {
+    x: marginX,
+    y: y - qrSize - 24,
+    size: 9,
+    font: regular,
+    color: GREY,
+  });
+
+  y = y - qrSize - 40;
   page.drawText("Herzliche Grüße,", { x: marginX, y, size: 11, font: regular, color: BLACK });
   y -= 15;
   page.drawText("Sarah Geisler", { x: marginX, y, size: 11, font: bold, color: BLACK });
