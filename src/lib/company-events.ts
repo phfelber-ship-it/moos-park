@@ -63,17 +63,28 @@ function normalize(data: Partial<CompanyEvent>[]): CompanyEvent[] {
   })) as CompanyEvent[];
 }
 
-async function readRaw(): Promise<CompanyEvent[] | null> {
+// "notFound": die Blob-Datei existiert nachweislich noch nicht (allererster
+// Aufruf ueberhaupt) - darf den Seed ausloesen.
+// "error": Netzwerk-/Parse-Fehler o.ae. - darf NICHT seeden, sonst wuerde
+// ein kurzzeitiger Fehler die komplette (ggf. schon befuellte)
+// Event-Liste in Produktion ueberschreiben und Daten vernichten.
+type ReadRawResult =
+  | { kind: "ok"; events: CompanyEvent[] }
+  | { kind: "notFound" }
+  | { kind: "error" };
+
+async function readRaw(): Promise<ReadRawResult> {
   try {
     const { blobs } = await list({ prefix: EVENTS_PATH });
     const match = blobs.find((b) => b.pathname === EVENTS_PATH);
-    if (!match) return null;
+    if (!match) return { kind: "notFound" };
     const res = await fetch(`${match.url}?v=${Date.now()}`, { cache: "no-store" });
-    if (!res.ok) return null;
+    if (!res.ok) return { kind: "error" };
     const data = (await res.json()) as Partial<CompanyEvent>[];
-    return Array.isArray(data) ? normalize(data) : null;
+    if (!Array.isArray(data)) return { kind: "error" };
+    return { kind: "ok", events: normalize(data) };
   } catch {
-    return null;
+    return { kind: "error" };
   }
 }
 
@@ -114,9 +125,14 @@ async function seedIfEmpty(): Promise<CompanyEvent[]> {
 
 export async function getCompanyEvents(): Promise<CompanyEvent[]> {
   const raw = await readRaw();
-  if (raw === null) return [];
-  if (raw.length === 0) return seedIfEmpty();
-  return raw;
+  // Seed nur, wenn die Datei wirklich noch nie existiert hat oder
+  // nachweislich leer ist - bei einem Lese-/Netzwerkfehler geben wir
+  // stattdessen [] zurueck (kein Seed!), damit ein kurzzeitiger Fehler
+  // niemals eine bereits befuellte Event-Liste ueberschreibt.
+  if (raw.kind === "notFound") return seedIfEmpty();
+  if (raw.kind === "error") return [];
+  if (raw.events.length === 0) return seedIfEmpty();
+  return raw.events;
 }
 
 export async function getCompanyEvent(id: string): Promise<CompanyEvent | null> {
