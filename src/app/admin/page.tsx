@@ -50,6 +50,11 @@ const SECTION_GROUPS: SectionGroup[] = [
         title: "Firmenkontakte",
         text: "Zentrale Firmenkunden-Datenbank fuer beliebige Einladungen & Aktionen.",
       },
+      {
+        href: "/admin/scanner",
+        title: "Scanner",
+        text: "QR-Code-Check-in fürs Einlasspersonal - Event auswählen, Link fürs Handy holen.",
+      },
     ],
   },
   {
