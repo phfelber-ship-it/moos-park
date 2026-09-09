@@ -59,6 +59,10 @@ export async function sendInvitationMail(input: {
     body: JSON.stringify({
       from,
       to: [input.to],
+      // Kopie geht bei jedem Versand automatisch an s.geisler@moos-park.de
+      // mit, damit im Team immer nachvollziehbar ist, welche Einladung
+      // wann rausgegangen ist.
+      cc: ["s.geisler@moos-park.de"],
       subject: input.subject,
       text: input.body,
       attachments: input.attachments.map((a) => ({

@@ -11,6 +11,7 @@ const STATUSES: { key: RegistrationStatus; label: string }[] = [
   { key: "NEU", label: "Neu" },
   { key: "BESTAETIGT", label: "Bestätigt" },
   { key: "NACHFRAGE", label: "Nachfrage" },
+  { key: "ABGELEHNT", label: "Abgelehnt" },
 ];
 
 export default function EventExperienceManager({
@@ -48,6 +49,23 @@ export default function EventExperienceManager({
     setRegistrations((cur) =>
       cur.map((r) => (r.id === id ? { ...r, invitationSentAt } : r))
     );
+  };
+
+  const deleteEntry = async (id: string, company: string) => {
+    if (!confirm(`Anmeldung von "${company}" wirklich unwiderruflich löschen?`)) {
+      return;
+    }
+    const prev = registrations;
+    setRegistrations((cur) => cur.filter((r) => r.id !== id));
+    try {
+      const res = await fetch(`/api/admin/event-experience?id=${id}`, {
+        method: "DELETE",
+      });
+      if (!res.ok) throw new Error("failed");
+    } catch {
+      setRegistrations(prev);
+      alert("Löschen fehlgeschlagen. Bitte erneut versuchen.");
+    }
   };
 
   return (
@@ -199,6 +217,14 @@ export default function EventExperienceManager({
                             ))}
                           </select>
                         </div>
+
+                        <button
+                          type="button"
+                          onClick={() => deleteEntry(r.id, r.company)}
+                          className="mt-2 w-full rounded-lg border border-red-500/30 px-3 py-1.5 text-[10px] font-bold uppercase tracking-wide text-red-400 transition-colors hover:bg-red-500/10"
+                        >
+                          Anfrage löschen
+                        </button>
                       </div>
                     ))}
                     {inColumn.length === 0 && (

@@ -4,12 +4,17 @@ import crypto from "node:crypto";
 const REGISTRATIONS_PATH = "admin/event-experience-registrations.json";
 const MAX_ENTRIES = 2000;
 
-export type RegistrationStatus = "NEU" | "BESTAETIGT" | "NACHFRAGE";
+export type RegistrationStatus =
+  | "NEU"
+  | "BESTAETIGT"
+  | "NACHFRAGE"
+  | "ABGELEHNT";
 
 export const REGISTRATION_STATUSES: RegistrationStatus[] = [
   "NEU",
   "BESTAETIGT",
   "NACHFRAGE",
+  "ABGELEHNT",
 ];
 
 export type Companion = {
@@ -169,4 +174,9 @@ export async function saveSentTickets(
   };
   await saveRegistrations(entries);
   return entries[idx];
+}
+
+export async function deleteRegistration(id: string): Promise<void> {
+  const entries = await getRegistrations();
+  await saveRegistrations(entries.filter((e) => e.id !== id));
 }
