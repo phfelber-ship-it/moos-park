@@ -5,6 +5,9 @@ import {
   EVENT_TIME_LABEL,
   TIMETABLE,
 } from "@/lib/event-experience-info";
+import type { Ticket } from "@/lib/event-experience";
+import { isAppleWalletConfigured } from "@/lib/apple-wallet";
+import { isGoogleWalletConfigured } from "@/lib/google-wallet";
 
 // Escaped Text fuer den Einsatz in HTML - der Vorlagentext kommt aus dem
 // Adminpanel (freies Textfeld), daher nicht ungeprueft als HTML einsetzen.
@@ -39,9 +42,39 @@ export function buildInvitationEmailHtml(params: {
   bodyText: string;
   ticketCount: number;
   registrationId: string;
+  tickets?: Ticket[];
 }): string {
   const bodyHtml = escapeHtml(params.bodyText).replace(/\n/g, "<br>");
   const cancelUrl = buildCancelUrl(params.registrationId);
+
+  const appleOn = isAppleWalletConfigured();
+  const googleOn = isGoogleWalletConfigured();
+  const walletRows =
+    (appleOn || googleOn) && params.tickets?.length
+      ? params.tickets
+          .map((t) => {
+            const name = `${t.firstName} ${t.lastName}`.trim();
+            const appleUrl = `${SITE_URL}/api/event-experience/${params.registrationId}/wallet/apple?code=${t.code}`;
+            const googleUrl = `${SITE_URL}/api/event-experience/${params.registrationId}/wallet/google?code=${t.code}`;
+            return `
+              <tr>
+                <td style="padding:10px 0;border-top:1px solid #2a2a2e;">
+                  <div style="font:700 13px Helvetica,Arial,sans-serif;color:${TEXT};margin-bottom:8px;">${name}</div>
+                  ${
+                    appleOn
+                      ? `<a href="${appleUrl}" style="display:inline-block;margin-right:8px;margin-bottom:6px;padding:9px 16px;border-radius:8px;background:#000000;font:700 11px Helvetica,Arial,sans-serif;color:#ffffff;text-decoration:none;">🍎 Apple Wallet</a>`
+                      : ""
+                  }
+                  ${
+                    googleOn
+                      ? `<a href="${googleUrl}" style="display:inline-block;margin-bottom:6px;padding:9px 16px;border-radius:8px;background:#1a73e8;font:700 11px Helvetica,Arial,sans-serif;color:#ffffff;text-decoration:none;">G Google Wallet</a>`
+                      : ""
+                  }
+                </td>
+              </tr>`;
+          })
+          .join("")
+      : "";
 
   const timetableRows = TIMETABLE.map(
     (t) => `
@@ -113,6 +146,17 @@ export function buildInvitationEmailHtml(params: {
               <div style="margin-top:18px;padding-top:14px;border-top:1px solid #2a2a2e;font:700 13px/1.5 Helvetica,Arial,sans-serif;color:${TEXT};">
                 🎟 ${params.ticketCount} Ticket${params.ticketCount === 1 ? "" : "s"} im Anhang dieser E-Mail (PDF)
               </div>
+
+              ${
+                walletRows
+                  ? `<div style="margin-top:16px;font:900 10px/1 Helvetica,Arial,sans-serif;letter-spacing:2px;color:${LIME};text-transform:uppercase;">
+                      Direkt zur Wallet hinzufügen
+                    </div>
+                    <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+                      ${walletRows}
+                    </table>`
+                  : ""
+              }
             </td>
           </tr>
 
