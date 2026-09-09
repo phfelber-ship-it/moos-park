@@ -68,6 +68,16 @@ export async function POST(request: Request) {
     );
   }
 
+  // Health-Check-Sonderfall: der taegliche Formular-Check (siehe
+  // lib/form-health-check.ts) schickt eine echte, vollstaendig validierte
+  // Anmeldung rein - alle Pflichtfeld- und Kapazitaets-Checks oben laufen
+  // normal durch. Ab hier brechen wir aber bewusst VOR dem Speichern der
+  // Anmeldung ab, damit im Event-Experience-CRM keine Fake-Anmeldung
+  // auftaucht und keine Bestaetigungsmail an eine echte Adresse rausgeht.
+  if (body.isHealthCheck === true) {
+    return NextResponse.json({ ok: true, healthCheck: true });
+  }
+
   try {
     await addRegistration(eventId, {
       company,

@@ -1,9 +1,11 @@
 import Link from "next/link";
 import ClearCacheButton from "@/components/ClearCacheButton";
 import FacebookPixelStatus from "@/components/FacebookPixelStatus";
+import FormHealthCheckStatus from "@/components/FormHealthCheckStatus";
 import { getInboxEntries } from "@/lib/inbox";
 import { getCompaniesWithLeads } from "@/lib/companies";
 import { getRegistrations } from "@/lib/event-experience";
+import { getLastFormHealthCheckResult } from "@/lib/form-health-check";
 
 // Admin-Panel gruppiert nach Themenbereichen (statt einer flachen Liste),
 // je Block eine eigene Zeile fuer bessere Lesbarkeit auf allen
@@ -112,8 +114,9 @@ const SECTION_GROUPS: SectionGroup[] = [
   },
 ];
 
-// Cache und Pixel sind keine reinen Link-Karten (Button bzw. Live-Status),
-// werden aber optisch wie die anderen "Einstellungen"-Karten dargestellt.
+// Cache, Pixel und Formular-Check sind keine reinen Link-Karten (Button
+// bzw. Live-Status), werden aber optisch wie die anderen
+// "Einstellungen"-Karten dargestellt.
 
 export const dynamic = "force-dynamic";
 
@@ -143,6 +146,10 @@ export default async function AdminDashboardPage() {
   } catch {
     newRegistrationsCount = 0;
   }
+
+  // Letztes Formular-Check-Ergebnis fuer die Status-Karte in
+  // "Einstellungen" - best-effort, siehe getLastFormHealthCheckResult().
+  const formHealthReport = await getLastFormHealthCheckResult();
 
   const badgeCounts: Record<string, number> = {
     "/admin/postfach": unreadCount,
@@ -199,6 +206,9 @@ export default async function AdminDashboardPage() {
                 </div>
                 <div className="rounded-2xl border border-foreground/10 p-6">
                   <FacebookPixelStatus />
+                </div>
+                <div className="rounded-2xl border border-foreground/10 p-6">
+                  <FormHealthCheckStatus initialReport={formHealthReport} />
                 </div>
               </>
             )}

@@ -30,6 +30,16 @@ export async function POST(request: Request) {
 
   const guestCount = body.guestCount ? Number(body.guestCount) : null;
 
+  // Health-Check-Sonderfall: der taegliche Formular-Check (siehe
+  // lib/form-health-check.ts) schickt hier eine echte, vollstaendig
+  // validierte Anfrage rein, damit die komplette Validierungslogik oben
+  // durchlaufen wird. Ab hier brechen wir aber bewusst VOR dem Anlegen des
+  // Leads und vor der Mail ab, damit im Firmen-CRM/Postfach kein Fake-Eintrag
+  // auftaucht, den Mitarbeitende faelschlich bearbeiten koennten.
+  if (body.isHealthCheck === true) {
+    return NextResponse.json({ ok: true, healthCheck: true });
+  }
+
   try {
     await createCompanyRequest({
       company,
