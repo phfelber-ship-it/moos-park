@@ -1,24 +1,54 @@
 "use client";
 
 import { useState } from "react";
-import { AnimatePresence, motion } from "motion/react";
+import { useRouter } from "next/navigation";
 import HoneypotField from "@/components/HoneypotField";
 import FlipText from "@/components/FlipText";
 
 const ANREDEN = ["Herr", "Frau", "Divers"];
 
+type Companion = { salutation: string; lastName: string; firstName: string };
+
+const emptyCompanion = (): Companion => ({
+  salutation: ANREDEN[0],
+  lastName: "",
+  firstName: "",
+});
+
 export default function EventExperienceForm() {
+  const router = useRouter();
   const [firma, setFirma] = useState("");
   const [anrede, setAnrede] = useState(ANREDEN[0]);
   const [nachname, setNachname] = useState("");
   const [vorname, setVorname] = useState("");
   const [email, setEmail] = useState("");
   const [telefon, setTelefon] = useState("");
+  const [begleitpersonenCount, setBegleitpersonenCount] = useState(0);
+  const [companions, setCompanions] = useState<Companion[]>([]);
   const [nachricht, setNachricht] = useState("");
   const [accepted, setAccepted] = useState(false);
   const [honeypot, setHoneypot] = useState("");
-  const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">(
-    "idle"
+  const [status, setStatus] = useState<"idle" | "sending" | "error">("idle");
+
+  const setCompanionCount = (raw: string) => {
+    const n = Math.max(0, Math.min(20, Number(raw.replace(/[^0-9]/g, "")) || 0));
+    setBegleitpersonenCount(n);
+    setCompanions((cur) => {
+      const next = [...cur];
+      while (next.length < n) next.push(emptyCompanion());
+      next.length = n;
+      return next;
+    });
+  };
+
+  const updateCompanion = (i: number, patch: Partial<Companion>) => {
+    setCompanions((cur) =>
+      cur.map((c, idx) => (idx === i ? { ...c, ...patch } : c))
+    );
+  };
+
+  const companionsComplete = companions.every(
+    (c) => c.lastName.trim() !== "" && c.firstName.trim() !== ""
   );
 
   const canSend =
@@ -27,13 +57,14 @@ export default function EventExperienceForm() {
     vorname.trim() !== "" &&
     email.trim() !== "" &&
     telefon.trim() !== "" &&
+    companionsComplete &&
     accepted;
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!canSend || status === "sending") return;
     if (honeypot) {
-      setStatus("sent");
+      router.push("/event-experience/bestaetigung");
       return;
     }
 
@@ -55,45 +86,22 @@ export default function EventExperienceForm() {
           message: nachricht.trim(),
           consent: accepted,
           honeypot,
+          companions: companions.map((c) => ({
+            salutation: c.salutation,
+            lastName: c.lastName.trim(),
+            firstName: c.firstName.trim(),
+          })),
         }),
       });
       if (!res.ok) throw new Error("failed");
-      setStatus("sent");
+      router.push("/event-experience/bestaetigung");
     } catch {
       setStatus("error");
     }
   };
 
   return (
-    <>
-      <AnimatePresence>
-        {status === "sent" && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 px-6"
-          >
-            <motion.div
-              initial={{ opacity: 0, y: 30, scale: 0.95 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: 20, scale: 0.95 }}
-              transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-              className="w-full max-w-sm rounded-2xl border border-accent-lime/30 bg-background p-8 text-center shadow-2xl sm:p-10"
-            >
-              <p className="text-3xl font-black uppercase text-foreground sm:text-4xl">
-                Platz gesichert! 🎉
-              </p>
-              <p className="mt-4 text-sm text-foreground/70">
-                Vielen Dank für Ihre Anmeldung zu THE EVENT EXPERIENCE. Wir
-                melden uns in Kürze bei Ihnen.
-              </p>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      <form onSubmit={submit} className="grid gap-4">
+    <form onSubmit={submit} className="grid gap-4">
       <HoneypotField value={honeypot} onChange={setHoneypot} />
       <input
         value={firma}
@@ -102,17 +110,20 @@ export default function EventExperienceForm() {
         className="w-full rounded-xl border border-foreground/15 bg-foreground/5 px-4 py-3 text-foreground placeholder-foreground/40 outline-none focus:border-accent-lime"
       />
 
-      <select
-        value={anrede}
-        onChange={(e) => setAnrede(e.target.value)}
-        className="w-full rounded-xl border border-foreground/15 bg-foreground/5 px-4 py-3 text-foreground outline-none focus:border-accent-lime"
-      >
-        {ANREDEN.map((a) => (
-          <option key={a} value={a}>
-            {a}
-          </option>
-        ))}
-      </select>
+      <div>
+        <p className="mb-2 text-sm font-bold text-foreground">Anrede</p>
+        <select
+          value={anrede}
+          onChange={(e) => setAnrede(e.target.value)}
+          className="w-full rounded-xl border border-foreground/15 bg-foreground/5 px-4 py-3 text-foreground outline-none focus:border-accent-lime sm:w-[30%]"
+        >
+          {ANREDEN.map((a) => (
+            <option key={a} value={a}>
+              {a}
+            </option>
+          ))}
+        </select>
+      </div>
 
       <div className="grid gap-4 sm:grid-cols-2">
         <input
@@ -144,6 +155,56 @@ export default function EventExperienceForm() {
           className="w-full rounded-xl border border-foreground/15 bg-foreground/5 px-4 py-3 text-foreground placeholder-foreground/40 outline-none focus:border-accent-lime"
         />
       </div>
+
+      <div>
+        <label className="mb-2 block text-sm font-bold text-foreground">
+          Begleitpersonen
+        </label>
+        <input
+          value={begleitpersonenCount || ""}
+          onChange={(e) => setCompanionCount(e.target.value)}
+          inputMode="numeric"
+          placeholder="0"
+          className="w-full max-w-[160px] rounded-xl border border-foreground/15 bg-foreground/5 px-4 py-3 text-foreground placeholder-foreground/40 outline-none focus:border-accent-lime"
+        />
+      </div>
+
+      {companions.length > 0 && (
+        <div className="grid gap-4 rounded-xl border border-foreground/10 bg-foreground/[0.02] p-4">
+          {companions.map((c, i) => (
+            <div key={i} className="grid gap-3">
+              <p className="text-xs font-bold uppercase tracking-wide text-foreground/50">
+                Begleitperson {i + 1}
+              </p>
+              <select
+                value={c.salutation}
+                onChange={(e) => updateCompanion(i, { salutation: e.target.value })}
+                className="w-full rounded-xl border border-foreground/15 bg-foreground/5 px-4 py-3 text-foreground outline-none focus:border-accent-lime sm:w-[30%]"
+              >
+                {ANREDEN.map((a) => (
+                  <option key={a} value={a}>
+                    {a}
+                  </option>
+                ))}
+              </select>
+              <div className="grid gap-3 sm:grid-cols-2">
+                <input
+                  value={c.lastName}
+                  onChange={(e) => updateCompanion(i, { lastName: e.target.value })}
+                  placeholder="Name"
+                  className="w-full rounded-xl border border-foreground/15 bg-foreground/5 px-4 py-3 text-foreground placeholder-foreground/40 outline-none focus:border-accent-lime"
+                />
+                <input
+                  value={c.firstName}
+                  onChange={(e) => updateCompanion(i, { firstName: e.target.value })}
+                  placeholder="Vorname"
+                  className="w-full rounded-xl border border-foreground/15 bg-foreground/5 px-4 py-3 text-foreground placeholder-foreground/40 outline-none focus:border-accent-lime"
+                />
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
 
       <textarea
         value={nachricht}
@@ -184,7 +245,6 @@ export default function EventExperienceForm() {
           text={status === "sending" ? "Wird gesendet..." : "Platz sichern"}
         />
       </button>
-      </form>
-    </>
+    </form>
   );
 }

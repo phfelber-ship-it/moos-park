@@ -1,5 +1,19 @@
 import { NextResponse } from "next/server";
-import { addRegistration } from "@/lib/event-experience";
+import { addRegistration, type Companion } from "@/lib/event-experience";
+
+function parseCompanions(raw: unknown): Companion[] {
+  if (!Array.isArray(raw)) return [];
+  return raw
+    .map((c) => {
+      if (!c || typeof c !== "object") return null;
+      const salutation = String((c as Record<string, unknown>).salutation ?? "").trim();
+      const lastName = String((c as Record<string, unknown>).lastName ?? "").trim();
+      const firstName = String((c as Record<string, unknown>).firstName ?? "").trim();
+      if (!lastName || !firstName) return null;
+      return { salutation, lastName, firstName };
+    })
+    .filter((c): c is Companion => c !== null);
+}
 
 export async function POST(request: Request) {
   const body = await request.json().catch(() => null);
@@ -21,6 +35,7 @@ export async function POST(request: Request) {
   const phone = String(body.phone ?? "").trim();
   const message = String(body.message ?? "").trim();
   const consent = Boolean(body.consent);
+  const companions = parseCompanions(body.companions);
 
   if (!company || !lastName || !firstName || !email || !phone || !consent) {
     return NextResponse.json(
@@ -38,6 +53,7 @@ export async function POST(request: Request) {
       email,
       phone,
       message,
+      companions,
     });
   } catch (err) {
     console.error("Event-Experience-Anmeldung konnte nicht gespeichert werden:", err);

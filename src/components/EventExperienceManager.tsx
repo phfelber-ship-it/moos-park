@@ -5,6 +5,7 @@ import type {
   EventExperienceRegistration,
   RegistrationStatus,
 } from "@/lib/event-experience";
+import EventExperienceInviteDialog from "@/components/EventExperienceInviteDialog";
 
 const STATUSES: { key: RegistrationStatus; label: string }[] = [
   { key: "NEU", label: "Neu" },
@@ -22,6 +23,7 @@ export default function EventExperienceManager({
   const [dragOverStatus, setDragOverStatus] = useState<RegistrationStatus | null>(
     null
   );
+  const [inviteDialogId, setInviteDialogId] = useState<string | null>(null);
 
   const changeStatus = async (id: string, status: RegistrationStatus) => {
     const prev = registrations;
@@ -40,6 +42,12 @@ export default function EventExperienceManager({
       // einen Status zu zeigen, der serverseitig nicht gespeichert wurde.
       setRegistrations(prev);
     }
+  };
+
+  const markInvitationSent = (id: string, invitationSentAt: string) => {
+    setRegistrations((cur) =>
+      cur.map((r) => (r.id === id ? { ...r, invitationSentAt } : r))
+    );
   };
 
   return (
@@ -112,18 +120,64 @@ export default function EventExperienceManager({
                         <p className="text-sm font-black uppercase text-foreground">
                           {r.company}
                         </p>
-                        <p className="mt-0.5 text-[11px] text-foreground/50">
-                          {r.salutation} {r.firstName} {r.lastName}
-                        </p>
-                        <p className="mt-0.5 text-[11px] text-foreground/50">
-                          {r.email}
-                          {r.phone ? ` · ${r.phone}` : ""}
-                        </p>
+                        <div className="mt-1.5 grid gap-0.5 text-[11px] text-foreground/60">
+                          <p>
+                            <span className="text-foreground/40">Name: </span>
+                            {r.lastName} {r.firstName}
+                          </p>
+                          <p>
+                            <span className="text-foreground/40">
+                              Anrede:{" "}
+                            </span>
+                            {r.salutation}
+                          </p>
+                          <p>
+                            <span className="text-foreground/40">
+                              E-Mail:{" "}
+                            </span>
+                            {r.email}
+                          </p>
+                          {r.phone && (
+                            <p>
+                              <span className="text-foreground/40">
+                                Telefon:{" "}
+                              </span>
+                              {r.phone}
+                            </p>
+                          )}
+                          {r.companions.length > 0 && (
+                            <p>
+                              <span className="text-foreground/40">
+                                Begleitpersonen:{" "}
+                              </span>
+                              {r.companions.length}
+                            </p>
+                          )}
+                        </div>
                         {r.message && (
                           <p className="mt-2 text-xs text-foreground/70">
                             {r.message}
                           </p>
                         )}
+
+                        {key === "BESTAETIGT" && (
+                          <button
+                            type="button"
+                            onClick={() => setInviteDialogId(r.id)}
+                            className="mt-2 w-full rounded-lg bg-accent-lime px-3 py-2 text-[11px] font-black uppercase tracking-wide text-black transition-transform hover:scale-105"
+                          >
+                            {r.invitationSentAt
+                              ? "Einladung erneut verschicken"
+                              : "Einladung verschicken"}
+                          </button>
+                        )}
+                        {r.invitationSentAt && (
+                          <p className="mt-1.5 text-[10px] text-accent-lime">
+                            Verschickt am{" "}
+                            {new Date(r.invitationSentAt).toLocaleString("de-DE")}
+                          </p>
+                        )}
+
                         <div className="mt-2 flex items-center justify-between gap-2">
                           <p className="text-[10px] text-foreground/30">
                             {new Date(r.createdAt).toLocaleString("de-DE")}
@@ -158,6 +212,16 @@ export default function EventExperienceManager({
             })}
           </div>
         </div>
+      )}
+
+      {inviteDialogId && (
+        <EventExperienceInviteDialog
+          registrationId={inviteDialogId}
+          onClose={() => setInviteDialogId(null)}
+          onSent={(invitationSentAt) =>
+            markInvitationSent(inviteDialogId, invitationSentAt)
+          }
+        />
       )}
     </div>
   );
