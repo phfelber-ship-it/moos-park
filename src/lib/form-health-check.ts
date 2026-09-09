@@ -253,6 +253,77 @@ export type FormHealthCheckReport = {
   allOk: boolean;
 };
 
+// --- Automatische Formular-Entdeckung -----------------------------------
+//
+// Scannt bei jedem Lauf zusaetzlich alle bekannten oeffentlichen Seiten
+// (STATIC_ROUTES aus sitemap.ts, gleiche Liste wie fuer die echte Sitemap)
+// nach <form>-Tags. Seiten, die schon oben in CHECKS ueberwacht werden,
+// werden uebersprungen. Wird ein <form> auf einer bisher unbekannten Seite
+// gefunden, taucht das als eigener (fehlgeschlagener) Eintrag im Bericht
+// auf - "fehlgeschlagen" ist hier bewusst gewaehlt, damit es in der
+// Alarm-Mail auffaellt und nicht stillschweigend untergeht, auch wenn das
+// gefundene Formular selbst technisch einwandfrei sein mag. Kein
+// automatischer Submission-Test fuer neu entdeckte Formulare - dafuer
+// muesste erst manuell geprueft werden, ob ein sicherer Health-Check-Weg
+// existiert (siehe Kommentare beim CHECKS-Array oben).
+async function discoverNewForms(origin: string): Promise<FormCheckResult[]> {
+  const known = new Set(CHECKS.map((c) => c.pageUrl));
+  // Admin-/API-/Legal-Seiten etc. enthalten nie ein oeffentliches
+  // Lead-Formular - ausgenommen, damit der Scan nicht wegen z.B. dem
+  // Cookie-Consent-Banner oder internen Widgets falsch anschlaegt.
+  const SKIP = new Set([
+    "",
+    "/impressum",
+    "/datenschutz",
+    "/agb",
+    "/widerruf",
+    "/app",
+    "/blog",
+    "/galerie",
+    "/faq",
+    "/clubcard",
+    "/erleben",
+  ]);
+
+  let routes: string[];
+  try {
+    ({ STATIC_ROUTES: routes } = await import("@/app/sitemap"));
+  } catch {
+    // Sitemap-Modul nicht ladbar (z.B. Build-Grenzfall) - Entdeckung dann
+    // einfach aus, der Rest des Checks laeuft unbeeinflusst weiter.
+    return [];
+  }
+
+  const results: FormCheckResult[] = [];
+  for (const route of routes) {
+    if (known.has(route) || SKIP.has(route)) continue;
+    const start = Date.now();
+    try {
+      const res = await fetch(`${origin}${route}`, {
+        cache: "no-store",
+        headers: bypassHeaders(),
+      });
+      if (!res.ok) continue;
+      const html = await res.text();
+      if (!/<form[\s>]/i.test(html)) continue;
+      results.push({
+        name: `Neu entdeckt: ${route}`,
+        pageUrl: route,
+        kind: "page-load",
+        ok: false,
+        message:
+          "Neues Formular auf dieser Seite gefunden, das noch nicht dauerhaft ueberwacht wird - bitte in lib/form-health-check.ts (CHECKS-Array) aufnehmen.",
+        checkedAt: new Date().toISOString(),
+        durationMs: Date.now() - start,
+      });
+    } catch {
+      // Einzelne Seite nicht erreichbar - Entdeckung dieser einen Seite
+      // ueberspringen, restlicher Scan laeuft weiter.
+    }
+  }
+  return results;
+}
+
 export async function runFormHealthChecks(origin: string): Promise<FormHealthCheckReport> {
   const results: FormCheckResult[] = [];
 
@@ -278,6 +349,8 @@ export async function runFormHealthChecks(origin: string): Promise<FormHealthChe
       durationMs: Date.now() - start,
     });
   }
+
+  results.push(...(await discoverNewForms(origin)));
 
   return {
     runAt: new Date().toISOString(),
