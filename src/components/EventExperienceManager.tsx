@@ -146,7 +146,7 @@ export default function EventExperienceManager({
                         }`}
                       >
                         <p className="text-sm font-black uppercase text-foreground">
-                          {r.company}
+                          {r.company || r.lastName || "Ohne Namen"}
                         </p>
                         <div className="mt-1.5 grid gap-0.5 text-[11px] text-foreground/60">
                           <p>
