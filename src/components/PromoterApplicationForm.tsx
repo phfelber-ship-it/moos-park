@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { sendContactMail } from "@/lib/clubscale";
-import { logInbox } from "@/lib/inbox-client";
+import { logInboxAwaited } from "@/lib/inbox-client";
 import HoneypotField from "@/components/HoneypotField";
 import FlipText from "@/components/FlipText";
 
@@ -35,25 +35,26 @@ export default function PromoterApplicationForm() {
     }
 
     setStatus("sending");
-    try {
-      await sendContactMail({
-        firstname: vorname.trim(),
-        lastname: nachname.trim(),
-        mail: email.trim(),
-        phone: "",
-        subject: "Promoter-Bewerbung über moos-park.de",
-        body: `Instagram: ${instagram.trim()}\nFollower: ${follower.trim()}\n`,
-      });
-      logInbox({
-        type: "promoter",
-        name: `${vorname.trim()} ${nachname.trim()}`,
-        email: email.trim(),
-        summary: `${instagram.trim()} · ${follower.trim()} Follower`,
-      });
-      setStatus("sent");
-    } catch {
-      setStatus("error");
-    }
+    // Postfach + die daran gekoppelte SMTP-Benachrichtigung sind der
+    // garantierte Zustellweg (siehe ContactForm.tsx fuer die Begruendung),
+    // Clubscale laeuft nur noch bestmoeglich nebenher.
+    const ok = await logInboxAwaited({
+      type: "promoter",
+      name: `${vorname.trim()} ${nachname.trim()}`,
+      email: email.trim(),
+      summary: `${instagram.trim()} · ${follower.trim()} Follower`,
+    });
+    sendContactMail({
+      firstname: vorname.trim(),
+      lastname: nachname.trim(),
+      mail: email.trim(),
+      phone: "",
+      subject: "Promoter-Bewerbung über moos-park.de",
+      body: `Instagram: ${instagram.trim()}\nFollower: ${follower.trim()}\n`,
+    }).catch((err) => {
+      console.error("Clubscale-Mail (Promoter-Bewerbung) fehlgeschlagen:", err);
+    });
+    setStatus(ok ? "sent" : "error");
   };
 
   if (status === "sent") {
