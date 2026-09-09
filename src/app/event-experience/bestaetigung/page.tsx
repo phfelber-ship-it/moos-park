@@ -24,8 +24,8 @@ export default function EventExperienceConfirmationPage() {
           Platz gesichert.
         </h1>
         <p className="mx-auto mt-4 max-w-lg text-foreground/70">
-          Wir prüfen Ihre Anfrage. Vielen Dank für Ihre Anmeldung zu THE
-          EVENT EXPERIENCE.
+          Wir prüfen Ihre Anfrage und melden uns innerhalb von 24 Stunden.
+          Vielen Dank für Ihre Anmeldung zu THE EVENT EXPERIENCE.
         </p>
       </div>
 
@@ -35,6 +35,10 @@ export default function EventExperienceConfirmationPage() {
         </p>
         <p className="mt-2 text-foreground/70">
           Sie bekommen eine Bestätigungsmail mit den Tickets.
+        </p>
+        <p className="mt-2 text-sm text-foreground/50">
+          Falls die Mail nicht ankommt: Bitte auch im Spam- und
+          Papierkorb-Ordner nachschauen.
         </p>
       </div>
 
