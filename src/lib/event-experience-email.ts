@@ -46,6 +46,9 @@ export function buildInvitationEmailHtml(params: {
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>THE EVENT EXPERIENCE</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@900&display=swap');
+</style>
 </head>
 <body style="margin:0;padding:0;background:${BG};">
   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:${BG};padding:32px 16px;">
@@ -58,7 +61,7 @@ export function buildInvitationEmailHtml(params: {
               <div style="font:900 11px/1 Helvetica,Arial,sans-serif;letter-spacing:3px;color:${LIME};text-transform:uppercase;">
                 moos.park präsentiert
               </div>
-              <div style="margin-top:10px;font:900 34px/1.05 Helvetica,Arial,sans-serif;letter-spacing:-0.5px;color:${TEXT};text-transform:uppercase;">
+              <div style="margin-top:10px;font:900 34px/1.05 'Montserrat',Helvetica,Arial,sans-serif;letter-spacing:-0.5px;color:${TEXT};text-transform:uppercase;">
                 THE EVENT<br>EXPERIENCE
               </div>
             </td>

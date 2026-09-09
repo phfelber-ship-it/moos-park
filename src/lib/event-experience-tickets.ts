@@ -1,5 +1,8 @@
 import { PDFDocument, rgb, StandardFonts, degrees } from "pdf-lib";
+import fontkit from "@pdf-lib/fontkit";
 import QRCode from "qrcode";
+import { readFile } from "node:fs/promises";
+import path from "node:path";
 import type { Ticket } from "@/lib/event-experience";
 import {
   EVENT_ADDRESS,
@@ -7,6 +10,15 @@ import {
   EVENT_LOCATION_NAME,
   EVENT_TIME_LABEL,
 } from "@/lib/event-experience-info";
+
+// Montserrat Black (900) - dieselbe Schnittstaerke, die die Website fuer
+// "font-black"-Ueberschriften nutzt (siehe layout.tsx). Lokal im Repo
+// hinterlegt statt zur Laufzeit von Google Fonts geladen, damit der
+// Ticket-Versand nicht von einem externen Request abhaengt.
+const MONTSERRAT_BLACK_PATH = path.join(
+  process.cwd(),
+  "src/assets/fonts/Montserrat-Black.ttf"
+);
 
 // moos.park-Markenfarben (siehe globals.css: --accent-lime / --background).
 const LIME = rgb(0.725, 0.812, 0.678); // #b9cead
@@ -29,9 +41,12 @@ export async function generateTicketPdf(
   company: string
 ): Promise<Uint8Array> {
   const doc = await PDFDocument.create();
+  doc.registerFontkit(fontkit);
   const page = doc.addPage([WIDTH, HEIGHT]);
   const bold = await doc.embedFont(StandardFonts.HelveticaBold);
   const regular = await doc.embedFont(StandardFonts.Helvetica);
+  const montserratBytes = await readFile(MONTSERRAT_BLACK_PATH);
+  const titleFont = await doc.embedFont(montserratBytes);
 
   // Hintergrund
   page.drawRectangle({ x: 0, y: 0, width: WIDTH, height: HEIGHT, color: BG });
@@ -55,14 +70,14 @@ export async function generateTicketPdf(
     x: padX,
     y: HEIGHT - 78,
     size: 30,
-    font: bold,
+    font: titleFont,
     color: WHITE,
   });
   page.drawText("EXPERIENCE", {
     x: padX,
     y: HEIGHT - 112,
     size: 30,
-    font: bold,
+    font: titleFont,
     color: WHITE,
   });
 
