@@ -35,7 +35,7 @@ const SECTION_GROUPS: SectionGroup[] = [
     sections: [
       {
         href: "/admin/firmen",
-        title: "Firmen",
+        title: "Anfrage Firmenfeier über die Webseite",
         text: "Firmenanfragen von /firmenevents, Leads & Status verwalten.",
       },
       {
