@@ -5,6 +5,8 @@ import {
   type Companion,
 } from "@/lib/event-experience";
 import { getCompanyEvent } from "@/lib/company-events";
+import { sendSmtpMail } from "@/lib/smtp-mailer";
+import { getFormNotificationRouting, recordSmtpFailure } from "@/lib/form-notification-routing";
 
 function parseCompanions(raw: unknown): Companion[] {
   if (!Array.isArray(raw)) return [];
@@ -95,6 +97,33 @@ export async function POST(request: Request) {
       { error: "Anmeldung konnte nicht gespeichert werden. Bitte versuchen Sie es erneut." },
       { status: 500 }
     );
+  }
+
+  // Best-effort SMTP-Benachrichtigung an die im Adminpanel hinterlegte
+  // Zieladresse - darf das oben bereits erfolgreiche Speichern der
+  // Anmeldung nicht mehr beeinflussen.
+  try {
+    const routing = await getFormNotificationRouting();
+    const ticketCount = 1 + companions.length;
+    const text =
+      `Neue Event-Experience-Anmeldung\n\n` +
+      `Firma: ${company}\n` +
+      `Name: ${salutation} ${firstName} ${lastName}\n` +
+      `E-Mail: ${email}\n` +
+      `Telefon: ${phone}\n` +
+      `Tickets: ${ticketCount}\n` +
+      (message ? `Nachricht: ${message}\n` : "");
+    const result = await sendSmtpMail({
+      to: routing["event-experience"],
+      subject: `Event-Experience-Anmeldung: ${company}`,
+      text,
+    });
+    if (!result.ok) {
+      console.error("SMTP-Benachrichtigung fuer event-experience fehlgeschlagen:", result.error);
+      await recordSmtpFailure("event-experience", result.error);
+    }
+  } catch (err) {
+    console.error("SMTP-Benachrichtigung fuer event-experience fehlgeschlagen:", err);
   }
 
   return NextResponse.json({ ok: true });

@@ -110,6 +110,11 @@ const SECTION_GROUPS: SectionGroup[] = [
         title: "Benutzer",
         text: "Weitere Admin-Zugänge anlegen oder entfernen.",
       },
+      {
+        href: "/admin/formular-mail",
+        title: "Formular-Mail",
+        text: "SMTP-Benachrichtigungen je Formular konfigurieren & Verbindung testen.",
+      },
     ],
   },
 ];
