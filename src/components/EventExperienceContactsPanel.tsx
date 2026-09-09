@@ -29,19 +29,53 @@ const emptyForm = {
   phone: "",
 };
 
+type CompanyContact = {
+  id: string;
+  company: string;
+  salutation: string;
+  lastName: string;
+  firstName: string;
+  street: string;
+  zip: string;
+  city: string;
+  email: string;
+  phone: string;
+};
+
 export default function EventExperienceContactsPanel({
   initialContacts,
+  companyContacts = [],
 }: {
   initialContacts: Contact[];
+  companyContacts?: CompanyContact[];
 }) {
   const [contacts, setContacts] = useState(initialContacts);
   const [form, setForm] = useState(emptyForm);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [status, setStatus] = useState<"idle" | "saving" | "error">("idle");
   const [error, setError] = useState<string | null>(null);
+  const [importId, setImportId] = useState("");
+  const [saveToDatabase, setSaveToDatabase] = useState(false);
 
   const set = (patch: Partial<typeof form>) =>
     setForm((cur) => ({ ...cur, ...patch }));
+
+  const importFromDatabase = (id: string) => {
+    setImportId(id);
+    const c = companyContacts.find((c) => c.id === id);
+    if (!c) return;
+    setForm({
+      company: c.company,
+      salutation: c.salutation,
+      lastName: c.lastName,
+      firstName: c.firstName,
+      street: c.street,
+      zip: c.zip,
+      city: c.city,
+      email: c.email,
+      phone: c.phone,
+    });
+  };
 
   // Alle Felder sind optional - was ausgefuellt wird, wird uebernommen.
   // Nur komplett leer darf das Formular nicht abgeschickt werden.
@@ -62,7 +96,20 @@ export default function EventExperienceContactsPanel({
       if (!res.ok) throw new Error(data?.error || "Kontakt konnte nicht angelegt werden.");
       setContacts((cur) => [data.contact, ...cur]);
       setSelectedId(data.contact.id);
+
+      // Best-effort, zusaetzlich zur Event-Experience-Anmeldung auch in
+      // der wiederverwendbaren Firmenkontakte-Datenbank speichern - darf
+      // das eigentliche Anlegen (oben) nicht blockieren/verhindern.
+      if (saveToDatabase) {
+        fetch("/api/admin/company-contacts", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ ...form, notes: "" }),
+        }).catch(() => {});
+      }
+
       setForm(emptyForm);
+      setImportId("");
       setStatus("idle");
     } catch (err) {
       setStatus("error");
@@ -95,6 +142,26 @@ export default function EventExperienceContactsPanel({
       <div className="mt-6 grid gap-6 lg:grid-cols-[1fr_320px]">
         {/* Formular + Liste */}
         <div>
+          {companyContacts.length > 0 && (
+            <div className="mb-3">
+              <label className="mb-1 block text-xs font-bold uppercase text-foreground/50">
+                Aus Firmenkontakten übernehmen
+              </label>
+              <select
+                value={importId}
+                onChange={(e) => importFromDatabase(e.target.value)}
+                className="w-full rounded-xl border border-foreground/15 bg-foreground/5 px-4 py-2.5 text-sm text-foreground outline-none focus:border-accent-lime"
+              >
+                <option value="">– Kontakt auswählen –</option>
+                {companyContacts.map((c) => (
+                  <option key={c.id} value={c.id}>
+                    {c.company || c.lastName || "Ohne Namen"}
+                    {c.city ? ` · ${c.city}` : ""}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
           <form onSubmit={submit} className="grid gap-3 sm:grid-cols-2">
             <input
               value={form.company}
@@ -158,6 +225,16 @@ export default function EventExperienceContactsPanel({
               placeholder="Telefon (optional)"
               className="rounded-xl border border-foreground/15 bg-foreground/5 px-4 py-2.5 text-sm text-foreground placeholder-foreground/40 outline-none focus:border-accent-lime"
             />
+
+            <label className="flex items-center gap-2 text-xs text-foreground/60 sm:col-span-2">
+              <input
+                type="checkbox"
+                checked={saveToDatabase}
+                onChange={(e) => setSaveToDatabase(e.target.checked)}
+              />
+              Auch dauerhaft in der Firmenkontakte-Datenbank speichern
+              (wiederverwendbar für andere Einladungen)
+            </label>
 
             {error && (
               <p className="text-xs text-red-500 sm:col-span-2">{error}</p>
