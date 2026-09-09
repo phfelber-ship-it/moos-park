@@ -22,6 +22,11 @@ const SECTIONS = [
     text: "Anmeldungen von /event-experience, Status & Excel-Export.",
   },
   {
+    href: "/admin/firmenkontakte",
+    title: "Firmenkontakte",
+    text: "Zentrale Firmenkunden-Datenbank für beliebige Einladungen & Aktionen.",
+  },
+  {
     href: "/admin/hero-bilder",
     title: "Hero-Bilder",
     text: "Hintergrund-Slideshow auf Startseite und /links verwalten.",

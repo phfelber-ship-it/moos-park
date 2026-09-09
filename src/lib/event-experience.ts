@@ -82,6 +82,26 @@ export type RegistrationInput = {
   companions: Companion[];
 };
 
+function normalize(
+  data: Partial<EventExperienceRegistration>[]
+): EventExperienceRegistration[] {
+  // Aeltere Eintraege (vor Begleitpersonen/Tickets/Adresse) auf
+  // vollstaendige Form normalisieren, damit alte Anmeldungen im
+  // Adminpanel nicht crashen.
+  return data.map((e) => ({
+    ...e,
+    companions: e.companions ?? [],
+    invitationSentAt: e.invitationSentAt ?? null,
+    tickets: e.tickets ?? [],
+    cancelledAt: e.cancelledAt ?? null,
+    cancelledAttendees: e.cancelledAttendees ?? null,
+    source: e.source ?? "WEB",
+    street: e.street ?? "",
+    zip: e.zip ?? "",
+    city: e.city ?? "",
+  })) as EventExperienceRegistration[];
+}
+
 // Anmeldungen fuer /event-experience liegen als JSON im Blob-Store (gleiches
 // Muster wie inbox.ts/dance-events.ts) - eigener CRM-Bereich statt Versand
 // ueber Clubscale, da die Anfragen direkt im Adminpanel landen und dort
@@ -101,23 +121,7 @@ export async function getRegistrations(): Promise<
     });
     if (!res.ok) return [];
     const data = (await res.json()) as Partial<EventExperienceRegistration>[];
-    // Aeltere Eintraege (vor Begleitpersonen/Tickets) auf vollstaendige
-    // Form normalisieren, damit alte Anmeldungen im Adminpanel nicht
-    // crashen.
-    return Array.isArray(data)
-      ? data.map((e) => ({
-          ...e,
-          companions: e.companions ?? [],
-          invitationSentAt: e.invitationSentAt ?? null,
-          tickets: e.tickets ?? [],
-          cancelledAt: e.cancelledAt ?? null,
-          cancelledAttendees: e.cancelledAttendees ?? null,
-          source: e.source ?? "WEB",
-          street: e.street ?? "",
-          zip: e.zip ?? "",
-          city: e.city ?? "",
-        }) as EventExperienceRegistration)
-      : [];
+    return Array.isArray(data) ? normalize(data) : [];
   } catch {
     return [];
   }
@@ -134,27 +138,56 @@ async function saveRegistrations(
   });
 }
 
+// Liest-aendert-schreibt die gesamte Liste, prueft danach per Re-Read, ob
+// die Aenderung tatsaechlich persistiert ist, und wiederholt den kompletten
+// Zyklus (frischer Read!) bei Bedarf. Schuetzt gegen echten Datenverlust,
+// wenn zwei Schreibvorgaenge kurz hintereinander passieren (z.B. Doppel-
+// Klick, Formular-Retry bei Netzwerkfehler): ohne das wuerde der zweite
+// Schreibvorgang auf Basis eines veralteten Reads den ersten Eintrag
+// stillschweigend ueberschreiben ("Kontakt/Anmeldung ist verschwunden").
+async function mutateRegistrations<T>(
+  mutate: (
+    entries: EventExperienceRegistration[]
+  ) => { entries: EventExperienceRegistration[]; result: T },
+  isPersisted: (entries: EventExperienceRegistration[]) => boolean
+): Promise<T> {
+  let result: T;
+  for (let attempt = 0; attempt < 4; attempt++) {
+    const current = await getRegistrations();
+    const mutated = mutate(current);
+    result = mutated.result;
+    await saveRegistrations(mutated.entries);
+    const verify = await getRegistrations();
+    if (isPersisted(verify)) return result;
+    if (attempt < 3) await new Promise((r) => setTimeout(r, 300));
+  }
+  return result!;
+}
+
 export async function addRegistration(
   input: RegistrationInput
 ): Promise<EventExperienceRegistration> {
-  const entries = await getRegistrations();
-  const entry: EventExperienceRegistration = {
-    ...input,
-    id: crypto.randomUUID(),
-    status: "NEU",
-    createdAt: new Date().toISOString(),
-    invitationSentAt: null,
-    tickets: [],
-    cancelledAt: null,
-    cancelledAttendees: null,
-    source: "WEB",
-    street: "",
-    zip: "",
-    city: "",
-  };
-  entries.unshift(entry);
-  await saveRegistrations(entries);
-  return entry;
+  const id = crypto.randomUUID();
+  return mutateRegistrations(
+    (entries) => {
+      const entry: EventExperienceRegistration = {
+        ...input,
+        id,
+        status: "NEU",
+        createdAt: new Date().toISOString(),
+        invitationSentAt: null,
+        tickets: [],
+        cancelledAt: null,
+        cancelledAttendees: null,
+        source: "WEB",
+        street: "",
+        zip: "",
+        city: "",
+      };
+      return { entries: [entry, ...entries], result: entry };
+    },
+    (verify) => verify.some((e) => e.id === id)
+  );
 }
 
 export type ManualContactInput = {
@@ -176,41 +209,61 @@ export type ManualContactInput = {
 export async function addManualContact(
   input: ManualContactInput
 ): Promise<EventExperienceRegistration> {
-  const entries = await getRegistrations();
-  const entry: EventExperienceRegistration = {
-    ...input,
-    message: "",
-    companions: [],
-    id: crypto.randomUUID(),
-    status: "NEU",
-    createdAt: new Date().toISOString(),
-    invitationSentAt: null,
-    tickets: [],
-    cancelledAt: null,
-    cancelledAttendees: null,
-    source: "MANUAL",
-  };
-  entries.unshift(entry);
-  await saveRegistrations(entries);
-  return entry;
+  const id = crypto.randomUUID();
+  return mutateRegistrations(
+    (entries) => {
+      const entry: EventExperienceRegistration = {
+        ...input,
+        message: "",
+        companions: [],
+        id,
+        status: "NEU",
+        createdAt: new Date().toISOString(),
+        invitationSentAt: null,
+        tickets: [],
+        cancelledAt: null,
+        cancelledAttendees: null,
+        source: "MANUAL",
+      };
+      return { entries: [entry, ...entries], result: entry };
+    },
+    (verify) => verify.some((e) => e.id === id)
+  );
 }
 
 export async function updateRegistrationStatus(
   id: string,
   status: RegistrationStatus
 ): Promise<void> {
-  const entries = await getRegistrations();
-  const idx = entries.findIndex((e) => e.id === id);
-  if (idx === -1) return;
-  entries[idx] = { ...entries[idx], status };
-  await saveRegistrations(entries);
+  await mutateRegistrations(
+    (entries) => {
+      const idx = entries.findIndex((e) => e.id === id);
+      if (idx === -1) return { entries, result: undefined };
+      const next = [...entries];
+      next[idx] = { ...next[idx], status };
+      return { entries: next, result: undefined };
+    },
+    (verify) => verify.find((e) => e.id === id)?.status === status
+  );
 }
 
+// Kurzer Retry gegen eine seltene, aber reale Race-Condition: wird eine
+// PDF-Vorschau (Ticket/Brief) direkt im Anschluss an das Anlegen einer
+// Anmeldung/eines Kontakts angefordert, kann der Blob-Store (list() nach
+// put()) den frischen Eintrag im ungluecklichsten Fall noch nicht liefern
+// ("Kontakt nicht gefunden" direkt nach dem Anlegen). Ein zweiter/dritter
+// Leseversuch nach kurzer Pause behebt das, ohne echte 404s zu verzoegern
+// (die schlagen ohnehin erst nach den Retries fehl).
 export async function getRegistration(
   id: string
 ): Promise<EventExperienceRegistration | null> {
-  const entries = await getRegistrations();
-  return entries.find((e) => e.id === id) ?? null;
+  for (let attempt = 0; attempt < 3; attempt++) {
+    const entries = await getRegistrations();
+    const found = entries.find((e) => e.id === id);
+    if (found) return found;
+    if (attempt < 2) await new Promise((r) => setTimeout(r, 300));
+  }
+  return null;
 }
 
 // Erzeugt fuer Hauptperson + jede Begleitperson ein Ticket mit
@@ -238,20 +291,24 @@ export async function saveSentTickets(
   id: string,
   tickets: Ticket[]
 ): Promise<EventExperienceRegistration | null> {
-  const entries = await getRegistrations();
-  const idx = entries.findIndex((e) => e.id === id);
-  if (idx === -1) return null;
-
-  entries[idx] = {
-    ...entries[idx],
-    tickets,
-    invitationSentAt: new Date().toISOString(),
-    // Nach erfolgreichem Versand automatisch in die naechste Spalte -
-    // Admin muss das nicht mehr manuell verschieben.
-    status: "EMAIL_VERSCHICKT",
-  };
-  await saveRegistrations(entries);
-  return entries[idx];
+  const invitationSentAt = new Date().toISOString();
+  return mutateRegistrations(
+    (entries) => {
+      const idx = entries.findIndex((e) => e.id === id);
+      if (idx === -1) return { entries, result: null };
+      const next = [...entries];
+      next[idx] = {
+        ...next[idx],
+        tickets,
+        invitationSentAt,
+        // Nach erfolgreichem Versand automatisch in die naechste Spalte -
+        // Admin muss das nicht mehr manuell verschieben.
+        status: "EMAIL_VERSCHICKT",
+      };
+      return { entries: next, result: next[idx] };
+    },
+    (verify) => verify.find((e) => e.id === id)?.invitationSentAt === invitationSentAt
+  );
 }
 
 // Absage durch den Gast (ueber /event-experience/absagen/[id]) - setzt den
@@ -263,21 +320,22 @@ export async function cancelRegistration(
   id: string,
   cancelledAttendees: Companion[]
 ): Promise<EventExperienceRegistration | null> {
-  const entries = await getRegistrations();
-  const idx = entries.findIndex((e) => e.id === id);
-  if (idx === -1) return null;
-
-  entries[idx] = {
-    ...entries[idx],
-    status: "ABGESAGT",
-    cancelledAt: new Date().toISOString(),
-    cancelledAttendees,
-  };
-  await saveRegistrations(entries);
-  return entries[idx];
+  const cancelledAt = new Date().toISOString();
+  return mutateRegistrations(
+    (entries) => {
+      const idx = entries.findIndex((e) => e.id === id);
+      if (idx === -1) return { entries, result: null };
+      const next = [...entries];
+      next[idx] = { ...next[idx], status: "ABGESAGT", cancelledAt, cancelledAttendees };
+      return { entries: next, result: next[idx] };
+    },
+    (verify) => verify.find((e) => e.id === id)?.cancelledAt === cancelledAt
+  );
 }
 
 export async function deleteRegistration(id: string): Promise<void> {
-  const entries = await getRegistrations();
-  await saveRegistrations(entries.filter((e) => e.id !== id));
+  await mutateRegistrations(
+    (entries) => ({ entries: entries.filter((e) => e.id !== id), result: undefined }),
+    (verify) => !verify.some((e) => e.id === id)
+  );
 }
