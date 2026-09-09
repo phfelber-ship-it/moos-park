@@ -15,8 +15,22 @@ const emptyCompanion = (): Companion => ({
   firstName: "",
 });
 
-export default function EventExperienceForm() {
+export default function EventExperienceForm({
+  eventId,
+  maxCompanions = 4,
+  confirmationHref = "/event-experience/bestaetigung",
+}: {
+  // eventId der Firmenevents-Plattform - undefined = Legacy-Event
+  // (THE EVENT EXPERIENCE, /event-experience). Neue Event-Landingpages
+  // (/[eventSlug]) uebergeben ihre eigene eventId.
+  eventId?: string;
+  // Maximale Personenzahl INSGESAMT (Hauptperson + Begleitpersonen) - vom
+  // jeweiligen CompanyEvent (Default 4 = bisheriges Legacy-Verhalten).
+  maxCompanions?: number;
+  confirmationHref?: string;
+} = {}) {
   const router = useRouter();
+  const maxCompanionsExtra = Math.max(0, maxCompanions - 1);
   const [firma, setFirma] = useState("");
   const [anrede, setAnrede] = useState(ANREDEN[0]);
   const [nachname, setNachname] = useState("");
@@ -33,7 +47,7 @@ export default function EventExperienceForm() {
   const setCompanionCount = (raw: string) => {
     // Maximal 4 Personen insgesamt pro Anmeldung (Hauptperson + max. 3
     // Begleitpersonen).
-    const n = Math.max(0, Math.min(3, Number(raw.replace(/[^0-9]/g, "")) || 0));
+    const n = Math.max(0, Math.min(maxCompanionsExtra, Number(raw.replace(/[^0-9]/g, "")) || 0));
     setBegleitpersonenCount(n);
     setCompanions((cur) => {
       const next = [...cur];
@@ -66,7 +80,7 @@ export default function EventExperienceForm() {
     e.preventDefault();
     if (!canSend || status === "sending") return;
     if (honeypot) {
-      router.push("/event-experience/bestaetigung");
+      router.push(confirmationHref);
       return;
     }
 
@@ -88,6 +102,7 @@ export default function EventExperienceForm() {
           message: nachricht.trim(),
           consent: accepted,
           honeypot,
+          eventId,
           companions: companions.map((c) => ({
             salutation: c.salutation,
             lastName: c.lastName.trim(),
@@ -96,7 +111,7 @@ export default function EventExperienceForm() {
         }),
       });
       if (!res.ok) throw new Error("failed");
-      router.push("/event-experience/bestaetigung");
+      router.push(confirmationHref);
     } catch {
       setStatus("error");
     }

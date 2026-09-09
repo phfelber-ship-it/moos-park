@@ -1,18 +1,15 @@
 import type { EventExperienceRegistration } from "@/lib/event-experience";
-import type { InvitationTemplate } from "@/lib/event-experience-template";
-import {
-  EVENT_ADDRESS,
-  EVENT_DATE_LABEL,
-  EVENT_LOCATION_NAME,
-  EVENT_TIME_LABEL,
-} from "@/lib/event-experience-info";
+import { LEGACY_EVENT_INFO, type EventInfo } from "@/lib/event-experience-info";
 
 // Ersetzt die Platzhalter aus TEMPLATE_PLACEHOLDERS (lib/event-experience-
 // template.ts) mit den echten Werten der Anmeldung - fuer Betreff und
-// Textkoerper gleichermassen nutzbar.
+// Textkoerper gleichermassen nutzbar. `info` ist optional (Default: die
+// Legacy-Eckdaten von THE EVENT EXPERIENCE), damit bestehende Aufrufer ohne
+// Aenderung weiterlaufen; neue Firmenevents geben ihre eigenen Eckdaten mit.
 export function applyTemplatePlaceholders(
   text: string,
-  reg: EventExperienceRegistration
+  reg: EventExperienceRegistration,
+  info: EventInfo = LEGACY_EVENT_INFO
 ): string {
   const ticketCount = 1 + reg.companions.length;
   return text
@@ -20,9 +17,9 @@ export function applyTemplatePlaceholders(
     .replaceAll("{{name}}", `${reg.firstName} ${reg.lastName}`)
     .replaceAll("{{firma}}", reg.company)
     .replaceAll("{{anzahl_tickets}}", String(ticketCount))
-    .replaceAll("{{datum}}", EVENT_DATE_LABEL)
-    .replaceAll("{{uhrzeit}}", EVENT_TIME_LABEL)
-    .replaceAll("{{ort}}", `${EVENT_LOCATION_NAME}, ${EVENT_ADDRESS}`);
+    .replaceAll("{{datum}}", info.dateLabel)
+    .replaceAll("{{uhrzeit}}", info.timeLabel)
+    .replaceAll("{{ort}}", `${info.locationName}, ${info.address}`);
 }
 
 export type MailAttachment = {

@@ -17,9 +17,9 @@ const SECTIONS = [
     text: "Firmenanfragen von /firmenevents, Leads & Status verwalten.",
   },
   {
-    href: "/admin/event-experience",
-    title: "Event Experience",
-    text: "Anmeldungen von /event-experience, Status & Excel-Export.",
+    href: "/admin/firmenevents",
+    title: "Firmenevents",
+    text: "Alle Firmenevents (inkl. THE EVENT EXPERIENCE) verwalten: Landingpage, CRM, Vorlagen & Erinnerungen.",
   },
   {
     href: "/admin/firmenkontakte",
@@ -128,7 +128,7 @@ export default async function AdminDashboardPage() {
                 {newCompaniesCount}
               </span>
             )}
-            {s.href === "/admin/event-experience" &&
+            {s.href === "/admin/firmenevents" &&
               newRegistrationsCount > 0 && (
                 <span className="absolute right-4 top-4 flex h-6 min-w-6 items-center justify-center rounded-full bg-accent-lime px-1.5 text-xs font-black text-black">
                   {newRegistrationsCount}

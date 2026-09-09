@@ -12,7 +12,11 @@ const SHOW_DURATION = 1500;
 // darunter ist die ganze Zeit schon gerendert, wird also nicht neu
 // aufgebaut, sondern nur freigelegt. Blockiert kurz das Scrollen, damit
 // der Effekt nicht durch einen Sprung im Hintergrund gestoert wird.
-export default function EventExperienceIntro() {
+export default function EventExperienceIntro({
+  title = "THE EVENT EXPERIENCE",
+}: {
+  title?: string;
+} = {}) {
   const [visible, setVisible] = useState(true);
 
   useEffect(() => {
@@ -65,7 +69,7 @@ export default function EventExperienceIntro() {
             transition={{ duration: 0.5, delay: 0.4, ease: "easeOut" }}
             className="text-2xl font-black uppercase tracking-[0.25em] text-black sm:text-4xl"
           >
-            THE EVENT EXPERIENCE
+            {title}
           </motion.p>
         </motion.div>
       )}

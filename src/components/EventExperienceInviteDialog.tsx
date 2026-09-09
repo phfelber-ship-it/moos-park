@@ -17,10 +17,17 @@ export default function EventExperienceInviteDialog({
   registrationId,
   onClose,
   onSent,
+  previewUrl,
+  sendUrl,
 }: {
   registrationId: string;
   onClose: () => void;
   onSent: (invitationSentAt: string) => void;
+  // Ueberschreibt die Legacy-Standardrouten - Firmenevents uebergeben ihre
+  // eigene, event-spezifische Vorlage/Versand-URL (siehe
+  // app/admin/firmenevents/[eventId]/page.tsx).
+  previewUrl?: string;
+  sendUrl?: string;
 }) {
   const [preview, setPreview] = useState<Preview | null>(null);
   const [loadError, setLoadError] = useState(false);
@@ -29,18 +36,18 @@ export default function EventExperienceInviteDialog({
   const [sent, setSent] = useState(false);
 
   useEffect(() => {
-    fetch(`/api/admin/event-experience/${registrationId}/invitation-preview`)
+    fetch(previewUrl ?? `/api/admin/event-experience/${registrationId}/invitation-preview`)
       .then((res) => (res.ok ? res.json() : Promise.reject()))
       .then((data) => setPreview(data))
       .catch(() => setLoadError(true));
-  }, [registrationId]);
+  }, [registrationId, previewUrl]);
 
   const send = async () => {
     setSending(true);
     setSendError(null);
     try {
       const res = await fetch(
-        `/api/admin/event-experience/${registrationId}/send-invitation`,
+        sendUrl ?? `/api/admin/event-experience/${registrationId}/send-invitation`,
         { method: "POST" }
       );
       const data = await res.json().catch(() => null);

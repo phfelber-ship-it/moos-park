@@ -1,5 +1,10 @@
 import { NextResponse } from "next/server";
-import { addRegistration, type Companion } from "@/lib/event-experience";
+import {
+  addRegistration,
+  LEGACY_EVENT_EXPERIENCE_ID,
+  type Companion,
+} from "@/lib/event-experience";
+import { getCompanyEvent } from "@/lib/company-events";
 
 function parseCompanions(raw: unknown): Companion[] {
   if (!Array.isArray(raw)) return [];
@@ -36,6 +41,11 @@ export async function POST(request: Request) {
   const message = String(body.message ?? "").trim();
   const consent = Boolean(body.consent);
   const companions = parseCompanions(body.companions);
+  // eventId ist optional - fehlt es (bestehendes /event-experience-Formular,
+  // das dieses Feld noch nicht mitschickt), gilt weiterhin das urspruengliche
+  // Legacy-Event. Neue Firmenevent-Landingpages (/[eventSlug]) schicken ihre
+  // eigene eventId mit.
+  const eventId = String(body.eventId ?? "").trim() || LEGACY_EVENT_EXPERIENCE_ID;
 
   if (!company || !lastName || !firstName || !email || !phone || !consent) {
     return NextResponse.json(
@@ -44,17 +54,22 @@ export async function POST(request: Request) {
     );
   }
 
-  // Maximal 4 Personen insgesamt (Hauptperson + max. 3 Begleitpersonen) -
+  const event = await getCompanyEvent(eventId);
+  const maxCompanions = event ? Math.max(0, event.maxCompanions - 1) : 3;
+
+  // Maximal maxCompanions Begleitpersonen zusaetzlich zur Hauptperson -
   // serverseitig durchgesetzt, nicht nur im Formular.
-  if (companions.length > 3) {
+  if (companions.length > maxCompanions) {
     return NextResponse.json(
-      { error: "Maximal 4 Personen pro Anmeldung (Hauptperson + 3 Begleitpersonen)." },
+      {
+        error: `Maximal ${maxCompanions + 1} Personen pro Anmeldung (Hauptperson + ${maxCompanions} Begleitpersonen).`,
+      },
       { status: 400 }
     );
   }
 
   try {
-    await addRegistration({
+    await addRegistration(eventId, {
       company,
       salutation,
       lastName,
