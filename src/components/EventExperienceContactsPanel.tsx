@@ -66,6 +66,73 @@ export default function EventExperienceContactsPanel({
   const [importId, setImportId] = useState("");
   const [saveToDatabase, setSaveToDatabase] = useState(false);
 
+  // Mehrfachauswahl aus den Firmenkontakten: statt jede Firma einzeln
+  // durchzuklicken, mehrere auswaehlen und in einem Rutsch als Kontakte
+  // anlegen (jeweils eigener Einladungsbrief pro Kontakt entsteht dabei
+  // automatisch, siehe rechtes Vorschau-Fenster pro einzelnem Kontakt).
+  const [bulkSelectedIds, setBulkSelectedIds] = useState<string[]>([]);
+  const [bulkStatus, setBulkStatus] = useState<"idle" | "running" | "error">("idle");
+  const [bulkError, setBulkError] = useState<string | null>(null);
+  const [bulkProgress, setBulkProgress] = useState<{ done: number; total: number } | null>(null);
+
+  const toggleBulkSelected = (id: string) => {
+    setBulkSelectedIds((cur) =>
+      cur.includes(id) ? cur.filter((x) => x !== id) : [...cur, id]
+    );
+  };
+
+  const createSelectedFromDatabase = async () => {
+    if (bulkSelectedIds.length === 0) return;
+    setBulkStatus("running");
+    setBulkError(null);
+    setBulkProgress({ done: 0, total: bulkSelectedIds.length });
+    const created: Contact[] = [];
+    const failed: string[] = [];
+
+    // Bewusst nacheinander statt Promise.all - vermeidet, dass viele
+    // gleichzeitige Schreibvorgaenge auf denselben Blob-Store sich
+    // gegenseitig ueberschreiben (siehe mutate-Muster in
+    // lib/event-experience.ts).
+    for (const id of bulkSelectedIds) {
+      const c = companyContacts.find((cc) => cc.id === id);
+      if (!c) continue;
+      try {
+        const res = await fetch(contactsApiUrl, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            company: c.company,
+            salutation: c.salutation,
+            lastName: c.lastName,
+            firstName: c.firstName,
+            street: c.street,
+            zip: c.zip,
+            city: c.city,
+            email: c.email,
+            phone: c.phone,
+          }),
+        });
+        const data = await res.json().catch(() => null);
+        if (!res.ok) throw new Error(data?.error);
+        created.push(data.contact);
+      } catch {
+        failed.push(c.company || c.lastName || id);
+      }
+      setBulkProgress((p) => (p ? { ...p, done: p.done + 1 } : p));
+    }
+
+    if (created.length > 0) {
+      setContacts((cur) => [...created, ...cur]);
+    }
+    if (failed.length > 0) {
+      setBulkStatus("error");
+      setBulkError(`Fehlgeschlagen bei: ${failed.join(", ")}`);
+    } else {
+      setBulkStatus("idle");
+      setBulkSelectedIds([]);
+    }
+  };
+
   const set = (patch: Partial<typeof form>) =>
     setForm((cur) => ({ ...cur, ...patch }));
 
@@ -152,9 +219,66 @@ export default function EventExperienceContactsPanel({
         {/* Formular + Liste */}
         <div>
           {companyContacts.length > 0 && (
+            <div className="mb-5 rounded-xl border border-foreground/10 bg-background p-4">
+              <p className="text-xs font-bold uppercase text-foreground/50">
+                Mehrere Firmen auf einmal anlegen
+              </p>
+              <p className="mt-1 text-xs text-foreground/40">
+                Firmen auswählen – für jede wird automatisch ein Kontakt +
+                Einladungsbrief für dieses Event erzeugt.
+              </p>
+              <div className="mt-3 max-h-48 overflow-y-auto rounded-lg border border-foreground/10">
+                {companyContacts.map((c) => (
+                  <label
+                    key={c.id}
+                    className="flex cursor-pointer items-center gap-2 border-b border-foreground/5 px-3 py-2 text-xs last:border-b-0 hover:bg-foreground/[0.03]"
+                  >
+                    <input
+                      type="checkbox"
+                      checked={bulkSelectedIds.includes(c.id)}
+                      onChange={() => toggleBulkSelected(c.id)}
+                    />
+                    <span className="font-bold text-foreground">
+                      {c.company || c.lastName || "Ohne Namen"}
+                    </span>
+                    {c.city && <span className="text-foreground/40">· {c.city}</span>}
+                  </label>
+                ))}
+              </div>
+              {bulkStatus === "running" && bulkProgress && (
+                <div className="mt-3 h-2 w-full overflow-hidden rounded-full bg-foreground/10">
+                  <div
+                    className="h-full rounded-full bg-accent-lime transition-all"
+                    style={{
+                      width: `${Math.round((bulkProgress.done / bulkProgress.total) * 100)}%`,
+                    }}
+                  />
+                </div>
+              )}
+              {bulkError && <p className="mt-2 text-xs text-red-500">{bulkError}</p>}
+              <div className="mt-3 flex items-center gap-3">
+                <button
+                  type="button"
+                  onClick={createSelectedFromDatabase}
+                  disabled={bulkSelectedIds.length === 0 || bulkStatus === "running"}
+                  className="rounded-lg bg-accent-lime px-5 py-2 text-xs font-black uppercase tracking-wide text-black transition-transform hover:scale-105 disabled:opacity-40"
+                >
+                  <FlipText
+                    text={
+                      bulkStatus === "running" && bulkProgress
+                        ? `Lege an… (${bulkProgress.done}/${bulkProgress.total})`
+                        : `${bulkSelectedIds.length || ""} Firma${bulkSelectedIds.length === 1 ? "" : "en"} anlegen`.trim()
+                    }
+                  />
+                </button>
+              </div>
+            </div>
+          )}
+
+          {companyContacts.length > 0 && (
             <div className="mb-3">
               <label className="mb-1 block text-xs font-bold uppercase text-foreground/50">
-                Aus Firmenkontakten übernehmen
+                Oder einzeln übernehmen (zum Anpassen vor dem Anlegen)
               </label>
               <select
                 value={importId}
