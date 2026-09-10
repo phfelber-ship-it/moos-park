@@ -292,12 +292,6 @@ export default function EventExperienceContactsPanel({
             Einladungsbrief mit QR-Code erzeugen.
           </p>
         </div>
-        <a
-          href={lettersExportUrl}
-          className="rounded-lg border border-foreground/15 px-4 py-2 text-xs font-black uppercase tracking-wide text-foreground transition-colors hover:border-accent-lime"
-        >
-          Alle Briefe als PDF exportieren
-        </a>
       </div>
 
       <div className="mt-6">
@@ -503,9 +497,17 @@ export default function EventExperienceContactsPanel({
             ▼
           </span>
         </summary>
-        <p className="mt-1 text-xs text-foreground/50">
-          Bereits für dieses Event angelegte Kontakte ({contacts.length})
-        </p>
+        <div className="mt-1 flex flex-wrap items-center justify-between gap-3">
+          <p className="text-xs text-foreground/50">
+            Bereits für dieses Event angelegte Kontakte ({contacts.length})
+          </p>
+          <a
+            href={lettersExportUrl}
+            className="rounded-lg border border-foreground/15 px-4 py-2 text-xs font-black uppercase tracking-wide text-foreground transition-colors hover:border-accent-lime"
+          >
+            Alle Briefe als PDF exportieren
+          </a>
+        </div>
         <div className="mt-3 grid gap-6 lg:grid-cols-[1fr_320px]">
           <div className="grid gap-1.5">
             {contacts.map((c) => (
