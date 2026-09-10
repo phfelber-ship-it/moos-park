@@ -34,6 +34,10 @@ export default function InboxManager({
   const [entries, setEntries] = useState(initialEntries);
   const [filter, setFilter] = useState<Filter>("alle");
   const [busyId, setBusyId] = useState<string | null>(null);
+  const [replyingId, setReplyingId] = useState<string | null>(null);
+  const [replyText, setReplyText] = useState("");
+  const [replyError, setReplyError] = useState<string | null>(null);
+  const [sendingReply, setSendingReply] = useState(false);
 
   const counts = useMemo(() => {
     const c: Record<Filter, number> = {
@@ -80,6 +84,40 @@ export default function InboxManager({
       setEntries((prev) => prev.filter((e) => e.id !== id));
     } finally {
       setBusyId(null);
+    }
+  };
+
+  const startReply = (entry: InboxEntry) => {
+    setReplyingId(entry.id);
+    setReplyText("");
+    setReplyError(null);
+  };
+
+  const sendReply = async (entry: InboxEntry) => {
+    if (!replyText.trim()) return;
+    setSendingReply(true);
+    setReplyError(null);
+    try {
+      const res = await fetch(`/api/admin/inbox/${entry.id}/reply`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message: replyText.trim() }),
+      });
+      const data = await res.json().catch(() => null);
+      if (!res.ok) throw new Error(data?.error || "Antwort konnte nicht gesendet werden.");
+      setEntries((prev) =>
+        prev.map((e) =>
+          e.id === entry.id
+            ? { ...e, read: true, repliedAt: new Date().toISOString(), replyText: replyText.trim() }
+            : e
+        )
+      );
+      setReplyingId(null);
+      setReplyText("");
+    } catch (err) {
+      setReplyError(err instanceof Error ? err.message : "Antwort konnte nicht gesendet werden.");
+    } finally {
+      setSendingReply(false);
     }
   };
 
@@ -233,8 +271,31 @@ export default function InboxManager({
                     {entry.message}
                   </p>
                 )}
+                {entry.repliedAt && (
+                  <div className="mt-3 rounded-lg border border-accent-lime/30 bg-accent-lime/5 p-3">
+                    <p className="text-[10px] font-black uppercase tracking-wide text-accent-lime">
+                      Beantwortet am {formatDate(entry.repliedAt)}
+                    </p>
+                    {entry.replyText && (
+                      <p className="mt-1 whitespace-pre-line text-xs text-foreground/60">
+                        {entry.replyText}
+                      </p>
+                    )}
+                  </div>
+                )}
               </div>
               <div className="flex shrink-0 flex-col gap-2 text-xs font-bold uppercase">
+                {entry.email && (
+                  <button
+                    type="button"
+                    onClick={() =>
+                      replyingId === entry.id ? setReplyingId(null) : startReply(entry)
+                    }
+                    className="rounded-lg bg-accent-lime px-3 py-1.5 text-black"
+                  >
+                    <FlipText text={replyingId === entry.id ? "Abbrechen" : "Antworten"} />
+                  </button>
+                )}
                 <button
                   type="button"
                   onClick={() => printEntry(entry)}
@@ -260,6 +321,32 @@ export default function InboxManager({
                 </button>
               </div>
             </div>
+
+            {replyingId === entry.id && (
+              <div className="mt-4 border-t border-foreground/10 pt-4">
+                <p className="text-[11px] font-bold uppercase tracking-wide text-foreground/50">
+                  Antwort an {entry.email}
+                </p>
+                <textarea
+                  value={replyText}
+                  onChange={(e) => setReplyText(e.target.value)}
+                  rows={4}
+                  placeholder="Ihre Antwort…"
+                  className="mt-2 w-full rounded-xl border border-foreground/15 bg-foreground/5 px-4 py-2.5 text-sm text-foreground outline-none focus:border-accent-lime"
+                />
+                {replyError && <p className="mt-2 text-xs text-red-500">{replyError}</p>}
+                <div className="mt-2 flex gap-2">
+                  <button
+                    type="button"
+                    onClick={() => sendReply(entry)}
+                    disabled={sendingReply || !replyText.trim()}
+                    className="rounded-lg bg-accent-lime px-5 py-2 text-xs font-black uppercase tracking-wide text-black transition-transform hover:scale-105 disabled:opacity-50"
+                  >
+                    <FlipText text={sendingReply ? "Wird gesendet…" : "Antwort senden"} />
+                  </button>
+                </div>
+              </div>
+            )}
           </li>
         ))}
       </ul>

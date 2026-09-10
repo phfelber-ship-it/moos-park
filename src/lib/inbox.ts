@@ -23,6 +23,10 @@ export type InboxEntry = {
   summary: string;
   message: string;
   read: boolean;
+  // Direktantwort aus dem Adminpanel (siehe api/admin/inbox/[id]/reply) -
+  // beides null/leer, solange noch nicht geantwortet wurde.
+  repliedAt: string | null;
+  replyText: string | null;
 };
 
 // Kopie jeder eingehenden Kontaktanfrage/Bewerbung/Reservierung liegt als
@@ -68,7 +72,7 @@ async function saveInboxEntries(entries: InboxEntry[]): Promise<void> {
 }
 
 export async function appendInboxEntry(
-  entry: Omit<InboxEntry, "id" | "createdAt" | "read">
+  entry: Omit<InboxEntry, "id" | "createdAt" | "read" | "repliedAt" | "replyText">
 ): Promise<void> {
   const entries = await getInboxEntries();
   entries.unshift({
@@ -76,7 +80,22 @@ export async function appendInboxEntry(
     id: crypto.randomUUID(),
     createdAt: new Date().toISOString(),
     read: false,
+    repliedAt: null,
+    replyText: null,
   });
+  await saveInboxEntries(entries);
+}
+
+export async function markInboxReplied(id: string, replyText: string): Promise<void> {
+  const entries = await getInboxEntries();
+  const idx = entries.findIndex((e) => e.id === id);
+  if (idx === -1) return;
+  entries[idx] = {
+    ...entries[idx],
+    repliedAt: new Date().toISOString(),
+    replyText,
+    read: true,
+  };
   await saveInboxEntries(entries);
 }
 
