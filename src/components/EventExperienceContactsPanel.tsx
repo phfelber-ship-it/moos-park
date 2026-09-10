@@ -300,8 +300,8 @@ export default function EventExperienceContactsPanel({
         </a>
       </div>
 
-      <div className="mt-6 grid gap-6 lg:grid-cols-[1fr_320px]">
-        {/* Formular + Liste */}
+      <div className="mt-6">
+        {/* Formular */}
         <div>
           {availableCompanyContacts.length > 0 && (
             <details className="group mb-5 rounded-xl border border-foreground/10 bg-background p-4">
@@ -489,68 +489,6 @@ export default function EventExperienceContactsPanel({
           </form>
 
         </div>
-
-        {/* Rechtes Fenster: PDF-Aktionen */}
-        <div className="rounded-xl border border-foreground/10 bg-background p-5">
-          <p className="text-xs font-black uppercase tracking-wide text-foreground/50">
-            Einladungsbrief
-          </p>
-          {!selected ? (
-            <p className="mt-3 text-xs text-foreground/40">
-              Legen Sie einen Kontakt an oder wählen Sie einen aus der Liste,
-              um den Brief zu öffnen.
-            </p>
-          ) : (
-            <div className="mt-3 grid gap-3">
-              <div>
-                <p className="text-sm font-bold text-foreground">
-                  {selected.company || selected.lastName || "Ohne Namen"}
-                </p>
-                <p className="text-xs text-foreground/50">
-                  {[selected.salutation, selected.firstName, selected.lastName]
-                    .filter(Boolean)
-                    .join(" ")}
-                </p>
-                <p className="text-xs text-foreground/40">
-                  {[selected.street, [selected.zip, selected.city].filter(Boolean).join(" ")]
-                    .filter(Boolean)
-                    .join(", ")}
-                </p>
-              </div>
-
-              <div className="relative aspect-[210/297] w-full overflow-hidden rounded-lg border border-foreground/10">
-                {letterLoading && (
-                  <div className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-2 bg-background">
-                    <div className="h-6 w-6 animate-spin rounded-full border-2 border-foreground/20 border-t-accent-lime" />
-                    <p className="text-xs text-foreground/40">Brief wird erzeugt…</p>
-                  </div>
-                )}
-                <iframe
-                  key={selected.id}
-                  title="Brief-Vorschau"
-                  src={`${letterBaseUrl}/${selected.id}/letter`}
-                  onLoad={() => setLetterLoading(false)}
-                  className="h-full w-full"
-                />
-              </div>
-
-              <a
-                href={`${letterBaseUrl}/${selected.id}/letter`}
-                target="_blank"
-                rel="noreferrer"
-                className="w-full rounded-lg bg-accent-lime px-4 py-2.5 text-center text-xs font-black uppercase tracking-wide text-black transition-transform hover:scale-105"
-              >
-                <FlipText text="PDF öffnen / drucken" />
-              </a>
-              <a
-                href={`${letterBaseUrl}/${selected.id}/letter?dl=1`}
-                className="w-full rounded-lg border border-foreground/15 px-4 py-2.5 text-center text-xs font-black uppercase tracking-wide text-foreground transition-colors hover:border-accent-lime"
-              >
-                PDF herunterladen
-              </a>
-            </div>
-          )}
-        </div>
       </div>
     </div>
     </details>
@@ -568,39 +506,103 @@ export default function EventExperienceContactsPanel({
         <p className="mt-1 text-xs text-foreground/50">
           Bereits für dieses Event angelegte Kontakte ({contacts.length})
         </p>
-        <div className="mt-3 grid gap-1.5">
-          {contacts.map((c) => (
-            <div
-              key={c.id}
-              className={`flex items-center gap-2 rounded-lg border px-3 py-2 text-xs transition-colors ${
-                selectedId === c.id
-                  ? "border-accent-lime bg-accent-lime/10"
-                  : "border-foreground/10 hover:border-foreground/25"
-              }`}
-            >
-              <button
-                type="button"
-                onClick={() => setSelectedId(c.id)}
-                className="flex min-w-0 flex-1 items-center justify-between text-left"
+        <div className="mt-3 grid gap-6 lg:grid-cols-[1fr_320px]">
+          <div className="grid gap-1.5">
+            {contacts.map((c) => (
+              <div
+                key={c.id}
+                className={`flex items-center gap-2 rounded-lg border px-3 py-2 text-xs transition-colors ${
+                  selectedId === c.id
+                    ? "border-accent-lime bg-accent-lime/10"
+                    : "border-foreground/10 hover:border-foreground/25"
+                }`}
               >
-                <span className="font-bold text-foreground">
-                  {c.company || c.lastName || "Ohne Namen"}
-                </span>
-                <span className="ml-2 truncate text-foreground/40">
-                  {[c.lastName, c.city].filter(Boolean).join(", ")}
-                </span>
-              </button>
-              <button
-                type="button"
-                onClick={() => deleteContact(c.id)}
-                disabled={deletingId === c.id}
-                title="Kontakt löschen"
-                className="shrink-0 text-foreground/30 transition-colors hover:text-red-500 disabled:opacity-40"
-              >
-                ✕
-              </button>
-            </div>
-          ))}
+                <button
+                  type="button"
+                  onClick={() => setSelectedId(c.id)}
+                  className="flex min-w-0 flex-1 items-center justify-between text-left"
+                >
+                  <span className="font-bold text-foreground">
+                    {c.company || c.lastName || "Ohne Namen"}
+                  </span>
+                  <span className="ml-2 truncate text-foreground/40">
+                    {[c.lastName, c.city].filter(Boolean).join(", ")}
+                  </span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => deleteContact(c.id)}
+                  disabled={deletingId === c.id}
+                  title="Kontakt löschen"
+                  className="shrink-0 text-foreground/30 transition-colors hover:text-red-500 disabled:opacity-40"
+                >
+                  ✕
+                </button>
+              </div>
+            ))}
+          </div>
+
+          {/* Rechtes Fenster: PDF-Aktionen */}
+          <div className="rounded-xl border border-foreground/10 bg-background p-5">
+            <p className="text-xs font-black uppercase tracking-wide text-foreground/50">
+              Einladungsbrief
+            </p>
+            {!selected ? (
+              <p className="mt-3 text-xs text-foreground/40">
+                Wählen Sie einen Kontakt aus der Liste, um den Brief zu
+                öffnen.
+              </p>
+            ) : (
+              <div className="mt-3 grid gap-3">
+                <div>
+                  <p className="text-sm font-bold text-foreground">
+                    {selected.company || selected.lastName || "Ohne Namen"}
+                  </p>
+                  <p className="text-xs text-foreground/50">
+                    {[selected.salutation, selected.firstName, selected.lastName]
+                      .filter(Boolean)
+                      .join(" ")}
+                  </p>
+                  <p className="text-xs text-foreground/40">
+                    {[selected.street, [selected.zip, selected.city].filter(Boolean).join(" ")]
+                      .filter(Boolean)
+                      .join(", ")}
+                  </p>
+                </div>
+
+                <div className="relative aspect-[210/297] w-full overflow-hidden rounded-lg border border-foreground/10">
+                  {letterLoading && (
+                    <div className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-2 bg-background">
+                      <div className="h-6 w-6 animate-spin rounded-full border-2 border-foreground/20 border-t-accent-lime" />
+                      <p className="text-xs text-foreground/40">Brief wird erzeugt…</p>
+                    </div>
+                  )}
+                  <iframe
+                    key={selected.id}
+                    title="Brief-Vorschau"
+                    src={`${letterBaseUrl}/${selected.id}/letter`}
+                    onLoad={() => setLetterLoading(false)}
+                    className="h-full w-full"
+                  />
+                </div>
+
+                <a
+                  href={`${letterBaseUrl}/${selected.id}/letter`}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="w-full rounded-lg bg-accent-lime px-4 py-2.5 text-center text-xs font-black uppercase tracking-wide text-black transition-transform hover:scale-105"
+                >
+                  <FlipText text="PDF öffnen / drucken" />
+                </a>
+                <a
+                  href={`${letterBaseUrl}/${selected.id}/letter?dl=1`}
+                  className="w-full rounded-lg border border-foreground/15 px-4 py-2.5 text-center text-xs font-black uppercase tracking-wide text-foreground transition-colors hover:border-accent-lime"
+                >
+                  PDF herunterladen
+                </a>
+              </div>
+            )}
+          </div>
         </div>
       </details>
     )}
