@@ -300,11 +300,16 @@ export async function updateRegistrationStatus(
 export async function getRegistration(
   id: string
 ): Promise<EventExperienceRegistration | null> {
-  for (let attempt = 0; attempt < 3; attempt++) {
+  // Grosszuegigeres Retry-Fenster (vorher 3x300ms = max. 900ms): bei der
+  // Mehrfachauswahl (mehrere Kontakte kurz hintereinander anlegen, siehe
+  // EventExperienceContactsPanel) reichte das offenbar teilweise nicht,
+  // um die Blob-Schreib-/Lese-Verzoegerung sicher abzudecken - fuehrte zu
+  // "Kontakt nicht gefunden" beim direkt danach geoeffneten Brief.
+  for (let attempt = 0; attempt < 7; attempt++) {
     const entries = await getRegistrations();
     const found = entries.find((e) => e.id === id);
     if (found) return found;
-    if (attempt < 2) await new Promise((r) => setTimeout(r, 300));
+    if (attempt < 6) await new Promise((r) => setTimeout(r, 400));
   }
   return null;
 }
