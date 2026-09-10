@@ -31,13 +31,20 @@ export default async function CompanyEventAdminPage({
     ]);
 
   const manualContacts = registrations.filter((r) => r.source === "MANUAL");
+  // Manuell angelegte Kontakte (nur fuer den Einladungsbrief-Versand
+  // gedacht, siehe EventExperienceContactsPanel) tauchen bewusst NICHT im
+  // CRM-Kanban-Board auf - dort soll nur erscheinen, wer sich tatsaechlich
+  // ueber die Website angemeldet hat. Sobald sich so ein Kontakt spaeter
+  // selbst ueber das Formular anmeldet, entsteht dafuer eine eigene,
+  // separate WEB-Registrierung, die dann ganz normal im CRM auftaucht.
+  const crmRegistrations = registrations.filter((r) => r.source !== "MANUAL");
   const apiBase = `/api/admin/company-events/${eventId}`;
 
   // Kleines Dashboard oben auf der Seite: schneller Ueberblick ueber
   // Einladungen/Tickets, ohne erst ins CRM-Board oder die
-  // Scanner-Uebersicht wechseln zu muessen.
-  const invitationsSent = registrations.filter((r) => r.invitationSentAt).length;
-  const allTickets = registrations.flatMap((r) => r.tickets);
+  // Scanner-Uebersicht wechseln zu muessen. Gleiche CRM-Filterung wie oben.
+  const invitationsSent = crmRegistrations.filter((r) => r.invitationSentAt).length;
+  const allTickets = crmRegistrations.flatMap((r) => r.tickets);
   const ticketsTotal = allTickets.length;
   const ticketsScanned = allTickets.filter((t) => t.checkedInAt).length;
   const ticketsOpen = ticketsTotal - ticketsScanned;
@@ -87,7 +94,7 @@ export default async function CompanyEventAdminPage({
           CRM
         </h2>
         <EventExperienceManager
-          initialRegistrations={registrations}
+          initialRegistrations={crmRegistrations}
           apiBase={`${apiBase}/registrations`}
           exportUrl={`${apiBase}/export`}
           eventId={eventId}
