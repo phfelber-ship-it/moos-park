@@ -15,7 +15,7 @@
 
 export type SmtpSendResult = { ok: true } | { ok: false; error: string };
 
-const DEFAULT_FROM = "moos.park <noreply@moos-park.de>";
+const DEFAULT_FROM = "moos.park <kontakt@moos-park.de>";
 
 function getResendConfig() {
   const apiKey = process.env.RESEND_API_KEY;
