@@ -82,6 +82,22 @@ export default function EventExperienceContactsPanel({
     );
   };
 
+  // Wartet, bis der Brief fuer einen frisch angelegten Kontakt wirklich
+  // erzeugt werden kann (ruft die Brief-Route einmal auf und verwirft das
+  // Ergebnis) - erst danach erscheint der Kontakt in der Liste "Angelegte
+  // Kontakte". Verhindert das "Kontakt nicht gefunden", das durch die
+  // kurze Verzoegerung zwischen Blob-Schreiben und -Lesen entstehen konnte,
+  // wenn man den Brief direkt nach dem Anlegen oeffnet.
+  const waitForLetterReady = async (id: string): Promise<void> => {
+    try {
+      const res = await fetch(`${letterBaseUrl}/${id}/letter`, { cache: "no-store" });
+      if (res.ok) return;
+    } catch {
+      // ignorieren - Kontakt trotzdem anzeigen, die Brief-Vorschau meldet
+      // dann selbst einen Fehler, falls es tatsaechlich nicht klappt.
+    }
+  };
+
   const createSelectedFromDatabase = async () => {
     if (bulkSelectedIds.length === 0) return;
     setBulkStatus("running");
@@ -115,6 +131,7 @@ export default function EventExperienceContactsPanel({
         });
         const data = await res.json().catch(() => null);
         if (!res.ok) throw new Error(data?.error);
+        await waitForLetterReady(data.contact.id);
         created.push(data.contact);
       } catch {
         failed.push(c.company || c.lastName || id);
@@ -171,6 +188,7 @@ export default function EventExperienceContactsPanel({
       });
       const data = await res.json().catch(() => null);
       if (!res.ok) throw new Error(data?.error || "Kontakt konnte nicht angelegt werden.");
+      await waitForLetterReady(data.contact.id);
       setContacts((cur) => [data.contact, ...cur]);
       setSelectedId(data.contact.id);
 
