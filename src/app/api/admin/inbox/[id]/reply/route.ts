@@ -13,7 +13,9 @@ export async function POST(
   { params }: { params: Promise<{ id: string }> }
 ) {
   const { id } = await params;
-  const body = (await request.json().catch(() => null)) as { message?: string } | null;
+  const body = (await request.json().catch(() => null)) as
+    | { message?: string; subject?: string; fromName?: string }
+    | null;
   const message = body?.message?.trim();
   if (!message) {
     return NextResponse.json({ error: "Nachricht darf nicht leer sein." }, { status: 400 });
@@ -31,10 +33,15 @@ export async function POST(
     );
   }
 
+  const subject =
+    body?.subject?.trim() ||
+    `Re: Ihre Anfrage bei moos.park${entry.summary ? ` – ${entry.summary}` : ""}`;
+
   const result = await sendSmtpMail({
     to: entry.email,
-    subject: `Re: Ihre Anfrage bei moos.park${entry.summary ? ` – ${entry.summary}` : ""}`,
+    subject,
     text: message,
+    fromName: body?.fromName?.trim() || undefined,
   });
 
   if (!result.ok) {

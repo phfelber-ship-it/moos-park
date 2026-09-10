@@ -15,7 +15,7 @@
 
 export type SmtpSendResult = { ok: true } | { ok: false; error: string };
 
-const DEFAULT_FROM = "moos.park <noreply@moos-park.de>";
+const DEFAULT_FROM = "moos.park <kontakt@moos-park.de>";
 
 function getResendConfig() {
   const apiKey = process.env.RESEND_API_KEY;
@@ -49,11 +49,19 @@ export async function sendSmtpMail(input: {
   subject: string;
   text: string;
   html?: string;
+  // Ueberschreibt nur den Anzeigenamen vor der Absenderadresse (z.B.
+  // "Sarah Geisler" statt "moos.park") - die eigentliche Adresse bleibt
+  // immer die konfigurierte (RESEND_FROM_EMAIL/DEFAULT_FROM), damit
+  // SPF/DKIM/Reputation der verifizierten Domain nicht umgangen wird.
+  fromName?: string;
 }): Promise<SmtpSendResult> {
   const config = getResendConfig();
   if (!config) {
     return { ok: false, error: "Resend nicht konfiguriert (RESEND_API_KEY fehlt)" };
   }
+  const from = input.fromName
+    ? config.from.replace(/^[^<]*(?=<)/, `${input.fromName} `)
+    : config.from;
 
   // Resend erwartet "to" als Array - unser bestehendes Interface reicht
   // wahlweise eine einzelne Adresse oder eine kommagetrennte Liste durch
@@ -71,7 +79,7 @@ export async function sendSmtpMail(input: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          from: config.from,
+          from,
           to,
           subject: input.subject,
           text: input.text,
