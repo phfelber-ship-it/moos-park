@@ -101,10 +101,15 @@ export default async function CompanyEventAdminPage({
         />
       </section>
 
-      <section className="mt-12">
-        <h2 className="text-lg font-black uppercase tracking-wide text-accent-lime">
-          Kontakte
-        </h2>
+      <details className="group mt-12">
+        <summary className="flex cursor-pointer list-none items-center gap-2">
+          <h2 className="text-lg font-black uppercase tracking-wide text-accent-lime">
+            Kontakte
+          </h2>
+          <span className="text-foreground/30 transition-transform group-open:rotate-180">
+            ▼
+          </span>
+        </summary>
         <p className="mt-1 text-xs text-foreground/50">
           Kontakte &amp; Einladungsbriefe
         </p>
@@ -115,12 +120,17 @@ export default async function CompanyEventAdminPage({
           lettersExportUrl={`${apiBase}/letters/export`}
           letterBaseUrl={`${apiBase}/registrations`}
         />
-      </section>
+      </details>
 
-      <section className="mt-12">
-        <h2 className="text-lg font-black uppercase tracking-wide text-accent-lime">
-          E-Mail-Vorlagen
-        </h2>
+      <details className="group mt-12">
+        <summary className="flex cursor-pointer list-none items-center gap-2">
+          <h2 className="text-lg font-black uppercase tracking-wide text-accent-lime">
+            E-Mail-Vorlagen
+          </h2>
+          <span className="text-foreground/30 transition-transform group-open:rotate-180">
+            ▼
+          </span>
+        </summary>
         <p className="mt-1 text-xs text-foreground/50">
           Einladungsbrief, Bestätigungs- und Erinnerungsvorlage
         </p>
@@ -142,7 +152,7 @@ export default async function CompanyEventAdminPage({
           initial={event.reminderWorkflow}
           initialEventDateTime={event.eventDateTime}
         />
-      </section>
+      </details>
     </div>
   );
 }

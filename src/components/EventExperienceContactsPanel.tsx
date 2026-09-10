@@ -291,15 +291,33 @@ export default function EventExperienceContactsPanel({
         {/* Formular + Liste */}
         <div>
           {availableCompanyContacts.length > 0 && (
-            <div className="mb-5 rounded-xl border border-foreground/10 bg-background p-4">
-              <p className="text-xs font-bold uppercase text-foreground/50">
-                Mehrere Firmen auf einmal anlegen
-              </p>
-              <p className="mt-1 text-xs text-foreground/40">
+            <details className="group mb-5 rounded-xl border border-foreground/10 bg-background p-4">
+              <summary className="flex cursor-pointer list-none items-center justify-between text-xs font-bold uppercase text-foreground/50">
+                <span>Mehrere Firmen auf einmal anlegen</span>
+                <span className="text-foreground/30 transition-transform group-open:rotate-180">
+                  ▼
+                </span>
+              </summary>
+              <p className="mt-2 text-xs text-foreground/40">
                 Firmen auswählen – für jede wird automatisch ein Kontakt +
                 Einladungsbrief für dieses Event erzeugt. Bereits angelegte
                 Firmen werden hier nicht mehr angezeigt.
               </p>
+              <label className="mt-3 flex cursor-pointer items-center gap-2 text-xs font-bold text-foreground">
+                <input
+                  type="checkbox"
+                  checked={
+                    availableCompanyContacts.length > 0 &&
+                    bulkSelectedIds.length === availableCompanyContacts.length
+                  }
+                  onChange={(e) =>
+                    setBulkSelectedIds(
+                      e.target.checked ? availableCompanyContacts.map((c) => c.id) : []
+                    )
+                  }
+                />
+                Alle auswählen
+              </label>
               <div className="mt-3 max-h-48 overflow-y-auto rounded-lg border border-foreground/10">
                 {availableCompanyContacts.map((c) => (
                   <label
@@ -345,7 +363,7 @@ export default function EventExperienceContactsPanel({
                   />
                 </button>
               </div>
-            </div>
+            </details>
           )}
 
           {availableCompanyContacts.length > 0 && (
