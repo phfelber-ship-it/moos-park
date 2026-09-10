@@ -65,6 +65,7 @@ export default function EventExperienceContactsPanel({
   const [error, setError] = useState<string | null>(null);
   const [importId, setImportId] = useState("");
   const [saveToDatabase, setSaveToDatabase] = useState(false);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
 
   // Mehrfachauswahl aus den Firmenkontakten: statt jede Firma einzeln
   // durchzuklicken, mehrere auswaehlen und in einem Rutsch als Kontakte
@@ -194,6 +195,23 @@ export default function EventExperienceContactsPanel({
   };
 
   const selected = contacts.find((c) => c.id === selectedId) ?? null;
+
+  const deleteContact = async (id: string) => {
+    if (!window.confirm("Diesen Kontakt unwiderruflich löschen?")) return;
+    setDeletingId(id);
+    try {
+      const res = await fetch(`${letterBaseUrl}?id=${encodeURIComponent(id)}`, {
+        method: "DELETE",
+      });
+      if (!res.ok) throw new Error();
+      setContacts((cur) => cur.filter((c) => c.id !== id));
+      if (selectedId === id) setSelectedId(null);
+    } catch {
+      alert("Kontakt konnte nicht gelöscht werden.");
+    } finally {
+      setDeletingId(null);
+    }
+  };
 
   return (
     <div className="mt-8 rounded-2xl border border-foreground/10 bg-foreground/[0.015] p-5 sm:p-6">
@@ -390,23 +408,36 @@ export default function EventExperienceContactsPanel({
                 Angelegte Kontakte ({contacts.length})
               </p>
               {contacts.map((c) => (
-                <button
+                <div
                   key={c.id}
-                  type="button"
-                  onClick={() => setSelectedId(c.id)}
-                  className={`flex items-center justify-between rounded-lg border px-3 py-2 text-left text-xs transition-colors ${
+                  className={`flex items-center gap-2 rounded-lg border px-3 py-2 text-xs transition-colors ${
                     selectedId === c.id
                       ? "border-accent-lime bg-accent-lime/10"
                       : "border-foreground/10 hover:border-foreground/25"
                   }`}
                 >
-                  <span className="font-bold text-foreground">
-                    {c.company || c.lastName || "Ohne Namen"}
-                  </span>
-                  <span className="text-foreground/40">
-                    {[c.lastName, c.city].filter(Boolean).join(", ")}
-                  </span>
-                </button>
+                  <button
+                    type="button"
+                    onClick={() => setSelectedId(c.id)}
+                    className="flex min-w-0 flex-1 items-center justify-between text-left"
+                  >
+                    <span className="font-bold text-foreground">
+                      {c.company || c.lastName || "Ohne Namen"}
+                    </span>
+                    <span className="ml-2 truncate text-foreground/40">
+                      {[c.lastName, c.city].filter(Boolean).join(", ")}
+                    </span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => deleteContact(c.id)}
+                    disabled={deletingId === c.id}
+                    title="Kontakt löschen"
+                    className="shrink-0 text-foreground/30 transition-colors hover:text-red-500 disabled:opacity-40"
+                  >
+                    ✕
+                  </button>
+                </div>
               ))}
             </div>
           )}

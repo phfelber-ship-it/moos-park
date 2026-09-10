@@ -11,8 +11,10 @@ import CookieConsent from "@/components/CookieConsent";
 // und WhatsApp-Button - keine Navigation, die vom Anmeldeformular ablenkt
 // oder von der Seite wegfuehrt. Statt des vollen Footers gibt es dort nur
 // den schlanken MinimalFooter (Logo, Impressum, Datenschutz). Cookie-Banner
-// bleibt ueberall bestehen.
-const NO_HEADER_PREFIXES = ["/event-experience"];
+// bleibt ueberall bestehen. /admin hat bereits seine eigene AdminTopBar
+// (siehe app/admin/layout.tsx) - die oeffentliche Hauptnavigation braucht
+// es dort nicht zusaetzlich.
+const NO_HEADER_PREFIXES = ["/event-experience", "/admin"];
 
 export default function SiteChrome({
   children,

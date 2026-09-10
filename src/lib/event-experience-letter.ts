@@ -98,7 +98,7 @@ export async function generateInvitationLetterPdf(
     page.drawLine({
       start: { x: 0, y: foldY },
       end: { x: 14, y: foldY },
-      thickness: 0.75,
+      thickness: 0.4,
       color: BLACK,
     });
   }
@@ -122,8 +122,8 @@ export async function generateInvitationLetterPdf(
     `${contact.zip} ${contact.city}`,
   ].filter(Boolean);
   for (const line of addressLines) {
-    page.drawText(line, { x: marginX, y, size: 11, font: regular, color: BLACK });
-    y -= 15;
+    page.drawText(line, { x: marginX, y, size: 10, font: regular, color: BLACK });
+    y -= 14;
   }
 
   // Datum rechtsbuendig
@@ -133,48 +133,48 @@ export async function generateInvitationLetterPdf(
     year: "numeric",
   });
   page.drawText(dateStr, {
-    x: width - marginX - regular.widthOfTextAtSize(dateStr, 11),
+    x: width - marginX - regular.widthOfTextAtSize(dateStr, 10),
     y: height - 194,
-    size: 11,
+    size: 10,
     font: regular,
     color: BLACK,
   });
 
   y -= 22;
   y = drawParagraph(page, "Sehr geehrte Damen und Herren,", {
-    x: marginX, y, size: 11, font: regular, maxWidth: contentWidth, lineHeight: 14,
+    x: marginX, y, size: 10, font: regular, maxWidth: contentWidth, lineHeight: 13,
   });
 
   y -= 8;
   y = drawParagraph(page, template.introText, {
-    x: marginX, y, size: 11, font: regular, maxWidth: contentWidth, lineHeight: 14,
+    x: marginX, y, size: 10, font: regular, maxWidth: contentWidth, lineHeight: 13,
   });
 
   y -= 12;
   {
     const title = info.heroTitle;
     const subtitle = "Erleben. Inspirieren. Ihr nächstes Event entdecken.";
-    page.drawText(title, { x: (width - bold.widthOfTextAtSize(title, 15)) / 2, y, size: 15, font: bold, color: BLACK });
+    page.drawText(title, { x: (width - bold.widthOfTextAtSize(title, 14)) / 2, y, size: 14, font: bold, color: BLACK });
     y -= 16;
-    page.drawText(subtitle, { x: (width - bold.widthOfTextAtSize(subtitle, 11)) / 2, y, size: 11, font: bold, color: BLACK });
+    page.drawText(subtitle, { x: (width - bold.widthOfTextAtSize(subtitle, 10)) / 2, y, size: 10, font: bold, color: BLACK });
   }
 
   y -= 16;
   y = drawParagraph(page, template.detailsText, {
-    x: marginX, y, size: 11, font: regular, maxWidth: contentWidth, lineHeight: 14,
+    x: marginX, y, size: 10, font: regular, maxWidth: contentWidth, lineHeight: 13,
   });
 
   y -= 14;
   const eventLines = [info.dateLabel, info.timeLabel, info.locationName, info.address];
   for (const line of eventLines) {
-    const w = bold.widthOfTextAtSize(line, 12);
-    page.drawText(line, { x: (width - w) / 2, y, size: 12, font: bold, color: BLACK });
+    const w = bold.widthOfTextAtSize(line, 11);
+    page.drawText(line, { x: (width - w) / 2, y, size: 11, font: bold, color: BLACK });
     y -= 15;
   }
 
   y -= 10;
   y = drawParagraph(page, template.closingNoteText, {
-    x: marginX, y, size: 11, font: regular, maxWidth: contentWidth, lineHeight: 14,
+    x: marginX, y, size: 10, font: regular, maxWidth: contentWidth, lineHeight: 13,
   });
 
   // QR-Code + "Jetzt Platz sichern" - zentriert, damit es als eigener
@@ -182,9 +182,9 @@ export async function generateInvitationLetterPdf(
   y -= 12;
   const ctaText = "Jetzt Platz sichern:";
   page.drawText(ctaText, {
-    x: (width - bold.widthOfTextAtSize(ctaText, 12)) / 2,
+    x: (width - bold.widthOfTextAtSize(ctaText, 11)) / 2,
     y,
-    size: 12,
+    size: 11,
     font: bold,
     color: BLACK,
   });
@@ -196,7 +196,7 @@ export async function generateInvitationLetterPdf(
   });
   const qrBytes = Buffer.from(qrDataUrl.split(",")[1], "base64");
   const qrImage = await doc.embedPng(qrBytes);
-  const qrSize = 64;
+  const qrSize = 80;
   const qrX = (width - qrSize) / 2;
   page.drawImage(qrImage, { x: qrX, y: y - qrSize - 10, width: qrSize, height: qrSize });
 
@@ -212,10 +212,10 @@ export async function generateInvitationLetterPdf(
     color: GREY,
   });
 
-  y = y - qrSize - 28;
-  page.drawText("Herzliche Grüße,", { x: marginX, y, size: 11, font: regular, color: BLACK });
+  y = y - qrSize - 42;
+  page.drawText("Herzliche Grüße,", { x: marginX, y, size: 10, font: regular, color: BLACK });
   y -= 14;
-  page.drawText("Sarah Geisler", { x: marginX, y, size: 11, font: bold, color: BLACK });
+  page.drawText("Sarah Geisler", { x: marginX, y, size: 10, font: bold, color: BLACK });
 
   // Trennstrich + Fussleiste folgen IMMER dem Textfluss (fester Abstand
   // zur Signatur), NIE eine fixe Mindestposition - sonst kann bei
@@ -229,18 +229,18 @@ export async function generateInvitationLetterPdf(
     thickness: 1.5,
     color: LIME,
   });
-  const footerY = footerLineY - 26;
-  page.drawText("MOOS-PARK GASTRONOMIE GMBH", { x: marginX, y: footerY, size: 8, font: bold, color: BLACK });
-  page.drawText("Rudolf-Diesel-Straße 23", { x: marginX, y: footerY - 11, size: 7.5, font: regular, color: BLACK });
-  page.drawText("86554 Pöttmes", { x: marginX, y: footerY - 21, size: 7.5, font: regular, color: BLACK });
+  const footerY = footerLineY - 22;
+  page.drawText("MOOS-PARK GASTRONOMIE GMBH", { x: marginX, y: footerY, size: 6.5, font: bold, color: BLACK });
+  page.drawText("Rudolf-Diesel-Straße 23", { x: marginX, y: footerY - 9, size: 6, font: regular, color: BLACK });
+  page.drawText("86554 Pöttmes", { x: marginX, y: footerY - 17, size: 6, font: regular, color: BLACK });
 
   const col2X = width / 2 + 20;
-  page.drawText("TELEFON", { x: col2X, y: footerY, size: 7, font: bold, color: GREY });
-  page.drawText("0160 4986807", { x: col2X + 50, y: footerY, size: 7.5, font: regular, color: BLACK });
-  page.drawText("E-MAIL", { x: col2X, y: footerY - 11, size: 7, font: bold, color: GREY });
-  page.drawText("s.geisler@moos-park.de", { x: col2X + 50, y: footerY - 11, size: 7.5, font: regular, color: BLACK });
-  page.drawText("WEBSITE", { x: col2X, y: footerY - 21, size: 7, font: bold, color: GREY });
-  page.drawText("www.moos-park.de", { x: col2X + 50, y: footerY - 21, size: 7.5, font: regular, color: BLACK });
+  page.drawText("TELEFON", { x: col2X, y: footerY, size: 5.5, font: bold, color: GREY });
+  page.drawText("0160 4986807", { x: col2X + 45, y: footerY, size: 6, font: regular, color: BLACK });
+  page.drawText("E-MAIL", { x: col2X, y: footerY - 9, size: 5.5, font: bold, color: GREY });
+  page.drawText("s.geisler@moos-park.de", { x: col2X + 45, y: footerY - 9, size: 6, font: regular, color: BLACK });
+  page.drawText("WEBSITE", { x: col2X, y: footerY - 17, size: 5.5, font: bold, color: GREY });
+  page.drawText("www.moos-park.de", { x: col2X + 45, y: footerY - 17, size: 6, font: regular, color: BLACK });
 
   return doc.save();
 }
