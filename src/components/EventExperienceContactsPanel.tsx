@@ -67,6 +67,22 @@ export default function EventExperienceContactsPanel({
   const [saveToDatabase, setSaveToDatabase] = useState(false);
   const [deletingId, setDeletingId] = useState<string | null>(null);
 
+  // Fortschritts-Overlay waehrend "Kontakt anlegen + Brief erzeugen": zeigt
+  // eine grobe Restzeit-Schaetzung an, waehrend im Hintergrund angelegt UND
+  // per waitForLetterReady auf den fertigen Brief gewartet wird - das dauert
+  // insgesamt spuerbar, ohne Anzeige wirkt die Oberflaeche sonst haengend.
+  const ESTIMATED_CREATE_MS = 4000;
+  const [createElapsedMs, setCreateElapsedMs] = useState(0);
+  useEffect(() => {
+    if (status !== "saving") return;
+    const startedAt = Date.now();
+    setCreateElapsedMs(0);
+    const interval = setInterval(() => {
+      setCreateElapsedMs(Date.now() - startedAt);
+    }, 100);
+    return () => clearInterval(interval);
+  }, [status]);
+
   // Mehrfachauswahl aus den Firmenkontakten: statt jede Firma einzeln
   // durchzuklicken, mehrere auswaehlen und in einem Rutsch als Kontakte
   // anlegen (jeweils eigener Einladungsbrief pro Kontakt entsteht dabei
@@ -544,6 +560,30 @@ export default function EventExperienceContactsPanel({
           )}
         </div>
       </div>
+
+      {status === "saving" && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4">
+          <div className="w-full max-w-xs rounded-2xl border border-foreground/10 bg-background p-6 text-center shadow-xl">
+            <div className="mx-auto h-8 w-8 animate-spin rounded-full border-2 border-foreground/20 border-t-accent-lime" />
+            <p className="mt-4 text-sm font-black uppercase tracking-wide text-foreground">
+              Kontakt wird angelegt…
+            </p>
+            <p className="mt-1 text-xs text-foreground/50">
+              {createElapsedMs < ESTIMATED_CREATE_MS
+                ? `Noch ca. ${Math.max(1, Math.ceil((ESTIMATED_CREATE_MS - createElapsedMs) / 1000))} Sekunden`
+                : "Dauert etwas länger als sonst…"}
+            </p>
+            <div className="mt-3 h-1.5 w-full overflow-hidden rounded-full bg-foreground/10">
+              <div
+                className="h-full rounded-full bg-accent-lime transition-all"
+                style={{
+                  width: `${Math.min(95, Math.round((createElapsedMs / ESTIMATED_CREATE_MS) * 100))}%`,
+                }}
+              />
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
