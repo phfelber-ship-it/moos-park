@@ -268,7 +268,20 @@ export default function EventExperienceContactsPanel({
   };
 
   return (
-    <div className="mt-8 rounded-2xl border border-foreground/10 bg-foreground/[0.015] p-5 sm:p-6">
+    <>
+    <details className="group mt-12">
+      <summary className="flex cursor-pointer list-none items-center gap-2">
+        <h2 className="text-lg font-black uppercase tracking-wide text-accent-lime">
+          Kontakte
+        </h2>
+        <span className="text-foreground/30 transition-transform group-open:rotate-180">
+          ▼
+        </span>
+      </summary>
+      <p className="mt-1 text-xs text-foreground/50">
+        Kontakte &amp; Einladungsbriefe
+      </p>
+    <div className="mt-2 rounded-2xl border border-foreground/10 bg-foreground/[0.015] p-5 sm:p-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <p className="text-sm font-black uppercase tracking-wide text-foreground">
@@ -475,50 +488,6 @@ export default function EventExperienceContactsPanel({
             </button>
           </form>
 
-          {contacts.length > 0 && (
-            <details className="group mt-6 rounded-xl border border-foreground/10 bg-background p-4">
-              <summary className="flex cursor-pointer list-none items-center justify-between text-xs font-bold uppercase text-foreground/50">
-                <span>Eingeladene Kontakte ({contacts.length})</span>
-                <span className="text-foreground/30 transition-transform group-open:rotate-180">
-                  ▼
-                </span>
-              </summary>
-              <div className="mt-3 grid gap-1.5">
-              {contacts.map((c) => (
-                <div
-                  key={c.id}
-                  className={`flex items-center gap-2 rounded-lg border px-3 py-2 text-xs transition-colors ${
-                    selectedId === c.id
-                      ? "border-accent-lime bg-accent-lime/10"
-                      : "border-foreground/10 hover:border-foreground/25"
-                  }`}
-                >
-                  <button
-                    type="button"
-                    onClick={() => setSelectedId(c.id)}
-                    className="flex min-w-0 flex-1 items-center justify-between text-left"
-                  >
-                    <span className="font-bold text-foreground">
-                      {c.company || c.lastName || "Ohne Namen"}
-                    </span>
-                    <span className="ml-2 truncate text-foreground/40">
-                      {[c.lastName, c.city].filter(Boolean).join(", ")}
-                    </span>
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => deleteContact(c.id)}
-                    disabled={deletingId === c.id}
-                    title="Kontakt löschen"
-                    className="shrink-0 text-foreground/30 transition-colors hover:text-red-500 disabled:opacity-40"
-                  >
-                    ✕
-                  </button>
-                </div>
-              ))}
-              </div>
-            </details>
-          )}
         </div>
 
         {/* Rechtes Fenster: PDF-Aktionen */}
@@ -583,6 +552,58 @@ export default function EventExperienceContactsPanel({
           )}
         </div>
       </div>
+    </div>
+    </details>
+
+    {contacts.length > 0 && (
+      <details className="group mt-12">
+        <summary className="flex cursor-pointer list-none items-center gap-2">
+          <h2 className="text-lg font-black uppercase tracking-wide text-accent-lime">
+            Eingeladene Kontakte
+          </h2>
+          <span className="text-foreground/30 transition-transform group-open:rotate-180">
+            ▼
+          </span>
+        </summary>
+        <p className="mt-1 text-xs text-foreground/50">
+          Bereits für dieses Event angelegte Kontakte ({contacts.length})
+        </p>
+        <div className="mt-3 grid gap-1.5">
+          {contacts.map((c) => (
+            <div
+              key={c.id}
+              className={`flex items-center gap-2 rounded-lg border px-3 py-2 text-xs transition-colors ${
+                selectedId === c.id
+                  ? "border-accent-lime bg-accent-lime/10"
+                  : "border-foreground/10 hover:border-foreground/25"
+              }`}
+            >
+              <button
+                type="button"
+                onClick={() => setSelectedId(c.id)}
+                className="flex min-w-0 flex-1 items-center justify-between text-left"
+              >
+                <span className="font-bold text-foreground">
+                  {c.company || c.lastName || "Ohne Namen"}
+                </span>
+                <span className="ml-2 truncate text-foreground/40">
+                  {[c.lastName, c.city].filter(Boolean).join(", ")}
+                </span>
+              </button>
+              <button
+                type="button"
+                onClick={() => deleteContact(c.id)}
+                disabled={deletingId === c.id}
+                title="Kontakt löschen"
+                className="shrink-0 text-foreground/30 transition-colors hover:text-red-500 disabled:opacity-40"
+              >
+                ✕
+              </button>
+            </div>
+          ))}
+        </div>
+      </details>
+    )}
 
       {status === "saving" && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4">
@@ -607,6 +628,6 @@ export default function EventExperienceContactsPanel({
           </div>
         </div>
       )}
-    </div>
+    </>
   );
 }
