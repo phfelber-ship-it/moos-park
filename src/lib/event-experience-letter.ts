@@ -91,6 +91,12 @@ export async function generateInvitationLetterPdf(
 
   let y = height - 150;
 
+  // Absenderzeile klein oberhalb der Empfaengeradresse (gaengige
+  // Geschaeftsbrief-Konvention - auch wichtig fuer Fensterumschlaege).
+  const senderLine = "moos.park Gastronomie GmbH, Rudolf-Diesel-Straße 23, 86554 Pöttmes";
+  page.drawText(senderLine, { x: marginX, y, size: 8, font: regular, color: GREY });
+  y -= 16;
+
   // Empfaengeradresse
   const addressLines = [
     contact.company,
@@ -111,7 +117,7 @@ export async function generateInvitationLetterPdf(
   });
   page.drawText(dateStr, {
     x: width - marginX - regular.widthOfTextAtSize(dateStr, 11),
-    y: height - 150,
+    y: height - 166,
     size: 11,
     font: regular,
     color: BLACK,
@@ -154,9 +160,17 @@ export async function generateInvitationLetterPdf(
     x: marginX, y, size: 11, font: regular, maxWidth: contentWidth, lineHeight: 15,
   });
 
-  // QR-Code + "Jetzt Platz sichern"
+  // QR-Code + "Jetzt Platz sichern" - zentriert, damit es als eigener
+  // Blickfang aus dem Fliesstext heraussticht.
   y -= 20;
-  page.drawText("Jetzt Platz sichern:", { x: marginX, y, size: 12, font: bold, color: BLACK });
+  const ctaText = "Jetzt Platz sichern:";
+  page.drawText(ctaText, {
+    x: (width - bold.widthOfTextAtSize(ctaText, 12)) / 2,
+    y,
+    size: 12,
+    font: bold,
+    color: BLACK,
+  });
 
   const qrTargetUrl = `${SITE_URL}/event-experience`;
   const qrDataUrl = await QRCode.toDataURL(qrTargetUrl, {
@@ -166,14 +180,15 @@ export async function generateInvitationLetterPdf(
   const qrBytes = Buffer.from(qrDataUrl.split(",")[1], "base64");
   const qrImage = await doc.embedPng(qrBytes);
   const qrSize = 90;
-  page.drawImage(qrImage, { x: marginX, y: y - qrSize - 10, width: qrSize, height: qrSize });
+  const qrX = (width - qrSize) / 2;
+  page.drawImage(qrImage, { x: qrX, y: y - qrSize - 10, width: qrSize, height: qrSize });
 
   // Website-Adresse als Klartext unter dem QR-Code - fuer alle, die den
   // Code nicht scannen koennen/wollen, aber trotzdem manuell zur Seite
   // gelangen sollen.
   const qrUrlText = qrTargetUrl.replace(/^https?:\/\//, "");
   page.drawText(qrUrlText, {
-    x: marginX,
+    x: (width - regular.widthOfTextAtSize(qrUrlText, 9)) / 2,
     y: y - qrSize - 24,
     size: 9,
     font: regular,
@@ -185,9 +200,15 @@ export async function generateInvitationLetterPdf(
   y -= 15;
   page.drawText("Sarah Geisler", { x: marginX, y, size: 11, font: bold, color: BLACK });
 
-  // Fussleiste
+  // Fussleiste: nur noch ein duenner Trennstrich oberhalb, kein
+  // vollflaechiger farbiger Balken mehr.
   const footerHeight = 70;
-  page.drawRectangle({ x: 0, y: 0, width, height: footerHeight, color: LIME });
+  page.drawLine({
+    start: { x: marginX, y: footerHeight },
+    end: { x: width - marginX, y: footerHeight },
+    thickness: 1.5,
+    color: LIME,
+  });
   const footerY = 44;
   page.drawText("MOOS-PARK GASTRONOMIE GMBH", { x: marginX, y: footerY, size: 10, font: bold, color: BLACK });
   page.drawText("Rudolf-Diesel-Straße 23", { x: marginX, y: footerY - 14, size: 9, font: regular, color: BLACK });
