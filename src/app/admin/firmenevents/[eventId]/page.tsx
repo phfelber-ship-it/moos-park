@@ -51,16 +51,28 @@ export default async function CompanyEventAdminPage({
 
   return (
     <div className="mx-auto max-w-7xl px-6 pb-20 pt-32">
-      <p className="text-xs font-black uppercase tracking-wide text-accent-lime">
-        Firmenevents / {event.name}
-      </p>
-      <h1 className="text-2xl font-black uppercase text-foreground">
-        {event.name}
-      </h1>
-      <p className="mt-2 text-sm text-foreground/60">
-        Öffentliche Seite: <code>/{event.slug}</code> · {event.dateLabel} ·{" "}
-        {event.locationName}
-      </p>
+      <div className="flex flex-wrap items-start justify-between gap-4">
+        <div>
+          <p className="text-xs font-black uppercase tracking-wide text-accent-lime">
+            Firmenevents / {event.name}
+          </p>
+          <h1 className="text-2xl font-black uppercase text-foreground">
+            {event.name}
+          </h1>
+          <p className="mt-2 text-sm text-foreground/60">
+            Öffentliche Seite: <code>/{event.slug}</code> · {event.dateLabel} ·{" "}
+            {event.locationName}
+          </p>
+        </div>
+        <a
+          href={`/${event.slug}`}
+          target="_blank"
+          rel="noreferrer"
+          className="rounded-lg border border-foreground/15 px-4 py-2 text-xs font-black uppercase tracking-wide text-foreground transition-colors hover:border-accent-lime"
+        >
+          Zur Webseitenvorschau
+        </a>
+      </div>
 
       <div className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-4">
         <div className="rounded-2xl border border-foreground/10 p-4 text-center">
