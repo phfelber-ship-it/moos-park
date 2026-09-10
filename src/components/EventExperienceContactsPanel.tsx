@@ -476,10 +476,14 @@ export default function EventExperienceContactsPanel({
           </form>
 
           {contacts.length > 0 && (
-            <div className="mt-6 grid gap-1.5">
-              <p className="text-xs font-bold uppercase text-foreground/50">
-                Angelegte Kontakte ({contacts.length})
-              </p>
+            <details className="group mt-6 rounded-xl border border-foreground/10 bg-background p-4">
+              <summary className="flex cursor-pointer list-none items-center justify-between text-xs font-bold uppercase text-foreground/50">
+                <span>Eingeladene Kontakte ({contacts.length})</span>
+                <span className="text-foreground/30 transition-transform group-open:rotate-180">
+                  ▼
+                </span>
+              </summary>
+              <div className="mt-3 grid gap-1.5">
               {contacts.map((c) => (
                 <div
                   key={c.id}
@@ -512,7 +516,8 @@ export default function EventExperienceContactsPanel({
                   </button>
                 </div>
               ))}
-            </div>
+              </div>
+            </details>
           )}
         </div>
 
