@@ -212,7 +212,7 @@ export async function generateInvitationLetterPdf(
     color: GREY,
   });
 
-  y = y - qrSize - 42;
+  y = y - qrSize - 42 - 14;
   page.drawText("Herzliche Grüße,", { x: marginX, y, size: 10, font: regular, color: BLACK });
   y -= 14;
   page.drawText("Sarah Geisler", { x: marginX, y, size: 10, font: bold, color: BLACK });

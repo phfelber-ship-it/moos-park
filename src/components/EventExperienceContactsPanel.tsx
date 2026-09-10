@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import FlipText from "@/components/FlipText";
 
 const ANREDEN = ["Herr", "Frau", "Divers"];
@@ -195,6 +195,14 @@ export default function EventExperienceContactsPanel({
   };
 
   const selected = contacts.find((c) => c.id === selectedId) ?? null;
+
+  // Brief-PDF wird serverseitig bei jedem Aufruf frisch erzeugt (Logo
+  // einbetten, QR-Code generieren, Text umbrechen) - das dauert spuerbar,
+  // daher eine Ladeanzeige waehrend das iframe laedt.
+  const [letterLoading, setLetterLoading] = useState(false);
+  useEffect(() => {
+    if (selectedId) setLetterLoading(true);
+  }, [selectedId]);
 
   // Firmen, fuer die in diesem Event schon ein Kontakt angelegt wurde,
   // fallen aus der Auswahl (Mehrfach-Checkliste + Einzel-Dropdown) raus -
@@ -484,10 +492,18 @@ export default function EventExperienceContactsPanel({
                 </p>
               </div>
 
-              <div className="aspect-[210/297] w-full overflow-hidden rounded-lg border border-foreground/10">
+              <div className="relative aspect-[210/297] w-full overflow-hidden rounded-lg border border-foreground/10">
+                {letterLoading && (
+                  <div className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-2 bg-background">
+                    <div className="h-6 w-6 animate-spin rounded-full border-2 border-foreground/20 border-t-accent-lime" />
+                    <p className="text-xs text-foreground/40">Brief wird erzeugt…</p>
+                  </div>
+                )}
                 <iframe
+                  key={selected.id}
                   title="Brief-Vorschau"
                   src={`${letterBaseUrl}/${selected.id}/letter`}
+                  onLoad={() => setLetterLoading(false)}
                   className="h-full w-full"
                 />
               </div>
