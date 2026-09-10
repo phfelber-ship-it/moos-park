@@ -196,6 +196,18 @@ export default function EventExperienceContactsPanel({
 
   const selected = contacts.find((c) => c.id === selectedId) ?? null;
 
+  // Firmen, fuer die in diesem Event schon ein Kontakt angelegt wurde,
+  // fallen aus der Auswahl (Mehrfach-Checkliste + Einzel-Dropdown) raus -
+  // sonst legt man versehentlich doppelte Kontakte/Briefe fuer dieselbe
+  // Firma an. Abgleich ueber Firma+Name, da manuelle Kontakte keine
+  // Referenz auf die urspruengliche Firmenkontakte-ID speichern.
+  const contactSignature = (c: { company: string; lastName: string; firstName: string }) =>
+    `${c.company.trim().toLowerCase()}|${c.lastName.trim().toLowerCase()}|${c.firstName.trim().toLowerCase()}`;
+  const usedSignatures = new Set(contacts.map(contactSignature));
+  const availableCompanyContacts = companyContacts.filter(
+    (c) => !usedSignatures.has(contactSignature(c))
+  );
+
   const deleteContact = async (id: string) => {
     if (!window.confirm("Diesen Kontakt unwiderruflich löschen?")) return;
     setDeletingId(id);
@@ -236,17 +248,18 @@ export default function EventExperienceContactsPanel({
       <div className="mt-6 grid gap-6 lg:grid-cols-[1fr_320px]">
         {/* Formular + Liste */}
         <div>
-          {companyContacts.length > 0 && (
+          {availableCompanyContacts.length > 0 && (
             <div className="mb-5 rounded-xl border border-foreground/10 bg-background p-4">
               <p className="text-xs font-bold uppercase text-foreground/50">
                 Mehrere Firmen auf einmal anlegen
               </p>
               <p className="mt-1 text-xs text-foreground/40">
                 Firmen auswählen – für jede wird automatisch ein Kontakt +
-                Einladungsbrief für dieses Event erzeugt.
+                Einladungsbrief für dieses Event erzeugt. Bereits angelegte
+                Firmen werden hier nicht mehr angezeigt.
               </p>
               <div className="mt-3 max-h-48 overflow-y-auto rounded-lg border border-foreground/10">
-                {companyContacts.map((c) => (
+                {availableCompanyContacts.map((c) => (
                   <label
                     key={c.id}
                     className="flex cursor-pointer items-center gap-2 border-b border-foreground/5 px-3 py-2 text-xs last:border-b-0 hover:bg-foreground/[0.03]"
@@ -293,7 +306,7 @@ export default function EventExperienceContactsPanel({
             </div>
           )}
 
-          {companyContacts.length > 0 && (
+          {availableCompanyContacts.length > 0 && (
             <div className="mb-3">
               <label className="mb-1 block text-xs font-bold uppercase text-foreground/50">
                 Oder einzeln übernehmen (zum Anpassen vor dem Anlegen)
@@ -304,7 +317,7 @@ export default function EventExperienceContactsPanel({
                 className="w-full rounded-xl border border-foreground/15 bg-foreground/5 px-4 py-2.5 text-sm text-foreground outline-none focus:border-accent-lime"
               >
                 <option value="">– Kontakt auswählen –</option>
-                {companyContacts.map((c) => (
+                {availableCompanyContacts.map((c) => (
                   <option key={c.id} value={c.id}>
                     {c.company || c.lastName || "Ohne Namen"}
                     {c.city ? ` · ${c.city}` : ""}
