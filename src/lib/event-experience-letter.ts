@@ -89,20 +89,6 @@ export async function generateInvitationLetterPdf(
     // Logo optional - Brief funktioniert auch ohne.
   }
 
-  // Faltmarken links (DIN 5008): kurze Striche am linken Seitenrand als
-  // Falzhilfe fuer den Ausdruck - bei 105mm und 210mm von oben (teilt die
-  // A4-Seite fuer den klassischen Wickelfalz in Drittel).
-  const MM = 2.8346;
-  for (const mmFromTop of [105, 210]) {
-    const foldY = height - mmFromTop * MM;
-    page.drawLine({
-      start: { x: 0, y: foldY },
-      end: { x: 14, y: foldY },
-      thickness: 0.4,
-      color: BLACK,
-    });
-  }
-
   // Adressblock zwei Zeilen tiefer als zuvor, damit bei einem
   // Fensterumschlag nicht der Brieftext ("Sehr geehrte...") im Sichtfenster
   // landet, sondern zuverlaessig die Adresse.
