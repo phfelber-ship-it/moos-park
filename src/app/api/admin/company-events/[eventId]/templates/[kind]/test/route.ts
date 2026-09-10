@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { getCompanyEvent, companyEventToInfo } from "@/lib/company-events";
 import { sendSmtpMail } from "@/lib/smtp-mailer";
+import { buildInvitationEmailHtml } from "@/lib/event-experience-email";
 import type { TemplateKind } from "@/lib/event-experience-template";
 
 function isValidKind(kind: string): kind is TemplateKind {
@@ -51,10 +52,21 @@ export async function POST(
   const fill = (text: string) =>
     Object.entries(sample).reduce((acc, [key, value]) => acc.replaceAll(key, value), text);
 
+  const filledBody = fill(body.body);
+  const html = buildInvitationEmailHtml({
+    bodyText: filledBody,
+    ticketCount: 2,
+    // Keine echte Anmeldung vorhanden - Absagen-Button in der Testmail
+    // zeigt auf eine Test-ID, ist rein optisch fuer die Vorschau gedacht.
+    registrationId: "test",
+    info,
+  });
+
   const result = await sendSmtpMail({
     to: body.to.trim(),
     subject: `[TEST] ${fill(body.subject)}`,
-    text: `Dies ist eine Testmail mit Beispieldaten – im echten Versand werden die Platzhalter durch die Daten der jeweiligen Anmeldung ersetzt.\n\n---\n\n${fill(body.body)}`,
+    text: `Dies ist eine Testmail mit Beispieldaten – im echten Versand werden die Platzhalter durch die Daten der jeweiligen Anmeldung ersetzt.\n\n---\n\n${filledBody}`,
+    html,
   });
 
   if (!result.ok) {
