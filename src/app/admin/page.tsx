@@ -146,12 +146,17 @@ export default async function AdminDashboardPage() {
   }
 
   // Event-Experience-Anmeldungen mit Status "NEU" - noch nicht
-  // gesichtet/bearbeitet. Best-effort, analog zu newCompaniesCount.
+  // gesichtet/bearbeitet. Best-effort, analog zu newCompaniesCount. Nur
+  // echte Web-Anmeldungen zaehlen (source "WEB") - manuell im Adminpanel
+  // angelegte Briefkontakte (source "MANUAL") starten zwar auch mit Status
+  // "NEU", sind aber keine echten Interessenten und sollen die Zahl hier
+  // nicht aufblaehen (siehe auch crmRegistrations-Filter in
+  // app/admin/firmenevents/[eventId]/page.tsx).
   let newRegistrationsCount = 0;
   try {
     const registrations = await getRegistrations();
     newRegistrationsCount = registrations.filter(
-      (r) => r.status === "NEU"
+      (r) => r.status === "NEU" && r.source !== "MANUAL"
     ).length;
   } catch {
     newRegistrationsCount = 0;
