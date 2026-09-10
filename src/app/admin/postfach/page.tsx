@@ -1,10 +1,14 @@
 import { getInboxEntries } from "@/lib/inbox";
+import { getInboxReplySettings } from "@/lib/inbox-reply-settings";
 import InboxManager from "@/components/InboxManager";
 
 export const dynamic = "force-dynamic";
 
 export default async function PostfachAdminPage() {
-  const entries = await getInboxEntries();
+  const [entries, replySettings] = await Promise.all([
+    getInboxEntries(),
+    getInboxReplySettings(),
+  ]);
 
   return (
     <div className="mx-auto max-w-3xl px-6 pb-20 pt-32">
@@ -17,7 +21,7 @@ export default async function PostfachAdminPage() {
         an einem Ort. Der eigentliche Versand geht weiterhin direkt an
         info@moos-park.de, hier liegt zusätzlich eine Kopie.
       </p>
-      <InboxManager initialEntries={entries} />
+      <InboxManager initialEntries={entries} initialReplySettings={replySettings} />
     </div>
   );
 }
