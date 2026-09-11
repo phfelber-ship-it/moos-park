@@ -296,7 +296,7 @@ export default function ScannerApp({ eventId }: { eventId: string }) {
         <div className="flex shrink-0 items-center gap-2">
           <Link
             href={`/admin/scanner/${eventId}`}
-            className="rounded-full bg-black/60 px-3 py-1.5 text-[11px] font-bold uppercase tracking-wide text-white"
+            className="rounded-full bg-accent-lime px-3 py-1.5 text-[11px] font-black uppercase tracking-wide text-black"
           >
             Übersicht
           </Link>
