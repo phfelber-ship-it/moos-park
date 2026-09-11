@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
-import { getCompanyEvent } from "@/lib/company-events";
+import { getCompanyEvent, getCompanyEvents } from "@/lib/company-events";
+import EventSwitcher from "@/components/EventSwitcher";
 import { getRegistrationsForEvent } from "@/lib/event-experience";
 import { getEventTemplate } from "@/lib/event-experience-template";
 import { getLetterTemplate } from "@/lib/event-experience-letter-template";
@@ -23,7 +24,7 @@ export default async function CompanyEventAdminPage({
   const event = await getCompanyEvent(eventId);
   if (!event) notFound();
 
-  const [registrations, bestaetigungTemplate, erinnerungTemplate, letterTemplate, companyContacts, matchDecisions] =
+  const [registrations, bestaetigungTemplate, erinnerungTemplate, letterTemplate, companyContacts, matchDecisions, allEvents] =
     await Promise.all([
       getRegistrationsForEvent(eventId),
       getEventTemplate(eventId, "BESTAETIGUNG"),
@@ -31,6 +32,7 @@ export default async function CompanyEventAdminPage({
       getLetterTemplate(),
       getCompanyContacts(),
       getMatchDecisions(eventId),
+      getCompanyEvents(),
     ]);
 
   const manualContacts = registrations.filter((r) => r.source === "MANUAL");
@@ -89,14 +91,20 @@ export default async function CompanyEventAdminPage({
             {event.locationName}
           </p>
         </div>
-        <a
-          href={`/${event.slug}`}
-          target="_blank"
-          rel="noreferrer"
-          className="rounded-lg border border-foreground/15 px-4 py-2 text-xs font-black uppercase tracking-wide text-foreground transition-colors hover:border-accent-lime"
-        >
-          Zur Webseitenvorschau
-        </a>
+        <div className="flex flex-wrap items-center gap-2">
+          <EventSwitcher
+            events={allEvents.map((ev) => ({ id: ev.id, name: ev.name }))}
+            currentEventId={eventId}
+          />
+          <a
+            href={`/${event.slug}`}
+            target="_blank"
+            rel="noreferrer"
+            className="rounded-lg border border-foreground/15 px-4 py-2 text-xs font-black uppercase tracking-wide text-foreground transition-colors hover:border-accent-lime"
+          >
+            Zur Webseitenvorschau
+          </a>
+        </div>
       </div>
 
       <div className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-4">
