@@ -8,6 +8,7 @@ import {
 import { getEventTemplate } from "@/lib/event-experience-template";
 import { applyTemplatePlaceholders, sendInvitationMail } from "@/lib/event-experience-mailer";
 import { buildInvitationEmailHtml } from "@/lib/event-experience-email";
+import { generateTicketPdf } from "@/lib/event-experience-tickets";
 
 // Stuendlicher Vercel-Cron-Job (siehe vercel.json): fuer jedes AKTIVE Event
 // mit aktiviertem Reminder-Workflow + gesetztem eventDateTime wird geprueft,
@@ -53,6 +54,11 @@ export async function GET(request: Request) {
       );
       for (const reg of due) {
         try {
+          // Bereits erstellte Tickets wiederverwenden statt neue zu
+          // erzeugen (unterschiedliche QR-Codes/IDs waeren sonst
+          // ungueltig fuer den Scanner) - nur falls tatsaechlich noch
+          // keine existieren (sollte bei ERINNERUNG eigentlich nie
+          // vorkommen), als Fallback neu bauen.
           const tickets = reg.tickets.length > 0 ? reg.tickets : buildTicketsForRegistration(reg);
           const subject = applyTemplatePlaceholders(template.subject, reg, info);
           const templateBody = applyTemplatePlaceholders(template.body, reg, info);
@@ -62,12 +68,21 @@ export async function GET(request: Request) {
             registrationId: reg.id,
             info,
           });
+          const attachments = await Promise.all(
+            tickets.map(async (ticket, i) => {
+              const pdfBytes = await generateTicketPdf(ticket, reg.company, info);
+              return {
+                filename: `Ticket-${i + 1}-${ticket.lastName}.pdf`,
+                content: Buffer.from(pdfBytes).toString("base64"),
+              };
+            })
+          );
           await sendInvitationMail({
             to: reg.email,
             subject,
             body: templateBody,
             html,
-            attachments: [],
+            attachments,
           });
           await markReminderSent(reg.id);
           sent += 1;
