@@ -4,11 +4,13 @@ import { getRegistrationsForEvent } from "@/lib/event-experience";
 import { getEventTemplate } from "@/lib/event-experience-template";
 import { getLetterTemplate } from "@/lib/event-experience-letter-template";
 import { getCompanyContacts } from "@/lib/company-contacts";
+import { getMatchDecisions } from "@/lib/company-event-matches";
 import EventExperienceManager from "@/components/EventExperienceManager";
 import EventExperienceContactsPanel from "@/components/EventExperienceContactsPanel";
 import EventExperienceLetterTemplateEditor from "@/components/EventExperienceLetterTemplateEditor";
 import CompanyEventTemplateEditor from "@/components/CompanyEventTemplateEditor";
 import CompanyEventReminderEditor from "@/components/CompanyEventReminderEditor";
+import EventExperienceMatchPanel from "@/components/EventExperienceMatchPanel";
 
 export const dynamic = "force-dynamic";
 
@@ -21,13 +23,14 @@ export default async function CompanyEventAdminPage({
   const event = await getCompanyEvent(eventId);
   if (!event) notFound();
 
-  const [registrations, bestaetigungTemplate, erinnerungTemplate, letterTemplate, companyContacts] =
+  const [registrations, bestaetigungTemplate, erinnerungTemplate, letterTemplate, companyContacts, matchDecisions] =
     await Promise.all([
       getRegistrationsForEvent(eventId),
       getEventTemplate(eventId, "BESTAETIGUNG"),
       getEventTemplate(eventId, "ERINNERUNG"),
       getLetterTemplate(),
       getCompanyContacts(),
+      getMatchDecisions(eventId),
     ]);
 
   const manualContacts = registrations.filter((r) => r.source === "MANUAL");
@@ -51,28 +54,11 @@ export default async function CompanyEventAdminPage({
 
   // Abgleich: welche postalisch eingeladenen Firmen (manuelle Kontakte)
   // haben sich tatsaechlich ueber die Landingpage angemeldet (WEB-
-  // Registrierung), welche noch nicht. Kein exakter String-Vergleich,
-  // sondern ein unscharfer Wort-Abgleich (schon EIN gemeinsames,
-  // aussagekraeftiges Wort reicht) - "Containerpark" und "Containerpark
-  // GmbH & Co. KG" sollen z.B. trotz unterschiedlicher Schreibweise
-  // zusammengefuehrt werden.
-  const COMPANY_STOPWORDS = new Set([
-    "gmbh", "co", "kg", "ag", "ug", "ohg", "gbr", "ev", "e", "v", "und", "the", "ltd", "inc",
-  ]);
-  const companyWords = (c: string): string[] =>
-    c
-      .toLowerCase()
-      .normalize("NFKD")
-      .replace(/[̀-ͯ]/g, "")
-      .split(/[^a-z0-9]+/)
-      .filter((w) => w.length > 2 && !COMPANY_STOPWORDS.has(w));
+  // Registrierung), welche noch nicht. Der unscharfe Wort-Abgleich selbst
+  // + die Bestaetigen/Trennen-Interaktion laufen im Client
+  // (EventExperienceMatchPanel) - hier werden nur die reinen Firmennamen
+  // + bereits getroffenen Entscheidungen aufbereitet.
   const normalizeCompany = (c: string) => c.trim().toLowerCase();
-  const companiesMatch = (a: string, b: string): boolean => {
-    const wordsA = companyWords(a);
-    const wordsB = new Set(companyWords(b));
-    return wordsA.some((w) => wordsB.has(w));
-  };
-
   const registeredCompanies = Array.from(
     new Map(
       crmRegistrations
@@ -87,19 +73,6 @@ export default async function CompanyEventAdminPage({
         .map((c) => [normalizeCompany(c.company), c.company.trim()])
     ).values()
   ).sort((a, b) => a.localeCompare(b, "de"));
-  const registeredInvitedCompanies = invitedCompanies.filter((c) =>
-    registeredCompanies.some((r) => companiesMatch(c, r))
-  );
-  const notYetRegisteredCompanies = invitedCompanies.filter(
-    (c) => !registeredCompanies.some((r) => companiesMatch(c, r))
-  );
-  // Firmen, die sich angemeldet haben, ohne vorher als Kontakt eingeladen
-  // worden zu sein (z.B. organisch/direkt ueber die Landingpage gefunden) -
-  // sonst wuerden solche Anmeldungen im Abgleich schlicht fehlen, auch wenn
-  // sie im CRM (z.B. Spalte "Neu") ganz normal auftauchen.
-  const uninvitedRegisteredCompanies = registeredCompanies
-    .filter((r) => !invitedCompanies.some((c) => companiesMatch(c, r)))
-    .sort((a, b) => a.localeCompare(b, "de"));
 
   return (
     <div className="mx-auto max-w-7xl px-6 pb-20 pt-32">
@@ -177,65 +150,14 @@ export default async function CompanyEventAdminPage({
         <p className="mt-1 text-xs text-foreground/50">
           Vergleich der postalisch eingeladenen Firmen mit den echten
           Anmeldungen über die Landingpage ({invitedCompanies.length} Firmen
-          eingeladen)
+          eingeladen) - unscharfe Übereinstimmungen müssen bestätigt werden.
         </p>
-        <div className="mt-4 grid gap-6 sm:grid-cols-2">
-          <div className="rounded-xl border border-accent-lime/30 bg-accent-lime/5 p-4">
-            <p className="text-xs font-black uppercase tracking-wide text-accent-lime">
-              Angemeldet ({registeredInvitedCompanies.length})
-            </p>
-            {registeredInvitedCompanies.length === 0 ? (
-              <p className="mt-2 text-xs text-foreground/40">
-                Noch keine der eingeladenen Firmen hat sich angemeldet.
-              </p>
-            ) : (
-              <ul className="mt-2 grid gap-1">
-                {registeredInvitedCompanies.map((c) => (
-                  <li key={c} className="text-sm text-foreground">
-                    {c}
-                  </li>
-                ))}
-              </ul>
-            )}
-          </div>
-          <div className="rounded-xl border border-foreground/10 bg-background p-4">
-            <p className="text-xs font-black uppercase tracking-wide text-foreground/50">
-              Noch nicht angemeldet ({notYetRegisteredCompanies.length})
-            </p>
-            {notYetRegisteredCompanies.length === 0 ? (
-              <p className="mt-2 text-xs text-foreground/40">
-                Alle eingeladenen Firmen haben sich bereits angemeldet.
-              </p>
-            ) : (
-              <ul className="mt-2 grid gap-1">
-                {notYetRegisteredCompanies.map((c) => (
-                  <li key={c} className="text-sm text-foreground/70">
-                    {c}
-                  </li>
-                ))}
-              </ul>
-            )}
-          </div>
-        </div>
-
-        {uninvitedRegisteredCompanies.length > 0 && (
-          <div className="mt-6 rounded-xl border border-foreground/10 bg-background p-4">
-            <p className="text-xs font-black uppercase tracking-wide text-foreground/50">
-              Zusätzliche Anmeldungen ohne Einladung ({uninvitedRegisteredCompanies.length})
-            </p>
-            <p className="mt-1 text-xs text-foreground/40">
-              Firmen, die sich angemeldet haben, ohne vorher postalisch
-              eingeladen worden zu sein.
-            </p>
-            <ul className="mt-2 grid gap-1">
-              {uninvitedRegisteredCompanies.map((c) => (
-                <li key={c} className="text-sm text-foreground">
-                  {c}
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
+        <EventExperienceMatchPanel
+          eventId={eventId}
+          invitedCompanies={invitedCompanies}
+          registeredCompanies={registeredCompanies}
+          initialDecisions={matchDecisions}
+        />
       </details>
 
       <EventExperienceContactsPanel
