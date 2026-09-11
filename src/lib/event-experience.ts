@@ -421,11 +421,15 @@ export async function saveSentTickets(
   );
 }
 
-// Absage durch den Gast (ueber /event-experience/absagen/[id]) - setzt den
-// Status auf ABGESAGT und speichert, welche Personen laut Gast nicht
-// teilnehmen koennen (kann auch nur ein Teil der angemeldeten Personen
-// sein - die ganze Anmeldung landet trotzdem in der Abgesagt-Spalte, damit
-// sie im Adminpanel nicht uebersehen wird).
+// Absage durch den Gast (ueber /event-experience/absagen/[id]) - speichert,
+// welche Personen laut Gast nicht teilnehmen koennen. Die ganze Anmeldung
+// wandert nur dann auf Status ABGESAGT, wenn WIRKLICH alle angemeldeten
+// Personen (Hauptperson + Begleitpersonen) abgesagt haben, d.h. die Firma
+// komplett nicht teilnimmt. Sagt nur ein Teil ab, bleibt der bisherige
+// Status erhalten (z.B. weiterhin BESTAETIGT) - im CRM erscheint die
+// abgesagte Person trotzdem als Hinweis auf der Karte (siehe
+// EventExperienceManager), ohne die ganze Anmeldung in die Abgesagt-Spalte
+// zu schieben.
 const attendeeSignature = (a: Companion) =>
   `${a.salutation.trim().toLowerCase()}|${a.firstName.trim().toLowerCase()}|${a.lastName.trim().toLowerCase()}`;
 
@@ -439,17 +443,25 @@ export async function cancelRegistration(
       const idx = entries.findIndex((e) => e.id === id);
       if (idx === -1) return { entries, result: null };
       const next = [...entries];
+      const reg = next[idx];
       // Neue Absagen mit bereits vorhandenen zusammenfuehren statt zu
       // ueberschreiben - sonst gehen bei einer zweiten Absage-Runde (z.B.
       // wenn spaeter noch jemand anders absagt) die zuvor schon
       // abgesagten Personen wieder verloren.
-      const existing = next[idx].cancelledAttendees ?? [];
+      const existing = reg.cancelledAttendees ?? [];
       const existingSignatures = new Set(existing.map(attendeeSignature));
       const merged = [
         ...existing,
         ...newlyCancelledAttendees.filter((a) => !existingSignatures.has(attendeeSignature(a))),
       ];
-      next[idx] = { ...next[idx], status: "ABGESAGT", cancelledAt, cancelledAttendees: merged };
+      const totalAttendees = 1 + reg.companions.length;
+      const allCancelled = merged.length >= totalAttendees;
+      next[idx] = {
+        ...reg,
+        status: allCancelled ? "ABGESAGT" : reg.status,
+        cancelledAt,
+        cancelledAttendees: merged,
+      };
       return { entries: next, result: next[idx] };
     },
     (verify) => verify.find((e) => e.id === id)?.cancelledAt === cancelledAt

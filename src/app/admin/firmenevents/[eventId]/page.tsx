@@ -51,14 +51,34 @@ export default async function CompanyEventAdminPage({
 
   // Abgleich: welche postalisch eingeladenen Firmen (manuelle Kontakte)
   // haben sich tatsaechlich ueber die Landingpage angemeldet (WEB-
-  // Registrierung), welche noch nicht - Vergleich ueber den Firmennamen,
-  // da manuelle Kontakte keine Referenz auf eine spaetere WEB-Anmeldung
-  // speichern.
+  // Registrierung), welche noch nicht. Kein exakter String-Vergleich,
+  // sondern ein unscharfer Wort-Abgleich (schon EIN gemeinsames,
+  // aussagekraeftiges Wort reicht) - "Containerpark" und "Containerpark
+  // GmbH & Co. KG" sollen z.B. trotz unterschiedlicher Schreibweise
+  // zusammengefuehrt werden.
+  const COMPANY_STOPWORDS = new Set([
+    "gmbh", "co", "kg", "ag", "ug", "ohg", "gbr", "ev", "e", "v", "und", "the", "ltd", "inc",
+  ]);
+  const companyWords = (c: string): string[] =>
+    c
+      .toLowerCase()
+      .normalize("NFKD")
+      .replace(/[̀-ͯ]/g, "")
+      .split(/[^a-z0-9]+/)
+      .filter((w) => w.length > 2 && !COMPANY_STOPWORDS.has(w));
   const normalizeCompany = (c: string) => c.trim().toLowerCase();
-  const registeredCompanySet = new Set(
-    crmRegistrations
-      .filter((r) => r.source === "WEB" && r.company.trim())
-      .map((r) => normalizeCompany(r.company))
+  const companiesMatch = (a: string, b: string): boolean => {
+    const wordsA = companyWords(a);
+    const wordsB = new Set(companyWords(b));
+    return wordsA.some((w) => wordsB.has(w));
+  };
+
+  const registeredCompanies = Array.from(
+    new Map(
+      crmRegistrations
+        .filter((r) => r.source === "WEB" && r.company.trim())
+        .map((r) => [normalizeCompany(r.company), r.company.trim()])
+    ).values()
   );
   const invitedCompanies = Array.from(
     new Map(
@@ -68,11 +88,18 @@ export default async function CompanyEventAdminPage({
     ).values()
   ).sort((a, b) => a.localeCompare(b, "de"));
   const registeredInvitedCompanies = invitedCompanies.filter((c) =>
-    registeredCompanySet.has(normalizeCompany(c))
+    registeredCompanies.some((r) => companiesMatch(c, r))
   );
   const notYetRegisteredCompanies = invitedCompanies.filter(
-    (c) => !registeredCompanySet.has(normalizeCompany(c))
+    (c) => !registeredCompanies.some((r) => companiesMatch(c, r))
   );
+  // Firmen, die sich angemeldet haben, ohne vorher als Kontakt eingeladen
+  // worden zu sein (z.B. organisch/direkt ueber die Landingpage gefunden) -
+  // sonst wuerden solche Anmeldungen im Abgleich schlicht fehlen, auch wenn
+  // sie im CRM (z.B. Spalte "Neu") ganz normal auftauchen.
+  const uninvitedRegisteredCompanies = registeredCompanies
+    .filter((r) => !invitedCompanies.some((c) => companiesMatch(c, r)))
+    .sort((a, b) => a.localeCompare(b, "de"));
 
   return (
     <div className="mx-auto max-w-7xl px-6 pb-20 pt-32">
@@ -190,6 +217,25 @@ export default async function CompanyEventAdminPage({
             )}
           </div>
         </div>
+
+        {uninvitedRegisteredCompanies.length > 0 && (
+          <div className="mt-6 rounded-xl border border-foreground/10 bg-background p-4">
+            <p className="text-xs font-black uppercase tracking-wide text-foreground/50">
+              Zusätzliche Anmeldungen ohne Einladung ({uninvitedRegisteredCompanies.length})
+            </p>
+            <p className="mt-1 text-xs text-foreground/40">
+              Firmen, die sich angemeldet haben, ohne vorher postalisch
+              eingeladen worden zu sein.
+            </p>
+            <ul className="mt-2 grid gap-1">
+              {uninvitedRegisteredCompanies.map((c) => (
+                <li key={c} className="text-sm text-foreground">
+                  {c}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
       </details>
 
       <EventExperienceContactsPanel
