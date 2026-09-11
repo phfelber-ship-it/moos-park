@@ -1,7 +1,12 @@
 import Link from "next/link";
+import QRCode from "qrcode";
 import { getCompanyEvents } from "@/lib/company-events";
+import { createSessionToken } from "@/lib/session";
 
 export const dynamic = "force-dynamic";
+
+const SITE_URL =
+  process.env.NEXT_PUBLIC_SITE_URL ?? "https://moos-park-hmd7.vercel.app";
 
 // Uebersicht/Auswahl fuer den QR-Check-in-Scanner (/scanner/[eventId]) -
 // der Scanner selbst ist bewusst ohne eigenen Login (Geraet am Einlass ist
@@ -14,6 +19,15 @@ export default async function ScannerAdminPage() {
   const events = await getCompanyEvents();
   const activeEvents = events.filter((e) => e.status === "AKTIV");
 
+  // QR-Code oben: mit der Handy-Kamera scannen -> oeffnet /admin/scanner
+  // direkt eingeloggt (Login-Token im Link, siehe api/scanner-login), ohne
+  // Benutzername/Passwort auf dem Geraet eintippen zu muessen. Gueltig 30
+  // Tage wie eine normale Adminpanel-Session - fuer ein neues Geraet diese
+  // Seite hier am bereits eingeloggten Handy/PC neu aufrufen.
+  const loginToken = await createSessionToken("scanner-device");
+  const loginUrl = `${SITE_URL}/api/scanner-login?t=${loginToken}`;
+  const loginQrDataUrl = await QRCode.toDataURL(loginUrl, { margin: 1, width: 220 });
+
   return (
     <div className="mx-auto max-w-3xl px-6 pb-20 pt-32">
       <h1 className="text-2xl font-black uppercase text-foreground">
@@ -23,6 +37,29 @@ export default async function ScannerAdminPage() {
         QR-Code-Check-in fürs Einlasspersonal am Handy. Event auswählen, den
         Link ans Personal weitergeben.
       </p>
+
+      <div className="mt-6 flex flex-wrap items-center gap-5 rounded-2xl border border-accent-lime/30 bg-accent-lime/5 p-5">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={loginQrDataUrl}
+          alt="QR-Code für automatischen Login im Adminpanel"
+          className="h-28 w-28 shrink-0 rounded-lg bg-white p-2"
+        />
+        <div>
+          <p className="text-sm font-black uppercase tracking-wide text-foreground">
+            Handy-Login per QR-Code
+          </p>
+          <p className="mt-1 text-xs text-foreground/60">
+            Mit der Handy-Kamera scannen – öffnet das Adminpanel direkt
+            angemeldet auf dieser Seite, ohne Passwort einzutippen. Danach
+            oben „Scanner öffnen“ antippen.
+          </p>
+          <p className="mt-2 text-[11px] text-foreground/40">
+            Achtung: Wer diesen Code scannt, ist 30 Tage lang im Adminpanel
+            angemeldet – nur an vertrauenswürdiges Einlasspersonal zeigen.
+          </p>
+        </div>
+      </div>
 
       {activeEvents.length === 0 ? (
         <p className="mt-8 text-sm text-foreground/50">
