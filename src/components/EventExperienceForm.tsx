@@ -124,6 +124,7 @@ export default function EventExperienceForm({
         value={firma}
         onChange={(e) => setFirma(e.target.value)}
         placeholder="Unternehmen"
+        required
         className="w-full rounded-xl border border-foreground/15 bg-foreground/5 px-4 py-3 text-foreground placeholder-foreground/40 outline-none focus:border-accent-lime"
       />
 
@@ -147,12 +148,14 @@ export default function EventExperienceForm({
           value={nachname}
           onChange={(e) => setNachname(e.target.value)}
           placeholder="Name"
+          required
           className="w-full rounded-xl border border-foreground/15 bg-foreground/5 px-4 py-3 text-foreground placeholder-foreground/40 outline-none focus:border-accent-lime"
         />
         <input
           value={vorname}
           onChange={(e) => setVorname(e.target.value)}
           placeholder="Vorname"
+          required
           className="w-full rounded-xl border border-foreground/15 bg-foreground/5 px-4 py-3 text-foreground placeholder-foreground/40 outline-none focus:border-accent-lime"
         />
       </div>
@@ -163,12 +166,14 @@ export default function EventExperienceForm({
           onChange={(e) => setEmail(e.target.value)}
           type="email"
           placeholder="E-Mail"
+          required
           className="w-full rounded-xl border border-foreground/15 bg-foreground/5 px-4 py-3 text-foreground placeholder-foreground/40 outline-none focus:border-accent-lime"
         />
         <input
           value={telefon}
           onChange={(e) => setTelefon(e.target.value)}
           placeholder="Telefonnummer"
+          required
           className="w-full rounded-xl border border-foreground/15 bg-foreground/5 px-4 py-3 text-foreground placeholder-foreground/40 outline-none focus:border-accent-lime"
         />
       </div>
@@ -212,12 +217,14 @@ export default function EventExperienceForm({
                   value={c.lastName}
                   onChange={(e) => updateCompanion(i, { lastName: e.target.value })}
                   placeholder="Name"
+                  required
                   className="w-full rounded-xl border border-foreground/15 bg-foreground/5 px-4 py-3 text-foreground placeholder-foreground/40 outline-none focus:border-accent-lime"
                 />
                 <input
                   value={c.firstName}
                   onChange={(e) => updateCompanion(i, { firstName: e.target.value })}
                   placeholder="Vorname"
+                  required
                   className="w-full rounded-xl border border-foreground/15 bg-foreground/5 px-4 py-3 text-foreground placeholder-foreground/40 outline-none focus:border-accent-lime"
                 />
               </div>
@@ -239,6 +246,7 @@ export default function EventExperienceForm({
           type="checkbox"
           checked={accepted}
           onChange={(e) => setAccepted(e.target.checked)}
+          required
           className="mt-0.5"
         />
         Ich habe die Datenschutzbestimmungen zur Kenntnis genommen und
