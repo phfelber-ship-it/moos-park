@@ -426,9 +426,12 @@ export async function saveSentTickets(
 // teilnehmen koennen (kann auch nur ein Teil der angemeldeten Personen
 // sein - die ganze Anmeldung landet trotzdem in der Abgesagt-Spalte, damit
 // sie im Adminpanel nicht uebersehen wird).
+const attendeeSignature = (a: Companion) =>
+  `${a.salutation.trim().toLowerCase()}|${a.firstName.trim().toLowerCase()}|${a.lastName.trim().toLowerCase()}`;
+
 export async function cancelRegistration(
   id: string,
-  cancelledAttendees: Companion[]
+  newlyCancelledAttendees: Companion[]
 ): Promise<EventExperienceRegistration | null> {
   const cancelledAt = new Date().toISOString();
   return mutateRegistrations(
@@ -436,7 +439,17 @@ export async function cancelRegistration(
       const idx = entries.findIndex((e) => e.id === id);
       if (idx === -1) return { entries, result: null };
       const next = [...entries];
-      next[idx] = { ...next[idx], status: "ABGESAGT", cancelledAt, cancelledAttendees };
+      // Neue Absagen mit bereits vorhandenen zusammenfuehren statt zu
+      // ueberschreiben - sonst gehen bei einer zweiten Absage-Runde (z.B.
+      // wenn spaeter noch jemand anders absagt) die zuvor schon
+      // abgesagten Personen wieder verloren.
+      const existing = next[idx].cancelledAttendees ?? [];
+      const existingSignatures = new Set(existing.map(attendeeSignature));
+      const merged = [
+        ...existing,
+        ...newlyCancelledAttendees.filter((a) => !existingSignatures.has(attendeeSignature(a))),
+      ];
+      next[idx] = { ...next[idx], status: "ABGESAGT", cancelledAt, cancelledAttendees: merged };
       return { entries: next, result: next[idx] };
     },
     (verify) => verify.find((e) => e.id === id)?.cancelledAt === cancelledAt

@@ -49,6 +49,31 @@ export default async function CompanyEventAdminPage({
   const ticketsScanned = allTickets.filter((t) => t.checkedInAt).length;
   const ticketsOpen = ticketsTotal - ticketsScanned;
 
+  // Abgleich: welche postalisch eingeladenen Firmen (manuelle Kontakte)
+  // haben sich tatsaechlich ueber die Landingpage angemeldet (WEB-
+  // Registrierung), welche noch nicht - Vergleich ueber den Firmennamen,
+  // da manuelle Kontakte keine Referenz auf eine spaetere WEB-Anmeldung
+  // speichern.
+  const normalizeCompany = (c: string) => c.trim().toLowerCase();
+  const registeredCompanySet = new Set(
+    crmRegistrations
+      .filter((r) => r.source === "WEB" && r.company.trim())
+      .map((r) => normalizeCompany(r.company))
+  );
+  const invitedCompanies = Array.from(
+    new Map(
+      manualContacts
+        .filter((c) => c.company.trim())
+        .map((c) => [normalizeCompany(c.company), c.company.trim()])
+    ).values()
+  ).sort((a, b) => a.localeCompare(b, "de"));
+  const registeredInvitedCompanies = invitedCompanies.filter((c) =>
+    registeredCompanySet.has(normalizeCompany(c))
+  );
+  const notYetRegisteredCompanies = invitedCompanies.filter(
+    (c) => !registeredCompanySet.has(normalizeCompany(c))
+  );
+
   return (
     <div className="mx-auto max-w-7xl px-6 pb-20 pt-32">
       <div className="flex flex-wrap items-start justify-between gap-4">
@@ -113,6 +138,60 @@ export default async function CompanyEventAdminPage({
         />
       </section>
 
+      <details className="group mt-12">
+        <summary className="flex cursor-pointer list-none items-center gap-2">
+          <h2 className="text-lg font-black uppercase tracking-wide text-accent-lime">
+            Anmeldungen-Abgleich
+          </h2>
+          <span className="text-foreground/30 transition-transform group-open:rotate-180">
+            ▼
+          </span>
+        </summary>
+        <p className="mt-1 text-xs text-foreground/50">
+          Vergleich der postalisch eingeladenen Firmen mit den echten
+          Anmeldungen über die Landingpage ({invitedCompanies.length} Firmen
+          eingeladen)
+        </p>
+        <div className="mt-4 grid gap-6 sm:grid-cols-2">
+          <div className="rounded-xl border border-accent-lime/30 bg-accent-lime/5 p-4">
+            <p className="text-xs font-black uppercase tracking-wide text-accent-lime">
+              Angemeldet ({registeredInvitedCompanies.length})
+            </p>
+            {registeredInvitedCompanies.length === 0 ? (
+              <p className="mt-2 text-xs text-foreground/40">
+                Noch keine der eingeladenen Firmen hat sich angemeldet.
+              </p>
+            ) : (
+              <ul className="mt-2 grid gap-1">
+                {registeredInvitedCompanies.map((c) => (
+                  <li key={c} className="text-sm text-foreground">
+                    {c}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+          <div className="rounded-xl border border-foreground/10 bg-background p-4">
+            <p className="text-xs font-black uppercase tracking-wide text-foreground/50">
+              Noch nicht angemeldet ({notYetRegisteredCompanies.length})
+            </p>
+            {notYetRegisteredCompanies.length === 0 ? (
+              <p className="mt-2 text-xs text-foreground/40">
+                Alle eingeladenen Firmen haben sich bereits angemeldet.
+              </p>
+            ) : (
+              <ul className="mt-2 grid gap-1">
+                {notYetRegisteredCompanies.map((c) => (
+                  <li key={c} className="text-sm text-foreground/70">
+                    {c}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+        </div>
+      </details>
+
       <EventExperienceContactsPanel
         initialContacts={manualContacts}
         companyContacts={companyContacts}
@@ -133,7 +212,7 @@ export default async function CompanyEventAdminPage({
         <p className="mt-1 text-xs text-foreground/50">
           Einladungsbrief, Bestätigungs- und Erinnerungsvorlage
         </p>
-        <EventExperienceLetterTemplateEditor initialTemplate={letterTemplate} />
+        <EventExperienceLetterTemplateEditor initialTemplate={letterTemplate} eventId={eventId} />
         <CompanyEventTemplateEditor
           eventId={eventId}
           kind="BESTAETIGUNG"

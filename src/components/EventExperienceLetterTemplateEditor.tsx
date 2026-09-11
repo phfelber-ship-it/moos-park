@@ -6,8 +6,13 @@ import FlipText from "@/components/FlipText";
 
 export default function EventExperienceLetterTemplateEditor({
   initialTemplate,
+  eventId,
 }: {
   initialTemplate: LetterTemplate;
+  // Fuer den Testbrief-Versand (Eckdaten des Events) - optional, damit die
+  // Komponente auch ohne eventId (Legacy-Kontext) nicht bricht; dann faellt
+  // die Route serverseitig auf die Legacy-Eckdaten zurueck.
+  eventId?: string;
 }) {
   const [introText, setIntroText] = useState(initialTemplate.introText);
   const [detailsText, setDetailsText] = useState(initialTemplate.detailsText);
@@ -18,6 +23,7 @@ export default function EventExperienceLetterTemplateEditor({
   const [status, setStatus] = useState<"idle" | "saving" | "saved" | "error">(
     "idle"
   );
+  const [testStatus, setTestStatus] = useState<"idle" | "creating" | "error">("idle");
 
   const save = async () => {
     setStatus("saving");
@@ -31,6 +37,28 @@ export default function EventExperienceLetterTemplateEditor({
       setStatus("saved");
     } catch {
       setStatus("error");
+    }
+  };
+
+  const createTestLetter = async () => {
+    if (testStatus === "creating") return;
+    setTestStatus("creating");
+    try {
+      const res = await fetch(
+        `/api/admin/company-events/${eventId ?? "legacy"}/letter-template/test`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ introText, detailsText, closingNoteText }),
+        }
+      );
+      if (!res.ok) throw new Error("failed");
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      window.open(url, "_blank");
+      setTestStatus("idle");
+    } catch {
+      setTestStatus("error");
     }
   };
 
@@ -99,22 +127,37 @@ export default function EventExperienceLetterTemplateEditor({
             </p>
           )}
 
-          <button
-            type="button"
-            onClick={save}
-            disabled={status === "saving"}
-            className="w-fit rounded-lg bg-accent-lime px-6 py-2.5 text-xs font-black uppercase tracking-wide text-black transition-transform hover:scale-105 disabled:pointer-events-none disabled:opacity-40"
-          >
-            <FlipText
-              text={
-                status === "saving"
-                  ? "Speichert..."
-                  : status === "saved"
-                    ? "Gespeichert ✓"
-                    : "Vorlage speichern"
-              }
-            />
-          </button>
+          <div className="flex flex-wrap items-center gap-3">
+            <button
+              type="button"
+              onClick={save}
+              disabled={status === "saving"}
+              className="w-fit rounded-lg bg-accent-lime px-6 py-2.5 text-xs font-black uppercase tracking-wide text-black transition-transform hover:scale-105 disabled:pointer-events-none disabled:opacity-40"
+            >
+              <FlipText
+                text={
+                  status === "saving"
+                    ? "Speichert..."
+                    : status === "saved"
+                      ? "Gespeichert ✓"
+                      : "Vorlage speichern"
+                }
+              />
+            </button>
+            <button
+              type="button"
+              onClick={createTestLetter}
+              disabled={testStatus === "creating"}
+              className="w-fit rounded-lg border border-foreground/15 px-6 py-2.5 text-xs font-black uppercase tracking-wide text-foreground transition-colors hover:border-accent-lime disabled:pointer-events-none disabled:opacity-40"
+            >
+              <FlipText
+                text={testStatus === "creating" ? "Wird erstellt..." : "Testbrief erstellen"}
+              />
+            </button>
+          </div>
+          {testStatus === "error" && (
+            <p className="text-sm text-red-500">Testbrief konnte nicht erstellt werden.</p>
+          )}
         </div>
       )}
     </div>
