@@ -18,6 +18,14 @@ export default function AdminTopBar() {
 
   if (pathname === "/admin/login") return null;
 
+  // Kommt man per "Übersicht"-Button direkt aus dem Kamerabild des
+  // Scanners (siehe ScannerApp.tsx), soll oben nicht "Admin-Dashboard"
+  // stehen - das fuehrt vom eigentlichen Türpersonal-Workflow weg. Stattdessen
+  // direkt zurück zur Kamera fuers selbe Event.
+  const scannerEventMatch = pathname?.match(/^\/admin\/scanner\/([^/]+)$/);
+  const backHref = scannerEventMatch ? `/scanner/${scannerEventMatch[1]}` : "/admin";
+  const backLabel = scannerEventMatch ? "← Zurück zur Kamera" : "← Admin-Dashboard";
+
   const doLogout = async () => {
     setLoading(true);
     await fetch("/api/admin/logout", { method: "POST" });
@@ -65,10 +73,10 @@ export default function AdminTopBar() {
     <>
       <div className="fixed inset-x-0 top-20 z-40 flex items-center justify-between border-b border-foreground/10 bg-background/95 px-6 py-3 backdrop-blur">
         <Link
-          href="/admin"
+          href={backHref}
           className="text-xs font-black uppercase tracking-wide text-foreground/60 hover:text-foreground"
         >
-          ← Admin-Dashboard
+          {backLabel}
         </Link>
         <button
           type="button"
