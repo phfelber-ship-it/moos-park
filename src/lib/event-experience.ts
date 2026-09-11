@@ -456,11 +456,20 @@ export async function cancelRegistration(
       ];
       const totalAttendees = 1 + reg.companions.length;
       const allCancelled = merged.length >= totalAttendees;
+      // Tickets der abgesagten Personen entfernen - dadurch verschwinden
+      // sie aus der Scanner-Ticketliste/-Gesamtzahl, und ein evtl. schon
+      // verschicktes QR-Ticket dieser Person wird beim Scan als
+      // "unbekannter Code" abgelehnt statt weiter gueltig zu sein.
+      const cancelledSignatures = new Set(merged.map(attendeeSignature));
+      const remainingTickets = reg.tickets.filter(
+        (t) => !cancelledSignatures.has(attendeeSignature(t))
+      );
       next[idx] = {
         ...reg,
         status: allCancelled ? "ABGESAGT" : reg.status,
         cancelledAt,
         cancelledAttendees: merged,
+        tickets: remainingTickets,
       };
       return { entries: next, result: next[idx] };
     },
