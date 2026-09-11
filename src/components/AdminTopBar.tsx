@@ -71,7 +71,7 @@ export default function AdminTopBar() {
 
   return (
     <>
-      <div className="fixed inset-x-0 top-20 z-40 flex items-center justify-end border-b border-foreground/10 bg-background/95 px-6 py-3 backdrop-blur">
+      <div className="fixed inset-x-0 top-0 z-40 flex items-center justify-end border-b border-foreground/10 bg-background/95 px-6 py-3 backdrop-blur">
         {scannerEventMatch ? (
           <Link
             href={backHref}
