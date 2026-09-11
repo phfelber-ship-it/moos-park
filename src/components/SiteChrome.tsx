@@ -14,7 +14,7 @@ import CookieConsent from "@/components/CookieConsent";
 // bleibt ueberall bestehen. /admin hat bereits seine eigene AdminTopBar
 // (siehe app/admin/layout.tsx) - die oeffentliche Hauptnavigation braucht
 // es dort nicht zusaetzlich.
-const NO_HEADER_PREFIXES = ["/event-experience", "/admin"];
+const NO_HEADER_PREFIXES = ["/event-experience", "/admin", "/abmelden"];
 
 export default function SiteChrome({
   children,

@@ -188,14 +188,35 @@ export default function CompanyContactsManager({
     }
   };
 
-  const filtered = contacts.filter((c) => {
+  const [unsubscribingId, setUnsubscribingId] = useState<string | null>(null);
+  const setUnsubscribed = async (id: string, unsubscribed: boolean) => {
+    setUnsubscribingId(id);
+    try {
+      const res = await fetch(`/api/admin/company-contacts/${id}/unsubscribe`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ unsubscribed }),
+      });
+      const data = await res.json().catch(() => null);
+      if (!res.ok) throw new Error();
+      setContacts((cur) => cur.map((c) => (c.id === id ? data.contact : c)));
+    } catch {
+      alert("Änderung fehlgeschlagen. Bitte erneut versuchen.");
+    } finally {
+      setUnsubscribingId(null);
+    }
+  };
+
+  const matchesQuery = (c: CompanyContact) => {
     if (!query.trim()) return true;
     const q = query.toLowerCase();
     return [c.company, c.lastName, c.firstName, c.city, c.email]
       .join(" ")
       .toLowerCase()
       .includes(q);
-  });
+  };
+  const filtered = contacts.filter((c) => !c.unsubscribed && matchesQuery(c));
+  const unsubscribedContacts = contacts.filter((c) => c.unsubscribed && matchesQuery(c));
 
   return (
     <div>
@@ -284,6 +305,15 @@ export default function CompanyContactsManager({
                   </button>
                   <button
                     type="button"
+                    onClick={() => setUnsubscribed(c.id, true)}
+                    disabled={unsubscribingId === c.id}
+                    title="In 'Abgemeldete Firmen' verschieben"
+                    className="rounded-lg border border-foreground/15 px-3 py-1.5 text-[11px] font-bold uppercase text-foreground/70 transition-colors hover:border-yellow-500 hover:text-yellow-500 disabled:opacity-40"
+                  >
+                    Abmelden
+                  </button>
+                  <button
+                    type="button"
                     onClick={() => deleteContact(c.id, c.company || c.lastName || "Kontakt")}
                     className="rounded-lg border border-red-500/30 px-3 py-1.5 text-[11px] font-bold uppercase text-red-400 transition-colors hover:bg-red-500/10"
                   >
@@ -300,6 +330,50 @@ export default function CompanyContactsManager({
           </p>
         )}
       </div>
+
+      <details className="group mt-10">
+        <summary className="flex cursor-pointer list-none items-center gap-2">
+          <p className="text-sm font-black uppercase tracking-wide text-foreground/60">
+            Abgemeldete Firmen ({unsubscribedContacts.length})
+          </p>
+          <span className="text-foreground/30 transition-transform group-open:rotate-180">
+            ▼
+          </span>
+        </summary>
+        <p className="mt-1 text-xs text-foreground/40">
+          Firmen, die sich über den Abmelden-Link in einer E-Mail
+          ausgetragen haben oder manuell hierher verschoben wurden - bekommen
+          keine weiteren Einladungen mehr.
+        </p>
+        <div className="mt-4 grid gap-3">
+          {unsubscribedContacts.map((c) => (
+            <div
+              key={c.id}
+              className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-foreground/10 bg-background p-4"
+            >
+              <div>
+                <p className="font-bold text-foreground">
+                  {c.company || c.lastName || "Ohne Namen"}
+                </p>
+                {c.email && <p className="text-xs text-foreground/50">{c.email}</p>}
+              </div>
+              <button
+                type="button"
+                onClick={() => setUnsubscribed(c.id, false)}
+                disabled={unsubscribingId === c.id}
+                className="rounded-lg bg-accent-lime px-4 py-1.5 text-[11px] font-black uppercase tracking-wide text-black transition-transform hover:scale-105 disabled:opacity-40"
+              >
+                Wieder anmelden
+              </button>
+            </div>
+          ))}
+          {unsubscribedContacts.length === 0 && (
+            <p className="py-4 text-center text-sm text-foreground/40">
+              Keine abgemeldeten Firmen.
+            </p>
+          )}
+        </div>
+      </details>
     </div>
   );
 }

@@ -29,6 +29,10 @@ export function buildCancelUrl(registrationId: string): string {
   return `${SITE_URL}/event-experience/absagen/${registrationId}`;
 }
 
+export function buildUnsubscribeUrl(registrationId: string): string {
+  return `${SITE_URL}/abmelden/${registrationId}`;
+}
+
 export function buildInvitationEmailHtml(params: {
   bodyText: string;
   ticketCount: number;
@@ -38,6 +42,7 @@ export function buildInvitationEmailHtml(params: {
   const info = params.info ?? LEGACY_EVENT_INFO;
   const bodyHtml = escapeHtml(params.bodyText).replace(/\n/g, "<br>");
   const cancelUrl = buildCancelUrl(params.registrationId);
+  const unsubscribeUrl = buildUnsubscribeUrl(params.registrationId);
 
   const timetableRows = info.timetable.map(
     (t) => `
@@ -131,6 +136,11 @@ export function buildInvitationEmailHtml(params: {
               <div style="font:400 12px/1.6 Helvetica,Arial,sans-serif;color:${MUTED};">
                 MOOS-PARK GASTRONOMIE GMBH · Rudolf-Diesel-Straße 23 · 86554 Pöttmes<br>
                 s.geisler@moos-park.de
+              </div>
+              <div style="margin-top:10px;">
+                <a href="${unsubscribeUrl}" style="font:400 11px Helvetica,Arial,sans-serif;color:${MUTED};text-decoration:underline;">
+                  Von diesen E-Mails abmelden
+                </a>
               </div>
             </td>
           </tr>
