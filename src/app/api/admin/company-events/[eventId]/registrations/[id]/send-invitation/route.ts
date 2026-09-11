@@ -30,7 +30,11 @@ export async function POST(
   const info = event ? companyEventToInfo(event) : undefined;
 
   try {
-    const tickets = buildTicketsForRegistration(reg);
+    // Beim erneuten Versand (z.B. weil der Kunde die erste Mail nicht
+    // bekommen hat) die bereits erstellten Tickets wiederverwenden statt
+    // neue QR-Codes zu generieren - sonst wird ein zuvor schon
+    // verschicktes/gescanntes Ticket ungueltig.
+    const tickets = reg.tickets.length > 0 ? reg.tickets : buildTicketsForRegistration(reg);
 
     const template = await getEventTemplate(eventId, "BESTAETIGUNG");
     const subject = applyTemplatePlaceholders(template.subject, reg, info);
