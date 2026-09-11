@@ -26,7 +26,7 @@ export async function GET(request: NextRequest) {
     secure: true,
     sameSite: "lax",
     path: "/",
-    maxAge: 60 * 60 * 24 * 30,
+    maxAge: 60 * 60 * 24 * 360,
   });
   return res;
 }

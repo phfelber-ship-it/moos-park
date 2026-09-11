@@ -55,7 +55,7 @@ export default async function ScannerAdminPage() {
             oben „Scanner öffnen“ antippen.
           </p>
           <p className="mt-2 text-[11px] text-foreground/40">
-            Achtung: Wer diesen Code scannt, ist 30 Tage lang im Adminpanel
+            Achtung: Wer diesen Code scannt, ist 360 Tage lang im Adminpanel
             angemeldet – nur an vertrauenswürdiges Einlasspersonal zeigen.
           </p>
         </div>

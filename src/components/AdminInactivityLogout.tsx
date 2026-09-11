@@ -4,7 +4,7 @@ import { useEffect, useRef } from "react";
 
 // Meldet im Adminpanel automatisch ab, wenn 30 Minuten lang keine
 // Aktivitaet (Maus/Tastatur/Touch/Scroll) stattgefunden hat - der
-// admin_session-Cookie selbst laeuft erst nach 30 Tagen ab (siehe
+// admin_session-Cookie selbst laeuft erst nach 360 Tagen ab (siehe
 // lib/session.ts), das ist fuer ein offen liegendes/gemeinsam genutztes
 // Geraet zu lang. Rein clientseitiger Inaktivitaets-Timer, der bei
 // Aktivitaet immer wieder zurueckgesetzt wird.

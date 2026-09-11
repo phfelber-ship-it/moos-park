@@ -4,7 +4,7 @@
 // Netzwerk-Zugriff auf den Blob-Store pruefen.
 
 const encoder = new TextEncoder();
-const SESSION_TTL_MS = 1000 * 60 * 60 * 24 * 30; // 30 Tage
+const SESSION_TTL_MS = 1000 * 60 * 60 * 24 * 360; // 360 Tage
 
 function base64url(bytes: Uint8Array): string {
   let binary = "";
