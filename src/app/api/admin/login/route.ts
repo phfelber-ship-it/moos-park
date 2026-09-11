@@ -42,7 +42,7 @@ export async function POST(request: Request) {
     secure: true,
     sameSite: "lax",
     path: "/",
-    maxAge: 60 * 60 * 24 * 360,
+    maxAge: 60 * 60 * 24 * 400, // Chrome-Cap fuer Cookie-Max-Age; Token selbst hat keine Ablaufzeit
   });
   return res;
 }

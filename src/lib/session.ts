@@ -1,10 +1,22 @@
 // Signierte Session-Tokens per Web Crypto (HMAC-SHA256) - laeuft sowohl im
-// Node- als auch im Edge-Runtime (Proxy), da wir bewusst kein Node-only
-// "crypto"-Modul hier verwenden. Der Proxy kann das Token so ohne
-// Netzwerk-Zugriff auf den Blob-Store pruefen.
+// Node- als auch im Edge-Runtime (Proxy). Tokens laufen bewusst NIE von
+// selbst ab ("Gueltigkeit immer freigeben") - stattdessen gibt es eine im
+// Blob-Store gespeicherte "Epoche": jedes Token traegt die Epoche, mit der
+// es ausgestellt wurde, und ist nur gueltig, solange diese mit der
+// aktuellen Epoche uebereinstimmt. "Alle Geraete abmelden" (siehe
+// revokeAllSessions) erzeugt einfach eine neue, zufaellige Epoche - damit
+// werden alle bisher ausgestellten Tokens (inkl. Scanner-QR-Login-Links)
+// in einem Rutsch ungueltig, ohne eine Liste einzelner Tokens fuehren zu
+// muessen. Kostet einen Netzwerk-Roundtrip pro Anfrage (Epoche lesen),
+// aber ist fuer ein internes Adminpanel vertretbar.
+import { list, put } from "@vercel/blob";
 
 const encoder = new TextEncoder();
-const SESSION_TTL_MS = 1000 * 60 * 60 * 24 * 360; // 360 Tage
+const EPOCH_PATH = "admin/session-epoch.json";
+// Ohne vorhandenen Epochen-Eintrag (z.B. direkt nach diesem Feature-Rollout)
+// gilt Epoche "0" fuer neu ausgestellte wie fuer bereits bestehende
+// Tokens - kein erzwungenes Ausloggen beim Deploy dieser Aenderung.
+const DEFAULT_EPOCH = "0";
 
 function base64url(bytes: Uint8Array): string {
   let binary = "";
@@ -28,12 +40,37 @@ async function getKey(secret: string) {
   );
 }
 
+async function getCurrentEpoch(): Promise<string> {
+  try {
+    const { blobs } = await list({ prefix: EPOCH_PATH });
+    const match = blobs.find((b) => b.pathname === EPOCH_PATH);
+    if (!match) return DEFAULT_EPOCH;
+    const res = await fetch(`${match.url}?v=${Date.now()}`, { cache: "no-store" });
+    if (!res.ok) return DEFAULT_EPOCH;
+    const data = (await res.json()) as { epoch?: string };
+    return typeof data.epoch === "string" ? data.epoch : DEFAULT_EPOCH;
+  } catch {
+    return DEFAULT_EPOCH;
+  }
+}
+
+// "Alle Geraete abmelden" - macht jedes bisher ausgestellte Session-Token
+// (Adminpanel-Login wie Scanner-QR-Login) auf einen Schlag ungueltig,
+// inklusive der Session, aus der dieser Aufruf selbst kommt.
+export async function revokeAllSessions(): Promise<void> {
+  const epoch = crypto.randomUUID();
+  await put(EPOCH_PATH, JSON.stringify({ epoch }), {
+    access: "public",
+    contentType: "application/json",
+    allowOverwrite: true,
+    cacheControlMaxAge: 0,
+  });
+}
+
 export async function createSessionToken(username: string): Promise<string> {
   const secret = process.env.ADMIN_PASSWORD ?? "";
-  const payload = JSON.stringify({
-    u: username,
-    exp: Date.now() + SESSION_TTL_MS,
-  });
+  const epoch = await getCurrentEpoch();
+  const payload = JSON.stringify({ u: username, epoch });
   const payloadB64 = base64url(encoder.encode(payload));
   const key = await getKey(secret);
   const sig = await crypto.subtle.sign("HMAC", key, encoder.encode(payloadB64));
@@ -60,8 +97,9 @@ export async function verifySessionToken(
   try {
     const payload = JSON.parse(
       new TextDecoder().decode(base64urlToBytes(payloadB64))
-    ) as { u: string; exp: number };
-    if (typeof payload.exp !== "number" || payload.exp < Date.now()) {
+    ) as { u: string; epoch?: string };
+    const currentEpoch = await getCurrentEpoch();
+    if ((payload.epoch ?? DEFAULT_EPOCH) !== currentEpoch) {
       return null;
     }
     return payload.u;

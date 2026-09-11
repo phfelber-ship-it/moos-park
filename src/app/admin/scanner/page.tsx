@@ -2,6 +2,7 @@ import Link from "next/link";
 import QRCode from "qrcode";
 import { getCompanyEvents } from "@/lib/company-events";
 import { createSessionToken } from "@/lib/session";
+import RevokeAllSessionsButton from "@/components/RevokeAllSessionsButton";
 
 export const dynamic = "force-dynamic";
 
@@ -21,9 +22,10 @@ export default async function ScannerAdminPage() {
 
   // QR-Code oben: mit der Handy-Kamera scannen -> oeffnet /admin/scanner
   // direkt eingeloggt (Login-Token im Link, siehe api/scanner-login), ohne
-  // Benutzername/Passwort auf dem Geraet eintippen zu muessen. Gueltig 30
-  // Tage wie eine normale Adminpanel-Session - fuer ein neues Geraet diese
-  // Seite hier am bereits eingeloggten Handy/PC neu aufrufen.
+  // Benutzername/Passwort auf dem Geraet eintippen zu muessen. Laeuft
+  // nicht von selbst ab (siehe lib/session.ts) - fuer ein neues Geraet
+  // diese Seite hier am bereits eingeloggten Handy/PC neu aufrufen. Bei
+  // Verlust eines Geraets: "Alle Geraete abmelden" unten.
   const loginToken = await createSessionToken("scanner-device");
   const loginUrl = `${SITE_URL}/api/scanner-login?t=${loginToken}`;
   const loginQrDataUrl = await QRCode.toDataURL(loginUrl, { margin: 1, width: 220 });
@@ -55,9 +57,12 @@ export default async function ScannerAdminPage() {
             oben „Scanner öffnen“ antippen.
           </p>
           <p className="mt-2 text-[11px] text-foreground/40">
-            Achtung: Wer diesen Code scannt, ist 360 Tage lang im Adminpanel
+            Achtung: Wer diesen Code scannt, bleibt dauerhaft im Adminpanel
             angemeldet – nur an vertrauenswürdiges Einlasspersonal zeigen.
           </p>
+          <div className="mt-3">
+            <RevokeAllSessionsButton />
+          </div>
         </div>
       </div>
 
