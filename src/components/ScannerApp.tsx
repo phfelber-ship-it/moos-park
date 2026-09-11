@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import Link from "next/link";
 import jsQR from "jsqr";
 
 type ScanState =
@@ -31,6 +32,9 @@ export default function ScannerApp({ eventId }: { eventId: string }) {
   const busyRef = useRef(false);
   const dismissTimerRef = useRef<number | null>(null);
   const trackRef = useRef<MediaStreamTrack | null>(null);
+  const streamRef = useRef<MediaStream | null>(null);
+  const lastFrameAtRef = useRef<number>(Date.now());
+  const restartingRef = useRef(false);
 
   const [state, setState] = useState<ScanState>({ kind: "SCANNING" });
   const [cameraError, setCameraError] = useState<string | null>(null);
@@ -96,18 +100,29 @@ export default function ScannerApp({ eventId }: { eventId: string }) {
   );
 
   useEffect(() => {
-    let stream: MediaStream | null = null;
     let cancelled = false;
 
+    // Kamera-Bild wird auf manchen Geraeten/Browsern nach einer Weile
+    // (Bildschirm gesperrt, App im Hintergrund, kurzer Verbindungsaussetzer)
+    // schwarz, ohne dass ein Fehler geworfen wird - man musste bisher
+    // manuell die Seite neu laden. Jetzt: Watchdog unten startet die Kamera
+    // automatisch neu, wenn laengere Zeit kein neues Bildschirm-Frame kam.
     async function start() {
       try {
-        stream = await navigator.mediaDevices.getUserMedia({
+        const stream = await navigator.mediaDevices.getUserMedia({
           video: { facingMode: { ideal: "environment" } },
           audio: false,
         });
-        if (cancelled || !videoRef.current) return;
+        if (cancelled || !videoRef.current) {
+          stream.getTracks().forEach((t) => t.stop());
+          return;
+        }
+        streamRef.current?.getTracks().forEach((t) => t.stop());
+        streamRef.current = stream;
         videoRef.current.srcObject = stream;
         await videoRef.current.play();
+        setCameraError(null);
+        lastFrameAtRef.current = Date.now();
 
         // Taschenlampe: nur auf manchen Geraeten/Browsern ueber die
         // "torch"-Constraint verfuegbar (v.a. Android Chrome) - iOS Safari
@@ -118,23 +133,32 @@ export default function ScannerApp({ eventId }: { eventId: string }) {
           | (MediaTrackCapabilities & { torch?: boolean })
           | undefined;
         setTorchSupported(Boolean(capabilities?.torch));
-
-        tick();
       } catch {
         setCameraError(
           "Kamera-Zugriff nicht möglich – bitte Berechtigung erteilen und Seite neu laden."
         );
+      } finally {
+        restartingRef.current = false;
       }
+    }
+
+    async function restart() {
+      if (restartingRef.current || cancelled) return;
+      restartingRef.current = true;
+      await start();
     }
 
     function tick() {
       const video = videoRef.current;
       const canvas = canvasRef.current;
-      if (!video || !canvas) {
-        rafRef.current = requestAnimationFrame(tick);
-        return;
+      if (video && video.readyState === video.HAVE_ENOUGH_DATA) {
+        // Zaehlt auch waehrend ein Scan-Ergebnis angezeigt wird (busyRef) -
+        // der Watchdog soll nur bei wirklich schwarzem/eingefrorenem Bild
+        // eingreifen, nicht waehrend der normalen Anzeige-Pause nach einem
+        // erfolgreichen Scan.
+        lastFrameAtRef.current = Date.now();
       }
-      if (video.readyState === video.HAVE_ENOUGH_DATA && !busyRef.current) {
+      if (video && canvas && video.readyState === video.HAVE_ENOUGH_DATA && !busyRef.current) {
         canvas.width = video.videoWidth;
         canvas.height = video.videoHeight;
         const ctx = canvas.getContext("2d", { willReadFrequently: true });
@@ -152,12 +176,34 @@ export default function ScannerApp({ eventId }: { eventId: string }) {
       rafRef.current = requestAnimationFrame(tick);
     }
 
+    // Watchdog: kommt 5s lang kein frisches Kamera-Frame an (und wir
+    // warten nicht gerade auf ein Neustart-Ergebnis, auch nicht waehrend
+    // ein Scan-Ergebnis angezeigt wird - da laeuft tick() bewusst weiter,
+    // liest aber busyRef ab), Kamera automatisch neu starten.
+    const watchdog = window.setInterval(() => {
+      if (document.hidden || cancelled) return;
+      if (Date.now() - lastFrameAtRef.current > 5000) {
+        restart();
+      }
+    }, 2000);
+
+    // Nach Rueckkehr aus dem Hintergrund (Bildschirm entsperrt, App-Wechsel
+    // beendet) Kamera vorsorglich neu starten - typischer Ausloeser fuer
+    // das schwarze Bild.
+    const onVisible = () => {
+      if (!document.hidden) restart();
+    };
+    document.addEventListener("visibilitychange", onVisible);
+
     start();
+    tick();
 
     return () => {
       cancelled = true;
+      window.clearInterval(watchdog);
+      document.removeEventListener("visibilitychange", onVisible);
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
-      stream?.getTracks().forEach((t) => t.stop());
+      streamRef.current?.getTracks().forEach((t) => t.stop());
     };
   }, [handleCode]);
 
@@ -243,21 +289,29 @@ export default function ScannerApp({ eventId }: { eventId: string }) {
         <div className="h-64 w-64 rounded-2xl border-4 border-accent-lime/80" />
       </div>
 
-      <div className="absolute left-0 right-0 top-0 flex items-center justify-between p-4">
-        <p className="rounded-full bg-black/60 px-3 py-1.5 text-[11px] font-bold uppercase tracking-wide text-white">
+      <div className="absolute left-0 right-0 top-0 flex items-center justify-between gap-2 p-4">
+        <p className="truncate rounded-full bg-black/60 px-3 py-1.5 text-[11px] font-bold uppercase tracking-wide text-white">
           {eventId}
         </p>
-        {torchSupported && (
-          <button
-            onClick={toggleTorch}
-            className={`flex h-9 w-9 items-center justify-center rounded-full text-lg ${
-              torchOn ? "bg-accent-lime text-black" : "bg-black/60 text-white"
-            }`}
-            aria-label="Taschenlampe"
+        <div className="flex shrink-0 items-center gap-2">
+          <Link
+            href={`/admin/scanner/${eventId}`}
+            className="rounded-full bg-black/60 px-3 py-1.5 text-[11px] font-bold uppercase tracking-wide text-white"
           >
-            💡
-          </button>
-        )}
+            Übersicht
+          </Link>
+          {torchSupported && (
+            <button
+              onClick={toggleTorch}
+              className={`flex h-9 w-9 items-center justify-center rounded-full text-lg ${
+                torchOn ? "bg-accent-lime text-black" : "bg-black/60 text-white"
+              }`}
+              aria-label="Taschenlampe"
+            >
+              💡
+            </button>
+          )}
+        </div>
       </div>
 
       {state.kind === "LOADING" && (
