@@ -73,6 +73,18 @@ export default async function CompanyEventAdminPage({
   const notYetRegisteredCompanies = invitedCompanies.filter(
     (c) => !registeredCompanySet.has(normalizeCompany(c))
   );
+  // Firmen, die sich angemeldet haben, ohne vorher als Kontakt eingeladen
+  // worden zu sein (z.B. organisch/direkt ueber die Landingpage gefunden) -
+  // sonst wuerden solche Anmeldungen im Abgleich schlicht fehlen, auch wenn
+  // sie im CRM (z.B. Spalte "Neu") ganz normal auftauchen.
+  const invitedCompanySet = new Set(invitedCompanies.map(normalizeCompany));
+  const uninvitedRegisteredCompanies = Array.from(
+    new Map(
+      crmRegistrations
+        .filter((r) => r.source === "WEB" && r.company.trim() && !invitedCompanySet.has(normalizeCompany(r.company)))
+        .map((r) => [normalizeCompany(r.company), r.company.trim()])
+    ).values()
+  ).sort((a, b) => a.localeCompare(b, "de"));
 
   return (
     <div className="mx-auto max-w-7xl px-6 pb-20 pt-32">
@@ -190,6 +202,25 @@ export default async function CompanyEventAdminPage({
             )}
           </div>
         </div>
+
+        {uninvitedRegisteredCompanies.length > 0 && (
+          <div className="mt-6 rounded-xl border border-foreground/10 bg-background p-4">
+            <p className="text-xs font-black uppercase tracking-wide text-foreground/50">
+              Zusätzliche Anmeldungen ohne Einladung ({uninvitedRegisteredCompanies.length})
+            </p>
+            <p className="mt-1 text-xs text-foreground/40">
+              Firmen, die sich angemeldet haben, ohne vorher postalisch
+              eingeladen worden zu sein.
+            </p>
+            <ul className="mt-2 grid gap-1">
+              {uninvitedRegisteredCompanies.map((c) => (
+                <li key={c} className="text-sm text-foreground">
+                  {c}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
       </details>
 
       <EventExperienceContactsPanel
