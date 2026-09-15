@@ -73,7 +73,11 @@ export default function CancelPage({
   };
 
   return (
-    <div className="mx-auto flex min-h-[100svh] max-w-xl flex-col justify-center px-6 py-16">
+    // Bewusst im hellen Design wie der Rest des Event-Experience-Flows.
+    <div
+      data-theme="light"
+      className="mx-auto flex min-h-[100svh] max-w-xl flex-col justify-center bg-background px-6 py-16"
+    >
       <div className="text-center">
         <p className="text-xs font-black uppercase tracking-[0.2em] text-accent-lime">
           THE EVENT EXPERIENCE

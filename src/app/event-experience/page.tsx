@@ -56,7 +56,10 @@ const FAQ = [
 
 export default function EventExperiencePage() {
   return (
-    <div>
+    // Event-Experience-Landingpage laeuft bewusst immer im hellen Design
+    // (data-theme="light" nur fuer diesen Teilbaum), unabhaengig vom
+    // Hell/Dunkel-Umschalter des restlichen Auftritts.
+    <div data-theme="light" className="min-h-screen bg-background">
       <EventExperienceIntro />
 
       {/* Hero: fuellt einen kompletten Bildschirm (100svh statt 100vh wegen

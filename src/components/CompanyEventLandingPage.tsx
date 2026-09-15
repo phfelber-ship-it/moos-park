@@ -50,7 +50,10 @@ export default function CompanyEventLandingPage({ event }: { event: CompanyEvent
   ];
 
   return (
-    <div>
+    // Event-Experience-Landingpages laufen bewusst immer im hellen Design
+    // (data-theme="light" nur fuer diesen Teilbaum) - unabhaengig vom
+    // Hell/Dunkel-Umschalter, der fuer den Rest der Seite gilt.
+    <div data-theme="light" className="min-h-screen bg-background">
       <EventExperienceIntro title={event.heroTitle} />
 
       <section className="flex min-h-[100svh] flex-col items-center justify-center px-6 py-16 text-center">

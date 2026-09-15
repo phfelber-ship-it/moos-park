@@ -17,7 +17,13 @@ const MAP_EMBED_SRC = `https://www.google.com/maps?q=${encodeURIComponent(
 
 export default function EventExperienceConfirmationPage() {
   return (
-    <div className="mx-auto flex min-h-[100svh] max-w-2xl flex-col justify-center px-6 py-16">
+    // Bewusst im hellen Design wie der Rest des Event-Experience-Flows
+    // (Landingpage, Absage-/Abmelden-Seiten) - data-theme="light" nur fuer
+    // diesen Teilbaum.
+    <div
+      data-theme="light"
+      className="mx-auto flex min-h-[100svh] max-w-2xl flex-col justify-center bg-background px-6 py-16"
+    >
       <div className="text-center">
         <p className="text-4xl">🎉</p>
         <h1 className="mt-4 text-5xl font-black uppercase leading-tight text-foreground sm:text-6xl">
