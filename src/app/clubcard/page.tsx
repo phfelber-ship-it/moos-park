@@ -79,8 +79,9 @@ export default function ClubcardPage() {
           Reopening bis Mai 2027 bei unseren Veranstaltungen.
         </p>
         <p className="mx-auto mt-3 max-w-xl text-sm font-bold text-accent-lime">
-          Nur bis zum Reopening am 12.09. zum vergünstigten Early-Bird-Preis
-          – danach wird&apos;s teurer. Jetzt zuschlagen!
+          Nur bis zum 30.09.2026 zum vergünstigten Early-Bird-Preis – danach
+          wird&apos;s teurer. Das Angebot endet am 15.10.2026. Jetzt
+          zuschlagen!
         </p>
         <a
           href={CTA_HREF}
@@ -157,18 +158,19 @@ export default function ClubcardPage() {
             🔥 Jetzt Early Bird sichern
           </p>
           <h2 className="mt-3 text-3xl font-black uppercase leading-tight text-black sm:text-4xl">
-            Die günstigen Early-Bird-Preise gibt es nur bis zum Reopening am
-            12.09. online.
+            Die günstigen Early-Bird-Preise gibt es nur bis zum 30.09.2026
+            online.
           </h2>
           <p className="mx-auto mt-4 max-w-xl font-bold text-black/80">
-            Ab dem Reopening sind die Clubcards weiterhin im MOOS.PARK
-            erhältlich – allerdings zum teureren regulären Preis: Bronze
-            49 € · Silber 79 € · Gold 129 € · Premium 149 €.
+            Vom 01.10.2026 bis zum 15.10.2026 sind die Clubcards weiterhin im
+            MOOS.PARK erhältlich – allerdings zum teureren regulären Preis:
+            Bronze 49 € · Silber 79 € · Gold 129 € · Premium 149 €. Am
+            15.10.2026 endet das Angebot endgültig.
           </p>
           <p className="mx-auto mt-4 max-w-xl text-black/80">
             <span className="font-black uppercase">Dein Vorteil:</span> Du
             sicherst dir deine Clubcard jetzt zum günstigsten Preis, bevor
-            sie ab dem 12.09. teurer wird – und kannst sie bereits beim
+            sie ab dem 01.10.2026 teurer wird – und kannst sie bereits beim
             Reopening nutzen. Also: jetzt zuschlagen!
           </p>
           <a
