@@ -12,6 +12,8 @@ import EventExperienceLetterTemplateEditor from "@/components/EventExperienceLet
 import CompanyEventTemplateEditor from "@/components/CompanyEventTemplateEditor";
 import CompanyEventReminderEditor from "@/components/CompanyEventReminderEditor";
 import EventExperienceMatchPanel from "@/components/EventExperienceMatchPanel";
+import { getGa4PageViews } from "@/lib/ga4";
+import { resolveDateRange } from "@/lib/date-range";
 
 export const dynamic = "force-dynamic";
 
@@ -24,7 +26,14 @@ export default async function CompanyEventAdminPage({
   const event = await getCompanyEvent(eventId);
   if (!event) notFound();
 
-  const [registrations, bestaetigungTemplate, erinnerungTemplate, letterTemplate, companyContacts, matchDecisions, allEvents] =
+  // Seitenaufrufe der oeffentlichen Landingpage (letzte 30 Tage) aus GA4 -
+  // liefert nur anonymisierte Aggregat-Zahlen (Aufrufe/Sitzungen/Nutzer),
+  // KEINE Namen einzelner Besucher (das kann GA4 grundsaetzlich nicht,
+  // unabhaengig vom Tool) - wer konkret war, steht nur im CRM unten, sobald
+  // sich jemand ueber das Formular angemeldet hat.
+  const pageviewRange = resolveDateRange("30d", undefined, undefined);
+
+  const [registrations, bestaetigungTemplate, erinnerungTemplate, letterTemplate, companyContacts, matchDecisions, allEvents, pageStats] =
     await Promise.all([
       getRegistrationsForEvent(eventId),
       getEventTemplate(eventId, "BESTAETIGUNG"),
@@ -33,6 +42,7 @@ export default async function CompanyEventAdminPage({
       getCompanyContacts(),
       getMatchDecisions(eventId),
       getCompanyEvents(),
+      getGa4PageViews(`/${event.slug}`, pageviewRange.startDate, pageviewRange.endDate),
     ]);
 
   const manualContacts = registrations.filter((r) => r.source === "MANUAL");
@@ -107,7 +117,15 @@ export default async function CompanyEventAdminPage({
         </div>
       </div>
 
-      <div className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-4">
+      <div className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-5">
+        <div className="rounded-2xl border border-foreground/10 p-4 text-center">
+          <p className="text-2xl font-black text-foreground">
+            {pageStats ? pageStats.pageViews : "–"}
+          </p>
+          <p className="mt-1 text-[11px] font-bold uppercase tracking-wide text-foreground/50">
+            Seitenaufrufe (30 Tage)
+          </p>
+        </div>
         <div className="rounded-2xl border border-foreground/10 p-4 text-center">
           <p className="text-2xl font-black text-foreground">{invitationsSent}</p>
           <p className="mt-1 text-[11px] font-bold uppercase tracking-wide text-foreground/50">
@@ -133,6 +151,14 @@ export default async function CompanyEventAdminPage({
           </p>
         </div>
       </div>
+      {!pageStats && (
+        <p className="mt-2 text-xs text-foreground/40">
+          Seitenaufrufe nicht verfügbar (Google Analytics nicht
+          konfiguriert). Hinweis: GA4 zeigt ohnehin nur anonyme
+          Aufrufzahlen, keine Namen einzelner Besucher – wer sich
+          konkret angemeldet hat, steht im CRM unten.
+        </p>
+      )}
 
       <section className="mt-10">
         <h2 className="text-lg font-black uppercase tracking-wide text-accent-lime">
