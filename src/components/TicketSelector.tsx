@@ -64,7 +64,7 @@ export default function TicketSelector({
               key={pool.id}
               className={`flex flex-wrap items-center justify-between gap-x-4 gap-y-2 py-3.5 ${
                 unavailable ? "opacity-50" : ""
-              } ${lowStock ? "-mx-3 rounded-lg bg-accent/10 px-3" : ""}`}
+              }`}
             >
               <div className="flex min-w-0 items-start gap-2.5">
                 <span
@@ -90,7 +90,11 @@ export default function TicketSelector({
                   <p className="truncate text-sm font-bold text-foreground">
                     {pool.name}
                   </p>
-                  <p className="mt-1 text-xs text-foreground/50">
+                  <p
+                    className={`mt-1 text-xs ${
+                      soldOut ? "font-bold text-red-500" : "text-foreground/50"
+                    }`}
+                  >
                     {saleNotStarted
                       ? `Verkauf ab ${formatSaleDate(pool.saleStart)}`
                       : saleEnded
@@ -100,12 +104,12 @@ export default function TicketSelector({
                       : pool.free
                       ? "Gratis"
                       : `${priceToEuro(pool.basePricePerTicket)} € + Ticketgebühr*`}
-                    {lowStock && (
-                      <span className="ml-1 font-bold text-foreground/70">
-                        (nur noch wenige verfügbar)
-                      </span>
-                    )}
                   </p>
+                  {lowStock && (
+                    <span className="mt-1.5 inline-block rounded-full bg-green-500 px-2.5 py-0.5 text-[10px] font-black uppercase tracking-wide text-black">
+                      Nur noch Wenige verfügbar
+                    </span>
+                  )}
                 </div>
               </div>
 
