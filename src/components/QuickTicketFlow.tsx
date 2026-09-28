@@ -130,7 +130,7 @@ export default function QuickTicketFlow({
                   />
                   <Link
                     href={`/eventdetails?id=${event.id}`}
-                    className="mt-4 inline-block text-xs font-bold text-accent hover:underline"
+                    className="mt-4 inline-block text-xs font-bold text-foreground hover:underline"
                   >
                     Alle Infos zum Event ansehen →
                   </Link>
