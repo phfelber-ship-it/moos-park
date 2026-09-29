@@ -1,6 +1,11 @@
 import { NextResponse } from "next/server";
 import { getInboxEntries, markInboxRead, deleteInboxEntry } from "@/lib/inbox";
 
+// GET wird nach jedem "Als gelesen"-Klick sofort erneut abgerufen (siehe
+// InboxManager.tsx), um immer den tatsaechlich gespeicherten Stand zu
+// zeigen - darf deshalb nie statisch/gecacht ausgeliefert werden.
+export const dynamic = "force-dynamic";
+
 export async function GET() {
   const entries = await getInboxEntries();
   return NextResponse.json({ entries });

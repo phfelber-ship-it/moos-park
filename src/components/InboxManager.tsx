@@ -99,9 +99,20 @@ export default function InboxManager({
         body: JSON.stringify({ id: entry.id, read: !entry.read }),
       });
       if (!res.ok) throw new Error();
-      setEntries((prev) =>
-        prev.map((e) => (e.id === entry.id ? { ...e, read: !e.read } : e))
-      );
+      // Nach dem Markieren die komplette Liste frisch vom Server holen statt
+      // nur lokal (optimistisch) umzuschalten - so zeigt die Oberflaeche
+      // immer garantiert den tatsaechlich gespeicherten Stand, auch wenn
+      // zwischenzeitlich ein anderer Schreibvorgang (z.B. eine neue
+      // Anfrage) etwas veraendert hat.
+      const listRes = await fetch("/api/admin/inbox", { cache: "no-store" });
+      if (listRes.ok) {
+        const data = await listRes.json();
+        if (Array.isArray(data?.entries)) setEntries(data.entries);
+      } else {
+        setEntries((prev) =>
+          prev.map((e) => (e.id === entry.id ? { ...e, read: !e.read } : e))
+        );
+      }
     } catch {
       alert("Änderung konnte nicht gespeichert werden. Bitte erneut versuchen.");
     } finally {
