@@ -62,52 +62,112 @@ export async function getInboxEntries(): Promise<InboxEntry[]> {
   }
 }
 
+// getInboxEntries() blendet HIDDEN_TYPES aus - fuer Schreibvorgaenge
+// brauchen wir aber ALLE Eintraege (sonst wuerden beim naechsten Speichern
+// versehentlich alte bewerbung/reservierung-Eintraege geloescht).
+async function getAllInboxEntriesRaw(): Promise<InboxEntry[]> {
+  try {
+    const { blobs } = await list({ prefix: INBOX_PATH });
+    const match = blobs.find((b) => b.pathname === INBOX_PATH);
+    if (!match) return [];
+    const res = await fetch(`${match.url}?v=${Date.now()}`, { cache: "no-store" });
+    if (!res.ok) return [];
+    const data = (await res.json()) as InboxEntry[];
+    return Array.isArray(data) ? data : [];
+  } catch {
+    return [];
+  }
+}
+
 async function saveInboxEntries(entries: InboxEntry[]): Promise<void> {
   await put(INBOX_PATH, JSON.stringify(entries.slice(0, MAX_ENTRIES)), {
     access: "public",
     contentType: "application/json",
     allowOverwrite: true,
-    cacheControlMaxAge: 60,
+    // Kein Caching (statt vorher 60s) - dieselbe Begruendung wie bei
+    // event-experience.ts: bei zwei schnell aufeinanderfolgenden
+    // Schreibvorgaengen (z.B. "als gelesen" markieren waehrend gleichzeitig
+    // eine neue Anfrage eingeht) darf der naechste Lesevorgang nie eine
+    // veraltete, gecachte Version zurueckbekommen.
+    cacheControlMaxAge: 0,
   });
+}
+
+// Liest-aendert-schreibt-verifiziert wie in event-experience.ts/
+// company-contacts.ts - ohne dieses Muster konnte ein "als gelesen"
+// markieren durch einen gleichzeitigen Schreibvorgang (z.B. eine neu
+// eingehende Anfrage) wieder ueberschrieben werden ("verschwand" dadurch
+// scheinbar wieder auf ungelesen).
+async function mutateInboxEntries<T>(
+  mutate: (entries: InboxEntry[]) => { entries: InboxEntry[]; result: T },
+  isPersisted: (entries: InboxEntry[]) => boolean
+): Promise<T> {
+  let result: T;
+  for (let attempt = 0; attempt < 4; attempt++) {
+    const current = await getAllInboxEntriesRaw();
+    const mutated = mutate(current);
+    result = mutated.result;
+    await saveInboxEntries(mutated.entries);
+    const verify = await getAllInboxEntriesRaw();
+    if (isPersisted(verify)) return result;
+    if (attempt < 3) await new Promise((r) => setTimeout(r, 300));
+  }
+  return result!;
 }
 
 export async function appendInboxEntry(
   entry: Omit<InboxEntry, "id" | "createdAt" | "read" | "repliedAt" | "replyText">
 ): Promise<void> {
-  const entries = await getInboxEntries();
-  entries.unshift({
-    ...entry,
-    id: crypto.randomUUID(),
-    createdAt: new Date().toISOString(),
-    read: false,
-    repliedAt: null,
-    replyText: null,
-  });
-  await saveInboxEntries(entries);
+  const id = crypto.randomUUID();
+  await mutateInboxEntries(
+    (entries) => {
+      const next = [
+        {
+          ...entry,
+          id,
+          createdAt: new Date().toISOString(),
+          read: false,
+          repliedAt: null,
+          replyText: null,
+        },
+        ...entries,
+      ];
+      return { entries: next, result: undefined };
+    },
+    (verify) => verify.some((e) => e.id === id)
+  );
 }
 
 export async function markInboxReplied(id: string, replyText: string): Promise<void> {
-  const entries = await getInboxEntries();
-  const idx = entries.findIndex((e) => e.id === id);
-  if (idx === -1) return;
-  entries[idx] = {
-    ...entries[idx],
-    repliedAt: new Date().toISOString(),
-    replyText,
-    read: true,
-  };
-  await saveInboxEntries(entries);
+  const repliedAt = new Date().toISOString();
+  await mutateInboxEntries(
+    (entries) => {
+      const idx = entries.findIndex((e) => e.id === id);
+      if (idx === -1) return { entries, result: undefined };
+      const next = [...entries];
+      next[idx] = { ...next[idx], repliedAt, replyText, read: true };
+      return { entries: next, result: undefined };
+    },
+    (verify) => verify.find((e) => e.id === id)?.repliedAt === repliedAt
+  );
 }
 
 export async function markInboxRead(id: string, read: boolean): Promise<void> {
-  const entries = await getInboxEntries();
-  const idx = entries.findIndex((e) => e.id === id);
-  if (idx === -1) return;
-  entries[idx] = { ...entries[idx], read };
-  await saveInboxEntries(entries);
+  await mutateInboxEntries(
+    (entries) => {
+      const idx = entries.findIndex((e) => e.id === id);
+      if (idx === -1) return { entries, result: undefined };
+      const next = [...entries];
+      next[idx] = { ...next[idx], read };
+      return { entries: next, result: undefined };
+    },
+    (verify) => verify.find((e) => e.id === id)?.read === read
+  );
 }
 
 export async function deleteInboxEntry(id: string): Promise<void> {
-  const entries = await getInboxEntries();
-  await saveInboxEntries(entries.filter((e) => e.id !== id));
+  await mutateInboxEntries(
+    (entries) => ({ entries: entries.filter((e) => e.id !== id), result: undefined }),
+    (verify) => !verify.some((e) => e.id === id)
+  );
 }

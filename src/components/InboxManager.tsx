@@ -93,14 +93,17 @@ export default function InboxManager({
   const toggleRead = async (entry: InboxEntry) => {
     setBusyId(entry.id);
     try {
-      await fetch("/api/admin/inbox", {
+      const res = await fetch("/api/admin/inbox", {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ id: entry.id, read: !entry.read }),
       });
+      if (!res.ok) throw new Error();
       setEntries((prev) =>
         prev.map((e) => (e.id === entry.id ? { ...e, read: !e.read } : e))
       );
+    } catch {
+      alert("Änderung konnte nicht gespeichert werden. Bitte erneut versuchen.");
     } finally {
       setBusyId(null);
     }
