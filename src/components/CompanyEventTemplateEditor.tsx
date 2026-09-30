@@ -13,11 +13,15 @@ export default function CompanyEventTemplateEditor({
   kind,
   title,
   initialTemplate,
+  hint,
 }: {
   eventId: string;
   kind: TemplateKind;
   title: string;
   initialTemplate: EventTemplate;
+  // Optionaler Hinweistext oben im aufgeklappten Editor (z.B. an wen die
+  // Vorlage geht).
+  hint?: string;
 }) {
   const [subject, setSubject] = useState(initialTemplate.subject);
   const [body, setBody] = useState(initialTemplate.body);
@@ -81,6 +85,11 @@ export default function CompanyEventTemplateEditor({
 
       {open && (
         <div className="mt-4 grid gap-4">
+          {hint && (
+            <p className="rounded-xl border border-accent-lime/30 bg-accent-lime/5 p-3 text-xs font-bold text-foreground/80">
+              {hint}
+            </p>
+          )}
           <p className="text-xs text-foreground/50">
             Verfügbare Platzhalter:
           </p>
