@@ -3,7 +3,13 @@ import FlipText from "@/components/FlipText";
 import Reveal from "@/components/Reveal";
 import EventExperienceForm from "@/components/EventExperienceForm";
 import EventExperienceIntro from "@/components/EventExperienceIntro";
+import EventPartnersSection from "@/components/EventPartnersSection";
+import { getCompanyEvent, LEGACY_EVENT_ID } from "@/lib/company-events";
 import { TIMETABLE } from "@/lib/event-experience-info";
+
+// Partner-Logos kommen aus dem Adminpanel; beim Hochladen wird die Seite
+// per revalidatePath aktualisiert, sonst spaetestens nach einer Minute.
+export const revalidate = 60;
 
 export const metadata = {
   alternates: { canonical: "/event-experience" },
@@ -79,7 +85,8 @@ const FAQ = [
   },
 ];
 
-export default function EventExperiencePage() {
+export default async function EventExperiencePage() {
+  const partners = (await getCompanyEvent(LEGACY_EVENT_ID))?.partners ?? [];
   return (
     <div>
       <EventExperienceIntro />
@@ -266,10 +273,12 @@ export default function EventExperiencePage() {
             </div>
         </section></Reveal>
 
+        <EventPartnersSection partners={partners} number="05" />
+
         <Reveal><section className="rounded-3xl border border-foreground/8 bg-foreground/[0.025] p-8 sm:p-14">
           <div className="text-center">
             <p className="text-xs font-black uppercase tracking-[0.2em] text-accent-lime">
-              05 · Fragen
+              {partners.length > 0 ? "06" : "05"} · Fragen
             </p>
             <h2 className="mt-3 text-5xl font-black uppercase text-foreground sm:text-6xl">
               Häufige Fragen

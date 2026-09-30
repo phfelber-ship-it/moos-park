@@ -1,4 +1,4 @@
-import { list, put } from "@vercel/blob";
+import { del, list, put } from "@vercel/blob";
 import crypto from "node:crypto";
 import {
   EVENT_ADDRESS,
@@ -20,6 +20,15 @@ export type EventStatus = "AKTIV" | "ARCHIVIERT";
 
 export type TimetableEntry = { time: string; label: string };
 
+// Partner-Logo (im Adminpanel hochgeladen, Vercel Blob) - erscheint auf der
+// oeffentlichen Event-Seite im Abschnitt "Partner" vor den FAQ.
+export type EventPartner = {
+  id: string;
+  name: string;
+  logoUrl: string;
+  logoPathname: string;
+};
+
 export type ReminderWorkflow = {
   enabled: boolean;
   hoursBefore: number;
@@ -40,6 +49,7 @@ export type CompanyEvent = {
   heroTitle: string;
   heroSubtitle: string;
   reminderWorkflow: ReminderWorkflow;
+  partners: EventPartner[];
   createdAt: string;
 };
 
@@ -59,6 +69,7 @@ function normalize(data: Partial<CompanyEvent>[]): CompanyEvent[] {
     heroTitle: e.heroTitle ?? "",
     heroSubtitle: e.heroSubtitle ?? "",
     reminderWorkflow: e.reminderWorkflow ?? { enabled: false, hoursBefore: 24 },
+    partners: e.partners ?? [],
     createdAt: e.createdAt ?? new Date().toISOString(),
   })) as CompanyEvent[];
 }
@@ -117,6 +128,7 @@ async function seedIfEmpty(): Promise<CompanyEvent[]> {
     heroTitle: "THE EVENT EXPERIENCE",
     heroSubtitle: "Erleben. Inspirieren. Ihr nächstes Event entdecken.",
     reminderWorkflow: { enabled: false, hoursBefore: 24 },
+    partners: [],
     createdAt: new Date().toISOString(),
   };
   await saveEvents([seeded]);
@@ -188,6 +200,7 @@ export async function addCompanyEvent(input: CompanyEventInput): Promise<Company
         id,
         status: "AKTIV",
         reminderWorkflow: { enabled: false, hoursBefore: 24 },
+        partners: [],
         createdAt: new Date().toISOString(),
       };
       return { events: [entry, ...events], result: entry };
@@ -251,4 +264,52 @@ export function companyEventToInfo(event: CompanyEvent) {
     timetable: event.timetable,
     heroTitle: event.heroTitle,
   };
+}
+
+// Partner-Logos: Datei in den Blob-Store legen und am Event vermerken.
+export async function addEventPartner(
+  eventId: string,
+  name: string,
+  file: File
+): Promise<EventPartner | null> {
+  const ext = (file.name.split(".").pop() || "png").toLowerCase().replace(/[^a-z0-9]/g, "");
+  const id = crypto.randomUUID();
+  const blob = await put(`company-events/partners/${eventId}-${id}.${ext}`, file, {
+    access: "public",
+  });
+  const partner: EventPartner = { id, name, logoUrl: blob.url, logoPathname: blob.pathname };
+  const updated = await mutateEvents(
+    (events) => {
+      const idx = events.findIndex((e) => e.id === eventId);
+      if (idx === -1) return { events, result: null as EventPartner | null };
+      const next = [...events];
+      next[idx] = { ...next[idx], partners: [...next[idx].partners, partner] };
+      return { events: next, result: partner as EventPartner | null };
+    },
+    (verify) => !!verify.find((e) => e.id === eventId)?.partners.some((p) => p.id === id)
+  );
+  if (!updated) await del(blob.url).catch(() => {});
+  return updated;
+}
+
+export async function removeEventPartner(eventId: string, partnerId: string): Promise<boolean> {
+  let pathname: string | null = null;
+  const ok = await mutateEvents(
+    (events) => {
+      const idx = events.findIndex((e) => e.id === eventId);
+      const found = idx === -1 ? undefined : events[idx].partners.find((p) => p.id === partnerId);
+      if (!found) return { events, result: false };
+      pathname = found.logoPathname;
+      const next = [...events];
+      next[idx] = { ...next[idx], partners: next[idx].partners.filter((p) => p.id !== partnerId) };
+      return { events: next, result: true };
+    },
+    (verify) => !verify.find((e) => e.id === eventId)?.partners.some((p) => p.id === partnerId)
+  );
+  if (ok && pathname) {
+    const { blobs } = await list({ prefix: pathname });
+    const match = blobs.find((b) => b.pathname === pathname);
+    if (match) await del(match.url).catch(() => {});
+  }
+  return ok;
 }

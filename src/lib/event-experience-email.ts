@@ -67,15 +67,17 @@ export function buildInvitationEmailHtml(params: {
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark light">
+<meta name="supported-color-schemes" content="dark light">
 <title>THE EVENT EXPERIENCE</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@900&display=swap');
 </style>
 </head>
-<body style="margin:0;padding:0;background:${BG};">
-  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:${BG};padding:32px 16px;">
+<body bgcolor="${BG}" style="margin:0;padding:0;background:${BG};">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" bgcolor="${BG}" style="background:${BG};padding:32px 16px;">
     <tr>
-      <td align="center">
+      <td align="center" bgcolor="${BG}" style="background:${BG};">
         <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;">
 
           <tr>
@@ -90,7 +92,7 @@ export function buildInvitationEmailHtml(params: {
           </tr>
 
           <tr>
-            <td style="background:${CARD_BG};border-radius:16px;padding:28px 28px;">
+            <td bgcolor="${CARD_BG}" style="background:${CARD_BG};border-radius:16px;padding:28px 28px;">
               <div style="font:400 15px/1.6 Helvetica,Arial,sans-serif;color:${TEXT};">
                 ${bodyHtml}
               </div>
@@ -100,7 +102,7 @@ export function buildInvitationEmailHtml(params: {
           <tr><td style="height:16px;"></td></tr>
 
           <tr>
-            <td style="background:${CARD_BG};border-radius:16px;padding:28px 28px;">
+            <td bgcolor="${CARD_BG}" style="background:${CARD_BG};border-radius:16px;padding:28px 28px;">
               <div style="font:900 10px/1 Helvetica,Arial,sans-serif;letter-spacing:2px;color:${LIME};text-transform:uppercase;margin-bottom:12px;">
                 Ihre Veranstaltung
               </div>

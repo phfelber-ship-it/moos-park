@@ -3,6 +3,7 @@ import FlipText from "@/components/FlipText";
 import Reveal from "@/components/Reveal";
 import EventExperienceForm from "@/components/EventExperienceForm";
 import EventExperienceIntro from "@/components/EventExperienceIntro";
+import EventPartnersSection from "@/components/EventPartnersSection";
 import type { CompanyEvent } from "@/lib/company-events";
 
 const STEPS = [
@@ -165,10 +166,12 @@ export default function CompanyEventLandingPage({ event }: { event: CompanyEvent
             </div>
         </section></Reveal>
 
+        <EventPartnersSection partners={event.partners} number="04" />
+
         <Reveal><section className="rounded-3xl border border-foreground/8 bg-foreground/[0.025] p-8 sm:p-14">
           <div className="text-center">
             <p className="text-xs font-black uppercase tracking-[0.2em] text-accent-lime">
-              04 · Fragen
+              {event.partners.length > 0 ? "05" : "04"} · Fragen
             </p>
             <h2 className="mt-3 text-5xl font-black uppercase text-foreground sm:text-6xl">
               Häufige Fragen
