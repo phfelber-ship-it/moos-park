@@ -8,13 +8,20 @@ import FlipText from "@/components/FlipText";
 export default function CompanyEventReminderEditor({
   eventId,
   initialDue,
+  initialInvitedOnly,
   initialAlreadySent,
+  skippedUnsubscribed,
+  skippedNoEmail,
 }: {
   eventId: string;
   initialDue: number;
+  initialInvitedOnly: number;
   initialAlreadySent: number;
+  skippedUnsubscribed: number;
+  skippedNoEmail: number;
 }) {
   const [due, setDue] = useState(initialDue);
+  const [invitedOnly, setInvitedOnly] = useState(initialInvitedOnly);
   const [alreadySent, setAlreadySent] = useState(initialAlreadySent);
   const [status, setStatus] = useState<"idle" | "sending" | "done" | "error">("idle");
   const [message, setMessage] = useState<string | null>(null);
@@ -22,7 +29,8 @@ export default function CompanyEventReminderEditor({
   const send = async () => {
     if (due === 0 || status === "sending") return;
     const ok = window.confirm(
-      `Erinnerungsmail wirklich jetzt an ${due} Anmeldung${due === 1 ? "" : "en"} senden (inkl. Tickets als PDF)?\n\nDas kann nicht rückgängig gemacht werden.`
+      `Erinnerungsmail wirklich jetzt an ${due} eingeladene Firma${due === 1 ? "" : "en"} senden?\n\n` +
+        `${due - invitedOnly} mit Anmeldung (inkl. Tickets als PDF), ${invitedOnly} eingeladen ohne Anmeldung (mit Anmelde-Link).\n\nDas kann nicht rückgängig gemacht werden.`
     );
     if (!ok) return;
     setStatus("sending");
@@ -33,6 +41,7 @@ export default function CompanyEventReminderEditor({
       if (!res.ok) throw new Error(data?.error || "Versand fehlgeschlagen.");
       setAlreadySent((n) => n + data.sent);
       setDue(data.total - data.sent);
+      if (data.sent === data.total) setInvitedOnly(0);
       setStatus(data.errors?.length ? "error" : "done");
       setMessage(
         `${data.sent} von ${data.total} verschickt.` +
@@ -51,13 +60,27 @@ export default function CompanyEventReminderEditor({
       </p>
       <p className="mt-1 text-xs text-foreground/50">
         Wird nur auf Knopfdruck verschickt (kein automatischer Versand). Geht
-        mit den bereits erstellten Tickets an alle bestätigten Anmeldungen, die
-        noch keine Erinnerung erhalten haben.
+        an ALLE eingeladenen Firmen, nicht nur an die, die sich angemeldet
+        haben: angemeldete Firmen bekommen sie mit ihren bereits erstellten
+        Tickets, eingeladene Firmen ohne Anmeldung mit Anmelde-Link. Wer noch
+        keine Erinnerung erhalten hat, wird beim Klick berücksichtigt;
+        abgemeldete Firmen werden übersprungen.
       </p>
       <p className="mt-3 text-sm text-foreground">
         <span className="font-black">{due}</span> noch offen ·{" "}
         <span className="font-black">{alreadySent}</span> bereits erinnert
+        {invitedOnly > 0 && (
+          <span className="text-foreground/50"> (davon {invitedOnly} eingeladen ohne Anmeldung)</span>
+        )}
       </p>
+      {(skippedUnsubscribed > 0 || skippedNoEmail > 0) && (
+        <p className="mt-1 text-xs text-foreground/40">
+          Übersprungen:
+          {skippedUnsubscribed > 0 && ` ${skippedUnsubscribed} abgemeldet`}
+          {skippedUnsubscribed > 0 && skippedNoEmail > 0 && ","}
+          {skippedNoEmail > 0 && ` ${skippedNoEmail} eingeladen ohne E-Mail-Adresse`}
+        </p>
+      )}
       <div className="mt-4 flex flex-wrap items-center gap-4">
         <button
           type="button"

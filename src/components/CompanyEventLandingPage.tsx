@@ -85,7 +85,7 @@ export default function CompanyEventLandingPage({ event }: { event: CompanyEvent
 
       <div className="mx-auto flex w-[90%] max-w-[1600px] flex-col gap-6 py-10 sm:gap-8 sm:py-16">
         {event.timetable.length > 0 && (
-          <section className="rounded-3xl border border-foreground/8 bg-foreground/[0.025] p-8 sm:p-14">
+          <Reveal><section className="rounded-3xl border border-foreground/8 bg-foreground/[0.025] p-8 sm:p-14">
             <div className="text-center">
               <p className="text-xs font-black uppercase tracking-[0.2em] text-accent-lime">
                 01 · Programm
@@ -94,7 +94,6 @@ export default function CompanyEventLandingPage({ event }: { event: CompanyEvent
                 Das erwartet Sie
               </h2>
             </div>
-            <Reveal>
               <div className="relative mx-auto mt-14 max-w-xl">
                 <div className="absolute bottom-2 left-[3px] top-2 w-0.5 bg-accent-lime/25 sm:left-1" />
                 <div className="flex flex-col gap-10">
@@ -113,11 +112,10 @@ export default function CompanyEventLandingPage({ event }: { event: CompanyEvent
                   ))}
                 </div>
               </div>
-            </Reveal>
-          </section>
+          </section></Reveal>
         )}
 
-        <section className="rounded-3xl border border-foreground/8 bg-foreground/[0.025] p-8 sm:p-14">
+        <Reveal><section className="rounded-3xl border border-foreground/8 bg-foreground/[0.025] p-8 sm:p-14">
           <div className="text-center">
             <p className="text-xs font-black uppercase tracking-[0.2em] text-accent-lime">
               02 · Ablauf
@@ -126,7 +124,6 @@ export default function CompanyEventLandingPage({ event }: { event: CompanyEvent
               So läuft Ihre Anmeldung.
             </h2>
           </div>
-          <Reveal>
             <div className="mt-14 divide-y divide-foreground/8">
               {STEPS.map((s) => (
                 <div
@@ -145,10 +142,9 @@ export default function CompanyEventLandingPage({ event }: { event: CompanyEvent
                 </div>
               ))}
             </div>
-          </Reveal>
-        </section>
+        </section></Reveal>
 
-        <section
+        <Reveal><section
           id="anmeldung"
           className="rounded-3xl border border-foreground/8 bg-foreground/[0.025] p-8 sm:p-14"
         >
@@ -160,7 +156,6 @@ export default function CompanyEventLandingPage({ event }: { event: CompanyEvent
               Jetzt Platz sichern
             </h2>
           </div>
-          <Reveal>
             <div className="mt-10 rounded-2xl border border-foreground/8 bg-background p-8 sm:p-10">
               <EventExperienceForm
                 eventId={event.id}
@@ -168,10 +163,9 @@ export default function CompanyEventLandingPage({ event }: { event: CompanyEvent
                 confirmationHref={`/${event.slug}/bestaetigung`}
               />
             </div>
-          </Reveal>
-        </section>
+        </section></Reveal>
 
-        <section className="rounded-3xl border border-foreground/8 bg-foreground/[0.025] p-8 sm:p-14">
+        <Reveal><section className="rounded-3xl border border-foreground/8 bg-foreground/[0.025] p-8 sm:p-14">
           <div className="text-center">
             <p className="text-xs font-black uppercase tracking-[0.2em] text-accent-lime">
               04 · Fragen
@@ -201,7 +195,7 @@ export default function CompanyEventLandingPage({ event }: { event: CompanyEvent
               <FlipText text="Kontakt aufnehmen" />
             </a>
           </div>
-        </section>
+        </section></Reveal>
       </div>
     </div>
   );

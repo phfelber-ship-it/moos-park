@@ -127,7 +127,7 @@ export default function EventExperiencePage() {
           randlosen, volle Breite einnehmenden Streifens - dadurch wirken
           alle Themenbereiche einheitlich und klar voneinander getrennt. */}
       <div className="mx-auto flex w-[90%] max-w-[1600px] flex-col gap-6 py-10 sm:gap-8 sm:py-16">
-        <section className="rounded-3xl border border-foreground/8 bg-foreground/[0.025] p-8 sm:p-14">
+        <Reveal><section className="rounded-3xl border border-foreground/8 bg-foreground/[0.025] p-8 sm:p-14">
           <div className="text-center">
             <p className="text-xs font-black uppercase tracking-[0.2em] text-accent-lime">
               01 · Programm
@@ -144,7 +144,6 @@ export default function EventExperiencePage() {
           {/* Vertikale Zeitstrahl-Grafik (Linie + Knotenpunkte) statt
               einfacher Liste - angelehnt an klassische
               "Dark-Timeline"-Infografiken. */}
-          <Reveal>
             <div className="relative mx-auto mt-14 max-w-xl">
               <div className="absolute bottom-2 left-[3px] top-2 w-0.5 bg-accent-lime/25 sm:left-1" />
               <div className="flex flex-col gap-10">
@@ -163,10 +162,9 @@ export default function EventExperiencePage() {
                 ))}
               </div>
             </div>
-          </Reveal>
-        </section>
+        </section></Reveal>
 
-        <section className="rounded-3xl border border-foreground/8 bg-foreground/[0.025] p-8 sm:p-14">
+        <Reveal><section className="rounded-3xl border border-foreground/8 bg-foreground/[0.025] p-8 sm:p-14">
           <div className="text-center">
             <p className="text-xs font-black uppercase tracking-[0.2em] text-accent-lime">
               02 · Highlights
@@ -175,7 +173,6 @@ export default function EventExperiencePage() {
               Das erwartet Sie
             </h2>
           </div>
-          <Reveal>
             <div className="mx-auto mt-10 max-w-2xl text-center text-foreground/70">
               <p>
                 Am 14. Oktober 2026 von 17:00 bis 22:00 Uhr wird der moos.park
@@ -214,10 +211,9 @@ export default function EventExperiencePage() {
               <p>🕔 17:00–22:00 Uhr</p>
               <p>📍 moos.park, Pöttmes</p>
             </div>
-          </Reveal>
-        </section>
+        </section></Reveal>
 
-        <section className="rounded-3xl border border-foreground/8 bg-foreground/[0.025] p-8 sm:p-14">
+        <Reveal><section className="rounded-3xl border border-foreground/8 bg-foreground/[0.025] p-8 sm:p-14">
           <div className="text-center">
             <p className="text-xs font-black uppercase tracking-[0.2em] text-accent-lime">
               03 · Ablauf
@@ -229,7 +225,6 @@ export default function EventExperiencePage() {
               In 3 Schritten von der Anmeldung zur fertigen Eventidee.
             </p>
           </div>
-          <Reveal>
             <div className="mt-14 divide-y divide-foreground/8">
               {STEPS.map((s) => (
                 <div
@@ -248,10 +243,9 @@ export default function EventExperiencePage() {
                 </div>
               ))}
             </div>
-          </Reveal>
-        </section>
+        </section></Reveal>
 
-        <section
+        <Reveal><section
           id="anmeldung"
           className="rounded-3xl border border-foreground/8 bg-foreground/[0.025] p-8 sm:p-14"
         >
@@ -267,14 +261,12 @@ export default function EventExperiencePage() {
               kostenlos und unverbindlich an.
             </p>
           </div>
-          <Reveal>
             <div className="mt-10 rounded-2xl border border-foreground/8 bg-background p-8 sm:p-10">
               <EventExperienceForm />
             </div>
-          </Reveal>
-        </section>
+        </section></Reveal>
 
-        <section className="rounded-3xl border border-foreground/8 bg-foreground/[0.025] p-8 sm:p-14">
+        <Reveal><section className="rounded-3xl border border-foreground/8 bg-foreground/[0.025] p-8 sm:p-14">
           <div className="text-center">
             <p className="text-xs font-black uppercase tracking-[0.2em] text-accent-lime">
               05 · Fragen
@@ -309,7 +301,7 @@ export default function EventExperiencePage() {
               <FlipText text="Kontakt aufnehmen" />
             </a>
           </div>
-        </section>
+        </section></Reveal>
       </div>
     </div>
   );

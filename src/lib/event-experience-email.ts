@@ -38,11 +38,16 @@ export function buildInvitationEmailHtml(params: {
   ticketCount: number;
   registrationId: string;
   info?: EventInfo;
+  // Gesetzt bei Erinnerungen an eingeladene Firmen OHNE Anmeldung: kein
+  // Ticket-Hinweis und kein Absagen-Block (es gibt noch nichts abzusagen),
+  // stattdessen ein Anmelde-Button.
+  registerUrl?: string;
 }): string {
   const info = params.info ?? LEGACY_EVENT_INFO;
   const bodyHtml = escapeHtml(params.bodyText).replace(/\n/g, "<br>");
   const cancelUrl = buildCancelUrl(params.registrationId);
   const unsubscribeUrl = buildUnsubscribeUrl(params.registrationId);
+  const isInviteeOnly = !!params.registerUrl;
 
   const timetableRows = info.timetable.map(
     (t) => `
@@ -111,15 +116,28 @@ export function buildInvitationEmailHtml(params: {
                 ${timetableRows}
               </table>
 
-              <div style="margin-top:18px;padding-top:14px;border-top:1px solid #2a2a2e;font:700 13px/1.5 Helvetica,Arial,sans-serif;color:${TEXT};">
+              ${
+                isInviteeOnly
+                  ? ""
+                  : `<div style="margin-top:18px;padding-top:14px;border-top:1px solid #2a2a2e;font:700 13px/1.5 Helvetica,Arial,sans-serif;color:${TEXT};">
                 🎟 ${params.ticketCount} Ticket${params.ticketCount === 1 ? "" : "s"} im Anhang dieser E-Mail (PDF)
-              </div>
+              </div>`
+              }
             </td>
           </tr>
 
           <tr><td style="height:16px;"></td></tr>
 
-          <tr>
+          ${
+            isInviteeOnly
+              ? `<tr>
+            <td align="center" style="padding:22px 24px;">
+              <a href="${params.registerUrl}" style="display:inline-block;padding:13px 28px;border-radius:8px;background:${LIME};font:900 13px Helvetica,Arial,sans-serif;letter-spacing:0.5px;color:#000;text-decoration:none;text-transform:uppercase;">
+                Jetzt Platz sichern
+              </a>
+            </td>
+          </tr>`
+              : `<tr>
             <td align="center" style="border:1px dashed #3a3a3e;border-radius:16px;padding:22px 24px;">
               <div style="font:400 13px/1.5 Helvetica,Arial,sans-serif;color:${MUTED};">
                 Sie haben leider keine Zeit? Bitte sagen Sie kurz ab, damit
@@ -129,7 +147,8 @@ export function buildInvitationEmailHtml(params: {
                 Teilnahme absagen
               </a>
             </td>
-          </tr>
+          </tr>`
+          }
 
           <tr>
             <td align="center" style="padding-top:32px;">
