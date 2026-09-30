@@ -31,6 +31,31 @@ const STEPS = [
   },
 ];
 
+const HIGHLIGHTS = [
+  {
+    icon: "✨",
+    title: "Deutscher Jugendmeister der Zauberkunst",
+    text: "Magie hautnah und garantiert nicht alltäglich",
+  },
+  {
+    icon: "🎷",
+    title: "DJ Levels & Saxophonist",
+    text: "für den passenden Sound und echtes Eventfeeling",
+  },
+  {
+    icon: "🔥",
+    title: "Flammbar Catering",
+    text: "mit besonderen kulinarischen Highlights",
+  },
+  {
+    icon: "🎰",
+    title: "Mobiles Casino",
+    text: "für Spiel, Spaß und ein bisschen Wettbewerb",
+  },
+  { icon: "🍰", title: "Zuckersüße Verführung von Sunnys Cakes", text: "" },
+  { icon: "☕", title: "Kaffeespezialitäten von Sebarista", text: "" },
+];
+
 const FAQ = [
   {
     q: "Für wen ist der Tag gedacht?",
@@ -144,7 +169,58 @@ export default function EventExperiencePage() {
         <section className="rounded-3xl border border-foreground/8 bg-foreground/[0.025] p-8 sm:p-14">
           <div className="text-center">
             <p className="text-xs font-black uppercase tracking-[0.2em] text-accent-lime">
-              02 · Ablauf
+              02 · Highlights
+            </p>
+            <h2 className="mt-3 text-4xl font-black uppercase text-foreground sm:text-5xl">
+              Das erwartet Sie
+            </h2>
+          </div>
+          <Reveal>
+            <div className="mx-auto mt-10 max-w-2xl text-center text-foreground/70">
+              <p>
+                Am 14. Oktober 2026 von 17:00 bis 22:00 Uhr wird der moos.park
+                zum Erlebnisraum für alle, die auf der Suche nach neuen Ideen
+                für ihr nächstes Firmen- oder Teamevent sind.
+              </p>
+              <p className="mt-4">
+                Sie erwartet kein klassischer Location-Rundgang, sondern ein
+                Abend voller Inspiration, Genuss, Networking und Entertainment:
+              </p>
+            </div>
+            <div className="mx-auto mt-10 grid max-w-3xl gap-4 sm:grid-cols-2">
+              {HIGHLIGHTS.map((h) => (
+                <div
+                  key={h.title}
+                  className="rounded-2xl border border-foreground/8 bg-background p-5"
+                >
+                  <p className="text-2xl">{h.icon}</p>
+                  <p className="mt-2 font-bold text-foreground">{h.title}</p>
+                  {h.text && (
+                    <p className="mt-1 text-sm text-foreground/60">{h.text}</p>
+                  )}
+                </div>
+              ))}
+            </div>
+            <p className="mx-auto mt-10 max-w-2xl text-center text-foreground/70">
+              Dazu gibt es jede Menge Inspiration für euer nächstes Event – von
+              Businessveranstaltungen und Team-Events bis hin zu besonderen
+              Firmenfeiern.
+            </p>
+            <p className="mt-8 text-center text-lg font-black uppercase tracking-[0.15em] text-accent-lime">
+              Work. Connect. Enjoy. Celebrate.
+            </p>
+            <div className="mt-6 flex flex-col items-center gap-1 text-center font-bold text-foreground">
+              <p>📅 14. Oktober 2026</p>
+              <p>🕔 17:00–22:00 Uhr</p>
+              <p>📍 moos.park, Pöttmes</p>
+            </div>
+          </Reveal>
+        </section>
+
+        <section className="rounded-3xl border border-foreground/8 bg-foreground/[0.025] p-8 sm:p-14">
+          <div className="text-center">
+            <p className="text-xs font-black uppercase tracking-[0.2em] text-accent-lime">
+              03 · Ablauf
             </p>
             <h2 className="mt-3 text-4xl font-black uppercase text-foreground sm:text-5xl">
               So läuft Ihre Anmeldung.
@@ -181,7 +257,7 @@ export default function EventExperiencePage() {
         >
           <div className="text-center">
             <p className="text-xs font-black uppercase tracking-[0.2em] text-accent-lime">
-              03 · Anmeldung
+              04 · Anmeldung
             </p>
             <h2 className="mt-3 text-4xl font-black uppercase text-foreground sm:text-5xl">
               Jetzt Platz sichern
@@ -201,7 +277,7 @@ export default function EventExperiencePage() {
         <section className="rounded-3xl border border-foreground/8 bg-foreground/[0.025] p-8 sm:p-14">
           <div className="text-center">
             <p className="text-xs font-black uppercase tracking-[0.2em] text-accent-lime">
-              04 · Fragen
+              05 · Fragen
             </p>
             <h2 className="mt-3 text-5xl font-black uppercase text-foreground sm:text-6xl">
               Häufige Fragen
