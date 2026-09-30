@@ -10,10 +10,8 @@ import EventExperienceManager from "@/components/EventExperienceManager";
 import EventExperienceContactsPanel from "@/components/EventExperienceContactsPanel";
 import EventExperienceLetterTemplateEditor from "@/components/EventExperienceLetterTemplateEditor";
 import CompanyEventTemplateEditor from "@/components/CompanyEventTemplateEditor";
-import CompanyEventReminderEditor from "@/components/CompanyEventReminderEditor";
 import EventExperienceMatchPanel from "@/components/EventExperienceMatchPanel";
 import { getGa4PageViews } from "@/lib/ga4";
-import { getReminderStats } from "@/lib/event-reminders";
 import { resolveDateRange } from "@/lib/date-range";
 
 export const dynamic = "force-dynamic";
@@ -34,7 +32,7 @@ export default async function CompanyEventAdminPage({
   // sich jemand ueber das Formular angemeldet hat.
   const pageviewRange = resolveDateRange("30d", undefined, undefined);
 
-  const [registrations, bestaetigungTemplate, erinnerungTemplate, letterTemplate, companyContacts, matchDecisions, allEvents, pageStats, reminderStats] =
+  const [registrations, bestaetigungTemplate, erinnerungTemplate, letterTemplate, companyContacts, matchDecisions, allEvents, pageStats] =
     await Promise.all([
       getRegistrationsForEvent(eventId),
       getEventTemplate(eventId, "BESTAETIGUNG"),
@@ -44,7 +42,6 @@ export default async function CompanyEventAdminPage({
       getMatchDecisions(eventId),
       getCompanyEvents(),
       getGa4PageViews(`/${event.slug}`, pageviewRange.startDate, pageviewRange.endDate),
-      getReminderStats(eventId),
     ]);
 
   const manualContacts = registrations.filter((r) => r.source === "MANUAL");
@@ -228,14 +225,8 @@ export default async function CompanyEventAdminPage({
           kind="ERINNERUNG"
           title="Erinnerungs-E-Mail-Vorlage"
           initialTemplate={erinnerungTemplate}
-          hint="Hinweis: Die Erinnerungsmail geht nur an die Firmen, die Sie beim Versand in der Liste auswählen (auch eingeladene ohne Anmeldung möglich). Formulieren Sie den Text deshalb so, dass er auch für Firmen passt, die sich noch nicht angemeldet haben (bei diesen steht unter dem Text ein Button „Jetzt Platz sichern“ statt der Tickets). Den Platzhalter {{anzahl_tickets}} hier besser nicht verwenden: bei Firmen ohne Anmeldung steht dort immer 1."
-        />
-        <CompanyEventReminderEditor
-          eventId={eventId}
-          candidates={reminderStats.candidates}
-          initialAlreadySent={reminderStats.alreadySent}
-          skippedUnsubscribed={reminderStats.skippedUnsubscribed}
-          skippedNoEmail={reminderStats.skippedNoEmail}
+          hint="Hinweis: Die Erinnerungsmail wird nicht automatisch verschickt, sondern einzeln über „Erinnerung senden an“ (unten) an die eingetragene Adresse. Die Adresse muss zu einer Anmeldung oder eingeladenen Firma dieses Events gehören. Angemeldete Firmen bekommen ihre Tickets als PDF, eingeladene ohne Anmeldung einen Button „Jetzt Platz sichern“. Den Platzhalter {{anzahl_tickets}} besser nicht verwenden: bei Firmen ohne Anmeldung steht dort immer 1."
+          sendReal
         />
       </details>
     </div>

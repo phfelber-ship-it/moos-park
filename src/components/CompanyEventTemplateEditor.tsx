@@ -14,6 +14,7 @@ export default function CompanyEventTemplateEditor({
   title,
   initialTemplate,
   hint,
+  sendReal,
 }: {
   eventId: string;
   kind: TemplateKind;
@@ -22,6 +23,9 @@ export default function CompanyEventTemplateEditor({
   // Optionaler Hinweistext oben im aufgeklappten Editor (z.B. an wen die
   // Vorlage geht).
   hint?: string;
+  // Zeigt zusaetzlich die Zeile "Erinnerung senden an ..." (echter Versand
+  // an eine Adresse des Events, nur fuer ERINNERUNG).
+  sendReal?: boolean;
 }) {
   const [subject, setSubject] = useState(initialTemplate.subject);
   const [body, setBody] = useState(initialTemplate.body);
@@ -33,6 +37,37 @@ export default function CompanyEventTemplateEditor({
   const [testTo, setTestTo] = useState("ph.felber@moos-park.de");
   const [testStatus, setTestStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
   const [testError, setTestError] = useState<string | null>(null);
+
+  // Echter Versand der (gespeicherten) Erinnerung an eine Adresse.
+  const [realTo, setRealTo] = useState("");
+  const [realStatus, setRealStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
+  const [realError, setRealError] = useState<string | null>(null);
+
+  const sendRealMail = async () => {
+    const to = realTo.trim();
+    if (!to || realStatus === "sending") return;
+    if (
+      !window.confirm(
+        `Erinnerung wirklich jetzt an ${to} senden?\n\nEs wird der GESPEICHERTE Vorlagentext verschickt (ungespeicherte Änderungen bitte vorher speichern). Das kann nicht rückgängig gemacht werden.`
+      )
+    )
+      return;
+    setRealStatus("sending");
+    setRealError(null);
+    try {
+      const res = await fetch(`/api/admin/company-events/${eventId}/send-reminders`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ to }),
+      });
+      const data = await res.json().catch(() => null);
+      if (!res.ok) throw new Error(data?.error || "Versand fehlgeschlagen.");
+      setRealStatus("sent");
+    } catch (err) {
+      setRealStatus("error");
+      setRealError(err instanceof Error ? err.message : "Versand fehlgeschlagen.");
+    }
+  };
 
   const save = async () => {
     setStatus("saving");
@@ -132,6 +167,40 @@ export default function CompanyEventTemplateEditor({
               <span className="text-xs font-bold text-red-400">Fehler beim Speichern.</span>
             )}
           </div>
+
+          {sendReal && (
+            <div className="mt-2 rounded-xl border border-accent-lime/30 bg-background p-4">
+              <p className="text-xs font-bold uppercase text-foreground/50">
+                Erinnerung senden an
+              </p>
+              <p className="mt-1 text-xs text-foreground/40">
+                Echter Versand (mit den Daten der Firma, ggf. Tickets als PDF) an
+                eine Adresse dieses Events.
+              </p>
+              <div className="mt-3 flex flex-wrap items-center gap-3">
+                <input
+                  value={realTo}
+                  onChange={(e) => setRealTo(e.target.value)}
+                  placeholder="E-Mail-Adresse des Empfängers"
+                  className="min-w-0 flex-1 rounded-xl border border-foreground/15 bg-foreground/5 px-4 py-2 text-sm text-foreground outline-none focus:border-accent-lime"
+                />
+                <button
+                  type="button"
+                  onClick={sendRealMail}
+                  disabled={!realTo.trim() || realStatus === "sending"}
+                  className="rounded-lg bg-accent-lime px-5 py-2 text-xs font-black uppercase tracking-wide text-black transition-transform hover:scale-105 disabled:opacity-50"
+                >
+                  <FlipText text={realStatus === "sending" ? "Wird gesendet..." : "Erinnerung senden"} />
+                </button>
+              </div>
+              {realStatus === "sent" && (
+                <p className="mt-2 text-xs font-bold text-accent-lime">Erinnerung wurde gesendet.</p>
+              )}
+              {realStatus === "error" && (
+                <p className="mt-2 text-xs font-bold text-red-400">{realError}</p>
+              )}
+            </div>
+          )}
 
           <div className="mt-2 rounded-xl border border-foreground/10 bg-background p-4">
             <p className="text-xs font-bold uppercase text-foreground/50">

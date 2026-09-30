@@ -1,25 +1,22 @@
 import { NextResponse } from "next/server";
 import { getCompanyEvent } from "@/lib/company-events";
-import { sendRemindersForEvent } from "@/lib/event-reminders";
+import { sendReminderToEmail } from "@/lib/event-reminders";
 
-export const maxDuration = 300;
+export const maxDuration = 60;
 
-// Erinnerungsmail per Knopfdruck (nach Bestaetigungsabfrage im Adminpanel,
-// siehe CompanyEventReminderEditor) statt automatisch X Stunden vor dem Event.
+// Erinnerungsmail an eine einzelne Adresse (Vorlagen-Editor ERINNERUNG,
+// Zeile "Erinnerung senden an ...") - kein automatischer oder Massenversand.
 export async function POST(
   request: Request,
   { params }: { params: Promise<{ eventId: string }> }
 ) {
   const { eventId } = await params;
+  const body = (await request.json().catch(() => null)) as { to?: string } | null;
+  const to = body?.to?.trim();
+  if (!to) return NextResponse.json({ error: "E-Mail-Adresse fehlt." }, { status: 400 });
   const event = await getCompanyEvent(eventId);
   if (!event) return NextResponse.json({ error: "Event nicht gefunden." }, { status: 404 });
-  const body = await request.json().catch(() => null);
-  const ids: string[] = Array.isArray(body?.registrationIds)
-    ? body.registrationIds.filter((x: unknown): x is string => typeof x === "string")
-    : [];
-  if (ids.length === 0) {
-    return NextResponse.json({ error: "Keine Firmen ausgewählt." }, { status: 400 });
-  }
-  const result = await sendRemindersForEvent(event, ids);
-  return NextResponse.json({ ok: true, ...result });
+  const result = await sendReminderToEmail(event, to);
+  if (!result.ok) return NextResponse.json({ error: result.error }, { status: result.status });
+  return NextResponse.json({ ok: true });
 }
