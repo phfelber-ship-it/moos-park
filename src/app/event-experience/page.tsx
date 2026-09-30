@@ -7,9 +7,9 @@ import EventPartnersSection from "@/components/EventPartnersSection";
 import { getCompanyEvent, LEGACY_EVENT_ID } from "@/lib/company-events";
 import { TIMETABLE } from "@/lib/event-experience-info";
 
-// Partner-Logos kommen aus dem Adminpanel; beim Hochladen wird die Seite
-// per revalidatePath aktualisiert, sonst spaetestens nach einer Minute.
-export const revalidate = 60;
+// Partner-Logos kommen aus dem Adminpanel und sollen sofort sichtbar sein
+// (kein Seiten-Cache, wie bei den dynamischen Event-Seiten /[eventSlug]).
+export const dynamic = "force-dynamic";
 
 export const metadata = {
   alternates: { canonical: "/event-experience" },
