@@ -10,6 +10,7 @@ import EventExperienceManager from "@/components/EventExperienceManager";
 import EventExperienceContactsPanel from "@/components/EventExperienceContactsPanel";
 import EventExperienceLetterTemplateEditor from "@/components/EventExperienceLetterTemplateEditor";
 import CompanyEventTemplateEditor from "@/components/CompanyEventTemplateEditor";
+import CompanyEventPartnersManager from "@/components/CompanyEventPartnersManager";
 import EventExperienceMatchPanel from "@/components/EventExperienceMatchPanel";
 import { getGa4PageViews } from "@/lib/ga4";
 import { resolveDateRange } from "@/lib/date-range";
@@ -200,6 +201,21 @@ export default async function CompanyEventAdminPage({
         lettersExportUrl={`${apiBase}/letters/export`}
         letterBaseUrl={`${apiBase}/registrations`}
       />
+
+      <details className="group mt-12">
+        <summary className="flex cursor-pointer list-none items-center gap-2">
+          <h2 className="text-lg font-black uppercase tracking-wide text-accent-lime">
+            Partner-Logos
+          </h2>
+          <span className="text-foreground/30 transition-transform group-open:rotate-180">
+            ▼
+          </span>
+        </summary>
+        <p className="mt-1 text-xs text-foreground/50">
+          Erscheinen auf der öffentlichen Seite im Abschnitt „Partner“ vor den häufigen Fragen.
+        </p>
+        <CompanyEventPartnersManager eventId={eventId} initialPartners={event.partners} />
+      </details>
 
       <details className="group mt-12">
         <summary className="flex cursor-pointer list-none items-center gap-2">
