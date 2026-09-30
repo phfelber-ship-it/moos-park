@@ -50,7 +50,7 @@ export const DEFAULT_REMINDER_TEMPLATE: InvitationTemplate = {
   body:
     "Sehr geehrte(r) {{anrede}} {{name}},\n\n" +
     "eine kurze Erinnerung an unsere Veranstaltung am {{datum}} um {{uhrzeit}} " +
-    "im {{ort}}. Wir freuen uns auf Sie und {{anzahl_tickets}} Teilnehmer.\n\n" +
+    "im {{ort}}. Wir freuen uns auf Sie.\n\n" +
     "Herzliche Grüße\nIhr moos.park Team",
 };
 

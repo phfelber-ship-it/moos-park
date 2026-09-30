@@ -133,7 +133,7 @@ export default function EventExperiencePage() {
               01 · Programm
             </p>
             <h2 className="mt-3 text-4xl font-black uppercase text-foreground sm:text-5xl">
-              Das erwartet Sie
+              Das Programm
             </h2>
             <p className="mx-auto mt-3 max-w-xl text-foreground/60">
               Ein Abend voller Ideen für Sommerfeste, Weihnachtsfeiern, Team
