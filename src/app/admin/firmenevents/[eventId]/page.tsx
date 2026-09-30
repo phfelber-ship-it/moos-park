@@ -225,7 +225,7 @@ export default async function CompanyEventAdminPage({
           kind="ERINNERUNG"
           title="Erinnerungs-E-Mail-Vorlage"
           initialTemplate={erinnerungTemplate}
-          hint="Hinweis: Die Erinnerungsmail wird nicht automatisch verschickt, sondern einzeln über „Erinnerung senden an“ (unten) an die eingetragene Adresse. Die Adresse muss zu einer Anmeldung oder eingeladenen Firma dieses Events gehören. Angemeldete Firmen bekommen ihre Tickets als PDF, eingeladene ohne Anmeldung einen Button „Jetzt Platz sichern“. Den Platzhalter {{anzahl_tickets}} besser nicht verwenden: bei Firmen ohne Anmeldung steht dort immer 1."
+          hint="Hinweis: Die Erinnerungsmail wird nicht automatisch verschickt, sondern einzeln über „Erinnerung senden an“ (unten) an die eingetragene Adresse – als reine E-Mail ohne Tickets. Formulieren Sie den Text so, dass er auch ohne Firmen- und Personenangaben passt; {{anzahl_tickets}} bitte nicht verwenden."
           sendReal
         />
       </details>

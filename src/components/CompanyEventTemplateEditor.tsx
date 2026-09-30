@@ -174,8 +174,9 @@ export default function CompanyEventTemplateEditor({
                 Erinnerung senden an
               </p>
               <p className="mt-1 text-xs text-foreground/40">
-                Echter Versand (mit den Daten der Firma, ggf. Tickets als PDF) an
-                eine Adresse dieses Events.
+                Echter Versand als reine E-Mail (ohne Tickets) an die eingetragene
+                Adresse. Gehört sie zu einer Firma dieses Events, werden deren Daten
+                in die Platzhalter eingesetzt, sonst bleiben Name und Firma leer.
               </p>
               <div className="mt-3 flex flex-wrap items-center gap-3">
                 <input

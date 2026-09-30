@@ -42,12 +42,17 @@ export function buildInvitationEmailHtml(params: {
   // Ticket-Hinweis und kein Absagen-Block (es gibt noch nichts abzusagen),
   // stattdessen ein Anmelde-Button.
   registerUrl?: string;
+  // Reine Textmail ohne Tickets: kein Ticket-Hinweis, kein Absagen-Block,
+  // kein Button (Erinnerung an eine einzelne Adresse aus dem Adminpanel).
+  plain?: boolean;
+  // Ohne Datensatz (frei eingegebene Adresse) gibt es keinen Abmelde-Link.
 }): string {
   const info = params.info ?? LEGACY_EVENT_INFO;
   const bodyHtml = escapeHtml(params.bodyText).replace(/\n/g, "<br>");
   const cancelUrl = buildCancelUrl(params.registrationId);
   const unsubscribeUrl = buildUnsubscribeUrl(params.registrationId);
   const isInviteeOnly = !!params.registerUrl;
+  const isPlain = !!params.plain;
 
   const timetableRows = info.timetable.map(
     (t) => `
@@ -117,7 +122,7 @@ export function buildInvitationEmailHtml(params: {
               </table>
 
               ${
-                isInviteeOnly
+                isInviteeOnly || isPlain
                   ? ""
                   : `<div style="margin-top:18px;padding-top:14px;border-top:1px solid #2a2a2e;font:700 13px/1.5 Helvetica,Arial,sans-serif;color:${TEXT};">
                 🎟 ${params.ticketCount} Ticket${params.ticketCount === 1 ? "" : "s"} im Anhang dieser E-Mail (PDF)
@@ -129,7 +134,9 @@ export function buildInvitationEmailHtml(params: {
           <tr><td style="height:16px;"></td></tr>
 
           ${
-            isInviteeOnly
+            isPlain
+              ? ""
+              : isInviteeOnly
               ? `<tr>
             <td align="center" style="padding:22px 24px;">
               <a href="${params.registerUrl}" style="display:inline-block;padding:13px 28px;border-radius:8px;background:${LIME};font:900 13px Helvetica,Arial,sans-serif;letter-spacing:0.5px;color:#000;text-decoration:none;text-transform:uppercase;">
@@ -156,7 +163,7 @@ export function buildInvitationEmailHtml(params: {
                 MOOS-PARK GASTRONOMIE GMBH · Rudolf-Diesel-Straße 23 · 86554 Pöttmes<br>
                 s.geisler@moos-park.de
               </div>
-              <div style="margin-top:10px;">
+              <div style="margin-top:10px;${params.registrationId ? "" : "display:none;"}">
                 <a href="${unsubscribeUrl}" style="font:400 11px Helvetica,Arial,sans-serif;color:${MUTED};text-decoration:underline;">
                   Von diesen E-Mails abmelden
                 </a>
