@@ -13,6 +13,7 @@ import CompanyEventTemplateEditor from "@/components/CompanyEventTemplateEditor"
 import CompanyEventReminderEditor from "@/components/CompanyEventReminderEditor";
 import EventExperienceMatchPanel from "@/components/EventExperienceMatchPanel";
 import { getGa4PageViews } from "@/lib/ga4";
+import { getReminderStats } from "@/lib/event-reminders";
 import { resolveDateRange } from "@/lib/date-range";
 
 export const dynamic = "force-dynamic";
@@ -33,7 +34,7 @@ export default async function CompanyEventAdminPage({
   // sich jemand ueber das Formular angemeldet hat.
   const pageviewRange = resolveDateRange("30d", undefined, undefined);
 
-  const [registrations, bestaetigungTemplate, erinnerungTemplate, letterTemplate, companyContacts, matchDecisions, allEvents, pageStats] =
+  const [registrations, bestaetigungTemplate, erinnerungTemplate, letterTemplate, companyContacts, matchDecisions, allEvents, pageStats, reminderStats] =
     await Promise.all([
       getRegistrationsForEvent(eventId),
       getEventTemplate(eventId, "BESTAETIGUNG"),
@@ -43,6 +44,7 @@ export default async function CompanyEventAdminPage({
       getMatchDecisions(eventId),
       getCompanyEvents(),
       getGa4PageViews(`/${event.slug}`, pageviewRange.startDate, pageviewRange.endDate),
+      getReminderStats(eventId),
     ]);
 
   const manualContacts = registrations.filter((r) => r.source === "MANUAL");
@@ -229,8 +231,8 @@ export default async function CompanyEventAdminPage({
         />
         <CompanyEventReminderEditor
           eventId={eventId}
-          initial={event.reminderWorkflow}
-          initialEventDateTime={event.eventDateTime}
+          initialDue={reminderStats.due}
+          initialAlreadySent={reminderStats.alreadySent}
         />
       </details>
     </div>
