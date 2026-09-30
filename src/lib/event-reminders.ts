@@ -70,6 +70,14 @@ export async function getReminderRecipients(eventId: string) {
 export async function getReminderStats(eventId: string) {
   const { due, alreadySent, skippedUnsubscribed, skippedNoEmail } = await getReminderRecipients(eventId);
   return {
+    // Auswahlliste fuer das Adminpanel: nur diese Firmen koennen angehakt werden.
+    candidates: due.map((r) => ({
+      id: r.id,
+      company: r.company,
+      contact: `${r.firstName} ${r.lastName}`.trim(),
+      email: r.email,
+      invitedOnly: r.source === "MANUAL",
+    })),
     due: due.length,
     invitedOnly: due.filter((r) => r.source === "MANUAL").length,
     alreadySent,
@@ -78,18 +86,20 @@ export async function getReminderStats(eventId: string) {
   };
 }
 
-// Verschickt die ERINNERUNG-Vorlage an alle noch nicht erinnerten
-// eingeladenen Firmen eines Events (Web-Anmeldungen inkl. der bereits
+// Verschickt die ERINNERUNG-Vorlage nur an die im Adminpanel angehakten
+// (registrationIds) und noch nicht erinnerten Firmen eines Events (Web-Anmeldungen inkl. der bereits
 // erstellten Tickets als PDF - keine neuen QR-Codes). Wird per Knopfdruck im
 // Adminpanel ausgeloest (api/admin/company-events/[eventId]/send-reminders).
-export async function sendRemindersForEvent(event: CompanyEvent) {
+export async function sendRemindersForEvent(event: CompanyEvent, registrationIds: string[]) {
   const info = companyEventToInfo(event);
   const template = await getEventTemplate(event.id, "ERINNERUNG");
-  const { due } = await getReminderRecipients(event.id);
+  const selected = new Set(registrationIds);
+  const due = (await getReminderRecipients(event.id)).due.filter((r) => selected.has(r.id));
   const registerUrl = `${SITE_URL}/${event.slug}`;
 
   let sent = 0;
   const errors: string[] = [];
+  const failedIds: string[] = [];
   for (const reg of due) {
     try {
       const inviteeOnly = reg.source === "MANUAL";
@@ -117,8 +127,9 @@ export async function sendRemindersForEvent(event: CompanyEvent) {
       await markReminderSent(reg.id);
       sent += 1;
     } catch (err) {
+      failedIds.push(reg.id);
       errors.push(`${reg.company || reg.id}: ${err instanceof Error ? err.message : String(err)}`);
     }
   }
-  return { total: due.length, sent, errors };
+  return { total: due.length, sent, errors, failedIds };
 }

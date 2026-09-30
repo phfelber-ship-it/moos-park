@@ -228,12 +228,11 @@ export default async function CompanyEventAdminPage({
           kind="ERINNERUNG"
           title="Erinnerungs-E-Mail-Vorlage"
           initialTemplate={erinnerungTemplate}
-          hint="Hinweis: Die Erinnerungsmail geht an ALLE eingeladenen Firmen, nicht nur an die, die sich angemeldet haben. Formulieren Sie den Text deshalb so, dass er auch für Firmen passt, die sich noch nicht angemeldet haben (bei diesen steht unter dem Text ein Button „Jetzt Platz sichern“ statt der Tickets). Den Platzhalter {{anzahl_tickets}} hier besser nicht verwenden: bei Firmen ohne Anmeldung steht dort immer 1."
+          hint="Hinweis: Die Erinnerungsmail geht nur an die Firmen, die Sie beim Versand in der Liste auswählen (auch eingeladene ohne Anmeldung möglich). Formulieren Sie den Text deshalb so, dass er auch für Firmen passt, die sich noch nicht angemeldet haben (bei diesen steht unter dem Text ein Button „Jetzt Platz sichern“ statt der Tickets). Den Platzhalter {{anzahl_tickets}} hier besser nicht verwenden: bei Firmen ohne Anmeldung steht dort immer 1."
         />
         <CompanyEventReminderEditor
           eventId={eventId}
-          initialDue={reminderStats.due}
-          initialInvitedOnly={reminderStats.invitedOnly}
+          candidates={reminderStats.candidates}
           initialAlreadySent={reminderStats.alreadySent}
           skippedUnsubscribed={reminderStats.skippedUnsubscribed}
           skippedNoEmail={reminderStats.skippedNoEmail}
