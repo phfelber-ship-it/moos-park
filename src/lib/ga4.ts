@@ -90,6 +90,50 @@ export async function getGa4Overview(
   }
 }
 
+export type Ga4PageStats = { pageViews: number; sessions: number; activeUsers: number };
+
+// Aufrufe/Sitzungen fuer EINE bestimmte Seite (z.B. eine Firmenevent-
+// Landingpage) - fuer das kleine Dashboard direkt im Firmenevent-
+// Adminpanel (app/admin/firmenevents/[eventId]/page.tsx). Wichtig: GA4
+// liefert nur anonymisierte Aggregat-Zahlen (Aufrufe/Sitzungen/Nutzer),
+// KEINE Namen oder Identitaeten einzelner Besucher - wer konkret war,
+// laesst sich nur aus echten Anmeldungen im eigenen CRM ablesen.
+export async function getGa4PageViews(
+  pagePath: string,
+  startDate: string,
+  endDate: string
+): Promise<Ga4PageStats | null> {
+  const client = getClient();
+  const propertyId = property();
+  if (!client || !propertyId) return null;
+
+  try {
+    const [res] = await client.runReport({
+      property: propertyId,
+      dateRanges: [{ startDate, endDate }],
+      dimensionFilter: {
+        filter: {
+          fieldName: "pagePath",
+          stringFilter: { matchType: "EXACT", value: pagePath },
+        },
+      },
+      metrics: [
+        { name: "screenPageViews" },
+        { name: "sessions" },
+        { name: "activeUsers" },
+      ],
+    });
+    const row = res.rows?.[0];
+    return {
+      pageViews: Number(row?.metricValues?.[0]?.value ?? 0),
+      sessions: Number(row?.metricValues?.[1]?.value ?? 0),
+      activeUsers: Number(row?.metricValues?.[2]?.value ?? 0),
+    };
+  } catch {
+    return null;
+  }
+}
+
 // Holt die wichtigsten Kennzahlen fuer den gewaehlten Zeitraum aus GA4 ueber
 // die offizielle Data-API. Echte Suchbegriffe liefert GA4 nicht (siehe
 // lib/search-console.ts) - dafuer braucht es die Google Search Console.

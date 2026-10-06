@@ -18,6 +18,14 @@ export default function AdminTopBar() {
 
   if (pathname === "/admin/login") return null;
 
+  // Kommt man per "Übersicht"-Button direkt aus dem Kamerabild des
+  // Scanners (siehe ScannerApp.tsx), soll oben nicht "Admin-Dashboard"
+  // stehen - das fuehrt vom eigentlichen Türpersonal-Workflow weg. Stattdessen
+  // direkt zurück zur Kamera fuers selbe Event.
+  const scannerEventMatch = pathname?.match(/^\/admin\/scanner\/([^/]+)$/);
+  const backHref = scannerEventMatch ? `/scanner/${scannerEventMatch[1]}` : "/admin";
+  const backLabel = scannerEventMatch ? "← Zurück zur Kamera" : "← Admin-Dashboard";
+
   const doLogout = async () => {
     setLoading(true);
     await fetch("/api/admin/logout", { method: "POST" });
@@ -63,21 +71,32 @@ export default function AdminTopBar() {
 
   return (
     <>
-      <div className="fixed inset-x-0 top-20 z-40 flex items-center justify-between border-b border-foreground/10 bg-background/95 px-6 py-3 backdrop-blur">
-        <Link
-          href="/admin"
-          className="text-xs font-black uppercase tracking-wide text-foreground/60 hover:text-foreground"
-        >
-          ← Admin-Dashboard
-        </Link>
-        <button
-          type="button"
-          onClick={logout}
-          disabled={loading}
-          className="text-xs font-black uppercase tracking-wide text-foreground/60 hover:text-foreground disabled:opacity-40"
-        >
-          {loading ? "..." : "Logout"}
-        </button>
+      <div className="fixed inset-x-0 top-0 z-40 flex items-center justify-end border-b border-foreground/10 bg-background/95 px-6 py-3 backdrop-blur">
+        {scannerEventMatch ? (
+          <Link
+            href={backHref}
+            className="rounded-lg bg-accent-lime px-4 py-1.5 text-xs font-black uppercase tracking-wide text-black transition-transform hover:scale-105"
+          >
+            {backLabel}
+          </Link>
+        ) : (
+          <>
+            <Link
+              href={backHref}
+              className="mr-auto text-xs font-black uppercase tracking-wide text-foreground/60 hover:text-foreground"
+            >
+              {backLabel}
+            </Link>
+            <button
+              type="button"
+              onClick={logout}
+              disabled={loading}
+              className="text-xs font-black uppercase tracking-wide text-foreground/60 hover:text-foreground disabled:opacity-40"
+            >
+              {loading ? "..." : "Logout"}
+            </button>
+          </>
+        )}
       </div>
 
       {pending && (

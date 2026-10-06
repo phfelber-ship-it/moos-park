@@ -1,5 +1,6 @@
 import AdminTopBar from "@/components/AdminTopBar";
 import SeoCheckPrompt from "@/components/SeoCheckPrompt";
+import AdminInactivityLogout from "@/components/AdminInactivityLogout";
 
 export default function AdminLayout({
   children,
@@ -10,6 +11,7 @@ export default function AdminLayout({
     <>
       <AdminTopBar />
       <SeoCheckPrompt />
+      <AdminInactivityLogout />
       {children}
     </>
   );

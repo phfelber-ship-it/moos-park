@@ -11,6 +11,7 @@ const TYPE_LABELS: Record<InboxType, string> = {
   promoter: "Promoter",
   bewerbung: "Bewerbung",
   reservierung: "Reservierung",
+  eventexperience: "Event Experience",
 };
 
 const TYPE_COLORS: Record<InboxType, string> = {
@@ -20,18 +21,56 @@ const TYPE_COLORS: Record<InboxType, string> = {
   promoter: "bg-orange-500/15 text-orange-400",
   bewerbung: "bg-accent-lime/15 text-accent-lime",
   reservierung: "bg-cyan-500/15 text-cyan-400",
+  eventexperience: "bg-emerald-500/15 text-emerald-400",
 };
 
 type Filter = "alle" | InboxType;
 
+type ReplySettings = { fromName: string; signature: string };
+
 export default function InboxManager({
   initialEntries,
+  initialReplySettings,
 }: {
   initialEntries: InboxEntry[];
+  initialReplySettings: ReplySettings;
 }) {
   const [entries, setEntries] = useState(initialEntries);
   const [filter, setFilter] = useState<Filter>("alle");
   const [busyId, setBusyId] = useState<string | null>(null);
+  const [replyingId, setReplyingId] = useState<string | null>(null);
+  const [replySubject, setReplySubject] = useState("");
+  const [replyText, setReplyText] = useState("");
+  const [replyError, setReplyError] = useState<string | null>(null);
+  const [sendingReply, setSendingReply] = useState(false);
+
+  // Einmal hinterlegter Absendername + Signatur (siehe /api/admin/inbox/
+  // reply-settings) - wird bei jeder Antwort automatisch vorausgefuellt,
+  // statt bei jeder Mail neu eingetippt werden zu muessen. Eigener kleiner
+  // Einstellungsbereich zum Bearbeiten (einmal einrichten, danach nie
+  // wieder anfassen).
+  const [replySettings, setReplySettingsState] = useState(initialReplySettings);
+  const [showReplySettings, setShowReplySettings] = useState(false);
+  const [settingsFromName, setSettingsFromName] = useState(initialReplySettings.fromName);
+  const [settingsSignature, setSettingsSignature] = useState(initialReplySettings.signature);
+  const [savingSettings, setSavingSettings] = useState(false);
+  const [settingsSaved, setSettingsSaved] = useState(false);
+
+  const saveReplySettings = async () => {
+    setSavingSettings(true);
+    setSettingsSaved(false);
+    try {
+      await fetch("/api/admin/inbox/reply-settings", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ fromName: settingsFromName, signature: settingsSignature }),
+      });
+      setReplySettingsState({ fromName: settingsFromName.trim() || "moos.park Team", signature: settingsSignature });
+      setSettingsSaved(true);
+    } finally {
+      setSavingSettings(false);
+    }
+  };
 
   const counts = useMemo(() => {
     const c: Record<Filter, number> = {
@@ -42,6 +81,7 @@ export default function InboxManager({
       promoter: 0,
       bewerbung: 0,
       reservierung: 0,
+      eventexperience: 0,
     };
     for (const e of entries) c[e.type]++;
     return c;
@@ -53,14 +93,28 @@ export default function InboxManager({
   const toggleRead = async (entry: InboxEntry) => {
     setBusyId(entry.id);
     try {
-      await fetch("/api/admin/inbox", {
+      const res = await fetch("/api/admin/inbox", {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ id: entry.id, read: !entry.read }),
       });
-      setEntries((prev) =>
-        prev.map((e) => (e.id === entry.id ? { ...e, read: !e.read } : e))
-      );
+      if (!res.ok) throw new Error();
+      // Nach dem Markieren die komplette Liste frisch vom Server holen statt
+      // nur lokal (optimistisch) umzuschalten - so zeigt die Oberflaeche
+      // immer garantiert den tatsaechlich gespeicherten Stand, auch wenn
+      // zwischenzeitlich ein anderer Schreibvorgang (z.B. eine neue
+      // Anfrage) etwas veraendert hat.
+      const listRes = await fetch("/api/admin/inbox", { cache: "no-store" });
+      if (listRes.ok) {
+        const data = await listRes.json();
+        if (Array.isArray(data?.entries)) setEntries(data.entries);
+      } else {
+        setEntries((prev) =>
+          prev.map((e) => (e.id === entry.id ? { ...e, read: !e.read } : e))
+        );
+      }
+    } catch {
+      alert("Änderung konnte nicht gespeichert werden. Bitte erneut versuchen.");
     } finally {
       setBusyId(null);
     }
@@ -77,6 +131,47 @@ export default function InboxManager({
       setEntries((prev) => prev.filter((e) => e.id !== id));
     } finally {
       setBusyId(null);
+    }
+  };
+
+  const startReply = (entry: InboxEntry) => {
+    setReplyingId(entry.id);
+    setReplySubject(
+      `Re: Ihre Anfrage bei moos.park${entry.summary ? ` – ${entry.summary}` : ""}`
+    );
+    setReplyText(replySettings.signature ? `\n\n${replySettings.signature}` : "");
+    setReplyError(null);
+  };
+
+  const sendReply = async (entry: InboxEntry) => {
+    if (!replyText.trim()) return;
+    setSendingReply(true);
+    setReplyError(null);
+    try {
+      const res = await fetch(`/api/admin/inbox/${entry.id}/reply`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          message: replyText.trim(),
+          subject: replySubject.trim(),
+          fromName: replySettings.fromName,
+        }),
+      });
+      const data = await res.json().catch(() => null);
+      if (!res.ok) throw new Error(data?.error || "Antwort konnte nicht gesendet werden.");
+      setEntries((prev) =>
+        prev.map((e) =>
+          e.id === entry.id
+            ? { ...e, read: true, repliedAt: new Date().toISOString(), replyText: replyText.trim() }
+            : e
+        )
+      );
+      setReplyingId(null);
+      setReplyText("");
+    } catch (err) {
+      setReplyError(err instanceof Error ? err.message : "Antwort konnte nicht gesendet werden.");
+    } finally {
+      setSendingReply(false);
     }
   };
 
@@ -153,7 +248,62 @@ export default function InboxManager({
 
   return (
     <div className="mt-8">
-      <div className="flex flex-wrap gap-2 border-b border-foreground/10 pb-4">
+      <div className="rounded-2xl border border-foreground/10 p-4">
+        <button
+          type="button"
+          onClick={() => setShowReplySettings((o) => !o)}
+          className="flex w-full items-center justify-between text-left text-xs font-black uppercase tracking-wide text-foreground/70"
+        >
+          Absendername &amp; Signatur für Antworten
+          <span className="text-foreground/40">{showReplySettings ? "▲" : "▼"}</span>
+        </button>
+        {!showReplySettings && (
+          <p className="mt-1 text-xs text-foreground/40">
+            Aktuell: {replySettings.fromName} — einmal einrichten, wird
+            danach bei jeder Antwort automatisch verwendet.
+          </p>
+        )}
+        {showReplySettings && (
+          <div className="mt-3">
+            <label className="mb-1 block text-[11px] font-bold uppercase text-foreground/50">
+              Absendername
+            </label>
+            <input
+              value={settingsFromName}
+              onChange={(e) => setSettingsFromName(e.target.value)}
+              placeholder="z.B. Sarah Geisler"
+              className="w-full rounded-xl border border-foreground/15 bg-foreground/5 px-4 py-2.5 text-sm text-foreground outline-none focus:border-accent-lime"
+            />
+            <label className="mb-1 mt-3 block text-[11px] font-bold uppercase text-foreground/50">
+              Signatur (z.B. aus eurer Mac-Mail per Copy-Paste)
+            </label>
+            <textarea
+              value={settingsSignature}
+              onChange={(e) => setSettingsSignature(e.target.value)}
+              rows={6}
+              className="w-full rounded-xl border border-foreground/15 bg-foreground/5 px-4 py-2.5 text-sm text-foreground outline-none focus:border-accent-lime"
+            />
+            <div className="mt-2 flex items-center gap-3">
+              <button
+                type="button"
+                onClick={saveReplySettings}
+                disabled={savingSettings}
+                className="rounded-lg bg-accent-lime px-5 py-2 text-xs font-black uppercase tracking-wide text-black transition-transform hover:scale-105 disabled:opacity-50"
+              >
+                <FlipText text={savingSettings ? "Speichert…" : "Speichern"} />
+              </button>
+              {settingsSaved && (
+                <span className="text-xs font-bold text-accent-lime">Gespeichert.</span>
+              )}
+            </div>
+          </div>
+        )}
+      </div>
+
+      <div className="mt-6 flex flex-wrap gap-2 border-b border-foreground/10 pb-4">
+        {/* "bewerbung"/"reservierung" bewusst kein eigener Tab mehr - siehe
+            HIDDEN_TYPES in lib/inbox.ts, laufen ausschliesslich ueber
+            Clubscale. */}
         {(
           [
             "alle",
@@ -161,8 +311,7 @@ export default function InboxManager({
             "eventlocation",
             "veranstaltung",
             "promoter",
-            "bewerbung",
-            "reservierung",
+            "eventexperience",
           ] as Filter[]
         ).map((f) => (
           <button
@@ -228,8 +377,31 @@ export default function InboxManager({
                     {entry.message}
                   </p>
                 )}
+                {entry.repliedAt && (
+                  <div className="mt-3 rounded-lg border border-accent-lime/30 bg-accent-lime/5 p-3">
+                    <p className="text-[10px] font-black uppercase tracking-wide text-accent-lime">
+                      Beantwortet am {formatDate(entry.repliedAt)}
+                    </p>
+                    {entry.replyText && (
+                      <p className="mt-1 whitespace-pre-line text-xs text-foreground/60">
+                        {entry.replyText}
+                      </p>
+                    )}
+                  </div>
+                )}
               </div>
               <div className="flex shrink-0 flex-col gap-2 text-xs font-bold uppercase">
+                {entry.email && (
+                  <button
+                    type="button"
+                    onClick={() =>
+                      replyingId === entry.id ? setReplyingId(null) : startReply(entry)
+                    }
+                    className="rounded-lg bg-accent-lime px-3 py-1.5 text-black"
+                  >
+                    <FlipText text={replyingId === entry.id ? "Abbrechen" : "Antworten"} />
+                  </button>
+                )}
                 <button
                   type="button"
                   onClick={() => printEntry(entry)}
@@ -255,6 +427,38 @@ export default function InboxManager({
                 </button>
               </div>
             </div>
+
+            {replyingId === entry.id && (
+              <div className="mt-4 border-t border-foreground/10 pt-4">
+                <p className="text-[11px] font-bold uppercase tracking-wide text-foreground/50">
+                  Antwort an {entry.email} · Von: {replySettings.fromName}
+                </p>
+                <input
+                  value={replySubject}
+                  onChange={(e) => setReplySubject(e.target.value)}
+                  placeholder="Betreff"
+                  className="mt-2 w-full rounded-xl border border-foreground/15 bg-foreground/5 px-4 py-2.5 text-sm text-foreground outline-none focus:border-accent-lime"
+                />
+                <textarea
+                  value={replyText}
+                  onChange={(e) => setReplyText(e.target.value)}
+                  rows={8}
+                  placeholder="Ihre Antwort…"
+                  className="mt-2 w-full rounded-xl border border-foreground/15 bg-foreground/5 px-4 py-2.5 text-sm text-foreground outline-none focus:border-accent-lime"
+                />
+                {replyError && <p className="mt-2 text-xs text-red-500">{replyError}</p>}
+                <div className="mt-2 flex gap-2">
+                  <button
+                    type="button"
+                    onClick={() => sendReply(entry)}
+                    disabled={sendingReply || !replyText.trim()}
+                    className="rounded-lg bg-accent-lime px-5 py-2 text-xs font-black uppercase tracking-wide text-black transition-transform hover:scale-105 disabled:opacity-50"
+                  >
+                    <FlipText text={sendingReply ? "Wird gesendet…" : "Antwort senden"} />
+                  </button>
+                </div>
+              </div>
+            )}
           </li>
         ))}
       </ul>

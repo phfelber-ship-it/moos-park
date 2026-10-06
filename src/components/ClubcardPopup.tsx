@@ -9,9 +9,9 @@ const STORAGE_KEY = "clubcard-popup-dismissed-at";
 // nerven - fuer eine zeitlich begrenzte Aktion reicht das, um trotzdem
 // immer wieder sichtbar zu sein.
 const REAPPEAR_AFTER_MS = 24 * 60 * 60 * 1000;
-// Aktion laeuft nur bis zum Reopening - danach zeigt sich das Popup von
-// selbst nicht mehr, ohne dass jemand daran denken muss, es abzuschalten.
-const CAMPAIGN_END = new Date("2026-09-30T23:59:59+02:00");
+// Angebot laeuft bis 15.10.2026 - danach zeigt sich das Popup von selbst
+// nicht mehr, ohne dass jemand daran denken muss, es abzuschalten.
+const CAMPAIGN_END = new Date("2026-10-15T23:59:59+02:00");
 
 export default function ClubcardPopup() {
   const [visible, setVisible] = useState(false);
@@ -92,8 +92,8 @@ export default function ClubcardPopup() {
               <p className="text-sm text-foreground/70">
                 Bronze, Silber, Gold oder Premium – sichere dir jetzt
                 günstigeren Eintritt oder gleich die ganze Saison
-                eintrittsfrei. Nur bis zum Reopening am 12.09. zum
-                Early-Bird-Preis.
+                eintrittsfrei. Nur bis zum 30.09.2026 zum
+                Early-Bird-Preis, das Angebot endet am 15.10.2026.
               </p>
               <a
                 href="/clubcard"

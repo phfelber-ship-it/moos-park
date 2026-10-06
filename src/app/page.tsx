@@ -12,7 +12,6 @@ import FanGallery from "@/components/FanGallery";
 import FlipText from "@/components/FlipText";
 import GalleryCard from "@/components/GalleryCard";
 import RoomsShowcase from "@/components/RoomsShowcase";
-import ClubcardPopup from "@/components/ClubcardPopup";
 import {
   TicketIcon,
   CouponIcon,
@@ -58,7 +57,6 @@ export default async function Home() {
 
   return (
     <div>
-      <ClubcardPopup />
       <Hero images={heroImages} />
 
       <section className="px-6 pb-24 pt-12 lg:pt-6">

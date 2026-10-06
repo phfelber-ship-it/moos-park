@@ -1,0 +1,637 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import FlipText from "@/components/FlipText";
+
+const ANREDEN = ["Herr", "Frau", "Divers"];
+
+type Contact = {
+  id: string;
+  company: string;
+  salutation: string;
+  lastName: string;
+  firstName: string;
+  street: string;
+  zip: string;
+  city: string;
+  createdAt: string;
+};
+
+const emptyForm = {
+  company: "",
+  salutation: "",
+  lastName: "",
+  firstName: "",
+  street: "",
+  zip: "",
+  city: "",
+  email: "",
+  phone: "",
+};
+
+type CompanyContact = {
+  id: string;
+  company: string;
+  salutation: string;
+  lastName: string;
+  firstName: string;
+  street: string;
+  zip: string;
+  city: string;
+  email: string;
+  phone: string;
+};
+
+export default function EventExperienceContactsPanel({
+  initialContacts,
+  companyContacts = [],
+  contactsApiUrl = "/api/admin/event-experience/contacts",
+  lettersExportUrl = "/api/admin/event-experience/letters/export",
+  letterBaseUrl = "/api/admin/event-experience",
+}: {
+  initialContacts: Contact[];
+  companyContacts?: CompanyContact[];
+  // Firmenevents uebergeben ihre eigenen, event-spezifischen Routen (siehe
+  // app/admin/firmenevents/[eventId]/page.tsx); Default bleibt das
+  // Legacy-Event.
+  contactsApiUrl?: string;
+  lettersExportUrl?: string;
+  letterBaseUrl?: string;
+}) {
+  const [contacts, setContacts] = useState(initialContacts);
+  const [form, setForm] = useState(emptyForm);
+  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [status, setStatus] = useState<"idle" | "saving" | "error">("idle");
+  const [error, setError] = useState<string | null>(null);
+  const [importId, setImportId] = useState("");
+  const [saveToDatabase, setSaveToDatabase] = useState(false);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
+
+  // Fortschritts-Overlay waehrend "Kontakt anlegen + Brief erzeugen": zeigt
+  // eine grobe Restzeit-Schaetzung an, waehrend im Hintergrund angelegt UND
+  // per waitForLetterReady auf den fertigen Brief gewartet wird - das dauert
+  // insgesamt spuerbar, ohne Anzeige wirkt die Oberflaeche sonst haengend.
+  const ESTIMATED_CREATE_MS = 4000;
+  const [createElapsedMs, setCreateElapsedMs] = useState(0);
+  useEffect(() => {
+    if (status !== "saving") return;
+    const startedAt = Date.now();
+    setCreateElapsedMs(0);
+    const interval = setInterval(() => {
+      setCreateElapsedMs(Date.now() - startedAt);
+    }, 100);
+    return () => clearInterval(interval);
+  }, [status]);
+
+  // Mehrfachauswahl aus den Firmenkontakten: statt jede Firma einzeln
+  // durchzuklicken, mehrere auswaehlen und in einem Rutsch als Kontakte
+  // anlegen (jeweils eigener Einladungsbrief pro Kontakt entsteht dabei
+  // automatisch, siehe rechtes Vorschau-Fenster pro einzelnem Kontakt).
+  const [bulkSelectedIds, setBulkSelectedIds] = useState<string[]>([]);
+  const [bulkStatus, setBulkStatus] = useState<"idle" | "running" | "error">("idle");
+  const [bulkError, setBulkError] = useState<string | null>(null);
+  const [bulkProgress, setBulkProgress] = useState<{ done: number; total: number } | null>(null);
+
+  const toggleBulkSelected = (id: string) => {
+    setBulkSelectedIds((cur) =>
+      cur.includes(id) ? cur.filter((x) => x !== id) : [...cur, id]
+    );
+  };
+
+  // Wartet, bis der Brief fuer einen frisch angelegten Kontakt wirklich
+  // erzeugt werden kann (ruft die Brief-Route einmal auf und verwirft das
+  // Ergebnis) - erst danach erscheint der Kontakt in der Liste "Angelegte
+  // Kontakte". Verhindert das "Kontakt nicht gefunden", das durch die
+  // kurze Verzoegerung zwischen Blob-Schreiben und -Lesen entstehen konnte,
+  // wenn man den Brief direkt nach dem Anlegen oeffnet.
+  const waitForLetterReady = async (id: string): Promise<void> => {
+    try {
+      const res = await fetch(`${letterBaseUrl}/${id}/letter`, { cache: "no-store" });
+      if (res.ok) return;
+    } catch {
+      // ignorieren - Kontakt trotzdem anzeigen, die Brief-Vorschau meldet
+      // dann selbst einen Fehler, falls es tatsaechlich nicht klappt.
+    }
+  };
+
+  const createSelectedFromDatabase = async () => {
+    if (bulkSelectedIds.length === 0) return;
+    setBulkStatus("running");
+    setBulkError(null);
+    setBulkProgress({ done: 0, total: bulkSelectedIds.length });
+    const created: Contact[] = [];
+    const failed: string[] = [];
+
+    // Bewusst nacheinander statt Promise.all - vermeidet, dass viele
+    // gleichzeitige Schreibvorgaenge auf denselben Blob-Store sich
+    // gegenseitig ueberschreiben (siehe mutate-Muster in
+    // lib/event-experience.ts).
+    for (const id of bulkSelectedIds) {
+      const c = companyContacts.find((cc) => cc.id === id);
+      if (!c) continue;
+      try {
+        const res = await fetch(contactsApiUrl, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            company: c.company,
+            salutation: c.salutation,
+            lastName: c.lastName,
+            firstName: c.firstName,
+            street: c.street,
+            zip: c.zip,
+            city: c.city,
+            email: c.email,
+            phone: c.phone,
+          }),
+        });
+        const data = await res.json().catch(() => null);
+        if (!res.ok) throw new Error(data?.error);
+        await waitForLetterReady(data.contact.id);
+        created.push(data.contact);
+      } catch {
+        failed.push(c.company || c.lastName || id);
+      }
+      setBulkProgress((p) => (p ? { ...p, done: p.done + 1 } : p));
+    }
+
+    if (created.length > 0) {
+      setContacts((cur) => [...created, ...cur]);
+    }
+    if (failed.length > 0) {
+      setBulkStatus("error");
+      setBulkError(`Fehlgeschlagen bei: ${failed.join(", ")}`);
+    } else {
+      setBulkStatus("idle");
+      setBulkSelectedIds([]);
+    }
+  };
+
+  const set = (patch: Partial<typeof form>) =>
+    setForm((cur) => ({ ...cur, ...patch }));
+
+  const importFromDatabase = (id: string) => {
+    setImportId(id);
+    const c = companyContacts.find((c) => c.id === id);
+    if (!c) return;
+    setForm({
+      company: c.company,
+      salutation: c.salutation,
+      lastName: c.lastName,
+      firstName: c.firstName,
+      street: c.street,
+      zip: c.zip,
+      city: c.city,
+      email: c.email,
+      phone: c.phone,
+    });
+  };
+
+  // Alle Felder sind optional - was ausgefuellt wird, wird uebernommen.
+  // Nur komplett leer darf das Formular nicht abgeschickt werden.
+  const canSave = Object.values(form).some((v) => v.trim() !== "");
+
+  const submit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!canSave || status === "saving") return;
+    setStatus("saving");
+    setError(null);
+    try {
+      const res = await fetch(contactsApiUrl, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
+      const data = await res.json().catch(() => null);
+      if (!res.ok) throw new Error(data?.error || "Kontakt konnte nicht angelegt werden.");
+      await waitForLetterReady(data.contact.id);
+      setContacts((cur) => [data.contact, ...cur]);
+      setSelectedId(data.contact.id);
+
+      // Best-effort, zusaetzlich zur Event-Experience-Anmeldung auch in
+      // der wiederverwendbaren Firmenkontakte-Datenbank speichern - darf
+      // das eigentliche Anlegen (oben) nicht blockieren/verhindern.
+      if (saveToDatabase) {
+        fetch("/api/admin/company-contacts", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ ...form, notes: "" }),
+        }).catch(() => {});
+      }
+
+      setForm(emptyForm);
+      setImportId("");
+      setStatus("idle");
+    } catch (err) {
+      setStatus("error");
+      setError(err instanceof Error ? err.message : "Kontakt konnte nicht angelegt werden.");
+    }
+  };
+
+  const selected = contacts.find((c) => c.id === selectedId) ?? null;
+
+  // Brief-PDF wird serverseitig bei jedem Aufruf frisch erzeugt (Logo
+  // einbetten, QR-Code generieren, Text umbrechen) - das dauert spuerbar,
+  // daher eine Ladeanzeige waehrend das iframe laedt.
+  const [letterLoading, setLetterLoading] = useState(false);
+  useEffect(() => {
+    if (selectedId) setLetterLoading(true);
+  }, [selectedId]);
+
+  // Firmen, fuer die in diesem Event schon ein Kontakt angelegt wurde,
+  // fallen aus der Auswahl (Mehrfach-Checkliste + Einzel-Dropdown) raus -
+  // sonst legt man versehentlich doppelte Kontakte/Briefe fuer dieselbe
+  // Firma an. Abgleich ueber Firma+Name, da manuelle Kontakte keine
+  // Referenz auf die urspruengliche Firmenkontakte-ID speichern.
+  const contactSignature = (c: { company: string; lastName: string; firstName: string }) =>
+    `${c.company.trim().toLowerCase()}|${c.lastName.trim().toLowerCase()}|${c.firstName.trim().toLowerCase()}`;
+  const usedSignatures = new Set(contacts.map(contactSignature));
+  const availableCompanyContacts = companyContacts.filter(
+    (c) => !usedSignatures.has(contactSignature(c))
+  );
+
+  const deleteContact = async (id: string) => {
+    if (!window.confirm("Diesen Kontakt unwiderruflich löschen?")) return;
+    setDeletingId(id);
+    try {
+      const res = await fetch(`${letterBaseUrl}?id=${encodeURIComponent(id)}`, {
+        method: "DELETE",
+      });
+      if (!res.ok) throw new Error();
+      setContacts((cur) => cur.filter((c) => c.id !== id));
+      if (selectedId === id) setSelectedId(null);
+    } catch {
+      alert("Kontakt konnte nicht gelöscht werden.");
+    } finally {
+      setDeletingId(null);
+    }
+  };
+
+  return (
+    <>
+    <details className="group mt-12">
+      <summary className="flex cursor-pointer list-none items-center gap-2">
+        <h2 className="text-lg font-black uppercase tracking-wide text-accent-lime">
+          Kontakte
+        </h2>
+        <span className="text-foreground/30 transition-transform group-open:rotate-180">
+          ▼
+        </span>
+      </summary>
+      <p className="mt-1 text-xs text-foreground/50">
+        Kontakte &amp; Einladungsbriefe
+      </p>
+    <div className="mt-2 rounded-2xl border border-foreground/10 bg-foreground/[0.015] p-5 sm:p-6">
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div>
+          <p className="text-sm font-black uppercase tracking-wide text-foreground">
+            Kontakte & Einladungsbriefe
+          </p>
+          <p className="mt-1 text-xs text-foreground/50">
+            Firma manuell anlegen und automatisch einen postalischen
+            Einladungsbrief mit QR-Code erzeugen.
+          </p>
+        </div>
+      </div>
+
+      <div className="mt-6">
+        {/* Formular */}
+        <div>
+          {availableCompanyContacts.length > 0 && (
+            <details className="group mb-5 rounded-xl border border-foreground/10 bg-background p-4">
+              <summary className="flex cursor-pointer list-none items-center justify-between text-xs font-bold uppercase text-foreground/50">
+                <span>Mehrere Firmen auf einmal anlegen</span>
+                <span className="text-foreground/30 transition-transform group-open:rotate-180">
+                  ▼
+                </span>
+              </summary>
+              <p className="mt-2 text-xs text-foreground/40">
+                Firmen auswählen – für jede wird automatisch ein Kontakt +
+                Einladungsbrief für dieses Event erzeugt. Bereits angelegte
+                Firmen werden hier nicht mehr angezeigt.
+              </p>
+              <label className="mt-3 flex cursor-pointer items-center gap-2 text-xs font-bold text-foreground">
+                <input
+                  type="checkbox"
+                  checked={
+                    availableCompanyContacts.length > 0 &&
+                    bulkSelectedIds.length === availableCompanyContacts.length
+                  }
+                  onChange={(e) =>
+                    setBulkSelectedIds(
+                      e.target.checked ? availableCompanyContacts.map((c) => c.id) : []
+                    )
+                  }
+                />
+                Alle auswählen
+              </label>
+              <div className="mt-3 max-h-48 overflow-y-auto rounded-lg border border-foreground/10">
+                {availableCompanyContacts.map((c) => (
+                  <label
+                    key={c.id}
+                    className="flex cursor-pointer items-center gap-2 border-b border-foreground/5 px-3 py-2 text-xs last:border-b-0 hover:bg-foreground/[0.03]"
+                  >
+                    <input
+                      type="checkbox"
+                      checked={bulkSelectedIds.includes(c.id)}
+                      onChange={() => toggleBulkSelected(c.id)}
+                    />
+                    <span className="font-bold text-foreground">
+                      {c.company || c.lastName || "Ohne Namen"}
+                    </span>
+                    {c.city && <span className="text-foreground/40">· {c.city}</span>}
+                  </label>
+                ))}
+              </div>
+              {bulkStatus === "running" && bulkProgress && (
+                <div className="mt-3 h-2 w-full overflow-hidden rounded-full bg-foreground/10">
+                  <div
+                    className="h-full rounded-full bg-accent-lime transition-all"
+                    style={{
+                      width: `${Math.round((bulkProgress.done / bulkProgress.total) * 100)}%`,
+                    }}
+                  />
+                </div>
+              )}
+              {bulkError && <p className="mt-2 text-xs text-red-500">{bulkError}</p>}
+              <div className="mt-3 flex items-center gap-3">
+                <button
+                  type="button"
+                  onClick={createSelectedFromDatabase}
+                  disabled={bulkSelectedIds.length === 0 || bulkStatus === "running"}
+                  className="rounded-lg bg-accent-lime px-5 py-2 text-xs font-black uppercase tracking-wide text-black transition-transform hover:scale-105 disabled:opacity-40"
+                >
+                  <FlipText
+                    text={
+                      bulkStatus === "running" && bulkProgress
+                        ? `Lege an… (${bulkProgress.done}/${bulkProgress.total})`
+                        : `${bulkSelectedIds.length || ""} Firma${bulkSelectedIds.length === 1 ? "" : "en"} anlegen`.trim()
+                    }
+                  />
+                </button>
+              </div>
+            </details>
+          )}
+
+          {availableCompanyContacts.length > 0 && (
+            <div className="mb-3">
+              <label className="mb-1 block text-xs font-bold uppercase text-foreground/50">
+                Oder einzeln übernehmen (zum Anpassen vor dem Anlegen)
+              </label>
+              <select
+                value={importId}
+                onChange={(e) => importFromDatabase(e.target.value)}
+                className="w-full rounded-xl border border-foreground/15 bg-foreground/5 px-4 py-2.5 text-sm text-foreground outline-none focus:border-accent-lime"
+              >
+                <option value="">– Kontakt auswählen –</option>
+                {availableCompanyContacts.map((c) => (
+                  <option key={c.id} value={c.id}>
+                    {c.company || c.lastName || "Ohne Namen"}
+                    {c.city ? ` · ${c.city}` : ""}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
+          <form onSubmit={submit} className="grid gap-3 sm:grid-cols-2">
+            <input
+              value={form.company}
+              onChange={(e) => set({ company: e.target.value })}
+              placeholder="Firma (optional)"
+              className="rounded-xl border border-foreground/15 bg-foreground/5 px-4 py-2.5 text-sm text-foreground placeholder-foreground/40 outline-none focus:border-accent-lime sm:col-span-2"
+            />
+            <select
+              value={form.salutation}
+              onChange={(e) => set({ salutation: e.target.value })}
+              className="rounded-xl border border-foreground/15 bg-foreground/5 px-4 py-2.5 text-sm text-foreground outline-none focus:border-accent-lime"
+            >
+              <option value="">Anrede (optional)</option>
+              {ANREDEN.map((a) => (
+                <option key={a} value={a}>
+                  {a}
+                </option>
+              ))}
+            </select>
+            <input
+              value={form.lastName}
+              onChange={(e) => set({ lastName: e.target.value })}
+              placeholder="Name (optional)"
+              className="rounded-xl border border-foreground/15 bg-foreground/5 px-4 py-2.5 text-sm text-foreground placeholder-foreground/40 outline-none focus:border-accent-lime"
+            />
+            <input
+              value={form.firstName}
+              onChange={(e) => set({ firstName: e.target.value })}
+              placeholder="Vorname (optional)"
+              className="rounded-xl border border-foreground/15 bg-foreground/5 px-4 py-2.5 text-sm text-foreground placeholder-foreground/40 outline-none focus:border-accent-lime"
+            />
+            <input
+              value={form.street}
+              onChange={(e) => set({ street: e.target.value })}
+              placeholder="Straße + Hausnummer (optional)"
+              className="rounded-xl border border-foreground/15 bg-foreground/5 px-4 py-2.5 text-sm text-foreground placeholder-foreground/40 outline-none focus:border-accent-lime"
+            />
+            <div className="grid grid-cols-[100px_1fr] gap-3">
+              <input
+                value={form.zip}
+                onChange={(e) => set({ zip: e.target.value })}
+                placeholder="PLZ (optional)"
+                className="rounded-xl border border-foreground/15 bg-foreground/5 px-4 py-2.5 text-sm text-foreground placeholder-foreground/40 outline-none focus:border-accent-lime"
+              />
+              <input
+                value={form.city}
+                onChange={(e) => set({ city: e.target.value })}
+                placeholder="Ort (optional)"
+                className="rounded-xl border border-foreground/15 bg-foreground/5 px-4 py-2.5 text-sm text-foreground placeholder-foreground/40 outline-none focus:border-accent-lime"
+              />
+            </div>
+            <input
+              value={form.email}
+              onChange={(e) => set({ email: e.target.value })}
+              placeholder="E-Mail (optional)"
+              className="rounded-xl border border-foreground/15 bg-foreground/5 px-4 py-2.5 text-sm text-foreground placeholder-foreground/40 outline-none focus:border-accent-lime"
+            />
+            <input
+              value={form.phone}
+              onChange={(e) => set({ phone: e.target.value })}
+              placeholder="Telefon (optional)"
+              className="rounded-xl border border-foreground/15 bg-foreground/5 px-4 py-2.5 text-sm text-foreground placeholder-foreground/40 outline-none focus:border-accent-lime"
+            />
+
+            <label className="flex items-center gap-2 text-xs text-foreground/60 sm:col-span-2">
+              <input
+                type="checkbox"
+                checked={saveToDatabase}
+                onChange={(e) => setSaveToDatabase(e.target.checked)}
+              />
+              Auch dauerhaft in der Firmenkontakte-Datenbank speichern
+              (wiederverwendbar für andere Einladungen)
+            </label>
+
+            {error && (
+              <p className="text-xs text-red-500 sm:col-span-2">{error}</p>
+            )}
+
+            <button
+              type="submit"
+              disabled={!canSave || status === "saving"}
+              className="w-fit rounded-lg bg-accent-lime px-6 py-2.5 text-xs font-black uppercase tracking-wide text-black transition-transform hover:scale-105 disabled:pointer-events-none disabled:opacity-40 sm:col-span-2"
+            >
+              <FlipText
+                text={status === "saving" ? "Wird angelegt..." : "Kontakt anlegen + Brief erzeugen"}
+              />
+            </button>
+          </form>
+
+        </div>
+      </div>
+    </div>
+    </details>
+
+    {contacts.length > 0 && (
+      <details className="group mt-12">
+        <summary className="flex cursor-pointer list-none items-center gap-2">
+          <h2 className="text-lg font-black uppercase tracking-wide text-accent-lime">
+            Eingeladene Kontakte
+          </h2>
+          <span className="text-foreground/30 transition-transform group-open:rotate-180">
+            ▼
+          </span>
+        </summary>
+        <div className="mt-1 flex flex-wrap items-center justify-between gap-3">
+          <p className="text-xs text-foreground/50">
+            Bereits für dieses Event angelegte Kontakte ({contacts.length})
+          </p>
+          <a
+            href={lettersExportUrl}
+            className="rounded-lg border border-foreground/15 px-4 py-2 text-xs font-black uppercase tracking-wide text-foreground transition-colors hover:border-accent-lime"
+          >
+            Alle Briefe als PDF exportieren
+          </a>
+        </div>
+        <div className="mt-3 grid gap-6 lg:grid-cols-[1fr_320px]">
+          <div className="grid gap-1.5">
+            {contacts.map((c) => (
+              <div
+                key={c.id}
+                className={`flex items-center gap-2 rounded-lg border px-3 py-2 text-xs transition-colors ${
+                  selectedId === c.id
+                    ? "border-accent-lime bg-accent-lime/10"
+                    : "border-foreground/10 hover:border-foreground/25"
+                }`}
+              >
+                <button
+                  type="button"
+                  onClick={() => setSelectedId(c.id)}
+                  className="flex min-w-0 flex-1 items-center justify-between text-left"
+                >
+                  <span className="font-bold text-foreground">
+                    {c.company || c.lastName || "Ohne Namen"}
+                  </span>
+                  <span className="ml-2 truncate text-foreground/40">
+                    {[c.lastName, c.city].filter(Boolean).join(", ")}
+                  </span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => deleteContact(c.id)}
+                  disabled={deletingId === c.id}
+                  title="Kontakt löschen"
+                  className="shrink-0 text-foreground/30 transition-colors hover:text-red-500 disabled:opacity-40"
+                >
+                  ✕
+                </button>
+              </div>
+            ))}
+          </div>
+
+          {/* Rechtes Fenster: PDF-Aktionen */}
+          <div className="rounded-xl border border-foreground/10 bg-background p-5">
+            <p className="text-xs font-black uppercase tracking-wide text-foreground/50">
+              Einladungsbrief
+            </p>
+            {!selected ? (
+              <p className="mt-3 text-xs text-foreground/40">
+                Wählen Sie einen Kontakt aus der Liste, um den Brief zu
+                öffnen.
+              </p>
+            ) : (
+              <div className="mt-3 grid gap-3">
+                <div>
+                  <p className="text-sm font-bold text-foreground">
+                    {selected.company || selected.lastName || "Ohne Namen"}
+                  </p>
+                  <p className="text-xs text-foreground/50">
+                    {[selected.salutation, selected.firstName, selected.lastName]
+                      .filter(Boolean)
+                      .join(" ")}
+                  </p>
+                  <p className="text-xs text-foreground/40">
+                    {[selected.street, [selected.zip, selected.city].filter(Boolean).join(" ")]
+                      .filter(Boolean)
+                      .join(", ")}
+                  </p>
+                </div>
+
+                <div className="relative aspect-[210/297] w-full overflow-hidden rounded-lg border border-foreground/10">
+                  {letterLoading && (
+                    <div className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-2 bg-background">
+                      <div className="h-6 w-6 animate-spin rounded-full border-2 border-foreground/20 border-t-accent-lime" />
+                      <p className="text-xs text-foreground/40">Brief wird erzeugt…</p>
+                    </div>
+                  )}
+                  <iframe
+                    key={selected.id}
+                    title="Brief-Vorschau"
+                    src={`${letterBaseUrl}/${selected.id}/letter`}
+                    onLoad={() => setLetterLoading(false)}
+                    className="h-full w-full"
+                  />
+                </div>
+
+                <a
+                  href={`${letterBaseUrl}/${selected.id}/letter`}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="w-full rounded-lg bg-accent-lime px-4 py-2.5 text-center text-xs font-black uppercase tracking-wide text-black transition-transform hover:scale-105"
+                >
+                  <FlipText text="PDF öffnen / drucken" />
+                </a>
+                <a
+                  href={`${letterBaseUrl}/${selected.id}/letter?dl=1`}
+                  className="w-full rounded-lg border border-foreground/15 px-4 py-2.5 text-center text-xs font-black uppercase tracking-wide text-foreground transition-colors hover:border-accent-lime"
+                >
+                  PDF herunterladen
+                </a>
+              </div>
+            )}
+          </div>
+        </div>
+      </details>
+    )}
+
+      {status === "saving" && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4">
+          <div className="w-full max-w-xs rounded-2xl border border-foreground/10 bg-background p-6 text-center shadow-xl">
+            <div className="mx-auto h-8 w-8 animate-spin rounded-full border-2 border-foreground/20 border-t-accent-lime" />
+            <p className="mt-4 text-sm font-black uppercase tracking-wide text-foreground">
+              Kontakt wird angelegt…
+            </p>
+            <p className="mt-1 text-xs text-foreground/50">
+              {createElapsedMs < ESTIMATED_CREATE_MS
+                ? `Noch ca. ${Math.max(1, Math.ceil((ESTIMATED_CREATE_MS - createElapsedMs) / 1000))} Sekunden`
+                : "Dauert etwas länger als sonst…"}
+            </p>
+            <div className="mt-3 h-1.5 w-full overflow-hidden rounded-full bg-foreground/10">
+              <div
+                className="h-full rounded-full bg-accent-lime transition-all"
+                style={{
+                  width: `${Math.min(95, Math.round((createElapsedMs / ESTIMATED_CREATE_MS) * 100))}%`,
+                }}
+              />
+            </div>
+          </div>
+        </div>
+      )}
+    </>
+  );
+}

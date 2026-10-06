@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { sendContactMail } from "@/lib/clubscale";
-import { logInbox } from "@/lib/inbox-client";
+import { logInboxAwaited } from "@/lib/inbox-client";
 import HoneypotField from "@/components/HoneypotField";
 import FlipText from "@/components/FlipText";
 
@@ -43,29 +43,30 @@ export default function EventRequestForm() {
     }
 
     setStatus("sending");
-    try {
-      await sendContactMail({
-        firstname: vorname.trim(),
-        lastname: nachname.trim(),
-        mail: email.trim(),
-        phone: telefon.trim(),
-        subject: "Veranstaltungsanfrage über moos-park.de",
-        body:
-          `Veranstaltungsort: ${ort}\n` +
-          (nachricht.trim() ? `Nachricht: ${nachricht.trim()}\n` : ""),
-      });
-      logInbox({
-        type: "veranstaltung",
-        name: `${vorname.trim()} ${nachname.trim()}`,
-        email: email.trim(),
-        phone: telefon.trim(),
-        summary: ort,
-        message: nachricht.trim(),
-      });
-      setStatus("sent");
-    } catch {
-      setStatus("error");
-    }
+    // Postfach + die daran gekoppelte SMTP-Benachrichtigung sind der
+    // garantierte Zustellweg (siehe ContactForm.tsx fuer die Begruendung),
+    // Clubscale laeuft nur noch bestmoeglich nebenher.
+    const ok = await logInboxAwaited({
+      type: "veranstaltung",
+      name: `${vorname.trim()} ${nachname.trim()}`,
+      email: email.trim(),
+      phone: telefon.trim(),
+      summary: ort,
+      message: nachricht.trim(),
+    });
+    sendContactMail({
+      firstname: vorname.trim(),
+      lastname: nachname.trim(),
+      mail: email.trim(),
+      phone: telefon.trim(),
+      subject: "Veranstaltungsanfrage über moos-park.de",
+      body:
+        `Veranstaltungsort: ${ort}\n` +
+        (nachricht.trim() ? `Nachricht: ${nachricht.trim()}\n` : ""),
+    }).catch((err) => {
+      console.error("Clubscale-Mail (Veranstaltungsanfrage) fehlgeschlagen:", err);
+    });
+    setStatus(ok ? "sent" : "error");
   };
 
   if (status === "sent") {

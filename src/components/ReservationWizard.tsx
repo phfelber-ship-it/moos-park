@@ -8,7 +8,6 @@ import {
   type ClubscaleEvent,
   type Reservable,
 } from "@/lib/clubscale";
-import { logInbox } from "@/lib/inbox-client";
 import HoneypotField from "@/components/HoneypotField";
 import FlipText from "@/components/FlipText";
 
@@ -160,16 +159,10 @@ export default function ReservationWizard({
         arrivalTime: arrival ? arrivalToISO(selectedEvent, arrival) : "",
         additionalInformation: message.trim(),
       });
-      logInbox({
-        type: "reservierung",
-        name: name.trim(),
-        email: email.trim(),
-        phone: phone.trim(),
-        summary:
-          `${selectedEvent?.name ?? "Ohne bestimmte Veranstaltung"} · ${people} Personen` +
-          (arrival ? ` · Ankunft ${arrival} Uhr` : ""),
-        message: message.trim(),
-      });
+      // Reservierungen laufen bewusst NICHT (mehr) durchs Postfach - App-
+      // und Website-Reservierungen landen sonst nur zur Haelfte dort (App-
+      // Reservierungen gehen direkt an Clubscale). Clubscale-Adminpanel ist
+      // hier die einzige, vollstaendige Quelle fuer beide Kanaele.
       setStatus("sent");
     } catch {
       setStatus("error");
