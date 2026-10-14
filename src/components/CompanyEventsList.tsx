@@ -294,7 +294,7 @@ export default function CompanyEventsList({
                       : "bg-foreground/10 text-foreground/50"
                   }`}
                 >
-                  {ev.status}
+                  {ev.status === "AKTIV" ? "Online" : "Offline"}
                 </span>
               </div>
               <p className="mt-1 text-xs text-foreground/50">/{ev.slug}</p>
