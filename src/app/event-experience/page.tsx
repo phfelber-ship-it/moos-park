@@ -3,21 +3,30 @@ import FlipText from "@/components/FlipText";
 import Reveal from "@/components/Reveal";
 import EventExperienceForm from "@/components/EventExperienceForm";
 import EventExperienceIntro from "@/components/EventExperienceIntro";
+import CompanyEventOfflinePage from "@/components/CompanyEventOfflinePage";
 import EventPartnersSection from "@/components/EventPartnersSection";
 import { getCompanyEvent, LEGACY_EVENT_ID } from "@/lib/company-events";
 import { TIMETABLE } from "@/lib/event-experience-info";
 
-// Partner-Logos kommen aus dem Adminpanel; beim Hochladen wird die Seite
-// per revalidatePath aktualisiert, sonst spaetestens nach einer Minute.
-export const revalidate = 60;
+// Partner-Logos kommen aus dem Adminpanel und sollen sofort sichtbar sein
+// (kein Seiten-Cache, wie bei den dynamischen Event-Seiten /[eventSlug]).
+export const dynamic = "force-dynamic";
 
-export const metadata = {
+const baseMetadata = {
   alternates: { canonical: "/event-experience" },
   title:
     "THE EVENT EXPERIENCE – Firmenfeiern erleben im moos.park Pöttmes",
   description:
     "Mittwoch, 14. Oktober 2026, 17–22 Uhr: Erleben Sie im moos.park einen inspirierenden Abend für Ihre nächste Firmenveranstaltung – Sommerfest, Weihnachtsfeier, Team- und Kundenevent. Plätze sind begrenzt – jetzt anmelden.",
 };
+
+export async function generateMetadata() {
+  const event = await getCompanyEvent(LEGACY_EVENT_ID);
+  if (event && event.status !== "AKTIV") {
+    return { title: baseMetadata.title, robots: { index: false, follow: false } };
+  }
+  return baseMetadata;
+}
 
 const STEPS = [
   {
@@ -86,7 +95,12 @@ const FAQ = [
 ];
 
 export default async function EventExperiencePage() {
-  const partners = (await getCompanyEvent(LEGACY_EVENT_ID))?.partners ?? [];
+  const event = await getCompanyEvent(LEGACY_EVENT_ID);
+  // Offline genommen (Adminpanel): freundliche Hinweisseite statt Landingpage.
+  if (event && event.status !== "AKTIV") {
+    return <CompanyEventOfflinePage eventName={event.name} />;
+  }
+  const partners = event?.partners ?? [];
   return (
     <div>
       <EventExperienceIntro />
