@@ -92,7 +92,7 @@ export default function AppPage() {
   return (
     <div>
       <section className="px-6 pb-8 pt-32">
-        <div className="mx-auto grid max-w-6xl items-center gap-10 lg:grid-cols-2 lg:gap-16">
+        <div className="mx-auto grid max-w-[1440px] items-center gap-10 lg:grid-cols-2 lg:gap-16">
           <AppPhoneReveal />
 
           <div className="order-1 text-center lg:order-2 lg:text-left">
@@ -135,7 +135,7 @@ export default function AppPage() {
       </section>
 
       <section className="px-6 py-20">
-        <div className="mx-auto max-w-6xl">
+        <div className="mx-auto max-w-[1440px]">
           <h2 className="text-center text-3xl font-black uppercase text-foreground">
             Das kann die App.
           </h2>

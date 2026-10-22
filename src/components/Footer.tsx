@@ -138,7 +138,7 @@ export default function Footer() {
       </div>
 
       {/* Desktop: vollstaendiges Link-Grid */}
-      <div className="mx-auto hidden max-w-7xl gap-8 lg:grid lg:grid-cols-[1.3fr_1fr_1fr_1fr_1fr]">
+      <div className="mx-auto hidden max-w-[1600px] gap-8 lg:grid lg:grid-cols-[1.3fr_1fr_1fr_1fr_1fr]">
         <div className="text-left">
           <Image
             src="/images/logo.png"
@@ -212,7 +212,7 @@ export default function Footer() {
         </div>
       </div>
 
-      <div className="mx-auto mt-14 hidden max-w-7xl flex-col items-center justify-between gap-4 border-t border-foreground/8 pt-8 text-xs text-foreground/40 lg:flex lg:flex-row">
+      <div className="mx-auto mt-14 hidden max-w-[1600px] flex-col items-center justify-between gap-4 border-t border-foreground/8 pt-8 text-xs text-foreground/40 lg:flex lg:flex-row">
         <p>
           © MOOS-PARK GASTRONOMIE GMBH {new Date().getFullYear()}. Alle
           Rechte vorbehalten. Teilweise werden Bilder und Texte auf dieser

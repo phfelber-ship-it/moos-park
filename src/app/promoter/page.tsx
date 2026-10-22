@@ -104,7 +104,7 @@ export default function PromoterPage() {
       </section>
 
       <section className="px-6 py-20">
-        <div className="mx-auto max-w-6xl">
+        <div className="mx-auto max-w-[1440px]">
           <h2 className="text-center text-3xl font-black uppercase text-foreground">
             Das bringt dir das Programm.
           </h2>

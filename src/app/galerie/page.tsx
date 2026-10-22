@@ -12,7 +12,7 @@ export default async function BilderPage() {
   const galleries = await getGalleries();
 
   return (
-    <div className="mx-auto max-w-7xl px-6 pb-20 pt-32">
+    <div className="mx-auto max-w-[1600px] px-6 pb-20 pt-32">
       <h1 className="text-center text-4xl font-black uppercase text-foreground">
         Bilder
       </h1>
