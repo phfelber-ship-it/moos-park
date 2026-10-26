@@ -282,7 +282,8 @@ export async function createDirectPurchaseRequest(input: {
       lastname: input.lastName,
       gender: "UNKNOWN" satisfies Gender,
       address: { street: "", houseNumber: "", zip: "", city: "", country: "" },
-      discountCodes: [],
+      codes: [],
+      discountCodes: [], // deprecated bei Clubscale, bis zur Entfernung zur Sicherheit mitsenden
       dryRun: false,
       items: input.items,
     }),
