@@ -26,6 +26,7 @@ export const STATIC_ROUTES = [
   "/eventlocation-ingolstadt",
   "/eventlocation-region",
   "/veranstaltungsanfrage",
+  "/verloren-und-gefunden",
   "/app",
   "/promoter",
   "/erleben",

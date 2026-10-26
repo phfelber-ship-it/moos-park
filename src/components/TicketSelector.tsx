@@ -41,7 +41,7 @@ export default function TicketSelector({
 
   return (
     <div>
-      <p className="mb-4 text-xs font-bold uppercase tracking-wide text-accent-lime">
+      <p className="mb-4 text-xs font-bold uppercase tracking-wide text-accent-lime lg:text-sm">
         Online Tickets kaufen &amp; sparen
       </p>
 
@@ -87,11 +87,11 @@ export default function TicketSelector({
                       )}
                     </div>
                   )}
-                  <p className="truncate text-sm font-bold text-foreground">
+                  <p className="truncate text-sm font-bold text-foreground lg:text-base">
                     {pool.name}
                   </p>
                   <p
-                    className={`mt-1 text-xs ${
+                    className={`mt-1 text-xs lg:text-sm ${
                       soldOut ? "font-bold text-red-500" : "text-foreground/50"
                     }`}
                   >
@@ -142,7 +142,7 @@ export default function TicketSelector({
         })}
       </div>
 
-      <p className="mt-4 text-xs text-foreground/50">
+      <p className="mt-4 text-xs text-foreground/50 lg:text-sm">
         *Gebühren werden auf der nächsten Seite automatisch berechnet.
       </p>
 
