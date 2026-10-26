@@ -245,10 +245,18 @@ export type Ticket = {
   qrText: string;
 };
 
+export type GiftCardShort = {
+  id: string;
+  code: string;
+  totalBalance: number;
+};
+
 export type Purchase = {
   id: string;
+  status?: "PENDING" | "SUCCEEDED" | "CANCELED";
   clientSecret?: string;
   tickets?: Ticket[];
+  giftCards?: GiftCardShort[];
 };
 
 export type DirectPurchaseResponse = {
@@ -483,4 +491,70 @@ export async function getFaqs(): Promise<Faq[]> {
   }
   const data = (await res.json()) as { faqs: Faq[] };
   return [...data.faqs].sort((a, b) => a.sortIndex - b.sortIndex);
+}
+
+export type GiftCardTemplate = {
+  id: string;
+  name: string;
+  description: string;
+  balance: number;
+  sortIndex: number;
+  published: boolean;
+  deactivated: boolean;
+  image: ClubscaleImage | null;
+};
+
+export async function getGiftCardTemplates(): Promise<GiftCardTemplate[]> {
+  try {
+    const res = await fetch(`${API_BASE}/gift-card-templates?limit=100`, {
+      next: { revalidate: 300 },
+    });
+    if (!res.ok) return [];
+    const data = (await res.json()) as { giftCardTemplates: GiftCardTemplate[] };
+    return data.giftCardTemplates
+      .filter((t) => t.published && !t.deactivated)
+      .sort((a, b) => a.sortIndex - b.sortIndex);
+  } catch {
+    return [];
+  }
+}
+
+// Ein Gutschein-Kauf enthaelt nur Gutscheine, nie Tickets, und braucht kein
+// Event. Pro Position entweder eine Vorlage (templateID) oder ein frei
+// gewaehlter Betrag in Cent (balance).
+export type GiftCardItemInput = {
+  templateID?: string;
+  balance?: number;
+  quantity: number;
+};
+
+export async function createDirectGiftCardPurchase(input: {
+  birthday: string;
+  mail: string;
+  firstName: string;
+  lastName: string;
+  items: GiftCardItemInput[];
+}): Promise<DirectPurchaseResponse> {
+  const res = await fetch(`${API_BASE}/purchase-requests/direct`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      birthday: input.birthday,
+      mail: input.mail,
+      firstname: input.firstName,
+      lastname: input.lastName,
+      gender: "UNKNOWN" satisfies Gender,
+      address: { street: "", houseNumber: "", zip: "", city: "", country: "" },
+      codes: [],
+      discountCodes: [],
+      dryRun: false,
+      items: [],
+      giftCardItems: input.items,
+    }),
+  });
+  const data = await res.json();
+  if (!res.ok) {
+    throw new Error(data?.message ?? "Gutschein-Bestellung fehlgeschlagen.");
+  }
+  return data as DirectPurchaseResponse;
 }

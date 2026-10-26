@@ -269,12 +269,14 @@ export default function TicketsDataFlow({
   );
 }
 
-function PaymentForm({
+export function PaymentForm({
   purchaseRequestId,
   secret,
+  returnPath = "/tickets-data/bestaetigung",
 }: {
   purchaseRequestId: string;
   secret: string;
+  returnPath?: string;
 }) {
   const stripe = useStripe();
   const elements = useElements();
@@ -286,10 +288,7 @@ function PaymentForm({
     setError(null);
     setSubmitting(true);
 
-    const returnUrl = new URL(
-      "/tickets-data/bestaetigung",
-      window.location.origin
-    );
+    const returnUrl = new URL(returnPath, window.location.origin);
     returnUrl.searchParams.set("prid", purchaseRequestId);
     returnUrl.searchParams.set("secret", secret);
 
