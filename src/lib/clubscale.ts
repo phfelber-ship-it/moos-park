@@ -273,6 +273,7 @@ export async function createDirectPurchaseRequest(input: {
   firstName: string;
   lastName: string;
   items: { ticketPoolID: string; quantity: number }[];
+  code?: string;
 }): Promise<DirectPurchaseResponse> {
   // phoneNumber/phoneVerificationCode duerfen hier nicht als leere Strings
   // mitgeschickt werden - schon ihre bloße Anwesenheit im Body loest bei der
@@ -290,7 +291,8 @@ export async function createDirectPurchaseRequest(input: {
       lastname: input.lastName,
       gender: "UNKNOWN" satisfies Gender,
       address: { street: "", houseNumber: "", zip: "", city: "", country: "" },
-      codes: [],
+      // codes nimmt Rabatt- und Gutscheincodes gemeinsam entgegen
+      codes: input.code ? [input.code] : [],
       discountCodes: [], // deprecated bei Clubscale, bis zur Entfernung zur Sicherheit mitsenden
       dryRun: false,
       items: input.items,
