@@ -8,8 +8,8 @@ export default function ReadMore({ text }: { text: string }) {
   return (
     <div>
       <p
-        className={`whitespace-pre-line text-base leading-relaxed text-foreground/80 lg:text-lg ${
-          open ? "" : "line-clamp-3 lg:line-clamp-6"
+        className={`whitespace-pre-line text-foreground/80 ${
+          open ? "" : "line-clamp-3"
         }`}
       >
         {text}

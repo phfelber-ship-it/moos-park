@@ -149,7 +149,7 @@ export default function EventlocationRegionPage() {
       </section>
 
       <section className="bg-foreground/[0.02] px-6 py-20">
-        <div className="mx-auto max-w-[1600px]">
+        <div className="mx-auto max-w-[1440px]">
           <Reveal>
             <p className="text-center text-xs font-black uppercase tracking-[0.3em] text-accent-lime">
               Für jeden Anlass
@@ -179,7 +179,7 @@ export default function EventlocationRegionPage() {
       </section>
 
       <section className="px-6 py-20">
-        <div className="mx-auto max-w-[1600px]">
+        <div className="mx-auto max-w-5xl">
           <Reveal>
             <p className="text-center text-xs font-black uppercase tracking-[0.3em] text-accent-lime">
               5 Räume, ein Anbieter
@@ -206,7 +206,7 @@ export default function EventlocationRegionPage() {
       </section>
 
       <section className="bg-foreground/[0.02] px-6 py-20">
-        <div className="mx-auto max-w-[1600px]">
+        <div className="mx-auto max-w-5xl">
           <Reveal>
             <p className="text-center text-xs font-black uppercase tracking-[0.3em] text-accent-lime">
               Im Umkreis von rund 100 km
