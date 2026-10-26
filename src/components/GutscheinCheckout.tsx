@@ -42,9 +42,6 @@ export default function GutscheinCheckout({
   const [step, setStep] = useState<"data" | "payment">("data");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
-  const [day, setDay] = useState("");
-  const [month, setMonth] = useState("");
-  const [year, setYear] = useState("");
   const [mail, setMail] = useState("");
   const [accepted, setAccepted] = useState(false);
 
@@ -60,18 +57,13 @@ export default function GutscheinCheckout({
     accepted &&
     firstName.trim() &&
     lastName.trim() &&
-    day &&
-    month &&
-    year.length === 4 &&
     mail.includes("@");
 
   const startPurchase = async () => {
     setError(null);
     setLoading(true);
     try {
-      const birthday = `${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`;
       const response = await createDirectGiftCardPurchase({
-        birthday,
         mail: mail.trim(),
         firstName: firstName.trim(),
         lastName: lastName.trim(),
@@ -154,32 +146,6 @@ export default function GutscheinCheckout({
             onChange={(e) => setLastName(e.target.value)}
             placeholder="Nachname"
             className="rounded-lg border border-foreground/20 bg-transparent px-4 py-2.5 text-sm text-foreground outline-none focus:border-accent-lime"
-          />
-        </div>
-
-        <p className="mb-2 mt-5 text-xs font-bold uppercase tracking-wide text-foreground/50">
-          Geburtstag
-        </p>
-        <div className="flex items-center gap-2">
-          <input
-            value={day}
-            onChange={(e) => setDay(e.target.value.replace(/\D/g, "").slice(0, 2))}
-            placeholder="TT"
-            className="w-16 rounded-lg border border-foreground/20 bg-transparent px-3 py-2.5 text-center text-sm text-foreground outline-none focus:border-accent-lime"
-          />
-          <span className="text-foreground/40">.</span>
-          <input
-            value={month}
-            onChange={(e) => setMonth(e.target.value.replace(/\D/g, "").slice(0, 2))}
-            placeholder="MM"
-            className="w-16 rounded-lg border border-foreground/20 bg-transparent px-3 py-2.5 text-center text-sm text-foreground outline-none focus:border-accent-lime"
-          />
-          <span className="text-foreground/40">.</span>
-          <input
-            value={year}
-            onChange={(e) => setYear(e.target.value.replace(/\D/g, "").slice(0, 4))}
-            placeholder="JJJJ"
-            className="w-20 rounded-lg border border-foreground/20 bg-transparent px-3 py-2.5 text-center text-sm text-foreground outline-none focus:border-accent-lime"
           />
         </div>
 

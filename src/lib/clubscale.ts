@@ -529,7 +529,6 @@ export type GiftCardItemInput = {
 };
 
 export async function createDirectGiftCardPurchase(input: {
-  birthday: string;
   mail: string;
   firstName: string;
   lastName: string;
@@ -539,7 +538,6 @@ export async function createDirectGiftCardPurchase(input: {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
-      birthday: input.birthday,
       mail: input.mail,
       firstname: input.firstName,
       lastname: input.lastName,
