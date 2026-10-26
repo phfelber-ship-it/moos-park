@@ -81,7 +81,9 @@ export default async function EventDetailPage({
   const moreEvents = allEvents.filter((e) => e.id !== event.id).slice(0, 3);
 
   return (
-    <div className="mx-auto max-w-2xl px-6 pb-16 pt-32">
+    <div className="mx-auto max-w-[1600px] px-6 lg:px-24 pb-16 pt-32">
+      <div className="grid gap-10 lg:grid-cols-[1.35fr_1fr] lg:items-start lg:gap-14">
+      <div className="min-w-0">
       {event.thumbnail?.presignedURL && (
         <div className="relative aspect-video w-full overflow-hidden rounded-2xl bg-foreground/5">
           <Image
@@ -89,13 +91,13 @@ export default async function EventDetailPage({
             alt={event.name}
             fill
             className="object-cover"
-            sizes="(min-width: 640px) 700px, 100vw"
+            sizes="(min-width: 1024px) 900px, 100vw"
             priority
           />
         </div>
       )}
 
-      <div className="mt-6 flex max-w-full flex-nowrap items-center justify-center gap-1.5 overflow-x-auto text-center">
+      <div className="mt-6 flex max-w-full flex-nowrap items-center justify-center gap-1.5 overflow-x-auto text-center lg:justify-start lg:text-left">
         {sortTags(event.tags).map((tag) => (
           <span
             key={tag}
@@ -108,7 +110,7 @@ export default async function EventDetailPage({
         ))}
       </div>
 
-      <h1 className="mt-4 text-center text-2xl font-black uppercase leading-tight text-foreground sm:text-4xl">
+      <h1 className="mt-4 text-center text-2xl font-black uppercase leading-tight text-foreground sm:text-4xl lg:text-left lg:text-5xl">
         {event.name}
       </h1>
 
@@ -117,19 +119,19 @@ export default async function EventDetailPage({
           event.hasBoxOffice ? "grid-cols-3" : "grid-cols-2"
         }`}
       >
-        <div className="p-4">
+        <div className="p-4 lg:p-5">
           <p className="text-xs font-bold uppercase tracking-wide text-foreground/40">
             Beginn
           </p>
-          <p className="mt-1 font-black text-foreground">
+          <p className="mt-1 font-black text-foreground lg:text-lg">
             {formatTime(event.start)}
           </p>
         </div>
-        <div className="p-4">
+        <div className="p-4 lg:p-5">
           <p className="text-xs font-bold uppercase tracking-wide text-foreground/40">
             Alter
           </p>
-          <p className="mt-1 font-black text-foreground">
+          <p className="mt-1 font-black text-foreground lg:text-lg">
             {event.ageRestriction}+
           </p>
         </div>
@@ -145,11 +147,14 @@ export default async function EventDetailPage({
         )}
       </div>
 
-      <div className="prose prose-neutral mt-10 max-w-none">
+      <div className="prose prose-neutral prose-lg mt-10 max-w-none lg:prose-xl">
         <ReadMore text={event.description} />
       </div>
 
-      <div className="mt-10 text-center">
+      </div>
+
+      <div className="min-w-0 lg:sticky lg:top-28">
+      <div className="text-center lg:hidden">
         <a
           href="#tickets"
           className="inline-flex items-center gap-2 rounded-lg bg-accent-lime px-8 py-3 text-sm font-black uppercase tracking-wide text-black transition-transform hover:scale-105"
@@ -158,8 +163,8 @@ export default async function EventDetailPage({
         </a>
       </div>
 
-      <div id="tickets" className="mt-10 scroll-mt-24">
-        <h2 className="mb-6 text-center text-xl font-black uppercase text-foreground">
+      <div id="tickets" className="mt-10 scroll-mt-24 lg:mt-0">
+        <h2 className="mb-6 text-center text-xl lg:text-2xl font-black uppercase text-foreground">
           Tickets
         </h2>
         <TicketSelector
@@ -168,6 +173,8 @@ export default async function EventDetailPage({
             .filter((p) => !p.deactivated)
             .sort((a, b) => a.sortIndex - b.sortIndex)}
         />
+      </div>
+      </div>
       </div>
 
       {artists.length > 0 && (

@@ -56,7 +56,7 @@ export default async function TanzabendPage() {
         </a>
       </section>
 
-      <section className="mx-auto max-w-4xl px-6 py-12">
+      <section className="mx-auto max-w-[1600px] px-6 lg:px-24 py-12">
         <div className="relative aspect-[1024/379] w-full overflow-hidden rounded-xl bg-foreground/5">
           <Image
             src="/images/tanzabend-banner.png"
@@ -69,7 +69,7 @@ export default async function TanzabendPage() {
       </section>
 
       <section className="px-6 pb-28">
-        <div className="mx-auto grid max-w-4xl gap-4 sm:grid-cols-2">
+        <div className="mx-auto grid max-w-[1600px] lg:px-16 gap-4 sm:grid-cols-2">
           {events.map((termin) => {
             const start = formatDateTime(termin.start);
             const end = formatDateTime(termin.end);

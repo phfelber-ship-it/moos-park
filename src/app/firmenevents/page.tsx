@@ -150,7 +150,7 @@ export default function FirmeneventsPage() {
       <RentalLandingTemplate data={data} />
 
       <section className="px-6 py-20">
-        <div className="mx-auto max-w-5xl">
+        <div className="mx-auto max-w-[1600px] lg:px-16">
           <Reveal>
             <p className="text-center text-xs font-black uppercase tracking-[0.3em] text-accent-lime">
               Von klein bis groß

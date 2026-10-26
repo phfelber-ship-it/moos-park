@@ -97,7 +97,7 @@ export default function ClubcardPage() {
 
       {/* Preis-Karten */}
       <section className="px-6 py-20">
-        <div className="mx-auto max-w-[1440px]">
+        <div className="mx-auto max-w-[1600px] lg:px-16">
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {TIERS.map((tier) => (
               <div
@@ -184,7 +184,7 @@ export default function ClubcardPage() {
 
       {/* Welche Card passt */}
       <section className="px-6 pb-28">
-        <div className="mx-auto max-w-[1440px]">
+        <div className="mx-auto max-w-[1600px] lg:px-16">
           <h2 className="text-center text-3xl font-black uppercase text-foreground">
             Welche Clubcard passt zu dir?
           </h2>
