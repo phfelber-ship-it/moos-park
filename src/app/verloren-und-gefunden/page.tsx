@@ -24,7 +24,7 @@ const STEPS = [
 
 export default function VerlorenUndGefundenPage() {
   return (
-    <div className="mx-auto max-w-3xl px-6 pb-20 pt-32">
+    <div className="mx-auto max-w-[1600px] px-6 pb-20 pt-32">
       <p className="text-center text-xs font-black uppercase tracking-[0.3em] text-accent-lime">
         Service
       </p>

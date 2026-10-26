@@ -47,7 +47,7 @@ export default function RentalLandingTemplate({ data }: { data: RentalPageData }
       </section>
 
       <section className="bg-foreground/[0.02] px-6 py-20">
-        <div className="mx-auto max-w-5xl">
+        <div className="mx-auto max-w-[1600px]">
           <Reveal>
             <p className="text-center text-xs font-black uppercase tracking-[0.3em] text-accent-lime">
               Das kennt jeder
@@ -74,7 +74,7 @@ export default function RentalLandingTemplate({ data }: { data: RentalPageData }
       </section>
 
       <section className="px-6 py-20">
-        <div className="mx-auto max-w-5xl">
+        <div className="mx-auto max-w-[1600px]">
           <Reveal>
             <p className="text-center text-xs font-black uppercase tracking-[0.3em] text-accent-lime">
               So einfach geht&apos;s
@@ -119,7 +119,7 @@ export default function RentalLandingTemplate({ data }: { data: RentalPageData }
       </section>
 
       <section className="px-6 py-20">
-        <div className="mx-auto max-w-5xl">
+        <div className="mx-auto max-w-[1600px]">
           <Reveal>
             <p className="text-center text-xs font-black uppercase tracking-[0.3em] text-accent-lime">
               {data.testimonialsHeading}

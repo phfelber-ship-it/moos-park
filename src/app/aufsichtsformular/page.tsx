@@ -80,7 +80,7 @@ export default function AufsichtsformularPage() {
       </section>
 
       <section className="px-6 py-16">
-        <div className="mx-auto max-w-5xl">
+        <div className="mx-auto max-w-[1600px]">
           <h2 className="text-center text-2xl font-black uppercase text-foreground sm:text-3xl">
             Einlassalter je Veranstaltung
           </h2>
