@@ -22,7 +22,7 @@ export default function BlogIndexPage() {
   );
 
   return (
-    <div className="mx-auto max-w-[1600px] px-6 pb-20 pt-32">
+    <div className="mx-auto max-w-[1600px] px-6 lg:px-24 pb-20 pt-32">
       <p className="text-sm font-bold uppercase tracking-wide text-accent-lime">
         moos.park Ratgeber
       </p>

@@ -81,7 +81,7 @@ export default async function EventDetailPage({
   const moreEvents = allEvents.filter((e) => e.id !== event.id).slice(0, 3);
 
   return (
-    <div className="mx-auto max-w-[1600px] px-6 pb-16 pt-32">
+    <div className="mx-auto max-w-[1600px] px-6 lg:px-24 pb-16 pt-32">
       <div className="grid gap-10 lg:grid-cols-[1.35fr_1fr] lg:items-start lg:gap-14">
       <div className="min-w-0">
       {event.thumbnail?.presignedURL && (

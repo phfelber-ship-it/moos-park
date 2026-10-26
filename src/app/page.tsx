@@ -140,7 +140,7 @@ export default async function Home() {
       </section>
 
       <section className="flex min-h-[720px] items-center px-6 py-24">
-        <div className="mx-auto w-full min-w-0 max-w-[1600px]">
+        <div className="mx-auto w-full min-w-0 max-w-[1600px] lg:px-16">
           <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
             <AppPhoneReveal />
 
@@ -217,7 +217,7 @@ export default async function Home() {
       </section>
 
       <section className="flex min-h-[640px] items-center px-6 py-24">
-        <div className="mx-auto w-full min-w-0 max-w-[1600px]">
+        <div className="mx-auto w-full min-w-0 max-w-[1600px] lg:px-16">
           <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
             <WhatsAppChannelReveal />
 
@@ -287,7 +287,7 @@ export default async function Home() {
       </section>
 
       <section className="flex min-h-[720px] items-center px-6 py-24">
-        <div className="mx-auto w-full min-w-0 max-w-[1600px]">
+        <div className="mx-auto w-full min-w-0 max-w-[1600px] lg:px-16">
           <Reveal>
             <RoomsShowcase roomImages={roomImages} />
           </Reveal>
