@@ -113,7 +113,7 @@ export default function GeburtstagPage() {
       </section>
 
       <section className="px-6 py-20">
-        <div className="mx-auto max-w-[1600px]">
+        <div className="mx-auto max-w-[1440px]">
           <h2 className="text-center text-3xl font-black uppercase text-foreground">
             Deine Geburtstagsparty im moospark
           </h2>
@@ -135,7 +135,7 @@ export default function GeburtstagPage() {
       </section>
 
       <section className="px-6 py-20">
-        <div className="mx-auto max-w-[1600px]">
+        <div className="mx-auto max-w-5xl">
           <h2 className="text-center text-3xl font-black uppercase text-foreground">
             So einfach geht&apos;s.
           </h2>
@@ -149,7 +149,7 @@ export default function GeburtstagPage() {
       </section>
 
       <section className="px-6 py-20">
-        <div className="mx-auto max-w-[1600px]">
+        <div className="mx-auto max-w-[1440px]">
           <h2 className="text-center text-3xl font-black uppercase text-foreground">
             Was Gäste sagen.
           </h2>
