@@ -12,14 +12,14 @@ const NAV_LINKS = [
   { href: "/events", label: "Events" },
   { href: "/galerie", label: "Bilder" },
   { href: "/tanzveranstaltungen", label: "Tanzabend" },
-  { href: "/eventlocation", label: "Eventlocation" },
+  { href: "/eventlocation", label: "Zu Mieten" },
   { href: "/geburtstag", label: "Geburtstag" },
-  { href: "/app", label: "Unsere App" },
   { href: "/gutscheine", label: "Gutscheine" },
+  { href: "/app", label: "Unsere App" },
   { href: "/jobs", label: "Jetzt bewerben" },
-  { href: "/faq", label: "FAQ" },
   { href: "/lost-and-found", label: "Lost and Found" },
   { href: "/kontakt", label: "Kontakt" },
+  { href: "/faq", label: "FAQ" },
 ];
 
 const CIRCLE_BTN =
