@@ -22,7 +22,7 @@ export default async function ReservierungPage({
   const events = await getEvents();
 
   return (
-    <div className="mx-auto max-w-5xl px-6 pb-20 pt-32">
+    <div className="mx-auto max-w-7xl px-6 pb-20 pt-32">
       <h1 className="text-center text-4xl font-black uppercase text-foreground">
         Reservierung
       </h1>
