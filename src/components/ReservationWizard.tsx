@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import {
   createReservation,
@@ -97,6 +97,13 @@ export default function ReservationWizard({
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, [step]);
+
+  const areasRef = useRef<HTMLDivElement>(null);
+  const scrollAreas = (dir: 1 | -1) =>
+    areasRef.current?.scrollBy({
+      left: dir * (areasRef.current.clientWidth * 0.8),
+      behavior: "smooth",
+    });
 
   const selectedEvent = useMemo(
     () => events.find((e) => e.id === eventId) ?? null,
@@ -339,13 +346,37 @@ export default function ReservationWizard({
             <p className="mb-6 text-center text-xl font-black uppercase text-foreground">
               Welchen Bereich möchtest du reservieren?
             </p>
-            <div className="grid gap-5 sm:grid-flow-col sm:auto-cols-fr">
+            <div className="relative">
+              {reservables.length > 1 && (
+                <>
+                  <button
+                    type="button"
+                    onClick={() => scrollAreas(-1)}
+                    aria-label="Vorheriger Bereich"
+                    className="absolute -left-4 top-1/3 z-10 hidden h-11 w-11 items-center justify-center rounded-full bg-background/90 text-lg font-black text-foreground shadow-lg ring-1 ring-foreground/20 transition-transform hover:scale-105 md:flex"
+                  >
+                    ‹
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => scrollAreas(1)}
+                    aria-label="Nächster Bereich"
+                    className="absolute -right-4 top-1/3 z-10 hidden h-11 w-11 items-center justify-center rounded-full bg-background/90 text-lg font-black text-foreground shadow-lg ring-1 ring-foreground/20 transition-transform hover:scale-105 md:flex"
+                  >
+                    ›
+                  </button>
+                </>
+              )}
+              <div
+                ref={areasRef}
+                className="flex snap-x snap-mandatory gap-5 overflow-x-auto scroll-smooth pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+              >
               {reservables.map((r) => (
                 <button
                   key={r.id}
                   type="button"
                   onClick={() => setReservableId(r.id)}
-                  className={`overflow-hidden rounded-2xl border text-left transition-colors ${
+                  className={`w-[17rem] shrink-0 snap-start overflow-hidden rounded-2xl border text-left transition-colors sm:w-[18.5rem] ${
                     reservableId === r.id
                       ? "border-accent-lime bg-accent-lime/10"
                       : "border-foreground/10 hover:border-foreground/25"
@@ -375,6 +406,7 @@ export default function ReservationWizard({
                   </div>
                 </button>
               ))}
+              </div>
             </div>
           </div>
         )}
