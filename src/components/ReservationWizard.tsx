@@ -270,7 +270,7 @@ export default function ReservationWizard({
       <div
         className={`mx-auto mt-10 ${
           current === "reservable" || current === "event"
-            ? "max-w-4xl"
+            ? "max-w-7xl"
             : "max-w-xl"
         }`}
       >
