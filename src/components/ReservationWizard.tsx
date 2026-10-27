@@ -85,11 +85,18 @@ export default function ReservationWizard({
   const [drinkCategories, setDrinkCategories] = useState<
     ReservationDrinkCategory[]
   >([]);
+  const [preorder, setPreorder] = useState(false);
   const [drinkQty, setDrinkQty] = useState<Record<string, number>>({});
   const [honeypot, setHoneypot] = useState("");
   const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">(
     "idle"
   );
+
+  // Bei jedem Schrittwechsel zurueck an den Seitenanfang, sonst bleibt man
+  // auf dem Handy weit unten stehen.
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, [step]);
 
   const selectedEvent = useMemo(
     () => events.find((e) => e.id === eventId) ?? null,
@@ -262,26 +269,29 @@ export default function ReservationWizard({
 
       <div
         className={`mx-auto mt-10 ${
-          current === "reservable" ? "max-w-4xl" : "max-w-xl"
+          current === "reservable" || current === "event"
+            ? "max-w-4xl"
+            : "max-w-xl"
         }`}
       >
         {current === "event" && (
-          <div className="flex flex-col gap-3">
+          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             <button
+              type="button"
               onClick={() => {
                 setEventId(null);
                 setStep(1);
               }}
-              className={`rounded-xl border p-4 text-left transition-colors ${
+              className={`flex flex-col justify-center rounded-2xl border p-6 text-left transition-colors ${
                 eventId === null
                   ? "border-accent-lime bg-accent-lime/10"
                   : "border-foreground/10 hover:border-foreground/25"
               }`}
             >
-              <p className="font-black uppercase text-foreground">
+              <p className="text-lg font-black uppercase leading-tight text-foreground">
                 Ohne bestimmte Veranstaltung
               </p>
-              <p className="mt-0.5 text-sm text-foreground/60">
+              <p className="mt-1 text-sm text-foreground/60">
                 Wir reservieren dir einen Platz an einem Tag deiner Wahl.
               </p>
             </button>
@@ -289,32 +299,33 @@ export default function ReservationWizard({
             {events.map((event) => (
               <button
                 key={event.id}
+                type="button"
                 onClick={() => {
                   setEventId(event.id);
                   setStep(1);
                 }}
-                className={`flex items-center gap-4 rounded-xl border p-4 text-left transition-colors ${
+                className={`overflow-hidden rounded-2xl border text-left transition-colors ${
                   eventId === event.id
                     ? "border-accent-lime bg-accent-lime/10"
                     : "border-foreground/10 hover:border-foreground/25"
                 }`}
               >
-                <div className="relative aspect-square h-14 w-14 shrink-0 overflow-hidden rounded-xl bg-foreground/5">
+                <div className="relative aspect-video w-full bg-foreground/5">
                   {event.thumbnail?.presignedURL && (
                     <Image
                       src={event.thumbnail.presignedURL}
                       alt={event.name}
                       fill
                       className="object-cover"
-                      sizes="56px"
+                      sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
                     />
                   )}
                 </div>
-                <div className="min-w-0">
-                  <p className="truncate font-black uppercase leading-tight text-foreground">
+                <div className="p-4">
+                  <p className="text-lg font-black uppercase leading-tight text-foreground">
                     {event.name}
                   </p>
-                  <p className="mt-0.5 text-sm text-foreground/60">
+                  <p className="mt-1 text-sm text-foreground/60">
                     {formatDate(event.start)}
                   </p>
                 </div>
@@ -422,12 +433,44 @@ export default function ReservationWizard({
         {current === "drinks" && (
           <div>
             <p className="text-center font-black uppercase text-foreground">
-              Getränke vorbestellen
+              Getränke
             </p>
-            <p className="mt-2 text-center text-sm text-foreground/60">
-              Optional – wähle schon jetzt, was bei eurer Ankunft bereitstehen
-              soll. Ohne Auswahl einfach weiter.
-            </p>
+            <div className="mt-6 grid gap-3 sm:grid-cols-2">
+              <button
+                type="button"
+                onClick={() => {
+                  setPreorder(false);
+                  setDrinkQty({});
+                  setStep((st) => Math.min(st + 1, steps.length - 1));
+                }}
+                className="rounded-2xl border border-foreground/10 p-5 text-left transition-colors hover:border-foreground/25"
+              >
+                <p className="font-black uppercase text-foreground">
+                  Getränkeauswahl im Club
+                </p>
+                <p className="mt-1 text-sm text-foreground/60">
+                  Ihr bestellt vor Ort. Weiter ohne Vorbestellung.
+                </p>
+              </button>
+              <button
+                type="button"
+                onClick={() => setPreorder(true)}
+                className={`rounded-2xl border p-5 text-left transition-colors ${
+                  preorder
+                    ? "border-accent-lime bg-accent-lime/10"
+                    : "border-foreground/10 hover:border-foreground/25"
+                }`}
+              >
+                <p className="font-black uppercase text-foreground">
+                  Getränke vorbestellen
+                </p>
+                <p className="mt-1 text-sm text-foreground/60">
+                  Optional – wähle schon jetzt, was bei eurer Ankunft
+                  bereitstehen soll.
+                </p>
+              </button>
+            </div>
+            {preorder && (
             <div className="mt-6 flex flex-col gap-6">
               {drinkGroups.map((g) => (
                 <div key={g.id || "ohne"}>
@@ -484,7 +527,8 @@ export default function ReservationWizard({
                 </div>
               ))}
             </div>
-            {drinksTotal > 0 && (
+            )}
+            {preorder && drinksTotal > 0 && (
               <p className="mt-4 text-right text-sm font-bold text-foreground">
                 Summe Getränke: {priceToEuro(drinksTotal)} €
               </p>
