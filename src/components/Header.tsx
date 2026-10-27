@@ -12,7 +12,7 @@ const NAV_LINKS = [
   { href: "/events", label: "Events" },
   { href: "/galerie", label: "Bilder" },
   { href: "/tanzveranstaltungen", label: "Tanzabend" },
-  { href: "/eventlocation", label: "Zu Mieten" },
+  { href: "/eventlocation", label: "Mieten" },
   { href: "/geburtstag", label: "Geburtstag" },
   { href: "/gutscheine", label: "Gutscheine" },
   { href: "/app", label: "Unsere App" },
