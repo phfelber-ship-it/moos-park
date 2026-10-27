@@ -76,7 +76,7 @@ export default async function GalleryPage({
     );
 
   return (
-    <div className="mx-auto max-w-[1600px] px-6 lg:px-24 pb-16 pt-32">
+    <div className="mx-auto max-w-5xl px-6 pb-16 pt-32">
       <Link href="/galerie" className="text-sm font-bold text-accent-lime">
         ← Alle Bilder
       </Link>
