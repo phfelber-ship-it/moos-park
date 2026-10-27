@@ -158,6 +158,15 @@ export default async function EventDetailPage({
         </a>
       </div>
 
+      <div className="mt-4 text-center">
+        <Link
+          href={`/reservierung?event=${event.id}`}
+          className="inline-flex items-center gap-2 rounded-lg border border-foreground/30 px-8 py-3 text-sm font-black uppercase tracking-wide text-foreground transition-transform hover:scale-105"
+        >
+          <FlipText text="Reservierung anfragen" />
+        </Link>
+      </div>
+
       <div id="tickets" className="mt-10 scroll-mt-24">
         <h2 className="mb-6 text-center text-xl font-black uppercase text-foreground">
           Tickets
