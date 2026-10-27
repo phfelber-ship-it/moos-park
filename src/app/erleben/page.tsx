@@ -49,7 +49,7 @@ export default function ErlebenPage() {
       </section>
 
       <section className="px-6 pb-28">
-        <div className="mx-auto grid max-w-[1440px] gap-6 sm:grid-cols-3">
+        <div className="mx-auto grid max-w-6xl gap-6 sm:grid-cols-3">
           {CATEGORIES.map((cat, i) => (
             <Reveal key={cat.title} delay={i * 0.1}>
               <Link
