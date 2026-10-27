@@ -60,7 +60,7 @@ export default async function Home() {
       <Hero images={heroImages} />
 
       <section className="px-6 pb-24 pt-12 lg:pt-6">
-        <div className="mx-auto w-full min-w-0 max-w-[1600px]">
+        <div className="mx-auto w-full min-w-0 max-w-7xl">
           <h2 className="text-center text-3xl font-black uppercase text-foreground sm:text-4xl">
             Aktuelle Events
           </h2>
@@ -110,7 +110,7 @@ export default async function Home() {
       </section>
 
       <section className="flex min-h-[720px] items-center px-6 py-24">
-        <div className="mx-auto w-full min-w-0 max-w-[1600px]">
+        <div className="mx-auto w-full min-w-0 max-w-7xl">
           <Reveal>
             <h2 className="text-center text-3xl font-black uppercase text-foreground sm:text-4xl">
               Galerie
@@ -140,7 +140,7 @@ export default async function Home() {
       </section>
 
       <section className="flex min-h-[720px] items-center px-6 py-24">
-        <div className="mx-auto w-full min-w-0 max-w-[1440px]">
+        <div className="mx-auto w-full min-w-0 max-w-6xl">
           <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
             <AppPhoneReveal />
 
@@ -217,7 +217,7 @@ export default async function Home() {
       </section>
 
       <section className="flex min-h-[640px] items-center px-6 py-24">
-        <div className="mx-auto w-full min-w-0 max-w-[1440px]">
+        <div className="mx-auto w-full min-w-0 max-w-6xl">
           <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
             <WhatsAppChannelReveal />
 

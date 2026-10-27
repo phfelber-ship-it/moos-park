@@ -149,7 +149,7 @@ export default function EventlocationRegionPage() {
       </section>
 
       <section className="bg-foreground/[0.02] px-6 py-20">
-        <div className="mx-auto max-w-[1440px]">
+        <div className="mx-auto max-w-6xl">
           <Reveal>
             <p className="text-center text-xs font-black uppercase tracking-[0.3em] text-accent-lime">
               Für jeden Anlass

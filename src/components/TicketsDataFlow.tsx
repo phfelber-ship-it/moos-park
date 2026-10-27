@@ -23,6 +23,14 @@ const stripePromise = loadStripe(STRIPE_PUBLISHABLE_KEY);
 
 type Item = { poolId: string; qty: number };
 
+// Codes haben das Format XXXX-XXXX: Leerzeichen/Bindestrich-Eingaben werden
+// vereinheitlicht, damit "9yyt th5x" und "9YYTTH5X" ebenfalls funktionieren.
+function normalizeCode(raw: string): string | undefined {
+  const clean = raw.replace(/[^a-z0-9]/gi, "").toUpperCase();
+  if (!clean) return undefined;
+  return clean.length === 8 ? `${clean.slice(0, 4)}-${clean.slice(4)}` : clean;
+}
+
 export default function TicketsDataFlow({
   eventId,
   itemsParam,
@@ -88,7 +96,7 @@ export default function TicketsDataFlow({
           ticketPoolID: i.poolId,
           quantity: i.qty,
         })),
-        code: code.replace(/\s+/g, "").toUpperCase() || undefined,
+        code: normalizeCode(code),
       });
 
       const cs =
@@ -204,7 +212,7 @@ export default function TicketsDataFlow({
         <input
           value={code}
           onChange={(e) => setCode(e.target.value)}
-          placeholder="z. B. 9YYT TH5X"
+          placeholder="z. B. 9YYT-TH5X"
           autoCapitalize="characters"
           autoComplete="off"
           className="w-full rounded-lg border border-foreground/20 bg-transparent px-4 py-2.5 font-mono text-sm uppercase tracking-widest text-foreground outline-none focus:border-accent-lime"
