@@ -366,6 +366,46 @@ export async function getEventReservables(
   return data.reservables.filter((r) => !r.disabled);
 }
 
+export type ReservationDrinkCategory = {
+  id: string;
+  text: string;
+  sortIndex: number;
+};
+
+export type ReservationDrink = {
+  id: string;
+  text: string;
+  subtext?: string;
+  price: number;
+  categoryID?: string;
+};
+
+// Optionale Vorbestellung (Getraenke) zur Reservierung. Die Public-API liefert
+// nur aktive Produkte, bereits nach Kategorie und sortIndex sortiert. Bei
+// Fehler oder wenn das Feature (enableReservationSubOrders) aus ist, kommt
+// eine leere Liste - der Wizard blendet den Schritt dann aus.
+export async function getReservationDrinks(): Promise<{
+  categories: ReservationDrinkCategory[];
+  products: ReservationDrink[];
+}> {
+  try {
+    const res = await fetch(`${API_BASE}/reservation-sub-order-products`, {
+      cache: "no-store",
+    });
+    if (!res.ok) return { categories: [], products: [] };
+    const data = (await res.json()) as {
+      reservationSubOrderProducts?: ReservationDrink[];
+      reservationSubOrderProductCategories?: ReservationDrinkCategory[];
+    };
+    return {
+      categories: data.reservationSubOrderProductCategories ?? [],
+      products: data.reservationSubOrderProducts ?? [],
+    };
+  } catch {
+    return { categories: [], products: [] };
+  }
+}
+
 // Oeffentliche Reservierungs-API: Name/E-Mail/Telefon sind fuer die
 // /public/ Variante Pflicht (siehe swagger_public.json), userID/vip/state/
 // minConsumption sind dort admin/super-only und werden bewusst nicht
@@ -379,6 +419,7 @@ export async function createReservation(input: {
   amountOfPersons: number;
   arrivalTime: string;
   additionalInformation: string;
+  subOrders?: { productID: string; quantity: number }[];
 }): Promise<void> {
   const res = await fetch(`${API_BASE}/reservations`, {
     method: "POST",
@@ -392,6 +433,8 @@ export async function createReservation(input: {
       amountOfPersons: input.amountOfPersons,
       arrivalTime: input.arrivalTime,
       additionalInformation: input.additionalInformation,
+      // nur mitsenden, wenn etwas gewaehlt wurde (Feature ist optional)
+      ...(input.subOrders?.length ? { subOrderRequests: input.subOrders } : {}),
     }),
   });
   if (!res.ok) {

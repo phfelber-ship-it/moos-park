@@ -10,16 +10,17 @@ import StaggerText from "@/components/StaggerText";
 const NAV_LINKS = [
   { href: "/", label: "Home" },
   { href: "/events", label: "Events" },
+  { href: "/reservierung", label: "Reservierung" },
   { href: "/galerie", label: "Bilder" },
   { href: "/tanzveranstaltungen", label: "Tanzabend" },
-  { href: "/eventlocation", label: "Eventlocation" },
+  { href: "/eventlocation", label: "Mieten" },
   { href: "/geburtstag", label: "Geburtstag" },
-  { href: "/app", label: "Unsere App" },
   { href: "/gutscheine", label: "Gutscheine" },
+  { href: "/app", label: "Unsere App" },
   { href: "/jobs", label: "Jetzt bewerben" },
-  { href: "/faq", label: "FAQ" },
   { href: "/lost-and-found", label: "Lost and Found" },
   { href: "/kontakt", label: "Kontakt" },
+  { href: "/faq", label: "FAQ" },
 ];
 
 const CIRCLE_BTN =
