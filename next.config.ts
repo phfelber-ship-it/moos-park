@@ -21,6 +21,7 @@ const nextConfig: NextConfig = {
     // ohne diese Redirects verlieren die Seiten beim Umzug ihr SEO-Ranking
     // und Nutzer mit alten Lesezeichen/Google-Treffern landen auf 404.
     return [
+      { source: "/verloren-und-gefunden", destination: "/lost-and-found", permanent: false },
       { source: "/tickets-uebersicht", destination: "/tickets", permanent: true },
       { source: "/tickets-checkout", destination: "/tickets", permanent: true },
       { source: "/purchase-checkout", destination: "/tickets", permanent: true },
