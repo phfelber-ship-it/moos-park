@@ -353,7 +353,7 @@ export default function ReservationWizard({
                     type="button"
                     onClick={() => scrollAreas(-1)}
                     aria-label="Vorheriger Bereich"
-                    className="absolute -left-4 top-1/3 z-10 hidden h-11 w-11 items-center justify-center rounded-full bg-background/90 text-lg font-black text-foreground shadow-lg ring-1 ring-foreground/20 transition-transform hover:scale-105 md:flex"
+                    className="absolute -left-5 top-1/3 z-10 hidden h-14 w-14 items-center justify-center rounded-full bg-accent-lime pb-1 text-4xl font-black leading-none text-black shadow-xl ring-2 ring-background transition-transform hover:scale-110 md:flex"
                   >
                     ‹
                   </button>
@@ -361,7 +361,7 @@ export default function ReservationWizard({
                     type="button"
                     onClick={() => scrollAreas(1)}
                     aria-label="Nächster Bereich"
-                    className="absolute -right-4 top-1/3 z-10 hidden h-11 w-11 items-center justify-center rounded-full bg-background/90 text-lg font-black text-foreground shadow-lg ring-1 ring-foreground/20 transition-transform hover:scale-105 md:flex"
+                    className="absolute -right-5 top-1/3 z-10 hidden h-14 w-14 items-center justify-center rounded-full bg-accent-lime pb-1 text-4xl font-black leading-none text-black shadow-xl ring-2 ring-background transition-transform hover:scale-110 md:flex"
                   >
                     ›
                   </button>
@@ -369,14 +369,14 @@ export default function ReservationWizard({
               )}
               <div
                 ref={areasRef}
-                className="flex snap-x snap-mandatory gap-5 overflow-x-auto scroll-smooth pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+                className="flex snap-x snap-mandatory gap-5 overflow-x-auto scroll-smooth pb-2 [scrollbar-width:none] [&>*:first-child]:ml-auto [&>*:last-child]:mr-auto [&::-webkit-scrollbar]:hidden"
               >
               {reservables.map((r) => (
                 <button
                   key={r.id}
                   type="button"
                   onClick={() => setReservableId(r.id)}
-                  className={`w-[17rem] shrink-0 snap-start overflow-hidden rounded-2xl border text-left transition-colors sm:w-[18.5rem] ${
+                  className={`w-[78%] shrink-0 snap-start overflow-hidden rounded-2xl border text-left transition-colors sm:w-[calc((100%-2.5rem)/2.5)] lg:w-[calc((100%-3.75rem)/3.5)] ${
                     reservableId === r.id
                       ? "border-accent-lime bg-accent-lime/10"
                       : "border-foreground/10 hover:border-foreground/25"
