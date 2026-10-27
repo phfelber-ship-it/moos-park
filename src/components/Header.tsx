@@ -15,10 +15,10 @@ const NAV_LINKS = [
   { href: "/eventlocation", label: "Eventlocation" },
   { href: "/geburtstag", label: "Geburtstag" },
   { href: "/app", label: "Unsere App" },
-  { href: "/promoter", label: "Promoter werden" },
+  { href: "/gutscheine", label: "Gutscheine" },
   { href: "/jobs", label: "Jetzt bewerben" },
   { href: "/faq", label: "FAQ" },
-  { href: "/blog", label: "Ratgeber" },
+  { href: "/lost-and-found", label: "Lost and Found" },
   { href: "/kontakt", label: "Kontakt" },
 ];
 

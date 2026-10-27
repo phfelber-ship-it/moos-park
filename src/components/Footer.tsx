@@ -56,7 +56,7 @@ const LINKS_COL_2 = [
   { href: "/jobs", label: "Jobs" },
   { href: "/promoter", label: "Promoter werden" },
   { href: "/kontakt", label: "Kontakt" },
-  { href: "/verloren-und-gefunden", label: "Verloren & Gefunden" },
+  { href: "/lost-and-found", label: "Lost and Found" },
   { href: "/faq", label: "FAQ" },
   { href: "/aufsichtsformular", label: "Aufsicht & Aufsichtszettel" },
 ];
