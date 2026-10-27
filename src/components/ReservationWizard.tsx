@@ -55,7 +55,14 @@ function arrivalToISO(event: ClubscaleEvent | null, arrival: string): string {
   ).toISOString();
 }
 
-type StepKind = "event" | "reservable" | "contact" | "done";
+type StepKind =
+  | "event"
+  | "reservable"
+  | "people"
+  | "arrival"
+  | "drinks"
+  | "contact"
+  | "done";
 
 export default function ReservationWizard({
   events,
@@ -64,7 +71,7 @@ export default function ReservationWizard({
   events: ClubscaleEvent[];
   preselectedEventId: string | null;
 }) {
-  const [step, setStep] = useState(0);
+  const [step, setStep] = useState(preselectedEventId ? 1 : 0);
   const [eventId, setEventId] = useState<string | null>(preselectedEventId);
   const [reservables, setReservables] = useState<Reservable[]>([]);
   const [reservableId, setReservableId] = useState<string | null>(null);
@@ -156,9 +163,18 @@ export default function ReservationWizard({
     },
   ].filter((g) => g.items.length > 0);
 
+  const showReservableStep = reservables.length > 1;
+
   const steps: { kind: StepKind; label: string }[] = [
     { kind: "event", label: "Veranstaltung" },
-    { kind: "reservable", label: "Bereich & Details" },
+    ...(showReservableStep
+      ? ([{ kind: "reservable", label: "Bereich" }] as const)
+      : []),
+    { kind: "people", label: "Personen" },
+    { kind: "arrival", label: "Ankunft" },
+    ...(drinks.length > 0
+      ? ([{ kind: "drinks", label: "Getränke" }] as const)
+      : []),
     { kind: "contact", label: "Kontakt" },
     { kind: "done", label: "Fertig" },
   ];
@@ -166,8 +182,10 @@ export default function ReservationWizard({
 
   const canNext: Record<StepKind, boolean> = {
     event: true,
-    reservable:
-      (reservables.length === 0 || reservableId !== null) && arrival !== null,
+    reservable: reservableId !== null,
+    people: true,
+    arrival: arrival !== null,
+    drinks: true,
     contact: name.trim() !== "" && phone.trim() !== "",
     done: true,
   };
@@ -226,7 +244,7 @@ export default function ReservationWizard({
   return (
     <div>
       <HoneypotField value={honeypot} onChange={setHoneypot} />
-      <div className="mx-auto max-w-md">
+      <div className="mx-auto max-w-xl">
         <div className="h-2.5 w-full overflow-hidden rounded-full bg-foreground/10">
           <div
             className="h-full rounded-full bg-accent-lime transition-all duration-500 ease-out"
@@ -242,7 +260,11 @@ export default function ReservationWizard({
         </div>
       </div>
 
-      <div className="mx-auto mt-10 max-w-xl">
+      <div
+        className={`mx-auto mt-10 ${
+          current === "reservable" ? "max-w-4xl" : "max-w-xl"
+        }`}
+      >
         {current === "event" && (
           <div className="flex flex-col gap-3">
             <button
@@ -302,77 +324,52 @@ export default function ReservationWizard({
         )}
 
         {current === "reservable" && (
-          <div className="flex flex-col gap-10">
-            {selectedReservable && (
-              <div>
-                <h2 className="text-center text-2xl font-black uppercase text-foreground sm:text-3xl">
-                  {selectedReservable.name}
-                </h2>
-                {selectedReservable.image?.presignedURL && (
-                  <div className="relative mt-5 aspect-[16/9] w-full overflow-hidden rounded-2xl bg-foreground/5">
-                    <Image
-                      src={selectedReservable.image.presignedURL}
-                      alt={selectedReservable.name}
-                      fill
-                      className="object-cover"
-                      sizes="(min-width: 768px) 576px, 100vw"
-                    />
+          <div>
+            <p className="mb-6 text-center text-xl font-black uppercase text-foreground">
+              Welchen Bereich möchtest du reservieren?
+            </p>
+            <div className="grid gap-5 sm:grid-flow-col sm:auto-cols-fr">
+              {reservables.map((r) => (
+                <button
+                  key={r.id}
+                  type="button"
+                  onClick={() => setReservableId(r.id)}
+                  className={`overflow-hidden rounded-2xl border text-left transition-colors ${
+                    reservableId === r.id
+                      ? "border-accent-lime bg-accent-lime/10"
+                      : "border-foreground/10 hover:border-foreground/25"
+                  }`}
+                >
+                  <div className="relative aspect-[4/3] w-full bg-foreground/5">
+                    {r.image?.presignedURL && (
+                      <Image
+                        src={r.image.presignedURL}
+                        alt={r.name}
+                        fill
+                        className="object-cover"
+                        sizes="(min-width: 640px) 33vw, 100vw"
+                      />
+                    )}
                   </div>
-                )}
-                <p className="mt-4 text-center text-sm text-foreground/70">
-                  {selectedReservable.minPersonCount}–
-                  {selectedReservable.maxPersonCount} Personen
-                  {selectedReservable.minConsumption > 0
-                    ? ` · Mindestverzehr ${priceToEuro(
-                        selectedReservable.minConsumption
-                      )} €`
-                    : ""}
-                </p>
-              </div>
-            )}
+                  <div className="p-4">
+                    <p className="text-lg font-black uppercase leading-tight text-foreground">
+                      {r.name}
+                    </p>
+                    <p className="mt-1 text-sm text-foreground/60">
+                      {r.minPersonCount}–{r.maxPersonCount} Personen
+                      {r.minConsumption > 0
+                        ? ` · Mindestverzehr ${priceToEuro(r.minConsumption)} €`
+                        : ""}
+                    </p>
+                  </div>
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
 
-            {reservables.length > 1 && (
-              <div>
-                <p className="mb-3 text-center font-black uppercase text-foreground">
-                  {selectedReservable
-                    ? "Anderen Bereich wählen"
-                    : "Welchen Bereich möchtest du reservieren?"}
-                </p>
-                <div className="grid auto-cols-fr grid-flow-col gap-3 overflow-x-auto">
-                  {reservables.map((r) => (
-                    <button
-                      key={r.id}
-                      type="button"
-                      onClick={() => setReservableId(r.id)}
-                      className={`min-w-[7.5rem] rounded-xl border p-3 text-center transition-colors ${
-                        reservableId === r.id
-                          ? "border-accent-lime bg-accent-lime/10"
-                          : "border-foreground/10 hover:border-foreground/25"
-                      }`}
-                    >
-                      {r.image?.presignedURL && (
-                        <div className="relative mb-2 aspect-[4/3] w-full overflow-hidden rounded-lg bg-foreground/5">
-                          <Image
-                            src={r.image.presignedURL}
-                            alt={r.name}
-                            fill
-                            className="object-cover"
-                            sizes="160px"
-                          />
-                        </div>
-                      )}
-                      <p className="text-sm font-black uppercase leading-tight text-foreground">
-                        {r.name}
-                      </p>
-                    </button>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {(reservables.length === 0 || selectedReservable) && (
-              <>
-                <div className="flex flex-col items-center gap-6 rounded-2xl border border-foreground/10 p-8 text-center">
+        {current === "people" && (
+          <div className="flex flex-col items-center gap-6 rounded-2xl border border-foreground/10 p-8 text-center">
             <p className="font-black uppercase text-foreground">
               Wie viele Personen?
             </p>
@@ -397,7 +394,10 @@ export default function ReservationWizard({
               Größere Gruppe? Schreib uns die genaue Zahl im nächsten Schritt.
             </p>
           </div>
-                <div>
+        )}
+
+        {current === "arrival" && (
+          <div>
             <p className="text-center font-black uppercase text-foreground">
               Wann kommt ihr an?
             </p>
@@ -417,8 +417,10 @@ export default function ReservationWizard({
               ))}
             </div>
           </div>
-                {drinks.length > 0 && (
-                  <div>
+        )}
+
+        {current === "drinks" && (
+          <div>
             <p className="text-center font-black uppercase text-foreground">
               Getränke vorbestellen
             </p>
@@ -486,10 +488,6 @@ export default function ReservationWizard({
               <p className="mt-4 text-right text-sm font-bold text-foreground">
                 Summe Getränke: {priceToEuro(drinksTotal)} €
               </p>
-            )}
-          </div>
-                )}
-              </>
             )}
           </div>
         )}
