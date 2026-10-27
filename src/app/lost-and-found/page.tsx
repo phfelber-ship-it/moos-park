@@ -1,5 +1,5 @@
-import Link from "next/link";
-import FlipText from "@/components/FlipText";
+import Image from "next/image";
+import AppPhoneReveal from "@/components/AppPhoneReveal";
 
 export const metadata = {
   alternates: { canonical: "/lost-and-found" },
@@ -25,7 +25,7 @@ const STEPS = [
 
 export default function LostAndFoundPage() {
   return (
-    <div className="mx-auto max-w-3xl px-6 pb-20 pt-32">
+    <div className="mx-auto max-w-5xl px-6 pb-20 pt-32">
       <p className="text-center text-xs font-black uppercase tracking-[0.3em] text-accent-lime">
         Service
       </p>
@@ -54,43 +54,53 @@ export default function LostAndFoundPage() {
         ))}
       </div>
 
-      <div className="mt-12 rounded-2xl bg-accent-lime p-8 text-center sm:p-10">
-        <h2 className="text-2xl font-black uppercase text-black">
-          Meldung nur über die App
-        </h2>
-        <p className="mx-auto mt-3 max-w-md text-sm text-black/70">
-          Verloren- und Fundmeldungen nehmen wir ausschließlich über die
-          moos.park App entgegen. Lade sie kostenlos herunter und sende deine
-          Meldung direkt dort.
-        </p>
-        <div className="mt-6 flex flex-wrap justify-center gap-3">
-          <a
-            href="https://apps.apple.com/de/app/moos-park/id6739537470"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="rounded-lg bg-black px-8 py-3 text-sm font-black uppercase tracking-wide text-white transition-transform hover:scale-105"
-          >
-            <FlipText text="App Store" />
-          </a>
-          <a
-            href="https://play.google.com/store/apps/details?id=de.moospark.clubscale&pcampaignid=web_share"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="rounded-lg bg-black px-8 py-3 text-sm font-black uppercase tracking-wide text-white transition-transform hover:scale-105"
-          >
-            <FlipText text="Google Play" />
-          </a>
+      <div className="mt-16 grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
+        <AppPhoneReveal />
+
+        <div className="order-1 text-center lg:order-2 lg:text-left">
+          <p className="text-xs font-black uppercase tracking-[0.3em] text-accent-lime">
+            moos.park App
+          </p>
+          <h2 className="mt-4 text-3xl font-black uppercase leading-[1.05] sm:text-4xl">
+            Ganz einfach über unsere App.
+          </h2>
+          <p className="mx-auto mt-5 max-w-md text-foreground/70 lg:mx-0">
+            Lade die moos.park App kostenlos herunter und sende deine Lost-and-
+            Found-Meldung direkt dort, in wenigen Sekunden.
+          </p>
+
+          <div className="mt-6 flex flex-wrap justify-center gap-3 lg:justify-start">
+            <a
+              href="https://apps.apple.com/de/app/moos-park/id6739537470"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="opacity-70 transition-opacity hover:opacity-100"
+            >
+              <Image
+                src="/images/appstore.png"
+                alt="App Store"
+                width={120}
+                height={33}
+              />
+            </a>
+            <a
+              href="https://play.google.com/store/apps/details?id=de.moospark.clubscale&pcampaignid=web_share"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="opacity-70 transition-opacity hover:opacity-100"
+            >
+              <Image
+                src="/images/googleplay.png"
+                alt="Google Play"
+                width={120}
+                height={34}
+              />
+            </a>
+          </div>
         </div>
-        <p className="mt-5 text-xs text-black/60">
-          Mehr zur App findest du auf der Seite{" "}
-          <Link href="/app" className="underline">
-            Unsere App
-          </Link>
-          .
-        </p>
       </div>
 
-      <p className="mt-6 text-xs text-foreground/40">
+      <p className="mx-auto mt-14 max-w-xl text-center text-xs text-foreground/40">
         Fundsachen bewahren wir für begrenzte Zeit auf. Wertsachen wie Ausweise
         oder Handys geben wir nur gegen Nachweis der Eigentümerschaft heraus.
       </p>
