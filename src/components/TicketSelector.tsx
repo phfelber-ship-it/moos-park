@@ -18,10 +18,12 @@ export default function TicketSelector({
   eventId,
   pools,
   hasBoxOffice = false,
+  boxOfficeText = "",
 }: {
   eventId: string;
   pools: TicketPool[];
   hasBoxOffice?: boolean;
+  boxOfficeText?: string;
 }) {
   const [quantities, setQuantities] = useState<Record<string, number>>({});
 
@@ -37,6 +39,26 @@ export default function TicketSelector({
 
   const anyBuyable = pools.some((p) => isPoolBuyable(p, now));
 
+  // Vorverkauf vorbei: keine Ueberschrift, keine Liste - nur der Hinweis mit
+  // dem im Dashboard gepflegten Abendkassen-Text.
+  if (!anyBuyable) {
+    const text =
+      boxOfficeText.trim() ||
+      (hasBoxOffice ? "Tickets gibt es an der Abendkasse." : "");
+    return (
+      <div className="rounded-xl border border-foreground/10 bg-foreground/[0.025] p-6 text-center">
+        <p className="font-black uppercase text-foreground">
+          Der Online-VVK ist beendet
+        </p>
+        {text && (
+          <p className="mt-2 whitespace-pre-line text-sm text-foreground/70">
+            {text}
+          </p>
+        )}
+      </div>
+    );
+  }
+
   const total = Object.values(quantities).reduce((a, b) => a + b, 0);
 
   const items = Object.entries(quantities)
@@ -45,6 +67,9 @@ export default function TicketSelector({
 
   return (
     <div>
+      <h2 className="mb-6 text-center text-xl font-black uppercase text-foreground">
+        Tickets
+      </h2>
       <p className="mb-4 text-xs font-bold uppercase tracking-wide text-accent-lime">
         Online Tickets kaufen &amp; sparen
       </p>
@@ -146,8 +171,6 @@ export default function TicketSelector({
         })}
       </div>
 
-      {anyBuyable ? (
-        <>
       <p className="mt-4 text-xs text-foreground/50">
         *Gebühren werden auf der nächsten Seite automatisch berechnet.
       </p>
@@ -160,19 +183,6 @@ export default function TicketSelector({
       >
         <FlipText text="Weiter zum Checkout" />
       </Link>
-        </>
-      ) : (
-        <div className="mt-6 rounded-xl border border-foreground/10 bg-foreground/[0.025] p-5 text-center">
-          <p className="font-black uppercase text-foreground">
-            Der Online-Vorverkauf ist beendet
-          </p>
-          {hasBoxOffice && (
-            <p className="mt-1 text-sm text-foreground/60">
-              Tickets gibt es an der Abendkasse.
-            </p>
-          )}
-        </div>
-      )}
     </div>
   );
 }
