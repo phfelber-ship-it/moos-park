@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import type { TicketPool } from "@/lib/clubscale";
-import { checkoutUrl, priceToEuro } from "@/lib/clubscale";
+import { checkoutUrl, isPoolBuyable, priceToEuro } from "@/lib/clubscale";
 import FlipText from "@/components/FlipText";
 
 function formatSaleDate(iso: string) {
@@ -17,9 +17,11 @@ function formatSaleDate(iso: string) {
 export default function TicketSelector({
   eventId,
   pools,
+  hasBoxOffice = false,
 }: {
   eventId: string;
   pools: TicketPool[];
+  hasBoxOffice?: boolean;
 }) {
   const [quantities, setQuantities] = useState<Record<string, number>>({});
 
@@ -32,6 +34,8 @@ export default function TicketSelector({
 
   // eslint-disable-next-line react-hooks/purity -- Verfuegbarkeit haengt bewusst von der aktuellen Uhrzeit ab
   const now = Date.now();
+
+  const anyBuyable = pools.some((p) => isPoolBuyable(p, now));
 
   const total = Object.values(quantities).reduce((a, b) => a + b, 0);
 
@@ -142,6 +146,8 @@ export default function TicketSelector({
         })}
       </div>
 
+      {anyBuyable ? (
+        <>
       <p className="mt-4 text-xs text-foreground/50">
         *Gebühren werden auf der nächsten Seite automatisch berechnet.
       </p>
@@ -154,6 +160,19 @@ export default function TicketSelector({
       >
         <FlipText text="Weiter zum Checkout" />
       </Link>
+        </>
+      ) : (
+        <div className="mt-6 rounded-xl border border-foreground/10 bg-foreground/[0.025] p-5 text-center">
+          <p className="font-black uppercase text-foreground">
+            Der Online-Vorverkauf ist beendet
+          </p>
+          {hasBoxOffice && (
+            <p className="mt-1 text-sm text-foreground/60">
+              Tickets gibt es an der Abendkasse.
+            </p>
+          )}
+        </div>
+      )}
     </div>
   );
 }

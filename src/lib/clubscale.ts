@@ -116,6 +116,17 @@ export function checkoutUrl(
   return `/tickets-data?${params.toString()}`;
 }
 
+// Ein Ticket ist online kaufbar, wenn es nicht deaktiviert/ausverkauft ist und
+// der Verkaufszeitraum laeuft (gleiche Regeln wie in der Ticketauswahl).
+export function isPoolBuyable(pool: TicketPool, now: number): boolean {
+  return (
+    !pool.deactivated &&
+    pool.sold < pool.contingent &&
+    new Date(pool.saleStart).getTime() <= now &&
+    new Date(pool.saleEnd).getTime() >= now
+  );
+}
+
 export function priceToEuro(cents: number): string {
   return (cents / 100).toLocaleString("de-DE", {
     minimumFractionDigits: 2,
