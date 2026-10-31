@@ -161,12 +161,10 @@ export default async function EventDetailPage({
       </div>
 
       <div id="tickets" className="mt-10 scroll-mt-24">
-        <h2 className="mb-6 text-center text-xl font-black uppercase text-foreground">
-          Tickets
-        </h2>
         <TicketSelector
           eventId={event.id}
           hasBoxOffice={event.hasBoxOffice}
+          boxOfficeText={event.boxOfficeText}
           pools={event.ticketPools
             .filter((p) => !p.deactivated)
             .sort((a, b) => a.sortIndex - b.sortIndex)}
