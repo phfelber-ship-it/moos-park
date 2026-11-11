@@ -89,7 +89,7 @@ const ADVANTAGES = [
   "Fest eingebaute Theken",
   "Pizzeria im Haus",
   "Kostenlose Parkplätze direkt am Haus",
-  "Garderobe für Ihre Gäste",
+  "Garderobe direkt im Foyer",
   "Räume einzeln oder kombiniert buchbar",
   "Ein fester Ansprechpartner für Ihr Event",
 ];
