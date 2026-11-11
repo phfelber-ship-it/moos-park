@@ -19,10 +19,10 @@ export default function RoomsShowcase({
   return (
     <div>
       <div className="mx-auto max-w-2xl text-center">
-        <p className="text-xs font-black uppercase tracking-[0.3em] text-accent-lime">
+        <p className="text-xs font-black uppercase font-mono tracking-[0.2em] text-accent-lime">
           Eventlocation mieten
         </p>
-        <h2 className="mt-3 text-3xl font-black uppercase leading-[1.05] text-foreground sm:text-4xl">
+        <h2 className="mt-3 text-3xl font-black uppercase leading-[1.05] text-foreground sm:text-4xl lg:text-5xl">
           Sieben Räume. Ein Gefühl.
         </h2>
         <p className="mx-auto mt-4 max-w-md text-foreground/70">
@@ -96,7 +96,7 @@ export default function RoomsShowcase({
 
         <Link
           href="/eventlocation#raeume"
-          className="mt-6 inline-block rounded-lg bg-accent-lime px-8 py-3 text-sm font-black uppercase tracking-wide text-black transition-transform hover:scale-105"
+          className="mt-6 inline-block rounded-full bg-accent-lime px-8 py-3 text-sm font-black uppercase tracking-wide text-black transition-transform hover:scale-105"
         >
           <FlipText text="Mehr erfahren" />
         </Link>
