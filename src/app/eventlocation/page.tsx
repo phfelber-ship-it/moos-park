@@ -83,11 +83,16 @@ const OCCASIONS = [
 ];
 
 const ADVANTAGES = [
-  "Eigene Gastronomie: Menü, Buffet, Bar und Pizzeria",
-  "Bühne, Licht- und Tontechnik sind vorhanden",
+  "Bühne, Licht- und Tontechnik vorhanden",
+  "Beamer und Präsentationstechnik",
+  "Eigene Gastronomie: Menü, Buffet und Pizzeria",
+  "Fest eingebaute Bars",
+  "Catering möglich",
   "Großer kostenloser Parkplatz",
+  "Garderobe im Haus",
   "Räume einzeln oder kombiniert mietbar",
   "Exklusivbuchung der gesamten Location möglich",
+  "Individuelle Raumgestaltung und Bestuhlung nach Ihrem Wunsch",
   "Ein Ansprechpartner von der Planung bis zum Abschluss",
   "Schnelle Angebotsbearbeitung, kostenlos und unverbindlich",
 ];
@@ -285,14 +290,20 @@ export default async function EventlocationPage() {
         <div className="mx-auto max-w-3xl text-center">
           <Reveal>
             <p className="text-xs font-black uppercase tracking-[0.3em] text-[#5f7a50]">
-              Ihre Vorteile
+              Was uns auszeichnet
             </p>
             <h2 className="mt-3 text-2xl font-black uppercase leading-[1.1] text-foreground sm:text-3xl lg:text-4xl">
-              Alles an einem Ort.
+              Alles aus einer Hand.
             </h2>
+            <p className="mx-auto mt-5 max-w-2xl text-foreground/70">
+              Wir bieten Ihnen nicht nur sieben Räume, sondern alles, was Ihr
+              Event braucht: Technik, Gastronomie und einen persönlichen
+              Ansprechpartner, der Sie von der ersten Anfrage bis zum Ende
+              begleitet.
+            </p>
           </Reveal>
           <Reveal delay={0.1}>
-            <ul className="mx-auto mt-8 grid max-w-2xl gap-3 text-left sm:grid-cols-2">
+            <ul className="mx-auto mt-8 grid max-w-3xl gap-x-8 gap-y-3 text-left sm:grid-cols-2">
               {ADVANTAGES.map((a) => (
                 <li
                   key={a}
