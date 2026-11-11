@@ -18,7 +18,7 @@ export async function POST(request: Request) {
         }
         return {
           allowedContentTypes: ["video/mp4", "video/webm", "video/quicktime"],
-          maximumSizeInBytes: 200 * 1024 * 1024,
+          maximumSizeInBytes: 30 * 1024 * 1024,
           addRandomSuffix: true,
         };
       },

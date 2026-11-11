@@ -5,7 +5,8 @@ import { upload } from "@vercel/blob/client";
 // bewusst nicht aus lib/hero-video importiert (zieht serverseitigen Blob-Code ins Client-Bundle)
 const HERO_VIDEO_PREFIX = "hero-video/";
 
-const MAX_MB = 200;
+// Hartes Limit: ein Hero-Video muss sofort laden, nicht erst nach Sekunden.
+const MAX_MB = 30;
 
 export default function HeroVideoManager({
   initialVideoUrl,
@@ -30,8 +31,7 @@ export default function HeroVideoManager({
       const blob = await upload(`${HERO_VIDEO_PREFIX}hero.${ext}`, file, {
         access: "public",
         handleUploadUrl: "/api/admin/hero-video/upload",
-        multipart: file.size > 20 * 1024 * 1024,
-        onUploadProgress: ({ percentage }) => setProgress(Math.round(percentage)),
+                onUploadProgress: ({ percentage }) => setProgress(Math.round(percentage)),
       });
       const res = await fetch("/api/admin/hero-video", {
         method: "POST",
@@ -76,11 +76,32 @@ export default function HeroVideoManager({
       </h2>
       <p className="mt-2 text-sm text-foreground/60">
         Optional: Ein Video statt der Bilder im Header der Startseite. Quer- und
-        Hochkant-Videos gehen, das Video füllt immer die volle Breite
-        (bei Hochkant wird oben und unten etwas abgeschnitten). Es läuft ohne
-        Ton in Dauerschleife. Empfehlung: MP4 (H.264), 10–30 Sekunden, möglichst
-        unter 20 MB, damit es auch mobil schnell lädt.
+        Hochkant-Videos gehen, das Video füllt immer die volle Breite (bei
+        Hochkant wird oben und unten etwas abgeschnitten). Es läuft ohne Ton in
+        Dauerschleife. Damit es sofort startet: möglichst unter 8 MB, 10–20
+        Sekunden, maximal {MAX_MB} MB.
       </p>
+      <details className="mt-3 text-sm text-foreground/60">
+        <summary className="cursor-pointer font-bold text-foreground">
+          Video klein rechnen (ffmpeg)
+        </summary>
+        <p className="mt-2">
+          Querformat (Breite 1280 px) – die Datei wird meist unter 5 MB groß:
+        </p>
+        <code className="mt-1 block whitespace-pre-wrap break-all rounded-lg bg-foreground/5 p-3 text-xs">
+          ffmpeg -i original.mov -t 20 -vf &quot;scale=1280:-2,fps=30&quot; -c:v libx264 -crf 28 -preset slow -an -movflags +faststart hero.mp4
+        </code>
+        <p className="mt-2">Hochkant (Breite 720 px):</p>
+        <code className="mt-1 block whitespace-pre-wrap break-all rounded-lg bg-foreground/5 p-3 text-xs">
+          ffmpeg -i original.mov -t 20 -vf &quot;scale=720:-2,fps=30&quot; -c:v libx264 -crf 28 -preset slow -an -movflags +faststart hero.mp4
+        </code>
+        <p className="mt-2">
+          Wichtig ist <code>+faststart</code>: Das Video beginnt damit schon
+          während des Ladens zu spielen. Ohne ffmpeg geht das auch mit dem
+          kostenlosen Programm HandBrake (Preset &quot;Fast 720p30&quot;, Audio
+          entfernen).
+        </p>
+      </details>
 
       {videoUrl && (
         <div className="mt-4">
