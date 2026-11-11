@@ -82,30 +82,16 @@ const OCCASIONS = [
 ];
 
 const ADVANTAGES = [
-  {
-    title: "Technik im Haus",
-    text: "Bühne, Licht- und Tontechnik und Beamer sind vorhanden.",
-  },
-  {
-    title: "Essen und Trinken",
-    text: "Küche, Buffet, Bars und Pizzeria gehören zum Haus. Anderes Catering sprechen wir mit Ihnen ab.",
-  },
-  {
-    title: "Räume nach Wunsch",
-    text: "Einzeln buchen oder kombinieren. Aufbau und Bestuhlung richten wir nach Ihrer Planung.",
-  },
-  {
-    title: "Das ganze Haus",
-    text: "Auf Wunsch gehört es an Ihrem Tag nur Ihnen.",
-  },
-  {
-    title: "Anreise",
-    text: "Kostenlose Parkplätze direkt am Haus und eine Garderobe für Ihre Gäste.",
-  },
-  {
-    title: "Ein Ansprechpartner",
-    text: "Eine Person begleitet Sie von der Planung bis zum Abschluss.",
-  },
+  "Bühne",
+  "Licht- und Tontechnik",
+  "Beamer für Präsentationen",
+  "Küche und Buffet im Haus",
+  "Fest eingebaute Bars",
+  "Pizzeria",
+  "Kostenlose Parkplätze",
+  "Garderobe",
+  "Räume einzeln oder kombiniert buchbar",
+  "Ein Ansprechpartner für Ihr Event",
 ];
 
 const FACTS = [
@@ -292,27 +278,33 @@ export default async function EventlocationPage() {
 
       {/* 4. Vorteile */}
       <section className="px-6 py-20 lg:py-24">
-        <div className="mx-auto max-w-5xl">
+        <div className="mx-auto max-w-3xl">
           <Reveal>
             <p className="text-center text-xs font-black uppercase tracking-[0.3em] text-accent-lime">
               Ihre Vorteile
             </p>
             <h2 className="mt-3 text-center text-2xl font-black uppercase leading-[1.1] text-foreground sm:text-3xl lg:text-4xl">
-              Das gibt es bei uns im Haus.
+              Alles, was Ihr Event braucht.
             </h2>
+            <p className="mx-auto mt-5 max-w-xl text-center text-foreground/70">
+              Das Wichtige ist schon im Haus. Sie sprechen mit einem
+              Ansprechpartner und müssen keine Dienstleister einzeln
+              koordinieren.
+            </p>
           </Reveal>
-          <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {ADVANTAGES.map((a, i) => (
-              <Reveal key={a.title} delay={i * 0.05}>
-                <div className="h-full rounded-2xl border border-foreground/10 bg-foreground/[0.025] p-6">
-                  <h3 className="text-base font-black uppercase text-foreground">
-                    {a.title}
-                  </h3>
-                  <p className="mt-2 text-sm text-foreground/70">{a.text}</p>
-                </div>
-              </Reveal>
-            ))}
-          </div>
+          <Reveal delay={0.1}>
+            <ul className="mt-10 grid gap-x-10 sm:grid-cols-2">
+              {ADVANTAGES.map((a) => (
+                <li
+                  key={a}
+                  className="flex items-center gap-3 border-b border-foreground/10 py-3 text-foreground/80"
+                >
+                  <span className="h-2 w-2 shrink-0 rounded-full bg-accent-lime" />
+                  {a}
+                </li>
+              ))}
+            </ul>
+          </Reveal>
         </div>
       </section>
 
