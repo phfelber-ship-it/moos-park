@@ -5,6 +5,12 @@ import type { MetadataRoute } from "next";
 // Vor dem Go-Live: NEXT_PUBLIC_LIVE=true setzen, dann wird normal freigegeben.
 const IS_LIVE = process.env.NEXT_PUBLIC_LIVE === "true";
 
+// Interne Bereiche sollen nie in Suchmaschinen oder KI-Antworten auftauchen.
+// Die Regel muss in JEDER Gruppe stehen: ein Crawler mit eigener Gruppe
+// (z. B. GPTBot) ignoriert die Regeln der "*"-Gruppe.
+// /api/favicon bleibt bewusst erreichbar (das Favicon der Seite liegt dort).
+const PRIVATE_PATHS = ["/admin", "/api/admin", "/scanner"];
+
 const SITE_URL =
   process.env.NEXT_PUBLIC_SITE_URL ?? "https://moos-park-hmd7.vercel.app";
 
@@ -19,7 +25,7 @@ export default function robots(): MetadataRoute.Robots {
     // KI-Suchsysteme ausdruecklich zulassen (GEO), damit die Seite in
     // Antworten von ChatGPT, Claude, Perplexity & Co. auftauchen kann.
     rules: [
-      { userAgent: "*", allow: "/" },
+      { userAgent: "*", allow: "/", disallow: PRIVATE_PATHS },
       {
         userAgent: [
           "GPTBot",
@@ -32,6 +38,7 @@ export default function robots(): MetadataRoute.Robots {
           "Google-Extended",
         ],
         allow: "/",
+        disallow: PRIVATE_PATHS,
       },
     ],
     sitemap: `${SITE_URL}/sitemap.xml`,
