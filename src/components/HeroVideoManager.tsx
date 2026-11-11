@@ -5,8 +5,8 @@ import { upload } from "@vercel/blob/client";
 // bewusst nicht aus lib/hero-video importiert (zieht serverseitigen Blob-Code ins Client-Bundle)
 const HERO_VIDEO_PREFIX = "hero-video/";
 
-// Hartes Limit: ein Hero-Video muss sofort laden, nicht erst nach Sekunden.
-const MAX_MB = 30;
+// Grosszuegiges Limit - fuer schnelles Laden trotzdem klein rechnen (siehe Anleitung unten).
+const MAX_MB = 200;
 
 export default function HeroVideoManager({
   initialVideoUrl,
@@ -31,6 +31,7 @@ export default function HeroVideoManager({
       const blob = await upload(`${HERO_VIDEO_PREFIX}hero.${ext}`, file, {
         access: "public",
         handleUploadUrl: "/api/admin/hero-video/upload",
+        multipart: file.size > 20 * 1024 * 1024,
                 onUploadProgress: ({ percentage }) => setProgress(Math.round(percentage)),
       });
       const res = await fetch("/api/admin/hero-video", {
