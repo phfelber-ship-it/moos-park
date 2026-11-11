@@ -10,6 +10,7 @@ export const metadata = {
 };
 
 const data: RentalPageData = {
+  formal: true,
   eyebrow: "Eventlocation in Pöttmes, zwischen Augsburg und Ingolstadt.",
   heroTitle: "Die Eventlocation Bayern.",
   heroSubtitle:
@@ -28,7 +29,7 @@ const data: RentalPageData = {
     },
     {
       title: "Kein Service, kein Ansprechpartner",
-      text: "Verschiedene Dienstleister, niemand trägt Verantwortung. Am Abend bist du Koordinator statt Gastgeber.",
+      text: "Verschiedene Dienstleister, niemand trägt Verantwortung. Am Abend sind Sie Koordinator statt Gastgeber.",
     },
   ],
   stepsHeading: "In 4 Schritten zur Eventlocation in Bayern.",
@@ -36,7 +37,7 @@ const data: RentalPageData = {
     {
       num: "01",
       title: "Anfrage senden",
-      text: "Datum, Anlass und Personenzahl – kurze Nachricht genügt. Wir melden uns schnell bei dir.",
+      text: "Datum, Anlass und Personenzahl – kurze Nachricht genügt. Wir melden uns schnell bei Ihnen.",
     },
     {
       num: "02",
@@ -46,22 +47,22 @@ const data: RentalPageData = {
     {
       num: "03",
       title: "Alles wird vorbereitet",
-      text: "Technik steht, Gastronomie ist bereit, Ablauf koordiniert – du musst nichts mehr selbst organisieren.",
+      text: "Technik steht, Gastronomie ist bereit, Ablauf koordiniert – Sie müssen nichts mehr selbst organisieren.",
     },
     {
       num: "04",
       title: "Einfach genießen",
-      text: "Du kommst, wir kümmern uns um den Rest. So soll eine Eventlocation in Bayern sein.",
+      text: "Sie kommen, wir kümmern uns um den Rest. So soll eine Eventlocation in Bayern sein.",
     },
   ],
   advantagesHeading: "Eventlocation Bayern – alles inklusive.",
   advantagesIntro:
     "Keine leere Halle – ein komplettes Eventpaket. Technik, Gastronomie und erfahrenes Team aus einer Hand.",
   advantages: [
-    "Du planst nichts – wir übernehmen die komplette Organisation.",
-    "Kein Aufräumen danach – du genießt, wir kümmern uns.",
+    "Sie planen nichts – wir übernehmen die komplette Organisation.",
+    "Kein Aufräumen danach – Sie genießen, wir kümmern uns.",
     "Professionelle Licht- & Tontechnik inklusive.",
-    "Persönliche Beratung – wir planen gemeinsam mit dir.",
+    "Persönliche Beratung – wir planen gemeinsam mit Ihnen.",
     "Bis 2300 Personen – flexibel kombinierbare Räume.",
     "Eventlocation in Bayern – alles inklusive.",
   ],
@@ -77,7 +78,7 @@ const data: RentalPageData = {
   faq: [
     {
       q: "Für welche Anlässe ist moos.park geeignet?",
-      a: "Für Firmenfeiern, Geburtstage, Hochzeiten, Club-Events, Konzerte, Abiballs und vieles mehr. Wenn du eine große Eventlocation in Bayern suchst – wir haben die passende Fläche.",
+      a: "Für Firmenfeiern, Geburtstage, Hochzeiten, Club-Events, Konzerte, Abiballs und vieles mehr. Wenn Sie eine große Eventlocation in Bayern suchen – wir haben die passende Fläche.",
     },
     {
       q: "Wie viele Personen passen in die Location?",
@@ -85,7 +86,7 @@ const data: RentalPageData = {
     },
     {
       q: "Kann ich die Eventlocation exklusiv mieten?",
-      a: "Ja, moos.park kann komplett exklusiv für deine Veranstaltung gebucht werden – kein anderes Event parallel.",
+      a: "Ja, moos.park kann komplett exklusiv für Ihre Veranstaltung gebucht werden – kein anderes Event parallel.",
     },
     {
       q: "Was ist beim Mieten inklusive?",
@@ -100,9 +101,9 @@ const data: RentalPageData = {
       a: "Für Wochenend-Termine empfehlen wir 6–12 Monate im Voraus. Werktags sind auch kurzfristige Buchungen möglich.",
     },
   ],
-  ctaHeading: "Deine Eventlocation Bayern – jetzt anfragen.",
+  ctaHeading: "Ihre Eventlocation Bayern – jetzt anfragen.",
   ctaText:
-    "Schnelle Angebotsbearbeitung: Wir erstellen dir ein persönliches Angebot. Kostenlos, unverbindlich, konkret.",
+    "Schnelle Angebotsbearbeitung: Wir erstellen Ihnen ein persönliches Angebot. Kostenlos, unverbindlich, konkret.",
 };
 
 export default function EventlocationBayernPage() {

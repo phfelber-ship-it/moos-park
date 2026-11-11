@@ -10,6 +10,7 @@ export const metadata = {
 };
 
 const data: RentalPageData = {
+  formal: true,
   eyebrow: "Viele Gäste aus dem Raum Ingolstadt feiern regelmäßig bei uns.",
   heroTitle: "Die Eventlocation bei Ingolstadt.",
   heroSubtitle:
@@ -28,7 +29,7 @@ const data: RentalPageData = {
     },
     {
       title: "Technik & Catering als Extrakosten",
-      text: "Ohne eigene Gastronomie und Technik buchst du alles separat – teurer und aufwendiger als jedes Angebot zunächst klingt.",
+      text: "Ohne eigene Gastronomie und Technik buchen Sie alles separat – teurer und aufwendiger als jedes Angebot zunächst klingt.",
     },
   ],
   stepsHeading: "In 4 Schritten zum Event bei Ingolstadt.",
@@ -41,12 +42,12 @@ const data: RentalPageData = {
     {
       num: "02",
       title: "Gemeinsam planen",
-      text: "Räume, Technik, Gastronomie – wir planen alles mit dir. Ein Ansprechpartner, kein Koordinationschaos.",
+      text: "Räume, Technik, Gastronomie – wir planen alles mit Ihnen. Ein Ansprechpartner, kein Koordinationschaos.",
     },
     {
       num: "03",
       title: "Alles vorbereitet",
-      text: "Technik steht, Essen ist bereit – deine Gäste aus Ingolstadt kommen an und sind sofort begeistert.",
+      text: "Technik steht, Essen ist bereit – Ihre Gäste aus Ingolstadt kommen an und sind sofort begeistert.",
     },
     {
       num: "04",
@@ -54,7 +55,7 @@ const data: RentalPageData = {
       text: "35 Minuten von Ingolstadt, kostenloser Großparkplatz, bis 2300 Personen. Alles an einem Ort.",
     },
   ],
-  advantagesHeading: "Deine Location nahe Ingolstadt.",
+  advantagesHeading: "Ihre Location nahe Ingolstadt.",
   advantagesIntro:
     "Nur 35 Minuten von Ingolstadt – aber mit Parkplatz für alle, bis 2300 Personen, eigener Küche und Vollausstattung.",
   advantages: [
@@ -102,7 +103,7 @@ const data: RentalPageData = {
   ],
   ctaHeading: "35 Minuten von Ingolstadt – jetzt anfragen.",
   ctaText:
-    "Schnelle Angebotsbearbeitung: Wir erstellen dir ein persönliches Angebot. Kostenlos und unverbindlich.",
+    "Schnelle Angebotsbearbeitung: Wir erstellen Ihnen ein persönliches Angebot. Kostenlos und unverbindlich.",
 };
 
 export default function EventlocationIngolstadtPage() {

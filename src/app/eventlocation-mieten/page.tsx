@@ -10,6 +10,7 @@ export const metadata = {
 };
 
 const data: RentalPageData = {
+  formal: true,
   eyebrow: "Eventlocation mieten in Pöttmes, zwischen Augsburg und Ingolstadt.",
   heroTitle: "Eventlocation mieten im moos.park.",
   heroSubtitle:
@@ -20,7 +21,7 @@ const data: RentalPageData = {
   painPoints: [
     {
       title: "Leere Hallen ohne Service",
-      text: "Du mietest vier Wände – und buchst Technik, Catering, Personal alles separat dazu. Zeitaufwändig und teuer.",
+      text: "Sie mieten vier Wände – und buchen Technik, Catering, Personal alles separat dazu. Zeitaufwändig und teuer.",
     },
     {
       title: "Versteckte Zusatzkosten",
@@ -28,7 +29,7 @@ const data: RentalPageData = {
     },
     {
       title: "Kein Ansprechpartner",
-      text: "Mehrere Dienstleister, niemand trägt Gesamtverantwortung. Am Eventtag bist du Koordinator statt Gastgeber.",
+      text: "Mehrere Dienstleister, niemand trägt Gesamtverantwortung. Am Eventtag sind Sie Koordinator statt Gastgeber.",
     },
   ],
   stepsHeading: "In 4 Schritten zur gemieteten Eventlocation.",
@@ -46,17 +47,17 @@ const data: RentalPageData = {
     {
       num: "03",
       title: "Alles wird vorbereitet",
-      text: "Technik aufgebaut, Gastronomie bereit, Ablauf koordiniert – du musst nichts extra buchen oder organisieren.",
+      text: "Technik aufgebaut, Gastronomie bereit, Ablauf koordiniert – Sie müssen nichts extra buchen oder organisieren.",
     },
     {
       num: "04",
       title: "Einfach starten",
-      text: "Du kommst, deine Gäste kommen, alles läuft. Kein Stress, keine Extra-Kosten. So soll Mieten sein.",
+      text: "Sie kommen, Ihre Gäste kommen, alles läuft. Kein Stress, keine Extra-Kosten. So soll Mieten sein.",
     },
   ],
-  advantagesHeading: "Eventlocation mieten – das bekommst du bei uns.",
+  advantagesHeading: "Eventlocation mieten – das bekommen Sie bei uns.",
   advantagesIntro:
-    "Bei moos.park mietest du keine leere Halle – sondern eine vollständig ausgestattete Eventlocation mit allem drum und dran.",
+    "Bei moos.park mieten Sie keine leere Halle – sondern eine vollständig ausgestattete Eventlocation mit allem drum und dran.",
   advantages: [
     "7 Räume – einzeln oder kombinierbar für 80–2300 Personen",
     "Licht- & Tontechnik, Bühne – alles inklusive",
@@ -89,7 +90,7 @@ const data: RentalPageData = {
     },
     {
       q: "Was kostet das Mieten der Location?",
-      a: "Die Kosten hängen von Datum, Räumen und Service ab. Wir erstellen dir ein individuelles Angebot ohne versteckte Kosten – schnell bearbeitet.",
+      a: "Die Kosten hängen von Datum, Räumen und Service ab. Wir erstellen Ihnen ein individuelles Angebot ohne versteckte Kosten – schnell bearbeitet.",
     },
     {
       q: "Wie weit ist moos.park von Augsburg und Ingolstadt?",
@@ -100,9 +101,9 @@ const data: RentalPageData = {
       a: "Für Wochenend-Termine 6–12 Monate im Voraus. Werktags sind auch kurzfristige Buchungen möglich.",
     },
   ],
-  ctaHeading: "Deine gemietete Location – schnell zum Angebot.",
+  ctaHeading: "Ihre gemietete Location – schnell zum Angebot.",
   ctaText:
-    "Meld dich jetzt – wir bearbeiten dein Angebot schnell und erstellen ein konkretes Mietangebot. Kostenlos und unverbindlich.",
+    "Melden Sie sich jetzt – wir bearbeiten Ihr Angebot schnell und erstellen ein konkretes Mietangebot. Kostenlos und unverbindlich.",
 };
 
 export default function EventlocationMietenPage() {
