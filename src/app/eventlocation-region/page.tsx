@@ -6,16 +6,15 @@ import { ROOMS } from "@/lib/rooms";
 
 export const metadata = {
   alternates: { canonical: "/eventlocation-region" },
-  title:
-    "Eventlocation mieten für Hochzeit, Firmenevent & Club-Feier – Region Augsburg, Ingolstadt, Regensburg | moos.park",
+  title: "Eventlocation Region Augsburg & Ingolstadt | moos.park Pöttmes",
   description:
-    "moos.park in Pöttmes: Eventlocation für Hochzeiten, Firmenevents, Club- & Disconächte, Geburtstage und Feiern jeder Art. Bis 2400 Personen, im Umkreis von rund 100 km um Aichach, Friedberg, Augsburg, Neuburg an der Donau, Ingolstadt, Regensburg, Wertingen und Dillingen mieten.",
+    "Eventlocation in Pöttmes für Hochzeiten, Firmenevents, Club-Nächte und Geburtstage. Bis 2300 Personen, Region Augsburg, Ingolstadt und Aichach-Friedberg.",
 };
 
 const EVENT_TYPES = [
   {
     title: "Firmenevents",
-    text: "Weihnachtsfeier, Kick-off, Produktlaunch, Sommerfest – professionelle Location für 80 bis 2400 Mitarbeiter und Gäste.",
+    text: "Weihnachtsfeier, Kick-off, Produktlaunch, Sommerfest – professionelle Location für 80 bis 2300 Mitarbeiter und Gäste.",
     href: "/firmenevents",
     cta: "Firmenevent anfragen",
   },
@@ -33,7 +32,7 @@ const EVENT_TYPES = [
   },
   {
     title: "Geburtstage & Feiern",
-    text: "Vom 18. bis zum 80. Geburtstag – private Feiern für 50 bis 2400 Gäste, inklusive Technik, Deko-Möglichkeiten und Catering.",
+    text: "Vom 18. bis zum 80. Geburtstag – private Feiern für 50 bis 2300 Gäste, inklusive Technik, Deko-Möglichkeiten und Catering.",
     href: "/geburtstag",
     cta: "Geburtstag feiern",
   },
@@ -48,12 +47,12 @@ const EVENT_TYPES = [
 const REGIONS = [
   {
     name: "Landkreis Aichach-Friedberg",
-    text: "moos.park liegt direkt in Pöttmes im Landkreis Aichach-Friedberg – nur wenige Minuten von Aichach, Friedberg, Kühbach, Dasing und Schrobenhausen entfernt. Die kürzeste Anfahrt der Region, mit großem kostenlosem Parkplatz direkt vor der Tür.",
+    text: "moos.park liegt direkt in Pöttmes im Landkreis Aichach-Friedberg – nur wenige Minuten von Aichach, Friedberg, Kühbach, Dasing und Schrobenhausen entfernt. Mit großem kostenlosem Parkplatz direkt vor der Tür.",
     towns: ["Aichach", "Friedberg", "Pöttmes", "Schrobenhausen", "Kühbach", "Dasing"],
   },
   {
     name: "Augsburg & Umland",
-    text: "Rund 40 Minuten von Augsburg entfernt bietet moos.park das, was Stadtlocations oft fehlt: großer Parkplatz, bis zu 2400 Plätze und eigene Gastronomie. Auch aus Königsbrunn, Neusäß, Gersthofen und Stadtbergen gut erreichbar.",
+    text: "Rund 40 Minuten von Augsburg entfernt bietet moos.park großen Parkplatz, Platz für bis zu 2300 Gäste und eigene Gastronomie. Auch aus Königsbrunn, Neusäß, Gersthofen und Stadtbergen gut erreichbar.",
     towns: ["Augsburg", "Königsbrunn", "Neusäß", "Gersthofen", "Stadtbergen"],
     link: { href: "/eventlocation-augsburg", label: "Mehr zur Eventlocation bei Augsburg" },
   },
@@ -65,7 +64,7 @@ const REGIONS = [
   },
   {
     name: "Donau-Ries, Dillingen & Wertingen",
-    text: "Auch aus Wertingen, Dillingen an der Donau, Donauwörth, Lauingen und Höchstädt an der Donau ist moos.park eine der größten Eventlocations der Region – mit Kapazitäten, die kleinere Säle in der Region nicht bieten.",
+    text: "Auch aus Wertingen, Dillingen an der Donau, Donauwörth, Lauingen und Höchstädt an der Donau ist moos.park gut erreichbar – mit Platz für bis zu 2300 Gäste im gesamten Haus.",
     towns: ["Wertingen", "Dillingen a.d. Donau", "Donauwörth", "Lauingen", "Höchstädt a.d. Donau"],
   },
   {
@@ -82,7 +81,7 @@ const FAQ = [
   },
   {
     q: "Für welche Anlässe kann ich die Location mieten?",
-    a: "Für Hochzeiten, Firmenevents, Club- und Disconächte, Geburtstage, private Feiern und Konzerte. Fünf kombinierbare Räume machen Events von 50 bis 2400 Personen möglich.",
+    a: "Für Hochzeiten, Firmenevents, Club- und Disconächte, Geburtstage, private Feiern und Konzerte. Sieben kombinierbare Räume machen Events von 50 bis 2300 Personen möglich.",
   },
   {
     q: "Ist eine exklusive Buchung der gesamten Location möglich?",
@@ -94,7 +93,7 @@ const FAQ = [
   },
   {
     q: "Wie schnell bekomme ich ein Angebot?",
-    a: "Nach deiner Anfrage über das Kontaktformular meldet sich unser Team in der Regel innerhalb von 24 Stunden mit einem individuellen, unverbindlichen Angebot.",
+    a: "Nach deiner Anfrage über das Kontaktformular meldet sich unser Team in der Regel schnell mit einem individuellen, unverbindlichen Angebot.",
   },
 ];
 
@@ -125,7 +124,7 @@ export default function EventlocationRegionPage() {
             Eventlocation mieten für Hochzeit, Firmenevent &amp; Club-Feier
           </h1>
           <p className="mx-auto mt-5 max-w-2xl text-foreground/70">
-            moos.park in Pöttmes – bis 2400 Personen, alles inklusive. Im Umkreis
+            moos.park in Pöttmes – bis 2300 Personen, alles inklusive. Im Umkreis
             von rund 100&nbsp;km um Aichach, Friedberg, Augsburg, Neuburg an der
             Donau, Ingolstadt, Regensburg, Wertingen und Dillingen die
             Eventlocation für Hochzeiten, Firmenevents, Clubnächte, Geburtstage
@@ -182,10 +181,10 @@ export default function EventlocationRegionPage() {
         <div className="mx-auto max-w-5xl">
           <Reveal>
             <p className="text-center text-xs font-black uppercase tracking-[0.3em] text-accent-lime">
-              5 Räume, ein Anbieter
+              7 Räume, ein Anbieter
             </p>
             <h2 className="mx-auto mt-3 max-w-2xl text-center text-2xl font-black uppercase leading-tight text-foreground sm:text-3xl">
-              Von 50 bis 2400 Gästen – flexibel kombinierbar.
+              Von 50 bis 2300 Gästen – flexibel kombinierbar.
             </h2>
           </Reveal>
 
@@ -216,8 +215,8 @@ export default function EventlocationRegionPage() {
             </h2>
             <p className="mx-auto mt-4 max-w-xl text-center text-foreground/70">
               Ob Aichach, Friedberg, Augsburg, Neuburg an der Donau, Ingolstadt,
-              Regensburg, Wertingen oder Dillingen – moos.park ist eine der
-              größten Eventlocations zwischen Augsburg und Ingolstadt.
+              Regensburg, Wertingen oder Dillingen – moos.park liegt zwischen
+              Augsburg und Ingolstadt.
             </p>
           </Reveal>
 
@@ -275,7 +274,7 @@ export default function EventlocationRegionPage() {
             Deine Eventlocation für die ganze Region – jetzt anfragen.
           </h2>
           <p className="mx-auto mt-4 max-w-md text-foreground/70">
-            Wir erstellen dir innerhalb von 24 Stunden ein persönliches
+            Schnelle Angebotsbearbeitung: Wir erstellen dir ein persönliches
             Angebot. Kostenlos, unverbindlich, konkret.
           </p>
           <div className="mt-8 flex flex-wrap items-center justify-center gap-4">

@@ -72,7 +72,7 @@ export default function EventRequestForm() {
   if (status === "sent") {
     return (
       <p className="rounded-xl border border-foreground/10 bg-foreground/[0.025] p-6 font-bold text-foreground">
-        Danke für deine Anfrage! Wir melden uns innerhalb von 24 Stunden mit
+        Danke für deine Anfrage! Wir bearbeiten sie schnell und melden uns mit
         einem passenden Angebot.
       </p>
     );

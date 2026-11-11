@@ -21,6 +21,8 @@ export type RentalPageData = {
   faq: { q: string; a: string }[];
   ctaHeading: string;
   ctaText: string;
+  formal?: boolean;
+  locationSection?: { heading: string; paragraphs: string[] };
 };
 
 export default function RentalLandingTemplate({ data }: { data: RentalPageData }) {
@@ -94,7 +96,7 @@ export default function RentalLandingTemplate({ data }: { data: RentalPageData }
         <div className="mx-auto max-w-3xl text-center">
           <Reveal>
             <p className="text-xs font-black uppercase tracking-[0.3em] text-accent-lime">
-              Deine Vorteile
+              {data.formal ? "Ihre Vorteile" : "Deine Vorteile"}
             </p>
             <h2 className="mt-3 text-2xl font-black uppercase leading-tight text-foreground sm:text-3xl">
               {data.advantagesHeading}
@@ -118,6 +120,7 @@ export default function RentalLandingTemplate({ data }: { data: RentalPageData }
         </div>
       </section>
 
+      {data.testimonials.length > 0 && (
       <section className="px-6 py-20">
         <div className="mx-auto max-w-5xl">
           <Reveal>
@@ -145,7 +148,24 @@ export default function RentalLandingTemplate({ data }: { data: RentalPageData }
           </div>
         </div>
       </section>
+      )}
 
+      {data.locationSection && (
+        <section className="px-6 py-20">
+          <div className="mx-auto max-w-3xl">
+            <Reveal>
+              <h2 className="text-center text-2xl font-black uppercase leading-tight text-foreground sm:text-3xl">
+                {data.locationSection.heading}
+              </h2>
+              {data.locationSection.paragraphs.map((para) => (
+                <p key={para} className="mt-4 text-foreground/70">
+                  {para}
+                </p>
+              ))}
+            </Reveal>
+          </div>
+        </section>
+      )}
       <section className="bg-foreground/[0.02] px-6 py-20">
         <div className="mx-auto max-w-3xl">
           <Reveal>
@@ -153,7 +173,7 @@ export default function RentalLandingTemplate({ data }: { data: RentalPageData }
               Häufige Fragen
             </p>
             <h2 className="mx-auto mt-3 max-w-xl text-center text-2xl font-black uppercase leading-tight text-foreground sm:text-3xl">
-              Alles was du wissen möchtest.
+              {data.formal ? "Alles, was Sie wissen möchten." : "Alles was du wissen möchtest."}
             </h2>
           </Reveal>
 

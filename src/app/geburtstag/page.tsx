@@ -1,10 +1,11 @@
+import Link from "next/link";
 import StepsTimeline from "@/components/StepsTimeline";
 import FlipText from "@/components/FlipText";
 
 export const metadata = {
   alternates: { canonical: "/geburtstag" },
   title:
-    "Geburtstag feiern Bayern – Location mieten für 18., 30., 40., 50. Geburtstag | moos.park",
+    "Geburtstag feiern in Bayern – Location mieten | moos.park",
   description:
     "Geburtstag feiern im moos.park Pöttmes – exklusive Location und unvergessliche Stimmung für deinen großen Tag.",
 };
@@ -101,12 +102,12 @@ export default function GeburtstagPage() {
           Kein Stress. Kein Aufräumen. Einfach nur feiern – wir kümmern uns um
           den Rest.
         </p>
-        <a
+        <Link
           href="/kontakt"
           className="mt-8 inline-block rounded-lg bg-accent-lime px-8 py-3 text-sm font-black uppercase tracking-wide text-black transition-transform hover:scale-105"
         >
           <FlipText text="Jetzt anfragen" />
-        </a>
+        </Link>
         <p className="mt-6 text-sm text-foreground/50">
           ⭐⭐⭐⭐⭐ Hunderte Geburtstage bereits gefeiert – im moos.park.
         </p>
@@ -193,9 +194,9 @@ export default function GeburtstagPage() {
           </div>
           <p className="mt-6 text-center text-foreground/60">
             Noch eine Frage offen?{" "}
-            <a href="/kontakt" className="font-bold text-accent">
+            <Link href="/kontakt" className="font-bold text-accent">
               Kontakt aufnehmen
-            </a>
+            </Link>
           </p>
         </div>
       </section>

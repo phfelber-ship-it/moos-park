@@ -4,16 +4,16 @@ import RentalLandingTemplate, {
 
 export const metadata = {
   alternates: { canonical: "/eventlocation-bayern" },
-  title: "Eventlocation Bayern mieten – bis 2400 Personen | moos.park Pöttmes",
+  title: "Eventlocation Bayern mieten – bis 2300 Personen | moos.park Pöttmes",
   description:
-    "Eventlocation in Bayern für Firmenevents, Hochzeiten, Geburtstage und Club-Events – bis zu 2400 Personen, alles inklusive.",
+    "Eventlocation in Bayern für Firmenevents, Hochzeiten, Geburtstage und Club-Events – bis zu 2300 Personen, alles inklusive.",
 };
 
 const data: RentalPageData = {
-  eyebrow: "Hunderte Events bereits gefeiert – im moos.park.",
+  eyebrow: "Eventlocation in Pöttmes, zwischen Augsburg und Ingolstadt.",
   heroTitle: "Die Eventlocation Bayern.",
   heroSubtitle:
-    "Firmenevents, Hochzeiten, Geburtstage, Club-Events – bis 2400 Personen, alles inklusive.",
+    "Firmenevents, Hochzeiten, Geburtstage, Club-Events – bis 2300 Personen, alles inklusive.",
   painHeading: "Das bringen Eventlocations in Bayern oft nicht mit.",
   painIntro:
     "Leere Hallen, kein Catering, kein Parkplatz – die meisten Locations liefern nur vier Wände. Alles andere kostet Zeit, Nerven und zusätzliches Geld.",
@@ -31,12 +31,12 @@ const data: RentalPageData = {
       text: "Verschiedene Dienstleister, niemand trägt Verantwortung. Am Abend bist du Koordinator statt Gastgeber.",
     },
   ],
-  stepsHeading: "In 4 Schritten zur perfekten Eventlocation Bayern.",
+  stepsHeading: "In 4 Schritten zur Eventlocation in Bayern.",
   steps: [
     {
       num: "01",
       title: "Anfrage senden",
-      text: "Datum, Anlass und Personenzahl – kurze Nachricht genügt. Wir melden uns innerhalb von 24 Stunden.",
+      text: "Datum, Anlass und Personenzahl – kurze Nachricht genügt. Wir melden uns schnell bei dir.",
     },
     {
       num: "02",
@@ -51,7 +51,7 @@ const data: RentalPageData = {
     {
       num: "04",
       title: "Einfach genießen",
-      text: "Du kommst, dein Event läuft perfekt, deine Gäste sind begeistert. So soll eine Eventlocation Bayern sein.",
+      text: "Du kommst, wir kümmern uns um den Rest. So soll eine Eventlocation in Bayern sein.",
     },
   ],
   advantagesHeading: "Eventlocation Bayern – alles inklusive.",
@@ -62,27 +62,18 @@ const data: RentalPageData = {
     "Kein Aufräumen danach – du genießt, wir kümmern uns.",
     "Professionelle Licht- & Tontechnik inklusive.",
     "Persönliche Beratung – wir planen gemeinsam mit dir.",
-    "Bis 2400 Personen – flexibel kombinierbare Räume.",
-    "Top Eventlocation in Bayern – alles inklusive.",
+    "Bis 2300 Personen – flexibel kombinierbare Räume.",
+    "Eventlocation in Bayern – alles inklusive.",
   ],
   testimonialsHeading: "Was unsere Kunden sagen.",
-  testimonials: [
-    {
-      quote:
-        "Unsere Betriebsfeier mit 250 Gästen war ein voller Erfolg. Technik, Essen, Atmosphäre – absolut professionell. Bestes Team-Feedback seit Jahren.",
-      author: "Michael R. – Geschäftsführer, Augsburg",
-    },
-    {
-      quote:
-        "Hochzeit mit 380 Gästen. Die Location hat alle begeistert – großer Parkplatz, eigene Küche, perfekter Service. Unglaublich professionell.",
-      author: "Sandra & Florian K. – Brautpaar, Ingolstadt",
-    },
-    {
-      quote:
-        "Endlich eine Location, die wirklich alles kann. Club-Night mit 500 Personen – Sound, Licht, Catering perfekt. Alle wollen nächstes Jahr wieder!",
-      author: "David M. – Eventveranstalter, München",
-    },
-  ],
+  testimonials: [],
+  locationSection: {
+    heading: "Lage in Bayern: zwischen Augsburg und Ingolstadt.",
+    paragraphs: [
+      "Der moos.park befindet sich in Pöttmes im Landkreis Aichach-Friedberg (Rudolf-Diesel-Straße 23, 86554 Pöttmes). Die Location liegt ca. 40 Minuten von Augsburg und ca. 35 Minuten von Ingolstadt entfernt.",
+      "Das Haus bietet 2200 m² Fläche und sieben Räume. Je nach Veranstaltung mieten Sie einzelne Räume, mehrere Räume kombiniert oder die gesamte Location exklusiv, mit bis zu 2300 Gästen im gesamten Haus.",
+    ],
+  },
   faq: [
     {
       q: "Für welche Anlässe ist moos.park geeignet?",
@@ -90,7 +81,7 @@ const data: RentalPageData = {
     },
     {
       q: "Wie viele Personen passen in die Location?",
-      a: "Bis zu 750 Personen in der Main-Halle. Mit flexiblen Raumkombinationen sind Events für bis zu 2400 Gäste möglich.",
+      a: "Bis zu 750 Personen in der Main-Halle. Mit flexiblen Raumkombinationen sind Events für bis zu 2300 Gäste möglich.",
     },
     {
       q: "Kann ich die Eventlocation exklusiv mieten?",
@@ -111,7 +102,7 @@ const data: RentalPageData = {
   ],
   ctaHeading: "Deine Eventlocation Bayern – jetzt anfragen.",
   ctaText:
-    "Wir erstellen dir innerhalb von 24 Stunden ein persönliches Angebot. Kostenlos, unverbindlich, konkret.",
+    "Schnelle Angebotsbearbeitung: Wir erstellen dir ein persönliches Angebot. Kostenlos, unverbindlich, konkret.",
 };
 
 export default function EventlocationBayernPage() {

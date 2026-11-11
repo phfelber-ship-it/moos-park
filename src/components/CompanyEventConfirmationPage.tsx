@@ -15,7 +15,7 @@ export default function CompanyEventConfirmationPage({ event }: { event: Company
           Platz gesichert.
         </h1>
         <p className="mx-auto mt-4 max-w-lg text-foreground/70">
-          Wir prüfen Ihre Anfrage und melden uns innerhalb von 24 Stunden.
+          Wir prüfen Ihre Anfrage und melden uns schnell bei Ihnen.
           Vielen Dank für Ihre Anmeldung zu {event.name}.
         </p>
       </div>
