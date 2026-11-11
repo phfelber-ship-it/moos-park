@@ -64,8 +64,8 @@ export default async function Home() {
       <Hero images={heroImages} videoUrl={heroVideo?.url ?? null} />
 
       <section className="px-6 pb-24 pt-12 lg:pt-6">
-        <div className="mx-auto w-full min-w-0 max-w-7xl">
-          <h2 className="text-center text-3xl font-black uppercase text-foreground sm:text-4xl">
+        <div className="mx-auto w-full min-w-0 max-w-[77rem]">
+          <h2 className="text-center text-3xl font-black uppercase text-foreground sm:text-4xl lg:text-5xl">
             Aktuelle Events
           </h2>
 
@@ -76,7 +76,7 @@ export default async function Home() {
           <div className="mt-12 text-center">
             <Link
               href="/events"
-              className="inline-block rounded-lg bg-accent-lime px-8 py-3 text-sm font-black uppercase tracking-wide text-black transition-transform hover:scale-105"
+              className="inline-block rounded-full bg-accent-lime px-8 py-3 text-sm font-black uppercase tracking-wide text-black transition-transform hover:scale-105"
             >
               <FlipText text="Alle Events ansehen" />
             </Link>
@@ -86,7 +86,7 @@ export default async function Home() {
 
       <section className="px-6 py-28 text-center">
         <Reveal direction="scale" className="relative">
-          <p className="text-xs font-black uppercase tracking-[0.3em] text-accent-lime">
+          <p className="text-xs font-black uppercase font-mono tracking-[0.2em] text-accent-lime">
             Jeden 2. &amp; 4. Freitag im Monat
           </p>
           <h2 className="mt-4 text-4xl font-black uppercase leading-[0.95] text-foreground sm:text-6xl">
@@ -97,17 +97,17 @@ export default async function Home() {
           </p>
           <Link
             href="/tanzveranstaltungen"
-            className="mt-8 inline-block rounded-lg bg-accent-lime px-8 py-3 text-sm font-black uppercase tracking-wide text-black transition-transform hover:scale-105"
+            className="mt-8 inline-block rounded-full bg-accent-lime px-8 py-3 text-sm font-black uppercase tracking-wide text-black transition-transform hover:scale-105"
           >
             <FlipText text="Alle Tanztermine ansehen" />
           </Link>
         </Reveal>
       </section>
 
-      <section className="flex min-h-[720px] items-center px-6 py-24">
-        <div className="mx-auto w-full min-w-0 max-w-7xl">
+      <section className="flex min-h-[720px] items-center px-6 py-24 lg:py-28">
+        <div className="mx-auto w-full min-w-0 max-w-[77rem]">
           <Reveal>
-            <h2 className="text-center text-3xl font-black uppercase text-foreground sm:text-4xl">
+            <h2 className="text-center text-3xl font-black uppercase text-foreground sm:text-4xl lg:text-5xl">
               Galerie
             </h2>
             <p className="mx-auto mt-3 max-w-md text-center text-foreground/60">
@@ -131,7 +131,7 @@ export default async function Home() {
           <Reveal delay={0.2} className="mt-12 text-center">
             <Link
               href="/galerie"
-              className="inline-block rounded-lg bg-accent-lime px-8 py-3 text-sm font-black uppercase tracking-wide text-black transition-transform hover:scale-105"
+              className="inline-block rounded-full bg-accent-lime px-8 py-3 text-sm font-black uppercase tracking-wide text-black transition-transform hover:scale-105"
             >
               <FlipText text="Alle Galerien ansehen" />
             </Link>
@@ -139,16 +139,16 @@ export default async function Home() {
         </div>
       </section>
 
-      <section className="flex min-h-[720px] items-center px-6 py-24">
-        <div className="mx-auto w-full min-w-0 max-w-6xl">
+      <section className="flex min-h-[720px] items-center px-6 py-24 lg:py-28">
+        <div className="mx-auto w-full min-w-0 max-w-[77rem]">
           <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
             <AppPhoneReveal />
 
             <Reveal direction="right" className="order-1 lg:order-2">
-              <p className="text-xs font-black uppercase tracking-[0.3em] text-accent-lime">
+              <p className="text-xs font-black uppercase font-mono tracking-[0.2em] text-accent-lime">
                 moos.park App
               </p>
-              <h2 className="mt-4 text-3xl font-black uppercase leading-[1.05] sm:text-4xl">
+              <h2 className="mt-4 text-3xl font-black uppercase leading-[1.05] sm:text-4xl lg:text-5xl">
                 Deine Nacht. Deine App.
               </h2>
               <p className="mt-5 max-w-md text-foreground/70">
@@ -178,7 +178,7 @@ export default async function Home() {
                 href="https://apps.apple.com/de/app/moos-park/id6739537470"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="mt-8 inline-block rounded-lg bg-accent-lime px-8 py-3 text-sm font-black uppercase tracking-wide text-black transition-transform hover:scale-105"
+                className="mt-8 inline-block rounded-full bg-accent-lime px-8 py-3 text-sm font-black uppercase tracking-wide text-black transition-transform hover:scale-105"
               >
                 <FlipText text="App laden" />
               </a>
@@ -216,16 +216,16 @@ export default async function Home() {
         </div>
       </section>
 
-      <section className="flex min-h-[640px] items-center px-6 py-24">
-        <div className="mx-auto w-full min-w-0 max-w-6xl">
+      <section className="flex min-h-[640px] items-center px-6 py-24 lg:py-28">
+        <div className="mx-auto w-full min-w-0 max-w-[77rem]">
           <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
             <WhatsAppChannelReveal />
 
             <Reveal direction="right" className="order-1 lg:order-2">
-              <p className="text-xs font-black uppercase tracking-[0.3em] text-accent-lime">
+              <p className="text-xs font-black uppercase font-mono tracking-[0.2em] text-accent-lime">
                 WhatsApp Channel
               </p>
-              <h2 className="mt-4 text-3xl font-black uppercase leading-[1.05] sm:text-4xl">
+              <h2 className="mt-4 text-3xl font-black uppercase leading-[1.05] sm:text-4xl lg:text-5xl">
                 Jetzt dabei sein.
               </h2>
               <p className="mt-5 max-w-md text-foreground/70">
@@ -256,7 +256,7 @@ export default async function Home() {
                 href={WHATSAPP_CHANNEL_URL}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="mt-8 inline-block rounded-lg bg-accent-lime px-8 py-3 text-sm font-black uppercase tracking-wide text-black transition-transform hover:scale-105"
+                className="mt-8 inline-block rounded-full bg-accent-lime px-8 py-3 text-sm font-black uppercase tracking-wide text-black transition-transform hover:scale-105"
               >
                 <FlipText text="Channel beitreten" />
               </a>
@@ -265,12 +265,12 @@ export default async function Home() {
         </div>
       </section>
 
-      <section className="flex min-h-[720px] flex-col justify-center px-6 py-24">
+      <section className="flex min-h-[720px] flex-col justify-center px-6 py-24 lg:py-28">
         <Reveal className="mx-auto w-full min-w-0 max-w-3xl text-center">
           <p className="text-sm font-black uppercase tracking-wide text-accent-lime">
             moos.park
           </p>
-          <h2 className="mt-2 text-3xl font-black uppercase text-foreground">
+          <h2 className="mt-2 text-3xl font-black uppercase text-foreground sm:text-4xl lg:text-5xl">
             Mehr als eine Eventlocation.
           </h2>
           <p className="mt-6 text-foreground/70">
@@ -286,8 +286,8 @@ export default async function Home() {
         <FanGallery photos={fanPhotos} />
       </section>
 
-      <section className="flex min-h-[720px] items-center px-6 py-24">
-        <div className="mx-auto w-full min-w-0 max-w-7xl">
+      <section className="flex min-h-[720px] items-center px-6 py-24 lg:py-28">
+        <div className="mx-auto w-full min-w-0 max-w-[77rem]">
           <Reveal>
             <RoomsShowcase roomImages={roomImages} />
           </Reveal>

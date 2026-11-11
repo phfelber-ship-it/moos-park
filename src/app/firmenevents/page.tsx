@@ -134,13 +134,13 @@ export default function FirmeneventsPage() {
     <div>
       <RentalLandingTemplate data={data} />
 
-      <section className="px-6 py-20">
-        <div className="mx-auto max-w-5xl">
+      <section className="px-6 py-20 lg:py-28">
+        <div className="mx-auto max-w-[77rem]">
           <Reveal>
-            <p className="text-center text-xs font-black uppercase tracking-[0.3em] text-accent-lime">
+            <p className="text-center text-xs font-black uppercase font-mono tracking-[0.2em] text-accent-lime">
               Von klein bis groß
             </p>
-            <h2 className="mx-auto mt-3 max-w-2xl text-center text-2xl font-black uppercase leading-tight text-foreground sm:text-3xl">
+            <h2 className="mx-auto mt-3 max-w-2xl text-center text-2xl font-black uppercase leading-tight text-foreground sm:text-3xl lg:text-5xl">
               Für jede Firmengröße die passende Veranstaltung.
             </h2>
             <p className="mx-auto mt-4 max-w-xl text-center text-foreground/70">
@@ -166,13 +166,13 @@ export default function FirmeneventsPage() {
         </div>
       </section>
 
-      <section id="firmenanfrage" className="bg-foreground/[0.02] px-6 py-20">
+      <section id="firmenanfrage" className="bg-foreground/[0.02] px-6 py-20 lg:py-28">
         <div className="mx-auto max-w-2xl">
           <Reveal>
-            <p className="text-center text-xs font-black uppercase tracking-[0.3em] text-accent-lime">
+            <p className="text-center text-xs font-black uppercase font-mono tracking-[0.2em] text-accent-lime">
               Jetzt anfragen
             </p>
-            <h2 className="mx-auto mt-3 max-w-xl text-center text-2xl font-black uppercase leading-tight text-foreground sm:text-3xl">
+            <h2 className="mx-auto mt-3 max-w-xl text-center text-2xl font-black uppercase leading-tight text-foreground sm:text-3xl lg:text-5xl">
               Ihre Firmenfeier – unverbindlich anfragen.
             </h2>
             <p className="mx-auto mt-4 max-w-md text-center text-foreground/70">
