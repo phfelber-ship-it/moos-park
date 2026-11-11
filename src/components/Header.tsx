@@ -7,19 +7,23 @@ import { useEffect, useRef, useState } from "react";
 import ThemeToggle from "@/components/ThemeToggle";
 import StaggerText from "@/components/StaggerText";
 
+// Zuerst die Hauptpunkte, der Rest hinter "Mehr".
 const NAV_LINKS = [
   { href: "/", label: "Home" },
   { href: "/events", label: "Events" },
-  { href: "/reservierung", label: "Reservierung" },
   { href: "/galerie", label: "Bilder" },
+  { href: "/reservierung", label: "Reservierung" },
   { href: "/tanzveranstaltungen", label: "Tanzabend" },
   { href: "/eventlocation", label: "Mieten" },
+  { href: "/kontakt", label: "Kontakt" },
+];
+
+const MORE_LINKS = [
   { href: "/geburtstag", label: "Geburtstag" },
   { href: "/gutscheine", label: "Gutscheine" },
   { href: "/app", label: "Unsere App" },
   { href: "/jobs", label: "Jetzt bewerben" },
   { href: "/lost-and-found", label: "Lost and Found" },
-  { href: "/kontakt", label: "Kontakt" },
   { href: "/faq", label: "FAQ" },
 ];
 
@@ -28,6 +32,7 @@ const CIRCLE_BTN =
 
 export default function Header() {
   const [open, setOpen] = useState(false);
+  const [showMore, setShowMore] = useState(false);
   const [origin, setOrigin] = useState({ x: 40, y: 40 });
   const btnRef = useRef<HTMLButtonElement>(null);
   const pathname = usePathname();
@@ -45,6 +50,7 @@ export default function Header() {
       setOrigin({ x: r.left + r.width / 2, y: r.top + r.height / 2 });
     }
     setOpen((v) => !v);
+    setShowMore(false);
   };
 
   return (
@@ -134,13 +140,13 @@ export default function Header() {
             ? `circle(150% at ${origin.x}px ${origin.y}px)`
             : `circle(0% at ${origin.x}px ${origin.y}px)`,
         }}
-        className={`fixed inset-0 z-40 flex flex-col items-center justify-center gap-5 bg-foreground transition-[clip-path] duration-700 ease-[cubic-bezier(0.77,0,0.175,1)] ${
+        className={`fixed inset-0 z-40 flex flex-col items-center justify-center gap-5 bg-background transition-[clip-path] duration-700 ease-[cubic-bezier(0.77,0,0.175,1)] ${
           open ? "" : "pointer-events-none"
         }`}
       >
         <nav
           aria-label="Hauptnavigation"
-          className={`flex flex-col items-center gap-5 overflow-y-auto transition-opacity duration-300 ${
+          className={`flex max-h-screen flex-col items-center gap-5 overflow-y-auto py-24 transition-opacity duration-300 ${
             open ? "opacity-100 delay-300" : "opacity-0"
           }`}
         >
@@ -159,14 +165,56 @@ export default function Header() {
                   open ? "animate-menu-item-in" : ""
                 } text-2xl font-black uppercase tracking-tight sm:text-4xl ${
                   active
-                    ? "text-accent-lime underline decoration-2 underline-offset-4"
-                    : "text-background"
+                    ? "text-accent-lime underline decoration-2 underline-offset-4 [[data-theme=light]_&]:text-[#5f7a50]"
+                    : "text-foreground"
                 }`}
               >
                 <StaggerText text={link.label} />
               </Link>
             );
           })}
+
+          {!showMore && (
+            <button
+              type="button"
+              onClick={() => setShowMore(true)}
+              aria-expanded={false}
+              className="mt-1 flex items-center gap-2 rounded-full border border-foreground/30 px-6 py-2 text-sm font-black uppercase tracking-wide text-foreground transition-colors hover:border-foreground"
+            >
+              Mehr
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                <path
+                  d="M6 9l6 6 6-6"
+                  stroke="currentColor"
+                  strokeWidth="2.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            </button>
+          )}
+
+          {showMore && (
+            <div className="flex flex-col items-center gap-4 border-t border-foreground/15 pt-6">
+              {MORE_LINKS.map((link) => {
+                const active = pathname?.startsWith(link.href);
+                return (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    onClick={() => setOpen(false)}
+                    className={`animate-menu-item-in text-xl font-black uppercase tracking-tight sm:text-2xl ${
+                      active
+                        ? "text-accent-lime underline decoration-2 underline-offset-4 [[data-theme=light]_&]:text-[#5f7a50]"
+                        : "text-foreground/80"
+                    }`}
+                  >
+                    {link.label}
+                  </Link>
+                );
+              })}
+            </div>
+          )}
         </nav>
       </div>
 
