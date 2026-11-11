@@ -32,7 +32,7 @@ const WHATSAPP_CHANNEL_URL =
 export default async function Home() {
   const events = await getEvents();
   const allGalleries = await getGalleries();
-  const galleries = allGalleries.slice(0, 4);
+  const galleries = allGalleries.slice(0, 6);
   const [heroImages, heroVideo] = await Promise.all([
     getHeroImages(),
     getHeroVideo(),
@@ -124,9 +124,14 @@ export default async function Home() {
             </p>
           </Reveal>
 
-          <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          {/* Desktop: 6 Galerien (3 + 3), darunter nur die ersten 3 */}
+          <div className="mt-12 grid gap-6 sm:grid-cols-3">
             {galleries.map((gallery, i) => (
-              <Reveal key={gallery.id} delay={i * 0.08}>
+              <Reveal
+                key={gallery.id}
+                delay={i * 0.08}
+                className={i >= 3 ? "hidden lg:block" : undefined}
+              >
                 <GalleryCard gallery={gallery} />
               </Reveal>
             ))}
@@ -291,7 +296,7 @@ export default async function Home() {
       </section>
 
       <section className="flex min-h-[720px] items-center px-6 py-24">
-        <div className="mx-auto w-full min-w-0 max-w-5xl">
+        <div className="mx-auto w-full min-w-0 max-w-7xl">
           <Reveal>
             <RoomsShowcase roomImages={roomImages} />
           </Reveal>
