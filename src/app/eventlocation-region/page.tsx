@@ -93,7 +93,7 @@ const FAQ = [
   },
   {
     q: "Wie schnell bekomme ich ein Angebot?",
-    a: "Nach deiner Anfrage über das Kontaktformular meldet sich unser Team in der Regel schnell mit einem individuellen, unverbindlichen Angebot.",
+    a: "Nach Ihrer Anfrage über das Kontaktformular meldet sich unser Team in der Regel schnell mit einem individuellen, unverbindlichen Angebot.",
   },
 ];
 
@@ -154,7 +154,7 @@ export default function EventlocationRegionPage() {
               Für jeden Anlass
             </p>
             <h2 className="mx-auto mt-3 max-w-2xl text-center text-2xl font-black uppercase leading-tight text-foreground sm:text-3xl">
-              Eine Location für alle deine Events.
+              Eine Location für alle Ihre Events.
             </h2>
           </Reveal>
 
@@ -258,7 +258,7 @@ export default function EventlocationRegionPage() {
               Häufige Fragen
             </p>
             <h2 className="mx-auto mt-3 max-w-xl text-center text-2xl font-black uppercase leading-tight text-foreground sm:text-3xl">
-              Alles was du wissen möchtest.
+              Alles, was Sie wissen möchten.
             </h2>
           </Reveal>
 
@@ -271,10 +271,10 @@ export default function EventlocationRegionPage() {
       <section className="bg-foreground/[0.02] px-6 py-24 text-center">
         <Reveal direction="scale">
           <h2 className="mx-auto max-w-2xl text-2xl font-black uppercase leading-tight text-foreground sm:text-4xl">
-            Deine Eventlocation für die ganze Region – jetzt anfragen.
+            Ihre Eventlocation für die ganze Region – jetzt anfragen.
           </h2>
           <p className="mx-auto mt-4 max-w-md text-foreground/70">
-            Schnelle Angebotsbearbeitung: Wir erstellen dir ein persönliches
+            Schnelle Angebotsbearbeitung: Wir erstellen Ihnen ein persönliches
             Angebot. Kostenlos, unverbindlich, konkret.
           </p>
           <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
