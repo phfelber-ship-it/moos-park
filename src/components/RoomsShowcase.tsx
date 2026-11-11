@@ -23,7 +23,7 @@ export default function RoomsShowcase({
           Eventlocation mieten
         </p>
         <h2 className="mt-3 text-3xl font-black uppercase leading-[1.05] text-foreground sm:text-4xl">
-          Sechs Räume. Ein Gefühl.
+          Sieben Räume. Ein Gefühl.
         </h2>
         <p className="mx-auto mt-4 max-w-md text-foreground/70">
           Ob Main-Halle, Terrasse oder Lounge – jeder Bereich lässt sich
@@ -31,13 +31,13 @@ export default function RoomsShowcase({
         </p>
       </div>
 
-      <div className="mt-12 grid gap-8 lg:grid-cols-2 lg:items-center lg:gap-12">
+      <div className="mt-12 grid gap-8 lg:grid-cols-[1fr_1.7fr] lg:items-center lg:gap-12">
         <div className="relative order-1 aspect-[16/10] w-full overflow-hidden rounded-2xl lg:order-2">
         <RoomImageRotator
           key={room.name}
           images={images}
           alt={room.name}
-          sizes="(min-width: 1024px) 700px, 100vw"
+          sizes="(min-width: 1024px) 60vw, 100vw"
         />
 
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />

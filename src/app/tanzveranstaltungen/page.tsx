@@ -1,4 +1,4 @@
-import Image from "next/image";
+import Link from "next/link";
 import { getDanceEvents, visiblePublicEvents } from "@/lib/dance-events";
 import FlipText from "@/components/FlipText";
 
@@ -39,7 +39,7 @@ export default async function TanzabendPage() {
 
   return (
     <div>
-      <section className="px-6 pb-8 pt-32 text-center">
+      <section className="px-6 pb-12 pt-32 text-center">
         <h1 className="text-3xl font-black uppercase leading-tight  text-foreground sm:text-5xl">
           Tanzbare Musik, gute Stimmung
           <br />
@@ -48,24 +48,12 @@ export default async function TanzabendPage() {
         <p className="mt-4 text-sm font-bold uppercase tracking-wide text-accent-lime">
           Jetzt neu: jeden 2. und 4. Freitag im Monat
         </p>
-        <a
+        <Link
           href="/kontakt"
           className="mt-6 inline-block rounded-lg bg-accent-lime px-8 py-3 text-sm font-black uppercase tracking-wide text-black transition-transform hover:scale-105"
         >
           <FlipText text="Hier Tisch reservieren" />
-        </a>
-      </section>
-
-      <section className="mx-auto max-w-4xl px-6 py-12">
-        <div className="relative aspect-[1024/379] w-full overflow-hidden rounded-xl bg-foreground/5">
-          <Image
-            src="/images/tanzabend-banner.png"
-            alt="Tanzen im moos.park"
-            fill
-            className="object-cover"
-            sizes="100vw"
-          />
-        </div>
+        </Link>
       </section>
 
       <section className="px-6 pb-28">
