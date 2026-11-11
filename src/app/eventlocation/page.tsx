@@ -110,6 +110,66 @@ const FACTS = [
   { value: "∞", label: "Unzählige Möglichkeiten" },
 ];
 
+// Einheitlicher Container: links Überschrift und Text, rechts der Inhalt.
+function SplitCard({
+  id,
+  accent = false,
+  label,
+  title,
+  text,
+  children,
+}: {
+  id?: string;
+  accent?: boolean;
+  label: string;
+  title: string;
+  text?: React.ReactNode;
+  children: React.ReactNode;
+}) {
+  return (
+    <section id={id} className="px-6 py-4 lg:py-5">
+      <Reveal>
+        <div
+          className={`mx-auto grid max-w-6xl gap-8 rounded-3xl border p-8 sm:p-10 lg:grid-cols-[5fr_7fr] lg:gap-14 lg:p-14 ${
+            accent
+              ? "border-accent-lime/30 bg-accent-lime/[0.06]"
+              : "border-foreground/10 bg-foreground/[0.03]"
+          }`}
+        >
+          <div className="lg:sticky lg:top-28 lg:self-start">
+            <p className="text-xs font-black uppercase tracking-[0.3em] text-accent-lime">
+              {label}
+            </p>
+            <h2 className="mt-3 text-2xl font-black uppercase leading-[1.1] text-foreground sm:text-3xl lg:text-4xl">
+              {title}
+            </h2>
+            {text && (
+              <div className="mt-5 text-foreground/70">{text}</div>
+            )}
+          </div>
+          <div className="min-w-0">{children}</div>
+        </div>
+      </Reveal>
+    </section>
+  );
+}
+
+function DotList({ items }: { items: string[] }) {
+  return (
+    <ul>
+      {items.map((item) => (
+        <li
+          key={item}
+          className="flex items-center gap-3 border-b border-foreground/10 py-3.5 text-foreground/80 first:pt-0 last:border-b-0"
+        >
+          <span className="h-2 w-2 shrink-0 rounded-full bg-accent-lime" />
+          {item}
+        </li>
+      ))}
+    </ul>
+  );
+}
+
 export default async function EventlocationPage() {
   const roomImages = await getAllRoomImages();
   const faqJsonLd = {
@@ -286,37 +346,19 @@ export default async function EventlocationPage() {
       </section>
 
       {/* 4. Vorteile */}
-      <section className="px-6 py-20 lg:py-24">
-        <div className="mx-auto max-w-3xl">
-          <Reveal>
-            <div className="h-full rounded-3xl border border-foreground/10 bg-foreground/[0.03] p-8 sm:p-10">
-              <p className="text-xs font-black uppercase tracking-[0.3em] text-accent-lime">
-                Ihre Vorteile
-              </p>
-              <h2 className="mt-3 text-2xl font-black uppercase leading-[1.1] text-foreground sm:text-3xl">
-                Alles, was Ihr Event braucht.
-              </h2>
-              <p className="mt-4 text-foreground/70">
-                Das Wichtige ist schon im Haus. Sie sprechen mit einem
-                Ansprechpartner und müssen keine Dienstleister einzeln
-                koordinieren.
-              </p>
-              <ul className="mt-6">
-                {ADVANTAGES.map((a) => (
-                  <li
-                    key={a}
-                    className="flex items-center gap-3 border-b border-foreground/10 py-3 text-foreground/80 last:border-b-0"
-                  >
-                    <span className="h-2 w-2 shrink-0 rounded-full bg-accent-lime" />
-                    {a}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </Reveal>
-
-        </div>
-      </section>
+      <SplitCard
+        label="Ihre Vorteile"
+        title="Alles, was Ihr Event braucht."
+        text={
+          <p>
+            Das Wichtige ist schon im Haus. Sie sprechen mit einem
+            Ansprechpartner und müssen keine Dienstleister einzeln
+            koordinieren.
+          </p>
+        }
+      >
+        <DotList items={ADVANTAGES} />
+      </SplitCard>
 
       {/* 5. Möglichkeiten / Anlässe */}
       <section id="anlaesse" className="bg-foreground/[0.02] px-6 py-20">
@@ -400,70 +442,53 @@ export default async function EventlocationPage() {
       </section>
 
       {/* 8. FAQ */}
-      <section className="px-6 py-20 lg:py-24">
-        <div className="mx-auto max-w-3xl">
-          <Reveal>
-            <p className="text-center text-xs font-black uppercase tracking-[0.3em] text-accent-lime">
-              Häufige Fragen
-            </p>
-            <h2 className="mx-auto mt-3 max-w-xl text-center text-2xl font-black uppercase leading-[1.1] text-foreground sm:text-3xl lg:text-4xl">
-              Alles, was Sie wissen möchten.
-            </h2>
-          </Reveal>
-          <Reveal delay={0.1} className="mt-8">
-            <Accordion items={FAQ} />
-          </Reveal>
-        </div>
-      </section>
+      <SplitCard
+        label="Häufige Fragen"
+        title="Alles, was Sie wissen möchten."
+        text={
+          <p>
+            Die wichtigsten Antworten auf einen Blick. Ihre Frage ist nicht
+            dabei?{" "}
+            <a href="#anfragen" className="font-bold text-accent-lime underline">
+              Schreiben Sie uns.
+            </a>
+          </p>
+        }
+      >
+        <Accordion items={FAQ} />
+      </SplitCard>
 
       {/* 8b. Zubuchbar (nach der FAQ) */}
-      <section className="px-6 pb-20 lg:pb-24">
-        <div className="mx-auto max-w-3xl">
-          <Reveal>
-            <div className="h-full rounded-3xl border border-accent-lime/30 bg-accent-lime/[0.06] p-8 sm:p-10">
-              <p className="text-xs font-black uppercase tracking-[0.3em] text-accent-lime">
-                Zubuchbar
-              </p>
-              <h2 className="mt-3 text-2xl font-black uppercase leading-[1.1] text-foreground sm:text-3xl">
-                Machen Sie mehr aus Ihrem Event.
-              </h2>
-              <p className="mt-4 text-foreground/70">
-                Über unsere hauseigene Agentur buchen Sie bei Bedarf Werbung
-                für Ihr Event und viele weitere Extras direkt mit dazu.
-              </p>
-              <ul className="mt-6">
-                {EXTRAS.map((e) => (
-                  <li
-                    key={e}
-                    className="flex items-center gap-3 border-b border-foreground/10 py-3 text-foreground/80 last:border-b-0"
-                  >
-                    <span className="h-2 w-2 shrink-0 rounded-full bg-accent-lime" />
-                    {e}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </Reveal>
-        </div>
-      </section>
+      <SplitCard
+        accent
+        label="Zubuchbar"
+        title="Machen Sie mehr aus Ihrem Event."
+        text={
+          <p>
+            Über unsere hauseigene Agentur buchen Sie bei Bedarf Werbung für
+            Ihr Event und viele weitere Extras direkt mit dazu.
+          </p>
+        }
+      >
+        <DotList items={EXTRAS} />
+      </SplitCard>
 
       {/* 9. Anfrage */}
-      <section id="anfragen" className="px-6 pb-28">
-        <div className="mx-auto max-w-3xl overflow-hidden rounded-2xl border border-foreground/8 bg-foreground/[0.025] p-8 sm:p-12">
-          <p className="text-sm font-bold uppercase tracking-wide text-accent-lime">
-            Ihr Event, unsere Beratung.
-          </p>
-          <h2 className="mt-2 text-2xl font-black uppercase leading-[1.1] text-foreground sm:text-3xl lg:text-4xl">
-            Ganz unverbindlich anfragen.
-          </h2>
-          <p className="mt-4 text-base leading-relaxed text-foreground/70">
-            Ihre Idee sind unser Antrieb. Melden Sie sich bei uns und wir
-            setzen Ihre Pläne um. Los geht&apos;s!
-          </p>
-
+      <div className="pb-24">
+        <SplitCard
+          id="anfragen"
+          label="Ihr Event, unsere Beratung."
+          title="Ganz unverbindlich anfragen."
+          text={
+            <p>
+              Ihre Idee sind unser Antrieb. Melden Sie sich bei uns und wir
+              setzen Ihre Pläne um. Los geht&apos;s!
+            </p>
+          }
+        >
           <EventlocationRequestForm />
-        </div>
-      </section>
+        </SplitCard>
+      </div>
     </div>
   );
 }
