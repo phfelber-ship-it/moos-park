@@ -94,6 +94,15 @@ const ADVANTAGES = [
   "Ein fester Ansprechpartner für Ihr Event",
 ];
 
+const EXTRAS = [
+  "Foto und Video",
+  "Live-Show",
+  "Künstler und Acts",
+  "DJ",
+  "Werbung und Promotion für Ihr Event",
+  "Weitere Extras auf Anfrage",
+];
+
 const FACTS = [
   { value: "2200 m²", label: "Hausfläche" },
   { value: "7", label: "Räume" },
@@ -301,6 +310,37 @@ export default async function EventlocationPage() {
                 >
                   <span className="h-2 w-2 shrink-0 rounded-full bg-accent-lime" />
                   {a}
+                </li>
+              ))}
+            </ul>
+          </Reveal>
+        </div>
+      </section>
+
+      {/* 4b. Zubuchbar */}
+      <section className="px-6 pb-20 lg:pb-24">
+        <div className="mx-auto max-w-3xl">
+          <Reveal>
+            <p className="text-center text-xs font-black uppercase tracking-[0.3em] text-accent-lime">
+              Zubuchbar
+            </p>
+            <h2 className="mt-3 text-center text-2xl font-black uppercase leading-[1.1] text-foreground sm:text-3xl lg:text-4xl">
+              Machen Sie mehr aus Ihrem Event.
+            </h2>
+            <p className="mx-auto mt-5 max-w-xl text-center text-foreground/70">
+              Über unsere hauseigene Agentur buchen Sie bei Bedarf Werbung für
+              Ihr Event und viele weitere Extras direkt mit dazu.
+            </p>
+          </Reveal>
+          <Reveal delay={0.1}>
+            <ul className="mt-10 grid gap-x-10 sm:grid-cols-2">
+              {EXTRAS.map((e) => (
+                <li
+                  key={e}
+                  className="flex items-center gap-3 border-b border-foreground/10 py-3 text-foreground/80"
+                >
+                  <span className="h-2 w-2 shrink-0 rounded-full bg-accent-lime" />
+                  {e}
                 </li>
               ))}
             </ul>
