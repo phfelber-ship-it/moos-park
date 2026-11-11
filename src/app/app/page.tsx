@@ -15,7 +15,7 @@ export const metadata = {
   alternates: { canonical: "/app" },
   title: "moos.park App - Tickets, Coupons & Punkte sammeln | moos.park",
   description:
-    "Die moos.park App: Tickets direkt in der Hosentasche, Coupon-Codes einlösen, Punkte sammeln und einlösen, Geschenke abholen, Fastline-Eingang und immer als Erstes von neuen Veranstaltungen erfahren.",
+    "Die moos.park App: Tickets in der Hosentasche, Coupon-Codes einlösen, Punkte sammeln, Fastline-Eingang und als Erstes von neuen Events erfahren.",
 };
 
 const APP_STORE_URL = "https://apps.apple.com/de/app/moos-park/id6739537470";

@@ -16,7 +16,24 @@ export default function robots(): MetadataRoute.Robots {
   }
 
   return {
-    rules: { userAgent: "*", allow: "/" },
+    // KI-Suchsysteme ausdruecklich zulassen (GEO), damit die Seite in
+    // Antworten von ChatGPT, Claude, Perplexity & Co. auftauchen kann.
+    rules: [
+      { userAgent: "*", allow: "/" },
+      {
+        userAgent: [
+          "GPTBot",
+          "OAI-SearchBot",
+          "ChatGPT-User",
+          "ClaudeBot",
+          "Claude-SearchBot",
+          "Claude-User",
+          "PerplexityBot",
+          "Google-Extended",
+        ],
+        allow: "/",
+      },
+    ],
     sitemap: `${SITE_URL}/sitemap.xml`,
   };
 }

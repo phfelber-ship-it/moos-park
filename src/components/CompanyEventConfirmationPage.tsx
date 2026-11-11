@@ -1,3 +1,4 @@
+import Link from "next/link";
 import type { CompanyEvent } from "@/lib/company-events";
 
 // Generalisierte Bestaetigungsseite - Pendant zu
@@ -15,7 +16,7 @@ export default function CompanyEventConfirmationPage({ event }: { event: Company
           Platz gesichert.
         </h1>
         <p className="mx-auto mt-4 max-w-lg text-foreground/70">
-          Wir prüfen Ihre Anfrage und melden uns innerhalb von 24 Stunden.
+          Wir prüfen Ihre Anfrage und melden uns schnell bei Ihnen.
           Vielen Dank für Ihre Anmeldung zu {event.name}.
         </p>
       </div>
@@ -67,12 +68,12 @@ export default function CompanyEventConfirmationPage({ event }: { event: Company
         </div>
       </div>
 
-      <a
+      <Link
         href="/"
         className="mx-auto mt-10 inline-block text-sm font-bold text-foreground/50 underline"
       >
         Zurück zur Startseite
-      </a>
+      </Link>
     </div>
   );
 }

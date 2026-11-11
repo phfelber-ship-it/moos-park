@@ -1,3 +1,4 @@
+import Link from "next/link";
 import {
   EVENT_ADDRESS,
   EVENT_DATE_LABEL,
@@ -24,7 +25,7 @@ export default function EventExperienceConfirmationPage() {
           Platz gesichert.
         </h1>
         <p className="mx-auto mt-4 max-w-lg text-foreground/70">
-          Wir prüfen Ihre Anfrage und melden uns innerhalb von 24 Stunden.
+          Wir prüfen Ihre Anfrage und melden uns schnell bei Ihnen.
           Vielen Dank für Ihre Anmeldung zu THE EVENT EXPERIENCE.
         </p>
       </div>
@@ -76,12 +77,12 @@ export default function EventExperienceConfirmationPage() {
         </div>
       </div>
 
-      <a
+      <Link
         href="/"
         className="mx-auto mt-10 inline-block text-sm font-bold text-foreground/50 underline"
       >
         Zurück zur Startseite
-      </a>
+      </Link>
     </div>
   );
 }

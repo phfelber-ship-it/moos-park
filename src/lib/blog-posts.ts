@@ -29,7 +29,7 @@ export const BLOG_POSTS: BlogPost[] = [
       {
         heading: "Wie viele Gäste erwartest du?",
         paragraphs: [
-          "Die Personenzahl ist der erste und wichtigste Filter bei der Locationsuche. Eine Halle für 2.400 Personen wirkt bei einer 50-köpfigen Feier leer und unpersönlich – umgekehrt wird es bei zu kleinen Räumen schnell eng und unangenehm.",
+          "Die Personenzahl ist der erste und wichtigste Filter bei der Locationsuche. Eine Halle für 2.300 Personen wirkt bei einer 50-köpfigen Feier leer und unpersönlich – umgekehrt wird es bei zu kleinen Räumen schnell eng und unangenehm.",
           "Achte darauf, ob die Location flexibel kombinierbare Räume anbietet. So lässt sich die Fläche an die tatsächliche Gästezahl anpassen, egal ob privates Fest mit 50 Personen oder Firmenfeier mit 800 Gästen.",
         ],
       },
@@ -256,7 +256,7 @@ export const BLOG_POSTS: BlogPost[] = [
     metaTitle:
       "Eventlocation zwischen Augsburg, Ingolstadt & Regensburg | moos.park",
     description:
-      "Eine der größten Eventlocations der Region: zentral zwischen Augsburg, Ingolstadt und Regensburg, mit Platz für bis zu 2.400 Gäste.",
+      "Eventlocation zwischen Augsburg und Ingolstadt: zentral zwischen Augsburg, Ingolstadt und Regensburg, mit Platz für bis zu 2.300 Gäste.",
     excerpt:
       "Zentral gelegen zwischen drei Großstädten – und trotzdem in wenigen Minuten erreichbar.",
     publishedAt: "2026-02-18",
@@ -270,7 +270,7 @@ export const BLOG_POSTS: BlogPost[] = [
       {
         heading: "Kapazität, die kleinere Stadtlocations nicht bieten",
         paragraphs: [
-          "Mit fünf kombinierbaren Räumen und Platz für bis zu 2.400 Personen zählt moos.park zu den größten Eventlocations der Region – von der kleinen Feier mit 50 Personen bis zur großen Hochzeit oder Firmenfeier mit mehreren Hundert Gästen.",
+          "Mit sieben kombinierbaren Räumen und Platz für bis zu 2.300 Personen im gesamten Haus bietet moos.park Raum für Events – von der kleinen Feier mit 50 Personen bis zur großen Hochzeit oder Firmenfeier mit mehreren Hundert Gästen.",
         ],
       },
       {

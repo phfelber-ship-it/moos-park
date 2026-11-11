@@ -17,7 +17,7 @@ const baseMetadata = {
   title:
     "THE EVENT EXPERIENCE – Firmenfeiern erleben im moos.park Pöttmes",
   description:
-    "Mittwoch, 14. Oktober 2026, 17–22 Uhr: Erleben Sie im moos.park einen inspirierenden Abend für Ihre nächste Firmenveranstaltung – Sommerfest, Weihnachtsfeier, Team- und Kundenevent. Plätze sind begrenzt – jetzt anmelden.",
+    "Mittwoch, 14. Oktober 2026, 17–22 Uhr: Erleben Sie im moos.park einen Abend für Ihre nächste Firmenveranstaltung. Plätze sind begrenzt, jetzt anmelden.",
 };
 
 export async function generateMetadata() {

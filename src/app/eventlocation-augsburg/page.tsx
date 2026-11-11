@@ -13,7 +13,7 @@ const data: RentalPageData = {
   eyebrow: "Zahlreiche Gäste aus dem Raum Augsburg feiern regelmäßig bei uns.",
   heroTitle: "Die Eventlocation bei Augsburg.",
   heroSubtitle:
-    "Nur 40 Minuten von Augsburg – mit allem, was Stadtlocations nicht bieten können.",
+    "Nur 40 Minuten von Augsburg – mit Parkplatz, Gastronomie und Technik an einem Ort.",
   painHeading: "Das bringen Eventlocations in Augsburg oft nicht mit.",
   painIntro:
     "Kein Parkplatz in der Innenstadt, begrenzte Kapazität, Technik extra buchen, Catering von außen – Augsburger Locations haben strukturelle Grenzen.",
@@ -24,19 +24,19 @@ const data: RentalPageData = {
     },
     {
       title: "Begrenzte Kapazitäten",
-      text: "Viele Augsburger Locations fassen maximal 150–200 Personen. Für große Firmen- oder Privatevents reicht das nicht.",
+      text: "Die Kapazität ist je nach Location begrenzt. Für große Firmen- oder Privatevents ist das schnell zu wenig.",
     },
     {
       title: "Technik & Catering als Extras",
       text: "Ohne eigene Gastronomie und Technik buchst du alles separat dazu – teurer und aufwendiger als erwartet.",
     },
   ],
-  stepsHeading: "In 4 Schritten zum perfekten Event bei Augsburg.",
+  stepsHeading: "In 4 Schritten zum Event bei Augsburg.",
   steps: [
     {
       num: "01",
       title: "Anfrage senden",
-      text: "Datum, Anlass, Personenzahl – kurze Nachricht genügt. Angebot kommt in 24 Stunden.",
+      text: "Datum, Anlass, Personenzahl – kurze Nachricht genügt. Schnelle Angebotsbearbeitung.",
     },
     {
       num: "02",
@@ -51,38 +51,29 @@ const data: RentalPageData = {
     {
       num: "04",
       title: "Einfach ankommen & feiern",
-      text: "40 Minuten von Augsburg, kostenloser Großparkplatz, bis 2400 Personen. Alles an einem Ort.",
+      text: "40 Minuten von Augsburg, kostenloser Großparkplatz, bis 2300 Personen. Alles an einem Ort.",
     },
   ],
-  advantagesHeading: "Deine Top-Location nahe Augsburg.",
+  advantagesHeading: "Deine Location nahe Augsburg.",
   advantagesIntro:
-    "Nur 40 Minuten von Augsburg – aber mit Parkplatz für alle, bis 2400 Personen, eigener Küche und Vollausstattung.",
+    "Nur 40 Minuten von Augsburg – aber mit Parkplatz für alle, bis 2300 Personen, eigener Küche und Vollausstattung.",
   advantages: [
     "Großer kostenloser Parkplatz direkt vor der Location",
-    "Bis 2400 Personen – deutlich mehr als die meisten Stadtlocations",
+    "Bis zu 2300 Gäste im gesamten Haus",
     "Eigene Gastronomie: Bar, Buffet & Pizzeria",
     "Vollständige Licht- & Tontechnik inklusive",
     "Nur 40 Minuten von Augsburg – schnell erreichbar",
     "Exklusivbuchung möglich",
   ],
   testimonialsHeading: "Was Gäste aus dem Raum Augsburg sagen.",
-  testimonials: [
-    {
-      quote:
-        "Wir kommen aus Augsburg und haben 40 Minuten gefahren – es war jeden Kilometer wert. Großer Parkplatz, top Technik, super Essen.",
-      author: "Julia M. – 40. Geburtstag, Augsburg",
-    },
-    {
-      quote:
-        "Unsere Firmenweihnachtsfeier aus Augsburg – moos.park war die beste Entscheidung. Parkplatz für alle, perfektes Essen, tolle Atmosphäre.",
-      author: "Peter S. – Geschäftsführer, Augsburg",
-    },
-    {
-      quote:
-        "Hochzeit mit 400 Gästen – wir haben halb Augsburg eingeladen. Die Location hat jeden begeistert. Wunderbar!",
-      author: "Anna & Michael K. – Brautpaar, Augsburg",
-    },
-  ],
+  testimonials: [],
+  locationSection: {
+    heading: "So kommen Sie aus Augsburg zum moos.park.",
+    paragraphs: [
+      "Der moos.park liegt in Pöttmes im Landkreis Aichach-Friedberg, Rudolf-Diesel-Straße 23, 86554 Pöttmes. Von Augsburg aus erreichen Sie die Location in ca. 40 Minuten über die B2/B300.",
+      "Direkt vor Ort steht ein großer kostenloser Parkplatz zur Verfügung. Gäste aus dem Raum Augsburg feiern bei uns Firmenevents, Geburtstage, Hochzeiten und Club-Events, einzeln oder kombiniert über bis zu sieben Räume.",
+    ],
+  },
   faq: [
     {
       q: "Wie weit ist moos.park von Augsburg?",
@@ -90,7 +81,7 @@ const data: RentalPageData = {
     },
     {
       q: "Wie viele Personen passen in die Location?",
-      a: "Bis zu 750 Personen in der Main-Halle. Flexibel kombinierbar für bis zu 2400 Gäste.",
+      a: "Bis zu 750 Personen in der Main-Halle. Flexibel kombinierbar für bis zu 2300 Gäste.",
     },
     {
       q: "Für welche Anlässe eignet sich die Location?",
@@ -111,7 +102,7 @@ const data: RentalPageData = {
   ],
   ctaHeading: "40 Minuten von Augsburg – jetzt anfragen.",
   ctaText:
-    "Wir erstellen dir innerhalb von 24 Stunden ein persönliches Angebot. Kostenlos und unverbindlich.",
+    "Schnelle Angebotsbearbeitung: Wir erstellen dir ein persönliches Angebot. Kostenlos und unverbindlich.",
 };
 
 export default function EventlocationAugsburgPage() {

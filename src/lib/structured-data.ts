@@ -13,6 +13,11 @@ export function buildStructuredData(siteUrl: string) {
     image: `${siteUrl}/images/logo.png`,
     telephone: "+49 8253 7576",
     email: "kontakt@moos-park.de",
+    geo: {
+      "@type": "GeoCoordinates",
+      latitude: 48.586268,
+      longitude: 11.10787,
+    },
     address: {
       "@type": "PostalAddress",
       streetAddress: "Rudolf-Diesel-Straße 23",

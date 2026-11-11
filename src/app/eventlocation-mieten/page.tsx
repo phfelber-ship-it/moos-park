@@ -4,16 +4,16 @@ import RentalLandingTemplate, {
 
 export const metadata = {
   alternates: { canonical: "/eventlocation-mieten" },
-  title: "Eventlocation mieten Bayern – 5 Säle für 80–2400 Personen | moos.park",
+  title: "Eventlocation mieten Bayern – 7 Räume für 80–2300 Personen | moos.park",
   description:
-    "Eventlocation in Bayern mieten – 5 Säle für 80 bis 2400 Personen, Technik und Gastronomie inklusive. Einfach mieten, einfach feiern.",
+    "Eventlocation in Bayern mieten – 7 Räume für 80 bis 2300 Personen, Technik und Gastronomie inklusive. Einfach mieten, einfach feiern.",
 };
 
 const data: RentalPageData = {
-  eyebrow: "Hunderte Events in gemieteten Sälen – im moos.park.",
-  heroTitle: "Eventlocation mieten. So einfach wie nie.",
+  eyebrow: "Eventlocation mieten in Pöttmes, zwischen Augsburg und Ingolstadt.",
+  heroTitle: "Eventlocation mieten im moos.park.",
   heroSubtitle:
-    "5 Säle, bis 2400 Personen – Technik & Gastronomie inklusive. Einfach mieten, einfach feiern.",
+    "7 Räume, bis 2300 Personen – Technik & Gastronomie inklusive. Einfach mieten, einfach feiern.",
   painHeading: "Location mieten in Bayern ist komplizierter als es sein müsste.",
   painIntro:
     "Vier Wände mieten, Technik separat buchen, Catering extern organisieren, Parkplatz fehlt – was billig klingt, wird schnell teuer und aufwendig.",
@@ -36,7 +36,7 @@ const data: RentalPageData = {
     {
       num: "01",
       title: "Anfrage senden",
-      text: "Datum, Anlass, Personenzahl – kurze Nachricht genügt. Angebot kommt innerhalb von 24 Stunden.",
+      text: "Datum, Anlass, Personenzahl – kurze Nachricht genügt. Schnelle Angebotsbearbeitung.",
     },
     {
       num: "02",
@@ -54,35 +54,26 @@ const data: RentalPageData = {
       text: "Du kommst, deine Gäste kommen, alles läuft. Kein Stress, keine Extra-Kosten. So soll Mieten sein.",
     },
   ],
-  advantagesHeading: "Eventlocation mieten – die bessere Wahl.",
+  advantagesHeading: "Eventlocation mieten – das bekommst du bei uns.",
   advantagesIntro:
     "Bei moos.park mietest du keine leere Halle – sondern eine vollständig ausgestattete Eventlocation mit allem drum und dran.",
   advantages: [
-    "5 Säle – einzeln oder kombinierbar für 80–2400 Personen",
+    "7 Räume – einzeln oder kombinierbar für 80–2300 Personen",
     "Licht- & Tontechnik, Bühne – alles inklusive",
     "Eigene Gastronomie: Bar, Catering & Pizzeria",
     "Kostenloser Parkplatz direkt vor der Location",
     "Exklusivbuchung der gesamten Location möglich",
-    "Angebot innerhalb von 24 Stunden – kostenlos",
+    "Schnelle Angebotsbearbeitung – kostenlos",
   ],
   testimonialsHeading: "Was Kunden über ihre Buchung sagen.",
-  testimonials: [
-    {
-      quote:
-        "Wir haben die komplette Location für unsere Hochzeit gemietet – 500 Gäste, alles perfekt. Kein externer Caterer, kein Chaos. Absolut empfehlenswert.",
-      author: "Julia & Florian S. – Brautpaar aus Augsburg",
-    },
-    {
-      quote:
-        "Die Location hat alles was man braucht. Technik, Essen, Parkplatz – und das Team kümmert sich wirklich. Kein Vergleich zu anderen Locations.",
-      author: "Thomas B. – Vereinsvorstand, Ingolstadt",
-    },
-    {
-      quote:
-        "Als Eventmanager bin ich anspruchsvoll. moos.park hat mich überzeugt: professionelle Technik, reibungsloser Ablauf, klasse Service.",
-      author: "Kevin M. – Eventmanager, München",
-    },
-  ],
+  testimonials: [],
+  locationSection: {
+    heading: "So läuft die Miete ab.",
+    paragraphs: [
+      "Sie senden uns Ihre Anfrage mit Datum, Anlass und Personenzahl. Wir bearbeiten sie schnell und erstellen Ihnen ein individuelles, unverbindliches Angebot. Die Anfrage ist kostenlos.",
+      "Gemietet werden können einzelne Räume, mehrere Räume kombiniert oder die gesamte Location exklusiv. Die Preise hängen von Datum, Räumen und Service ab, deshalb gibt es sie ausschließlich im persönlichen Angebot.",
+    ],
+  },
   faq: [
     {
       q: "Was ist beim Mieten alles inklusive?",
@@ -90,7 +81,7 @@ const data: RentalPageData = {
     },
     {
       q: "Wie viele Personen passen in die Location?",
-      a: "80 bis 2400 Personen, je nach Raumauswahl. 5 Säle sind flexibel kombinierbar.",
+      a: "80 bis 2300 Personen, je nach Raumauswahl. 7 Räume sind flexibel kombinierbar.",
     },
     {
       q: "Kann ich die Location exklusiv mieten?",
@@ -98,7 +89,7 @@ const data: RentalPageData = {
     },
     {
       q: "Was kostet das Mieten der Location?",
-      a: "Die Kosten hängen von Datum, Räumen und Service ab. Wir erstellen dir ein individuelles Angebot ohne versteckte Kosten – innerhalb von 24 Stunden.",
+      a: "Die Kosten hängen von Datum, Räumen und Service ab. Wir erstellen dir ein individuelles Angebot ohne versteckte Kosten – schnell bearbeitet.",
     },
     {
       q: "Wie weit ist moos.park von Augsburg und Ingolstadt?",
@@ -109,9 +100,9 @@ const data: RentalPageData = {
       a: "Für Wochenend-Termine 6–12 Monate im Voraus. Werktags sind auch kurzfristige Buchungen möglich.",
     },
   ],
-  ctaHeading: "Deine gemietete Location – in 24h dein Angebot.",
+  ctaHeading: "Deine gemietete Location – schnell zum Angebot.",
   ctaText:
-    "Meld dich jetzt – wir erstellen dir innerhalb von 24 Stunden ein konkretes Mietangebot. Kostenlos und unverbindlich.",
+    "Meld dich jetzt – wir bearbeiten dein Angebot schnell und erstellen ein konkretes Mietangebot. Kostenlos und unverbindlich.",
 };
 
 export default function EventlocationMietenPage() {

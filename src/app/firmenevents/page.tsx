@@ -6,16 +6,16 @@ import Reveal from "@/components/Reveal";
 
 export const metadata = {
   alternates: { canonical: "/firmenevents" },
-  title: "Firmenevents Bayern – Betriebsfeier & Weihnachtsfeier Location | moos.park",
+  title: "Firmenevents Bayern – Betriebsfeier & Weihnachtsfeier | moos.park",
   description:
-    "Firmenevents in Bayern – Weihnachtsfeier, Betriebsfest, Kick-off oder Produktlaunch für bis zu 2400 Personen, alles aus einer Hand.",
+    "Firmenevents in Bayern – Weihnachtsfeier, Betriebsfest, Kick-off oder Produktlaunch für bis zu 2300 Gäste im gesamten Haus, alles aus einer Hand.",
 };
 
 const data: RentalPageData = {
-  eyebrow: "Hunderte Firmenfeiern bereits umgesetzt – im moos.park.",
-  heroTitle: "Ihr Firmenevent. Einfach unvergesslich.",
+  eyebrow: "Firmenevents in Pöttmes, zwischen Augsburg und Ingolstadt.",
+  heroTitle: "Ihr Firmenevent im moos.park.",
   heroSubtitle:
-    "Weihnachtsfeier, Betriebsfest, Kick-off, Produktlaunch – bis 2400 Personen, alles aus einer Hand.",
+    "Weihnachtsfeier, Betriebsfest, Kick-off, Produktlaunch – bis zu 2300 Gäste im gesamten Haus. Wir übernehmen Planung, Technik und Gastronomie. Sie kümmern sich um Ihre Gäste.",
   painHeading: "Firmenevent planen kostet Zeit und Nerven.",
   painIntro:
     "Jedes Jahr dasselbe: Location koordinieren, Catering organisieren, Technik klären – alles neben dem Tagesgeschäft. Klingt nach Arbeit, nicht nach Feier.",
@@ -33,12 +33,12 @@ const data: RentalPageData = {
       text: "Schlechte Atmosphäre, kein gutes Essen, kein roter Faden – eine misslungene Firmenfeier bleibt negativ in Erinnerung.",
     },
   ],
-  stepsHeading: "In 4 Schritten zum perfekten Firmenevent.",
+  stepsHeading: "In 4 Schritten zu Ihrem Firmenevent.",
   steps: [
     {
       num: "01",
       title: "Anfrage senden",
-      text: "Datum, Anlass, Personenzahl – kurze Nachricht genügt. Angebot kommt innerhalb von 24 Stunden.",
+      text: "Datum, Anlass, Personenzahl – kurze Nachricht genügt. Schnelle Angebotsbearbeitung.",
     },
     {
       num: "02",
@@ -53,14 +53,14 @@ const data: RentalPageData = {
     {
       num: "04",
       title: "Einfach feiern",
-      text: "Ihr Team kommt, erlebt einen unvergesslichen Abend, geht nach Hause begeistert. Kein Chaos, kein Stress.",
+      text: "Ihr Team kommt, feiert und geht nach Hause. Um den Rest kümmern wir uns.",
     },
   ],
-  advantagesHeading: "Firmenevents, die wirklich begeistern.",
+  advantagesHeading: "Firmenevents aus einer Hand.",
   advantagesIntro:
     "moos.park liefert kein leeres Gelände – sondern das komplette Firmen-Event-Paket. Technik, Essen, Service, alles inklusive.",
   advantages: [
-    "Bis 2400 Personen – auch für große Betriebsfeiern",
+    "Bis zu 2300 Gäste im gesamten Haus – auch für große Betriebsfeiern",
     "Bühne, Licht & Sound – nichts extra buchen",
     "Eigene Gastronomie: Menü, Buffet, Bar",
     "Kostenloser Parkplatz für alle Mitarbeiter",
@@ -68,23 +68,7 @@ const data: RentalPageData = {
     "Ein Ansprechpartner – von Planung bis Abschluss",
   ],
   testimonialsHeading: "Was Unternehmen sagen.",
-  testimonials: [
-    {
-      quote:
-        "Unsere Betriebsfeier mit 300 Personen war ein voller Erfolg. moos.park hat alles geliefert: Technik, Essen, Atmosphäre. Bestes Feedback vom Team seit Jahren.",
-      author: "Michael R. – HR-Leiter, Augsburger Industriebetrieb",
-    },
-    {
-      quote:
-        "Kick-off-Event für 180 Mitarbeiter – reibungslos, professionell. Ein Ansprechpartner für alles. Genau das braucht man als Unternehmen.",
-      author: "Sandra K. – Geschäftsführung, Tech-Startup München",
-    },
-    {
-      quote:
-        "Weihnachtsfeier für 220 Mitarbeiter – jedes Jahr wieder moos.park. Die Location, das Essen, der Service – alles erstklassig.",
-      author: "Andreas L. – Inhaber, Handwerksbetrieb Ingolstadt",
-    },
-  ],
+  testimonials: [],
   faq: [
     {
       q: "Für welche Firmenevents ist moos.park geeignet?",
@@ -92,7 +76,7 @@ const data: RentalPageData = {
     },
     {
       q: "Wie viele Personen passen in die Location?",
-      a: "80 bis 2400 Personen. Einzelne Säle oder die komplette Location – exklusiv buchbar.",
+      a: "Bis zu 2300 Gäste im gesamten Haus, inklusive Terrasse. Einzelne Räume fassen je nach Raum 80 bis 750 Personen (stehend), mehrere Räume sind kombinierbar. Die Bestuhlung planen wir individuell nach Ihrem Wunsch.",
     },
     {
       q: "Gibt es Catering für Firmenevents?",
@@ -100,7 +84,7 @@ const data: RentalPageData = {
     },
     {
       q: "Welche Technik steht zur Verfügung?",
-      a: "Bühne, Fullservice-Licht, Profi-Sound, Beamer – alles vorhanden. Individuelle Anforderungen sprechen wir direkt ab.",
+      a: "Bühne, Licht, Tontechnik, Beamer – alles vorhanden. Individuelle Anforderungen sprechen wir direkt ab.",
     },
     {
       q: "Kann die Location exklusiv gebucht werden?",
@@ -112,8 +96,9 @@ const data: RentalPageData = {
     },
   ],
   ctaHeading: "Ihr nächstes Firmenevent – jetzt anfragen.",
+  formal: true,
   ctaText:
-    "Wir erstellen Ihnen innerhalb von 24 Stunden ein maßgeschneidertes Angebot. Kostenlos, unverbindlich, konkret.",
+    "Schnelle Angebotsbearbeitung: Wir erstellen Ihnen ein maßgeschneidertes Angebot. Kostenlos, unverbindlich, konkret.",
 };
 
 const SIZE_STEPS = [
@@ -138,9 +123,9 @@ const SIZE_STEPS = [
     text: "Exklusivbuchung empfehlenswert – volle Location, volles Programm.",
   },
   {
-    range: "1.000–2.396 Personen",
+    range: "1.000–2.300 Personen",
     fit: "Großveranstaltung",
-    text: "Behördlich zugelassene Gesamtkapazität – für die größten Betriebsveranstaltungen der Region.",
+    text: "Gesamtes Haus inklusive Terrasse – bis zu 2.300 Gäste.",
   },
 ];
 
@@ -159,7 +144,7 @@ export default function FirmeneventsPage() {
               Für jede Firmengröße die passende Veranstaltung.
             </h2>
             <p className="mx-auto mt-4 max-w-xl text-center text-foreground/70">
-              Behördlich zugelassene Gesamtkapazität: bis zu 2.396 Personen.
+              Bis zu 2.300 Gäste im gesamten Haus, inklusive Terrasse.
             </p>
           </Reveal>
 

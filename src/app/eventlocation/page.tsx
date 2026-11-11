@@ -2,43 +2,197 @@ import Image from "next/image";
 import Link from "next/link";
 import { ROOMS } from "@/lib/rooms";
 import { getAllRoomImages } from "@/lib/room-images";
-import RoomImageRotator from "@/components/RoomImageRotator";
+import RoomRows from "@/components/RoomRows";
 import EventlocationRequestForm from "@/components/EventlocationRequestForm";
 import FlipText from "@/components/FlipText";
+import Accordion from "@/components/Accordion";
+import Reveal from "@/components/Reveal";
+
+const SITE_URL =
+  process.env.NEXT_PUBLIC_SITE_URL ?? "https://moos-park-hmd7.vercel.app";
 
 export const metadata = {
   alternates: { canonical: "/eventlocation" },
   title: "Eventlocation Pöttmes – Veranstaltungslocation Bayern | moos.park",
   description:
-    "Eventlocation in Pöttmes für bis zu 2200 Gäste – sechs kombinierbare Räume für Konzerte, Firmenfeiern, Hochzeiten und private Feiern.",
+    "Eventlocation in Pöttmes für bis zu 2300 Gäste – sieben kombinierbare Räume für Konzerte, Firmenfeiern, Hochzeiten und private Feiern.",
+  openGraph: {
+    title: "Eventlocation Pöttmes | moos.park",
+    description:
+      "Bis zu 2300 Gäste, sieben kombinierbare Räume, eigene Gastronomie und Technik. Eventlocation zwischen Augsburg und Ingolstadt.",
+    url: "/eventlocation",
+    type: "website",
+    locale: "de_DE",
+    images: ["/images/eventlocation-hero.png"],
+  },
 };
 
-function PersonIcon() {
-  return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-      <path d="M12 12a5 5 0 1 0 0-10 5 5 0 0 0 0 10m0 2c-4.4 0-9 2.2-9 5v3h18v-3c0-2.8-4.6-5-9-5" />
-    </svg>
-  );
-}
+const FAQ = [
+  {
+    q: "Wie viele Gäste passen in die Location?",
+    a: "Bis zu 2300 Gäste im gesamten Haus, inklusive Terrasse. Einzelne Räume fassen je nach Raum 80 bis 750 Personen (stehend), mehrere Räume sind kombinierbar. Die Bestuhlung planen wir individuell nach Ihrem Wunsch.",
+  },
+  {
+    q: "Für welche Anlässe kann ich die Location mieten?",
+    a: "Für Geburtstage und Privatfeiern, Firmenevents, Sommerfeste und Weihnachtsfeiern, Seminare, Coaching, Teamevents, Konzerte und Messen.",
+  },
+  {
+    q: "Ist eine exklusive Buchung der gesamten Location möglich?",
+    a: "Ja. moos.park kann komplett exklusiv gebucht werden, ohne parallel stattfindende Events.",
+  },
+  {
+    q: "Was ist bei der Miete inklusive?",
+    a: "Licht- und Tontechnik, Bühne, eigene Gastronomie (Bar, Buffet, Pizzeria), großer kostenloser Parkplatz und ein persönlicher Ansprechpartner für die gesamte Planung.",
+  },
+  {
+    q: "Wie finde ich zum moos.park?",
+    a: "Der moos.park liegt in Pöttmes im Landkreis Aichach-Friedberg, rund 40 Minuten von Augsburg und ca. 35 Minuten von Ingolstadt entfernt.",
+  },
+  {
+    q: "Wie schnell bekomme ich ein Angebot?",
+    a: "Wir bearbeiten Anfragen schnell und melden uns mit einem individuellen, unverbindlichen Angebot. Die Anfrage ist kostenlos.",
+  },
+];
 
-function AreaIcon() {
-  return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-      <path
-        d="M9 3H4v5M15 3h5v5M9 21H4v-5M15 21h5v-5"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
+const OCCASIONS = [
+  {
+    title: "Geburtstage & Privatfeiern",
+    text: "Vom runden Geburtstag bis zur privaten Feier: Räume, Technik und Gastronomie an einem Ort.",
+    href: "#anfragen",
+    cta: "Jetzt anfragen",
+  },
+  {
+    title: "Firmenevents, Sommerfest und Weihnachtsfeiern",
+    text: "Betriebsfeier, Kick-off oder Weihnachtsfeier: Planung, Technik und Gastronomie aus einer Hand.",
+    href: "#anfragen",
+    cta: "Jetzt anfragen",
+  },
+  {
+    title: "Seminar, Coaching, Teamevents & Teambuilding",
+    text: "Räume für Gruppen, Workshops und Teamtage, mit eigener Gastronomie vor Ort.",
+    href: "#anfragen",
+    cta: "Jetzt anfragen",
+  },
+  {
+    title: "Konzerte & Messen",
+    text: "Konzerte, Messen und größere Veranstaltungen: Bühne, Licht- und Tontechnik sind vorhanden.",
+    href: "#anfragen",
+    cta: "Jetzt anfragen",
+  },
+];
+
+const ADVANTAGES = [
+  "Große Bühne für Ihr Programm",
+  "Sonnenterrasse für Events unter freiem Himmel",
+  "Professionelle Licht- und Tontechnik",
+  "WLAN für Ihre Gäste",
+  "Fest eingebaute Theken",
+  "Pizzeria im Haus",
+  "Kostenlose Parkplätze direkt am Haus",
+  "Garderobe direkt im Foyer",
+  "Räume einzeln oder kombiniert buchbar",
+  "Ein fester Ansprechpartner für Ihr Event",
+];
+
+const EXTRAS = [
+  "Foto und Video",
+  "Live-Show",
+  "Künstler und Acts",
+  "DJ",
+  "Werbung und Promotion für Ihr Event",
+  "Weitere Extras auf Anfrage",
+];
+
+const FACTS = [
+  { value: "2200 m²", label: "Hausfläche" },
+  { value: "7", label: "Räume" },
+  { value: "1", label: "Location" },
+  { value: "∞", label: "Unzählige Möglichkeiten" },
+];
 
 export default async function EventlocationPage() {
   const roomImages = await getAllRoomImages();
+  const faqJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: FAQ.map((item) => ({
+      "@type": "Question",
+      name: item.q,
+      acceptedAnswer: { "@type": "Answer", text: item.a },
+    })),
+  };
+
+  const venueJsonLd = {
+    "@context": "https://schema.org",
+    "@type": ["EventVenue", "LocalBusiness"],
+    "@id": `${SITE_URL}/eventlocation#venue`,
+    name: "moos.park Eventlocation",
+    description:
+      "Eventlocation in Pöttmes mit sieben kombinierbaren Räumen, eigener Gastronomie und Veranstaltungstechnik für Firmenevents, Feiern, Konzerte und Messen.",
+    url: `${SITE_URL}/eventlocation`,
+    image: `${SITE_URL}/images/eventlocation-hero.png`,
+    maximumAttendeeCapacity: 2300,
+    telephone: "+49 8253 7576",
+    email: "kontakt@moos-park.de",
+    sameAs: [
+      "https://www.facebook.com/mp.poettmes",
+      "https://www.instagram.com/moos.park/",
+    ],
+    geo: {
+      "@type": "GeoCoordinates",
+      latitude: 48.586268,
+      longitude: 11.10787,
+    },
+    address: {
+      "@type": "PostalAddress",
+      streetAddress: "Rudolf-Diesel-Straße 23",
+      postalCode: "86554",
+      addressLocality: "Pöttmes",
+      addressRegion: "Bayern",
+      addressCountry: "DE",
+    },
+    amenityFeature: [
+      "Bühne",
+      "Licht- und Tontechnik",
+      "Eigene Gastronomie",
+      "Kostenloser Parkplatz",
+      "Garderobe",
+    ].map((name) => ({
+      "@type": "LocationFeatureSpecification",
+      name,
+      value: true,
+    })),
+    containsPlace: ROOMS.map((room) => ({
+      "@type": "Room",
+      name: room.name,
+      description: room.text,
+    })),
+  };
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Startseite", item: SITE_URL },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: "Eventlocation",
+        item: `${SITE_URL}/eventlocation`,
+      },
+    ],
+  };
+
   return (
     <div>
+      {[faqJsonLd, venueJsonLd, breadcrumbJsonLd].map((ld, i) => (
+        <script
+          key={i}
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(ld) }}
+        />
+      ))}
+
+      {/* 1. Hero mit Hintergrundbild */}
       <section className="relative flex min-h-[70vh] items-end overflow-hidden text-center text-white sm:min-h-[85vh]">
         <Image
           src="/images/eventlocation-hero.png"
@@ -50,27 +204,12 @@ export default async function EventlocationPage() {
         />
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/75 via-black/20 to-transparent" />
 
-        <div className="relative z-10 mx-auto max-w-3xl px-6 pb-10">
-          <h1 className="text-3xl font-black uppercase leading-[1.05] tracking-tight text-white sm:text-5xl">
-            Jede Idee verdient die perfekte Bühne
+        <div className="relative z-10 mx-auto max-w-5xl px-6 pb-12">
+          <h1 className="text-3xl font-black uppercase leading-[1.05] tracking-tight text-white sm:text-5xl lg:text-6xl">
+            Jede Idee braucht den passenden Raum
           </h1>
 
-          <div className="mt-8 flex justify-center gap-12 sm:gap-20">
-            <div>
-              <p className="text-4xl font-black sm:text-5xl">2200</p>
-              <p className="mt-1 max-w-[10rem] text-sm text-white/80">
-                QM Eventfläche, Exclusive Ausstattung
-              </p>
-            </div>
-            <div>
-              <p className="text-4xl font-black sm:text-5xl">92%</p>
-              <p className="mt-1 max-w-[10rem] text-sm text-white/80">
-                der Fachleute erleben Marken positiver durch Live-Events.
-              </p>
-            </div>
-          </div>
-
-          <div className="mt-8 inline-flex rounded-lg bg-black/30 p-1 backdrop-blur">
+          <div className="mt-8 inline-flex rounded-lg bg-black/70 p-1 backdrop-blur">
             <Link
               href="/"
               className="rounded-lg px-5 py-2 text-xs font-black uppercase tracking-wide text-white"
@@ -84,15 +223,16 @@ export default async function EventlocationPage() {
         </div>
       </section>
 
-      <section className="px-6 py-20 text-center">
-        <div className="mx-auto max-w-2xl">
-          <h2 className="text-3xl font-black uppercase text-foreground">
+      {/* 2. Beschreibung der Location */}
+      <section className="px-6 py-20 text-center lg:py-24">
+        <div className="mx-auto max-w-3xl">
+          <h2 className="text-3xl font-black uppercase leading-[1.05] text-foreground sm:text-4xl lg:text-5xl">
             Die Eventlocation für einzigartige Momente.
           </h2>
-          <p className="mt-6 text-foreground/70">
+          <p className="mt-6 text-base leading-relaxed text-foreground/70">
             Der <strong>moos.park in Pöttmes</strong> – wo Erlebnis auf
             Atmosphäre trifft. Mit seinem modernen Industrieflair und einer
-            Ausstattung auf höchstem Niveau bietet der moos.park den idealen
+            Ausstattung für unterschiedlichste Anlässe bietet der moos.park den
             Rahmen für{" "}
             <strong>
               Firmenveranstaltungen, Präsentationen, Hochzeiten oder private
@@ -100,25 +240,21 @@ export default async function EventlocationPage() {
             </strong>
             .
           </p>
-          <p className="mt-4 text-foreground/70">
+          <p className="mt-4 text-base leading-relaxed text-foreground/70">
             Dank <strong>variabler Raumkonzepte</strong>, neuester
             Eventtechnik und einem engagierten Team wird jedes Event zu einem
             individuellen Erlebnis. Von der ersten Idee bis zur letzten Minute
             begleiten wir Sie mit Leidenschaft und Präzision –{" "}
             <strong>alles aus einer Hand.</strong>
           </p>
-          <p className="mt-4 text-foreground/70">
+          <p className="mt-4 text-base leading-relaxed text-foreground/70">
             Ob stilvoll, außergewöhnlich oder ganz nach Ihren Vorstellungen –
             im <strong>moos.park Pöttmes</strong> entstehen Momente, die
             bleiben.
           </p>
-          <p className="mt-4 text-foreground/70">
-            Eine <strong>Location voller Möglichkeiten</strong>, perfekt für
-            alle, die mehr als nur einen Veranstaltungsort suchen.
-          </p>
 
           <a
-            href="#raeume"
+            href="#anfragen"
             className="mt-8 inline-block rounded-lg bg-accent-lime px-8 py-3 text-sm font-black uppercase tracking-wide text-black transition-transform hover:scale-105"
           >
             <FlipText text="Unvergesslich werden" />
@@ -126,76 +262,202 @@ export default async function EventlocationPage() {
         </div>
       </section>
 
-      <section id="raeume" className="px-6 py-20 text-center">
-        <div className="mx-auto max-w-xl">
-          <h2 className="text-3xl font-black uppercase text-foreground">
-            Unsere Räume
-          </h2>
-          <p className="mt-4 text-foreground/70">
-            Ob einzelne Bereiche, flexible Kombinationen oder die gesamte
-            Anlage:
-          </p>
-          <p className="mt-4 text-foreground/70">
-            Nutzen Sie unser vielseitiges Raumkonzept mit{" "}
-            <strong>2200 m² Eventfläche</strong> inklusive neuer{" "}
-            <strong>460 m² Sonnen-Terrasse</strong>. Auf einer Gesamtfläche
-            von <strong>10.000 m²</strong> – ideal für Events jeder Art.
-          </p>
-        </div>
-
-        <div className="mx-auto mt-12 grid max-w-6xl gap-8 sm:grid-cols-2 lg:grid-cols-3">
-          {ROOMS.map((room) => (
-            <div
-              key={room.name}
-              className="flex flex-col items-center rounded-2xl bg-foreground/[0.03] p-4 text-center"
-            >
-              <div className="relative aspect-[4/3] w-full overflow-hidden rounded-xl bg-foreground/5">
-                <RoomImageRotator
-                  images={roomImages[room.slug] ?? room.images}
-                  alt={room.name}
-                  sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
-                />
-              </div>
-
-              <div className="mt-5 flex items-center gap-4 text-sm font-semibold text-foreground/70">
-                <span className="flex items-center gap-1.5">
-                  <PersonIcon />
-                  {room.capacity}
-                </span>
-                <span className="h-5 w-px bg-foreground/15" />
-                <span className="flex items-center gap-1.5">
-                  <AreaIcon />
-                  {room.area}
-                </span>
-              </div>
-
-              <h3 className="mt-3 text-lg font-black uppercase text-foreground">
-                {room.name}
-              </h3>
-              <p className="mt-3 text-sm text-foreground/70">{room.text}</p>
-
-              <a
-                href="#anfragen"
-                className="mt-5 inline-block rounded-lg bg-accent-lime px-8 py-2.5 text-xs font-black uppercase tracking-wide text-black transition-transform hover:scale-105"
-              >
-                Anfragen
-              </a>
-            </div>
-          ))}
+      {/* 3. Eventlocation in Zahlen (ohne Raumbilder) */}
+      <section className="bg-foreground/[0.02] px-6 py-16 lg:py-20">
+        <div className="mx-auto max-w-5xl">
+          <Reveal>
+            <p className="text-center text-xs font-black uppercase tracking-[0.3em] text-accent-lime">
+              Eventlocation
+            </p>
+          </Reveal>
+          <div className="mt-8 grid grid-cols-2 gap-6 text-center lg:grid-cols-4">
+            {FACTS.map((fact, i) => (
+              <Reveal key={fact.label} delay={i * 0.06}>
+                <p className="whitespace-nowrap text-4xl font-black text-foreground sm:text-5xl">
+                  {fact.value}
+                </p>
+                <p className="mt-2 text-sm font-bold uppercase tracking-wide text-foreground/60">
+                  {fact.label}
+                </p>
+              </Reveal>
+            ))}
+          </div>
         </div>
       </section>
 
+      {/* 4. Vorteile */}
+      <section className="px-6 py-20 lg:py-24">
+        <div className="mx-auto max-w-3xl">
+          <Reveal>
+            <p className="text-center text-xs font-black uppercase tracking-[0.3em] text-accent-lime">
+              Ihre Vorteile
+            </p>
+            <h2 className="mt-3 text-center text-2xl font-black uppercase leading-[1.1] text-foreground sm:text-3xl lg:text-4xl">
+              Alles, was Ihr Event braucht.
+            </h2>
+            <p className="mx-auto mt-5 max-w-xl text-center text-foreground/70">
+              Das Wichtige ist schon im Haus. Sie sprechen mit einem
+              Ansprechpartner und müssen keine Dienstleister einzeln
+              koordinieren.
+            </p>
+          </Reveal>
+          <Reveal delay={0.1}>
+            <ul className="mt-10 grid gap-x-10 sm:grid-cols-2">
+              {ADVANTAGES.map((a) => (
+                <li
+                  key={a}
+                  className="flex items-center gap-3 border-b border-foreground/10 py-3 text-foreground/80"
+                >
+                  <span className="h-2 w-2 shrink-0 rounded-full bg-accent-lime" />
+                  {a}
+                </li>
+              ))}
+            </ul>
+          </Reveal>
+        </div>
+      </section>
+
+      {/* 4b. Zubuchbar */}
+      <section className="px-6 pb-20 lg:pb-24">
+        <div className="mx-auto max-w-3xl">
+          <Reveal>
+            <p className="text-center text-xs font-black uppercase tracking-[0.3em] text-accent-lime">
+              Zubuchbar
+            </p>
+            <h2 className="mt-3 text-center text-2xl font-black uppercase leading-[1.1] text-foreground sm:text-3xl lg:text-4xl">
+              Machen Sie mehr aus Ihrem Event.
+            </h2>
+            <p className="mx-auto mt-5 max-w-xl text-center text-foreground/70">
+              Über unsere hauseigene Agentur buchen Sie bei Bedarf Werbung für
+              Ihr Event und viele weitere Extras direkt mit dazu.
+            </p>
+          </Reveal>
+          <Reveal delay={0.1}>
+            <ul className="mt-10 grid gap-x-10 sm:grid-cols-2">
+              {EXTRAS.map((e) => (
+                <li
+                  key={e}
+                  className="flex items-center gap-3 border-b border-foreground/10 py-3 text-foreground/80"
+                >
+                  <span className="h-2 w-2 shrink-0 rounded-full bg-accent-lime" />
+                  {e}
+                </li>
+              ))}
+            </ul>
+          </Reveal>
+        </div>
+      </section>
+
+      {/* 5. Möglichkeiten / Anlässe */}
+      <section id="anlaesse" className="bg-foreground/[0.02] px-6 py-20">
+        <div className="mx-auto max-w-5xl">
+          <Reveal>
+            <p className="text-center text-xs font-black uppercase tracking-[0.3em] text-accent-lime">
+              Möglichkeiten
+            </p>
+            <h2 className="mx-auto mt-3 max-w-2xl text-center text-2xl font-black uppercase leading-[1.1] text-foreground sm:text-3xl lg:text-4xl">
+              Für jeden Anlass die passende Veranstaltung.
+            </h2>
+          </Reveal>
+          <div className="mt-10 grid grid-cols-1 gap-4 lg:grid-cols-4">
+            {OCCASIONS.map((o, i) => (
+              <Reveal key={o.title} delay={i * 0.06}>
+                <div className="flex h-full flex-col rounded-2xl border border-foreground/10 p-6">
+                  <h3 className="font-black uppercase text-foreground">
+                    {o.title}
+                  </h3>
+                  <p className="mt-2 flex-1 text-sm text-foreground/70">
+                    {o.text}
+                  </p>
+                  <Link
+                    href={o.href}
+                    className="mt-4 text-xs font-black uppercase tracking-wide text-accent-lime"
+                  >
+                    {o.cta} →
+                  </Link>
+                </div>
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* 6. Unsere Bereiche */}
+      <section id="raeume" className="px-6 py-20 text-center">
+        <div className="mx-auto max-w-xl">
+          <h2 className="text-2xl font-black uppercase leading-[1.1] text-foreground sm:text-3xl lg:text-4xl">
+            Unsere Bereiche
+          </h2>
+          <p className="mt-4 text-base leading-relaxed text-foreground/70">
+            Ob einzelne Bereiche, flexible Kombinationen oder die gesamte
+            Anlage.
+          </p>
+        </div>
+
+        <RoomRows
+          rooms={ROOMS.map((room) => ({
+            ...room,
+            images: roomImages[room.slug] ?? room.images,
+          }))}
+        />
+      </section>
+
+      {/* 7. Karte */}
+      <section id="anfahrt" className="bg-foreground/[0.02] px-6 py-20">
+        <div className="mx-auto max-w-5xl">
+          <Reveal>
+            <p className="text-center text-xs font-black uppercase tracking-[0.3em] text-accent-lime">
+              Anfahrt
+            </p>
+            <h2 className="mx-auto mt-3 max-w-2xl text-center text-2xl font-black uppercase leading-[1.1] text-foreground sm:text-3xl lg:text-4xl">
+              So finden Sie uns.
+            </h2>
+            <p className="mx-auto mt-4 max-w-xl text-center text-foreground/70">
+              Rudolf-Diesel-Straße 23, 86554 Pöttmes. Rund 40 Minuten von
+              Augsburg und ca. 35 Minuten von Ingolstadt.
+            </p>
+          </Reveal>
+          <div className="mt-8 overflow-hidden rounded-2xl border border-foreground/10">
+            <iframe
+              title="Karte: moos.park, Rudolf-Diesel-Straße 23, 86554 Pöttmes"
+              src="https://www.google.com/maps?q=Rudolf-Diesel-Stra%C3%9Fe+23,+86554+P%C3%B6ttmes&output=embed"
+              className="h-[380px] w-full"
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+            />
+          </div>
+        </div>
+      </section>
+
+      {/* 8. FAQ */}
+      <section className="px-6 py-20 lg:py-24">
+        <div className="mx-auto max-w-3xl">
+          <Reveal>
+            <p className="text-center text-xs font-black uppercase tracking-[0.3em] text-accent-lime">
+              Häufige Fragen
+            </p>
+            <h2 className="mx-auto mt-3 max-w-xl text-center text-2xl font-black uppercase leading-[1.1] text-foreground sm:text-3xl lg:text-4xl">
+              Alles, was Sie wissen möchten.
+            </h2>
+          </Reveal>
+          <Reveal delay={0.1} className="mt-8">
+            <Accordion items={FAQ} />
+          </Reveal>
+        </div>
+      </section>
+
+      {/* 9. Anfrage */}
       <section id="anfragen" className="px-6 pb-28">
         <div className="mx-auto max-w-3xl overflow-hidden rounded-2xl border border-foreground/8 bg-foreground/[0.025] p-8 sm:p-12">
           <p className="text-sm font-bold uppercase tracking-wide text-accent-lime">
             Ihr Event, unsere Beratung.
           </p>
-          <h2 className="mt-2 text-3xl font-black uppercase text-foreground">
+          <h2 className="mt-2 text-2xl font-black uppercase leading-[1.1] text-foreground sm:text-3xl lg:text-4xl">
             Ganz unverbindlich anfragen.
           </h2>
-          <p className="mt-4 text-foreground/70">
+          <p className="mt-4 text-base leading-relaxed text-foreground/70">
             Ihre Idee sind unser Antrieb. Melden Sie sich bei uns und wir
-            verwandeln Ihre Pläne in unvergessliche Erlebnisse. Los geht&apos;s!
+            setzen Ihre Pläne um. Los geht&apos;s!
           </p>
 
           <EventlocationRequestForm />

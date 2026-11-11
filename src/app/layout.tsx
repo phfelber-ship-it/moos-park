@@ -5,6 +5,7 @@ import SiteChrome from "@/components/SiteChrome";
 import GoogleTagManager from "@/components/GoogleTagManager";
 import ClickTracker from "@/components/ClickTracker";
 import StructuredDataInjector from "@/components/StructuredDataInjector";
+import { buildStructuredData } from "@/lib/structured-data";
 
 const montserrat = Montserrat({
   variable: "--font-montserrat",
@@ -68,6 +69,16 @@ export default function RootLayout({
             haengt sonst zuverlaessig jede statische Seite beim Build fest
             (siehe lib/seo-overrides.ts). So kann das SEO-Tool
             (/admin/seo-tool) sie trotzdem per Knopfdruck umschalten. */}
+        {/* Organisationsdaten fest im HTML, damit auch Crawler ohne JavaScript
+            (u.a. KI-Systeme) sie sehen. Die id sorgt dafuer, dass der
+            StructuredDataInjector kein zweites Skript anhaengt. */}
+        <script
+          id="seo-structured-data"
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(buildStructuredData(SITE_URL)),
+          }}
+        />
         <StructuredDataInjector />
       </body>
     </html>
