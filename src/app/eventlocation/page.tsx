@@ -200,7 +200,7 @@ export default async function EventlocationPage() {
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/75 via-black/20 to-transparent" />
 
         <div className="relative z-10 mx-auto max-w-5xl px-6 pb-12">
-          <h1 className="text-4xl font-black uppercase leading-[1.02] tracking-tight text-white sm:text-6xl lg:text-7xl">
+          <h1 className="text-3xl font-black uppercase leading-[1.05] tracking-tight text-white sm:text-5xl lg:text-6xl">
             Jede Idee braucht den passenden Raum
           </h1>
 
@@ -219,12 +219,12 @@ export default async function EventlocationPage() {
       </section>
 
       {/* 2. Beschreibung der Location */}
-      <section className="px-6 py-24 text-center lg:py-32">
+      <section className="px-6 py-20 text-center lg:py-24">
         <div className="mx-auto max-w-3xl">
-          <h2 className="text-4xl font-black uppercase leading-[1.05] text-foreground sm:text-5xl lg:text-6xl">
+          <h2 className="text-3xl font-black uppercase leading-[1.05] text-foreground sm:text-4xl lg:text-5xl">
             Die Eventlocation für einzigartige Momente.
           </h2>
-          <p className="mt-8 text-lg leading-relaxed text-foreground/70">
+          <p className="mt-6 text-base leading-relaxed text-foreground/70">
             Der <strong>moos.park in Pöttmes</strong> – wo Erlebnis auf
             Atmosphäre trifft. Mit seinem modernen Industrieflair und einer
             Ausstattung für unterschiedlichste Anlässe bietet der moos.park den
@@ -235,14 +235,14 @@ export default async function EventlocationPage() {
             </strong>
             .
           </p>
-          <p className="mt-5 text-lg leading-relaxed text-foreground/70">
+          <p className="mt-4 text-base leading-relaxed text-foreground/70">
             Dank <strong>variabler Raumkonzepte</strong>, neuester
             Eventtechnik und einem engagierten Team wird jedes Event zu einem
             individuellen Erlebnis. Von der ersten Idee bis zur letzten Minute
             begleiten wir Sie mit Leidenschaft und Präzision –{" "}
             <strong>alles aus einer Hand.</strong>
           </p>
-          <p className="mt-5 text-lg leading-relaxed text-foreground/70">
+          <p className="mt-4 text-base leading-relaxed text-foreground/70">
             Ob stilvoll, außergewöhnlich oder ganz nach Ihren Vorstellungen –
             im <strong>moos.park Pöttmes</strong> entstehen Momente, die
             bleiben.
@@ -258,7 +258,7 @@ export default async function EventlocationPage() {
       </section>
 
       {/* 3. Eventlocation in Zahlen (ohne Raumbilder) */}
-      <section className="bg-foreground/[0.02] px-6 py-20 lg:py-28">
+      <section className="bg-foreground/[0.02] px-6 py-16 lg:py-20">
         <div className="mx-auto max-w-5xl">
           <Reveal>
             <p className="text-center text-xs font-black uppercase tracking-[0.3em] text-[#5f7a50]">
@@ -268,10 +268,10 @@ export default async function EventlocationPage() {
           <div className="mt-8 grid grid-cols-2 gap-6 text-center lg:grid-cols-4">
             {FACTS.map((fact, i) => (
               <Reveal key={fact.label} delay={i * 0.06}>
-                <p className="text-5xl font-black text-foreground sm:text-6xl lg:text-7xl">
+                <p className="whitespace-nowrap text-4xl font-black text-foreground sm:text-5xl">
                   {fact.value}
                 </p>
-                <p className="mt-3 text-base font-bold uppercase tracking-wide text-foreground/60">
+                <p className="mt-2 text-sm font-bold uppercase tracking-wide text-foreground/60">
                   {fact.label}
                 </p>
               </Reveal>
@@ -281,13 +281,13 @@ export default async function EventlocationPage() {
       </section>
 
       {/* 4. Vorteile */}
-      <section className="px-6 py-24 lg:py-32">
+      <section className="px-6 py-20 lg:py-24">
         <div className="mx-auto max-w-3xl text-center">
           <Reveal>
             <p className="text-xs font-black uppercase tracking-[0.3em] text-[#5f7a50]">
               Ihre Vorteile
             </p>
-            <h2 className="mt-3 text-3xl font-black uppercase leading-[1.05] text-foreground sm:text-4xl lg:text-5xl">
+            <h2 className="mt-3 text-2xl font-black uppercase leading-[1.1] text-foreground sm:text-3xl lg:text-4xl">
               Alles an einem Ort.
             </h2>
           </Reveal>
@@ -314,7 +314,7 @@ export default async function EventlocationPage() {
             <p className="text-center text-xs font-black uppercase tracking-[0.3em] text-[#5f7a50]">
               Möglichkeiten
             </p>
-            <h2 className="mx-auto mt-3 max-w-2xl text-center text-3xl font-black uppercase leading-[1.05] text-foreground sm:text-4xl lg:text-5xl">
+            <h2 className="mx-auto mt-3 max-w-2xl text-center text-2xl font-black uppercase leading-[1.1] text-foreground sm:text-3xl lg:text-4xl">
               Für jeden Anlass die passende Veranstaltung.
             </h2>
           </Reveal>
@@ -344,10 +344,10 @@ export default async function EventlocationPage() {
       {/* 6. Unsere Bereiche */}
       <section id="raeume" className="px-6 py-20 text-center">
         <div className="mx-auto max-w-xl">
-          <h2 className="text-3xl font-black uppercase text-foreground">
+          <h2 className="text-2xl font-black uppercase leading-[1.1] text-foreground sm:text-3xl lg:text-4xl">
             Unsere Bereiche
           </h2>
-          <p className="mt-5 text-lg leading-relaxed text-foreground/70">
+          <p className="mt-4 text-base leading-relaxed text-foreground/70">
             Ob einzelne Bereiche, flexible Kombinationen oder die gesamte
             Anlage.
           </p>
@@ -368,7 +368,7 @@ export default async function EventlocationPage() {
             <p className="text-center text-xs font-black uppercase tracking-[0.3em] text-[#5f7a50]">
               Anfahrt
             </p>
-            <h2 className="mx-auto mt-3 max-w-2xl text-center text-3xl font-black uppercase leading-[1.05] text-foreground sm:text-4xl lg:text-5xl">
+            <h2 className="mx-auto mt-3 max-w-2xl text-center text-2xl font-black uppercase leading-[1.1] text-foreground sm:text-3xl lg:text-4xl">
               So finden Sie uns.
             </h2>
             <p className="mx-auto mt-4 max-w-xl text-center text-foreground/70">
@@ -389,13 +389,13 @@ export default async function EventlocationPage() {
       </section>
 
       {/* 8. FAQ */}
-      <section className="px-6 py-24 lg:py-32">
+      <section className="px-6 py-20 lg:py-24">
         <div className="mx-auto max-w-3xl">
           <Reveal>
             <p className="text-center text-xs font-black uppercase tracking-[0.3em] text-[#5f7a50]">
               Häufige Fragen
             </p>
-            <h2 className="mx-auto mt-3 max-w-xl text-center text-3xl font-black uppercase leading-[1.05] text-foreground sm:text-4xl lg:text-5xl">
+            <h2 className="mx-auto mt-3 max-w-xl text-center text-2xl font-black uppercase leading-[1.1] text-foreground sm:text-3xl lg:text-4xl">
               Alles, was Sie wissen möchten.
             </h2>
           </Reveal>
@@ -411,10 +411,10 @@ export default async function EventlocationPage() {
           <p className="text-sm font-bold uppercase tracking-wide text-[#5f7a50]">
             Ihr Event, unsere Beratung.
           </p>
-          <h2 className="mt-2 text-3xl font-black uppercase text-foreground">
+          <h2 className="mt-2 text-2xl font-black uppercase leading-[1.1] text-foreground sm:text-3xl lg:text-4xl">
             Ganz unverbindlich anfragen.
           </h2>
-          <p className="mt-5 text-lg leading-relaxed text-foreground/70">
+          <p className="mt-4 text-base leading-relaxed text-foreground/70">
             Ihre Idee sind unser Antrieb. Melden Sie sich bei uns und wir
             setzen Ihre Pläne um. Los geht&apos;s!
           </p>
