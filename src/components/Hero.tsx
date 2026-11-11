@@ -33,6 +33,9 @@ export default function Hero({
     <section className="relative flex h-[100vh] items-end overflow-hidden text-center text-white sm:h-[85vh]">
       <HeroBackground images={images} videoUrl={videoUrl} />
 
+      {/* Weicher Übergang in die Seitenfarbe, kein harter Schnitt zu "Aktuelle Events" */}
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 z-[5] h-24 bg-gradient-to-t from-background via-background/60 to-transparent sm:h-32" />
+
       <motion.div
         variants={container}
         initial="hidden"
