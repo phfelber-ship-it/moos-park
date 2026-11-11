@@ -285,65 +285,60 @@ export default async function EventlocationPage() {
         </div>
       </section>
 
-      {/* 4. Vorteile */}
+      {/* 4. Vorteile und Zubuchbar in zwei Containern */}
       <section className="px-6 py-20 lg:py-24">
-        <div className="mx-auto max-w-3xl">
+        <div className="mx-auto grid max-w-6xl gap-6 lg:grid-cols-2">
           <Reveal>
-            <p className="text-center text-xs font-black uppercase tracking-[0.3em] text-accent-lime">
-              Ihre Vorteile
-            </p>
-            <h2 className="mt-3 text-center text-2xl font-black uppercase leading-[1.1] text-foreground sm:text-3xl lg:text-4xl">
-              Alles, was Ihr Event braucht.
-            </h2>
-            <p className="mx-auto mt-5 max-w-xl text-center text-foreground/70">
-              Das Wichtige ist schon im Haus. Sie sprechen mit einem
-              Ansprechpartner und müssen keine Dienstleister einzeln
-              koordinieren.
-            </p>
+            <div className="h-full rounded-3xl border border-foreground/10 bg-foreground/[0.03] p-8 sm:p-10">
+              <p className="text-xs font-black uppercase tracking-[0.3em] text-accent-lime">
+                Ihre Vorteile
+              </p>
+              <h2 className="mt-3 text-2xl font-black uppercase leading-[1.1] text-foreground sm:text-3xl">
+                Alles, was Ihr Event braucht.
+              </h2>
+              <p className="mt-4 text-foreground/70">
+                Das Wichtige ist schon im Haus. Sie sprechen mit einem
+                Ansprechpartner und müssen keine Dienstleister einzeln
+                koordinieren.
+              </p>
+              <ul className="mt-6">
+                {ADVANTAGES.map((a) => (
+                  <li
+                    key={a}
+                    className="flex items-center gap-3 border-b border-foreground/10 py-3 text-foreground/80 last:border-b-0"
+                  >
+                    <span className="h-2 w-2 shrink-0 rounded-full bg-accent-lime" />
+                    {a}
+                  </li>
+                ))}
+              </ul>
+            </div>
           </Reveal>
-          <Reveal delay={0.1}>
-            <ul className="mt-10 grid gap-x-10 sm:grid-cols-2">
-              {ADVANTAGES.map((a) => (
-                <li
-                  key={a}
-                  className="flex items-center gap-3 border-b border-foreground/10 py-3 text-foreground/80"
-                >
-                  <span className="h-2 w-2 shrink-0 rounded-full bg-accent-lime" />
-                  {a}
-                </li>
-              ))}
-            </ul>
-          </Reveal>
-        </div>
-      </section>
 
-      {/* 4b. Zubuchbar */}
-      <section className="px-6 pb-20 lg:pb-24">
-        <div className="mx-auto max-w-3xl">
-          <Reveal>
-            <p className="text-center text-xs font-black uppercase tracking-[0.3em] text-accent-lime">
-              Zubuchbar
-            </p>
-            <h2 className="mt-3 text-center text-2xl font-black uppercase leading-[1.1] text-foreground sm:text-3xl lg:text-4xl">
-              Machen Sie mehr aus Ihrem Event.
-            </h2>
-            <p className="mx-auto mt-5 max-w-xl text-center text-foreground/70">
-              Über unsere hauseigene Agentur buchen Sie bei Bedarf Werbung für
-              Ihr Event und viele weitere Extras direkt mit dazu.
-            </p>
-          </Reveal>
           <Reveal delay={0.1}>
-            <ul className="mt-10 grid gap-x-10 sm:grid-cols-2">
-              {EXTRAS.map((e) => (
-                <li
-                  key={e}
-                  className="flex items-center gap-3 border-b border-foreground/10 py-3 text-foreground/80"
-                >
-                  <span className="h-2 w-2 shrink-0 rounded-full bg-accent-lime" />
-                  {e}
-                </li>
-              ))}
-            </ul>
+            <div className="h-full rounded-3xl border border-accent-lime/30 bg-accent-lime/[0.06] p-8 sm:p-10">
+              <p className="text-xs font-black uppercase tracking-[0.3em] text-accent-lime">
+                Zubuchbar
+              </p>
+              <h2 className="mt-3 text-2xl font-black uppercase leading-[1.1] text-foreground sm:text-3xl">
+                Machen Sie mehr aus Ihrem Event.
+              </h2>
+              <p className="mt-4 text-foreground/70">
+                Über unsere hauseigene Agentur buchen Sie bei Bedarf Werbung
+                für Ihr Event und viele weitere Extras direkt mit dazu.
+              </p>
+              <ul className="mt-6">
+                {EXTRAS.map((e) => (
+                  <li
+                    key={e}
+                    className="flex items-center gap-3 border-b border-foreground/10 py-3 text-foreground/80 last:border-b-0"
+                  >
+                    <span className="h-2 w-2 shrink-0 rounded-full bg-accent-lime" />
+                    {e}
+                  </li>
+                ))}
+              </ul>
+            </div>
           </Reveal>
         </div>
       </section>

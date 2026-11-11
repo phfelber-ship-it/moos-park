@@ -30,10 +30,12 @@ export default function RoomImageRotator({
   images,
   alt,
   sizes,
+  autoplay = true,
 }: {
   images: string[];
   alt: string;
   sizes: string;
+  autoplay?: boolean;
 }) {
   const [[index, direction], setState] = useState<[number, number]>([0, 1]);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
@@ -45,7 +47,7 @@ export default function RoomImageRotator({
 
   const restartTimer = () => {
     if (intervalRef.current) clearInterval(intervalRef.current);
-    if (images.length <= 1) return;
+    if (!autoplay || images.length <= 1) return;
     intervalRef.current = setInterval(() => paginate(1), IMAGE_INTERVAL);
   };
 
@@ -55,7 +57,7 @@ export default function RoomImageRotator({
       if (intervalRef.current) clearInterval(intervalRef.current);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [images.length]);
+  }, [images.length, autoplay]);
 
   const goTo = (dir: 1 | -1) => {
     paginate(dir);
