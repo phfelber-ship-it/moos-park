@@ -82,18 +82,30 @@ const OCCASIONS = [
 ];
 
 const ADVANTAGES = [
-  "Bühne sowie Licht- und Tontechnik im Haus",
-  "Beamer für Präsentationen und Vorträge",
-  "Küche und Buffet aus eigener Hand, auf Wunsch mit Pizzeria",
-  "Fest eingebaute Theken in der Haupthalle",
-  "Externes Catering nach Absprache",
-  "Parkplätze direkt am Haus, ohne Gebühr",
-  "Garderobe für Ihre Gäste",
-  "Räume einzeln buchen oder frei kombinieren",
-  "Das ganze Haus exklusiv für Ihre Veranstaltung",
-  "Aufbau und Bestuhlung nach Ihrer Planung",
-  "Ein fester Ansprechpartner von der Anfrage bis zum Abbau",
-  "Rasche, kostenlose und unverbindliche Angebotserstellung",
+  {
+    title: "Technik im Haus",
+    text: "Bühne, Licht- und Tontechnik und Beamer sind vorhanden.",
+  },
+  {
+    title: "Essen und Trinken",
+    text: "Küche, Buffet, Bars und Pizzeria gehören zum Haus. Anderes Catering sprechen wir mit Ihnen ab.",
+  },
+  {
+    title: "Räume nach Wunsch",
+    text: "Einzeln buchen oder kombinieren. Aufbau und Bestuhlung richten wir nach Ihrer Planung.",
+  },
+  {
+    title: "Das ganze Haus",
+    text: "Auf Wunsch gehört es an Ihrem Tag nur Ihnen.",
+  },
+  {
+    title: "Anreise",
+    text: "Kostenlose Parkplätze direkt am Haus und eine Garderobe für Ihre Gäste.",
+  },
+  {
+    title: "Ein Ansprechpartner",
+    text: "Eine Person begleitet Sie von der Planung bis zum Abschluss.",
+  },
 ];
 
 const FACTS = [
@@ -280,33 +292,27 @@ export default async function EventlocationPage() {
 
       {/* 4. Vorteile */}
       <section className="px-6 py-20 lg:py-24">
-        <div className="mx-auto max-w-3xl text-center">
+        <div className="mx-auto max-w-5xl">
           <Reveal>
-            <p className="text-xs font-black uppercase tracking-[0.3em] text-accent-lime">
+            <p className="text-center text-xs font-black uppercase tracking-[0.3em] text-accent-lime">
               Ihre Vorteile
             </p>
-            <h2 className="mt-3 text-2xl font-black uppercase leading-[1.1] text-foreground sm:text-3xl lg:text-4xl">
-              Raum, Technik und Küche an einem Ort.
+            <h2 className="mt-3 text-center text-2xl font-black uppercase leading-[1.1] text-foreground sm:text-3xl lg:text-4xl">
+              Das gibt es bei uns im Haus.
             </h2>
-            <p className="mx-auto mt-5 max-w-2xl text-foreground/70">
-              Bei uns planen Sie Ihr Event nicht mit fünf Dienstleistern,
-              sondern mit einem Team. Im moos.park Pöttmes steht, was Sie für
-              einen gelungenen Tag brauchen, bereits im Haus.
-            </p>
           </Reveal>
-          <Reveal delay={0.1}>
-            <ul className="mx-auto mt-8 grid max-w-3xl gap-x-8 gap-y-3 text-left sm:grid-cols-2">
-              {ADVANTAGES.map((a) => (
-                <li
-                  key={a}
-                  className="flex items-start gap-2 text-sm text-foreground/80"
-                >
-                  <span className="mt-0.5 text-accent-lime">✔</span>
-                  <span>{a}</span>
-                </li>
-              ))}
-            </ul>
-          </Reveal>
+          <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {ADVANTAGES.map((a, i) => (
+              <Reveal key={a.title} delay={i * 0.05}>
+                <div className="h-full rounded-2xl border border-foreground/10 bg-foreground/[0.025] p-6">
+                  <h3 className="text-base font-black uppercase text-foreground">
+                    {a.title}
+                  </h3>
+                  <p className="mt-2 text-sm text-foreground/70">{a.text}</p>
+                </div>
+              </Reveal>
+            ))}
+          </div>
         </div>
       </section>
 
