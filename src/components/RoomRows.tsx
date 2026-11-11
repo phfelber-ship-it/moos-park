@@ -34,7 +34,7 @@ function AreaIcon() {
 
 export default function RoomRows({ rooms }: { rooms: RowRoom[] }) {
   return (
-    <div className="mx-auto mt-12 max-w-5xl space-y-12 text-left lg:space-y-16">
+    <div className="mx-auto mt-12 max-w-[77rem] space-y-12 text-left lg:space-y-16">
       {rooms.map((room, i) => (
         <div
           key={room.slug}
@@ -74,7 +74,7 @@ export default function RoomRows({ rooms }: { rooms: RowRoom[] }) {
             )}
             <a
               href="#anfragen"
-              className="mt-6 inline-block rounded-lg bg-accent-lime px-8 py-2.5 text-xs font-black uppercase tracking-wide text-black transition-transform hover:scale-105"
+              className="mt-6 inline-block rounded-full bg-accent-lime px-8 py-2.5 text-xs font-black uppercase tracking-wide text-black transition-transform hover:scale-105"
             >
               Anfragen
             </a>

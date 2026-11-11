@@ -130,21 +130,21 @@ function SplitCard({
     <section id={id} className="px-6 py-4 lg:py-5">
       <Reveal>
         <div
-          className={`mx-auto grid max-w-6xl gap-8 rounded-3xl border p-8 sm:p-10 lg:grid-cols-[5fr_7fr] lg:gap-14 lg:p-14 ${
+          className={`mx-auto grid max-w-[77rem] gap-8 rounded-3xl border p-8 sm:p-10 lg:grid-cols-[5fr_7fr] lg:gap-14 lg:p-14 ${
             accent
               ? "border-accent-lime/30 bg-accent-lime/[0.06]"
               : "border-foreground/10 bg-foreground/[0.03]"
           }`}
         >
           <div className="lg:sticky lg:top-28 lg:self-start">
-            <p className="text-xs font-black uppercase tracking-[0.3em] text-accent-lime">
+            <p className="text-xs font-black uppercase font-mono tracking-[0.2em] text-accent-lime">
               {label}
             </p>
-            <h2 className="mt-3 text-2xl font-black uppercase leading-[1.1] text-foreground sm:text-3xl lg:text-4xl">
+            <h2 className="mt-3 text-2xl font-black uppercase leading-[1.1] text-foreground sm:text-3xl lg:text-5xl">
               {title}
             </h2>
             {text && (
-              <div className="mt-5 text-foreground/70">{text}</div>
+              <div className="mt-5 text-base leading-relaxed text-foreground/60 lg:text-lg">{text}</div>
             )}
           </div>
           <div className="min-w-0">{children}</div>
@@ -264,19 +264,19 @@ export default async function EventlocationPage() {
         />
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/75 via-black/20 to-transparent" />
 
-        <div className="relative z-10 mx-auto max-w-5xl px-6 pb-12">
-          <h1 className="text-3xl font-black uppercase leading-[1.05] tracking-tight text-white sm:text-5xl lg:text-6xl">
+        <div className="relative z-10 mx-auto max-w-[77rem] px-6 pb-12">
+          <h1 className="text-3xl font-black uppercase leading-[1.05] tracking-[-0.03em] text-white sm:text-5xl lg:text-6xl">
             Jede Idee braucht den passenden Raum
           </h1>
 
-          <div className="mt-8 inline-flex rounded-lg bg-black/70 p-1 backdrop-blur">
+          <div className="mt-8 inline-flex rounded-full bg-black/70 p-1 backdrop-blur">
             <Link
               href="/"
-              className="rounded-lg px-5 py-2 text-xs font-black uppercase tracking-wide text-white"
+              className="rounded-full px-5 py-2 text-xs font-black uppercase tracking-wide text-white"
             >
               Club
             </Link>
-            <span className="rounded-lg bg-white px-5 py-2 text-xs font-black uppercase tracking-wide text-black">
+            <span className="rounded-full bg-white px-5 py-2 text-xs font-black uppercase tracking-wide text-black">
               Eventlocation
             </span>
           </div>
@@ -284,7 +284,7 @@ export default async function EventlocationPage() {
       </section>
 
       {/* 2. Beschreibung der Location */}
-      <section className="px-6 py-20 text-center lg:py-24">
+      <section className="px-6 py-20 text-center lg:py-28">
         <div className="mx-auto max-w-3xl">
           <h2 className="text-3xl font-black uppercase leading-[1.05] text-foreground sm:text-4xl lg:text-5xl">
             Die Eventlocation für einzigartige Momente.
@@ -315,7 +315,7 @@ export default async function EventlocationPage() {
 
           <a
             href="#anfragen"
-            className="mt-8 inline-block rounded-lg bg-accent-lime px-8 py-3 text-sm font-black uppercase tracking-wide text-black transition-transform hover:scale-105"
+            className="mt-8 inline-block rounded-full bg-accent-lime px-8 py-3 text-sm font-black uppercase tracking-wide text-black transition-transform hover:scale-105"
           >
             <FlipText text="Unvergesslich werden" />
           </a>
@@ -323,10 +323,10 @@ export default async function EventlocationPage() {
       </section>
 
       {/* 3. Eventlocation in Zahlen (ohne Raumbilder) */}
-      <section className="bg-foreground/[0.02] px-6 py-16 lg:py-20">
-        <div className="mx-auto max-w-5xl">
+      <section className="bg-foreground/[0.02] px-6 py-16 lg:py-24">
+        <div className="mx-auto max-w-[77rem]">
           <Reveal>
-            <p className="text-center text-xs font-black uppercase tracking-[0.3em] text-accent-lime">
+            <p className="text-center text-xs font-black uppercase font-mono tracking-[0.2em] text-accent-lime">
               Eventlocation
             </p>
           </Reveal>
@@ -361,13 +361,13 @@ export default async function EventlocationPage() {
       </SplitCard>
 
       {/* 5. Möglichkeiten / Anlässe */}
-      <section id="anlaesse" className="bg-foreground/[0.02] px-6 py-20">
-        <div className="mx-auto max-w-5xl">
+      <section id="anlaesse" className="bg-foreground/[0.02] px-6 py-20 lg:py-28">
+        <div className="mx-auto max-w-[77rem]">
           <Reveal>
-            <p className="text-center text-xs font-black uppercase tracking-[0.3em] text-accent-lime">
+            <p className="text-center text-xs font-black uppercase font-mono tracking-[0.2em] text-accent-lime">
               Möglichkeiten
             </p>
-            <h2 className="mx-auto mt-3 max-w-2xl text-center text-2xl font-black uppercase leading-[1.1] text-foreground sm:text-3xl lg:text-4xl">
+            <h2 className="mx-auto mt-3 max-w-2xl text-center text-2xl font-black uppercase leading-[1.1] text-foreground sm:text-3xl lg:text-5xl">
               Für jeden Anlass die passende Veranstaltung.
             </h2>
           </Reveal>
@@ -395,9 +395,9 @@ export default async function EventlocationPage() {
       </section>
 
       {/* 6. Unsere Bereiche */}
-      <section id="raeume" className="px-6 py-20 text-center">
+      <section id="raeume" className="px-6 py-20 text-center lg:py-28">
         <div className="mx-auto max-w-xl">
-          <h2 className="text-2xl font-black uppercase leading-[1.1] text-foreground sm:text-3xl lg:text-4xl">
+          <h2 className="text-2xl font-black uppercase leading-[1.1] text-foreground sm:text-3xl lg:text-5xl">
             Unsere Bereiche
           </h2>
           <p className="mt-4 text-base leading-relaxed text-foreground/70">
@@ -415,13 +415,13 @@ export default async function EventlocationPage() {
       </section>
 
       {/* 7. Karte */}
-      <section id="anfahrt" className="bg-foreground/[0.02] px-6 py-20">
-        <div className="mx-auto max-w-5xl">
+      <section id="anfahrt" className="bg-foreground/[0.02] px-6 py-20 lg:py-28">
+        <div className="mx-auto max-w-[77rem]">
           <Reveal>
-            <p className="text-center text-xs font-black uppercase tracking-[0.3em] text-accent-lime">
+            <p className="text-center text-xs font-black uppercase font-mono tracking-[0.2em] text-accent-lime">
               Anfahrt
             </p>
-            <h2 className="mx-auto mt-3 max-w-2xl text-center text-2xl font-black uppercase leading-[1.1] text-foreground sm:text-3xl lg:text-4xl">
+            <h2 className="mx-auto mt-3 max-w-2xl text-center text-2xl font-black uppercase leading-[1.1] text-foreground sm:text-3xl lg:text-5xl">
               So finden Sie uns.
             </h2>
             <p className="mx-auto mt-4 max-w-xl text-center text-foreground/70">
