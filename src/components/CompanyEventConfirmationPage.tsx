@@ -1,3 +1,4 @@
+import Link from "next/link";
 import type { CompanyEvent } from "@/lib/company-events";
 
 // Generalisierte Bestaetigungsseite - Pendant zu
@@ -67,12 +68,12 @@ export default function CompanyEventConfirmationPage({ event }: { event: Company
         </div>
       </div>
 
-      <a
+      <Link
         href="/"
         className="mx-auto mt-10 inline-block text-sm font-bold text-foreground/50 underline"
       >
         Zurück zur Startseite
-      </a>
+      </Link>
     </div>
   );
 }

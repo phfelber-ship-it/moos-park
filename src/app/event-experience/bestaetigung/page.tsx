@@ -1,3 +1,4 @@
+import Link from "next/link";
 import {
   EVENT_ADDRESS,
   EVENT_DATE_LABEL,
@@ -76,12 +77,12 @@ export default function EventExperienceConfirmationPage() {
         </div>
       </div>
 
-      <a
+      <Link
         href="/"
         className="mx-auto mt-10 inline-block text-sm font-bold text-foreground/50 underline"
       >
         Zurück zur Startseite
-      </a>
+      </Link>
     </div>
   );
 }
