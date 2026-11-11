@@ -263,6 +263,8 @@ export default async function EventlocationPage() {
           sizes="100vw"
         />
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/75 via-black/20 to-transparent" />
+        {/* Weicher Übergang in die Seitenfarbe, kein harter Schnitt zum Text darunter */}
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 z-[5] h-24 bg-gradient-to-t from-background via-background/60 to-transparent sm:h-32" />
 
         <div className="relative z-10 mx-auto max-w-[77rem] px-6 pb-12">
           <h1 className="text-3xl font-black uppercase leading-[1.05] tracking-[-0.03em] text-white sm:text-5xl lg:text-6xl">
