@@ -6,6 +6,7 @@ type RowRoom = {
   capacity: string;
   area: string;
   text: string;
+  more?: string;
   images: string[];
 };
 
@@ -48,6 +49,7 @@ export default function RoomRows({ rooms }: { rooms: RowRoom[] }) {
               images={room.images}
               alt={room.name}
               sizes="(min-width: 1024px) 50vw, 100vw"
+              autoplay={false}
             />
           </div>
 
@@ -67,6 +69,9 @@ export default function RoomRows({ rooms }: { rooms: RowRoom[] }) {
               </span>
             </div>
             <p className="mt-4 text-foreground/70">{room.text}</p>
+            {room.more && (
+              <p className="mt-3 text-foreground/70">{room.more}</p>
+            )}
             <a
               href="#anfragen"
               className="mt-6 inline-block rounded-lg bg-accent-lime px-8 py-2.5 text-xs font-black uppercase tracking-wide text-black transition-transform hover:scale-105"
