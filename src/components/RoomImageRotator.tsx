@@ -79,7 +79,7 @@ export default function RoomImageRotator({
 
   if (images.length === 0) {
     return (
-      <div className="flex h-full w-full items-center justify-center bg-[#e5e7e9] text-sm font-semibold text-[#8a9096]">
+      <div className="flex h-full w-full items-center justify-center bg-foreground/10 text-sm font-semibold text-foreground/50">
         Bild folgt
       </div>
     );
