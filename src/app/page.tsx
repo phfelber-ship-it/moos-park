@@ -84,24 +84,15 @@ export default async function Home() {
         </div>
       </section>
 
-      <section className="relative overflow-hidden px-6 py-32 text-center">
-        <Image
-          src="/images/tanzabend-banner.png"
-          alt="Tanz Nächte"
-          fill
-          className="object-cover"
-          sizes="100vw"
-        />
-        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black via-black/60 to-black/30" />
-
+      <section className="px-6 py-28 text-center">
         <Reveal direction="scale" className="relative">
           <p className="text-xs font-black uppercase tracking-[0.3em] text-accent-lime">
             Jeden 2. &amp; 4. Freitag im Monat
           </p>
-          <h2 className="mt-4 text-4xl font-black uppercase leading-[0.95] text-white sm:text-6xl">
+          <h2 className="mt-4 text-4xl font-black uppercase leading-[0.95] text-foreground sm:text-6xl">
             Tanz Nächte
           </h2>
-          <p className="mx-auto mt-4 max-w-md text-white/70">
+          <p className="mx-auto mt-4 max-w-md text-foreground/70">
             &bdquo;Tanzbare Musik, gute Stimmung und echte Emotionen.&ldquo;
           </p>
           <Link
