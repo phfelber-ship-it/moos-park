@@ -82,16 +82,16 @@ const OCCASIONS = [
 ];
 
 const ADVANTAGES = [
-  "Bühne",
-  "Licht- und Tontechnik",
-  "Beamer für Präsentationen",
-  "Küche und Buffet im Haus",
-  "Fest eingebaute Bars",
-  "Pizzeria",
-  "Kostenlose Parkplätze",
-  "Garderobe",
+  "Große Bühne für Ihr Programm",
+  "Sonnenterrasse für Events unter freiem Himmel",
+  "Professionelle Licht- und Tontechnik",
+  "WLAN für Ihre Gäste",
+  "Fest eingebaute Theken",
+  "Pizzeria im Haus",
+  "Kostenlose Parkplätze direkt am Haus",
+  "Garderobe für Ihre Gäste",
   "Räume einzeln oder kombiniert buchbar",
-  "Ein Ansprechpartner für Ihr Event",
+  "Ein fester Ansprechpartner für Ihr Event",
 ];
 
 const FACTS = [
