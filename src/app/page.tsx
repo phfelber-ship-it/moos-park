@@ -2,6 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { getEvents, getGalleries } from "@/lib/clubscale";
 import { getHeroImages } from "@/lib/hero-images";
+import { getHeroVideo } from "@/lib/hero-video";
 import { getAllRoomImages } from "@/lib/room-images";
 import EventsExplorer from "@/components/EventsExplorer";
 import Hero from "@/components/Hero";
@@ -32,7 +33,10 @@ export default async function Home() {
   const events = await getEvents();
   const allGalleries = await getGalleries();
   const galleries = allGalleries.slice(0, 4);
-  const heroImages = await getHeroImages();
+  const [heroImages, heroVideo] = await Promise.all([
+    getHeroImages(),
+    getHeroVideo(),
+  ]);
   const roomImages = await getAllRoomImages();
   // Individuelle Alt-Texte statt generischem "moos.park" - beschreiben, was
   // auf dem jeweiligen Foto tatsaechlich zu sehen ist (gut fuer SEO/
@@ -57,7 +61,7 @@ export default async function Home() {
 
   return (
     <div>
-      <Hero images={heroImages} />
+      <Hero images={heroImages} videoUrl={heroVideo?.url ?? null} />
 
       <section className="px-6 pb-24 pt-12 lg:pt-6">
         <div className="mx-auto w-full min-w-0 max-w-7xl">
