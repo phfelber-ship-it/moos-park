@@ -23,6 +23,14 @@ const stripePromise = loadStripe(STRIPE_PUBLISHABLE_KEY);
 
 type Item = { poolId: string; qty: number };
 
+// Codes haben das Format XXXX-XXXX: Leerzeichen/Bindestrich-Eingaben werden
+// vereinheitlicht, damit "9yyt th5x" und "9YYTTH5X" ebenfalls funktionieren.
+function normalizeCode(raw: string): string | undefined {
+  const clean = raw.replace(/[^a-z0-9]/gi, "").toUpperCase();
+  if (!clean) return undefined;
+  return clean.length === 8 ? `${clean.slice(0, 4)}-${clean.slice(4)}` : clean;
+}
+
 export default function TicketsDataFlow({
   eventId,
   itemsParam,
@@ -45,6 +53,7 @@ export default function TicketsDataFlow({
   const [month, setMonth] = useState("");
   const [year, setYear] = useState("");
   const [mail, setMail] = useState("");
+  const [code, setCode] = useState("");
 
   const [pools, setPools] = useState<TicketPool[] | null>(null);
   const [purchaseRequest, setPurchaseRequest] =
@@ -87,6 +96,7 @@ export default function TicketsDataFlow({
           ticketPoolID: i.poolId,
           quantity: i.qty,
         })),
+        code: normalizeCode(code),
       });
 
       const cs =
@@ -124,7 +134,12 @@ export default function TicketsDataFlow({
   // nicht aus den Pool-Schätzwerten: der tatsächliche Preis enthält neben
   // der Community-Gebühr auch Clubscale- und Zahlungs-Gebühren, die erst
   // beim Erstellen des Purchase-Requests berechnet werden.
+  const itemsTotal = lineItems.reduce(
+    (sum, { pool, qty }) => sum + (pool.free ? 0 : pool.basePricePerTicket * qty),
+    0
+  );
   const subtotal = purchaseRequest?.price ?? 0;
+  const discount = code && itemsTotal > subtotal ? itemsTotal - subtotal : 0;
   const fees = purchaseRequest
     ? purchaseRequest.communityFee +
       purchaseRequest.internalClubscaleFee +
@@ -191,6 +206,18 @@ export default function TicketsDataFlow({
           className="w-full rounded-lg border border-foreground/20 bg-transparent px-4 py-2.5 text-sm text-foreground outline-none focus:border-accent-lime"
         />
 
+        <p className="mb-2 mt-5 text-xs font-bold uppercase tracking-wide text-foreground/50">
+          Gutschein- oder Rabattcode (optional)
+        </p>
+        <input
+          value={code}
+          onChange={(e) => setCode(e.target.value)}
+          placeholder="z. B. 9YYT-TH5X"
+          autoCapitalize="characters"
+          autoComplete="off"
+          className="w-full rounded-lg border border-foreground/20 bg-transparent px-4 py-2.5 font-mono text-sm uppercase tracking-widest text-foreground outline-none focus:border-accent-lime"
+        />
+
         {error && <p className="mt-4 text-sm text-red-500">{error}</p>}
 
         <button
@@ -230,8 +257,14 @@ export default function TicketsDataFlow({
       <div className="mt-4 space-y-2 border-t border-foreground/8 pt-4 text-sm">
         <div className="flex justify-between text-foreground/70">
           <span>Zwischensumme</span>
-          <span>{priceToEuro(subtotal)} €</span>
+          <span>{priceToEuro(discount ? itemsTotal : subtotal)} €</span>
         </div>
+        {discount > 0 && (
+          <div className="flex justify-between text-foreground/70">
+            <span>Code abgezogen</span>
+            <span>-{priceToEuro(discount)} €</span>
+          </div>
+        )}
         <div className="flex justify-between text-foreground/70">
           <span>Gebühr</span>
           <span>{priceToEuro(fees)} €</span>
@@ -269,12 +302,14 @@ export default function TicketsDataFlow({
   );
 }
 
-function PaymentForm({
+export function PaymentForm({
   purchaseRequestId,
   secret,
+  returnPath = "/tickets-data/bestaetigung",
 }: {
   purchaseRequestId: string;
   secret: string;
+  returnPath?: string;
 }) {
   const stripe = useStripe();
   const elements = useElements();
@@ -286,10 +321,7 @@ function PaymentForm({
     setError(null);
     setSubmitting(true);
 
-    const returnUrl = new URL(
-      "/tickets-data/bestaetigung",
-      window.location.origin
-    );
+    const returnUrl = new URL(returnPath, window.location.origin);
     returnUrl.searchParams.set("prid", purchaseRequestId);
     returnUrl.searchParams.set("secret", secret);
 

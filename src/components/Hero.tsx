@@ -22,10 +22,16 @@ const item: Variants = {
   },
 };
 
-export default function Hero({ images }: { images: string[] }) {
+export default function Hero({
+  images,
+  videoUrl,
+}: {
+  images: string[];
+  videoUrl?: string | null;
+}) {
   return (
     <section className="relative flex h-[100vh] items-end overflow-hidden text-center text-white sm:h-[85vh]">
-      <HeroBackground images={images} />
+      <HeroBackground images={images} videoUrl={videoUrl} />
 
       <motion.div
         variants={container}

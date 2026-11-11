@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import type { TicketPool } from "@/lib/clubscale";
-import { checkoutUrl, priceToEuro } from "@/lib/clubscale";
+import { checkoutUrl, isPoolBuyable, priceToEuro } from "@/lib/clubscale";
 import FlipText from "@/components/FlipText";
 
 function formatSaleDate(iso: string) {
@@ -17,9 +17,13 @@ function formatSaleDate(iso: string) {
 export default function TicketSelector({
   eventId,
   pools,
+  hasBoxOffice = false,
+  boxOfficeText = "",
 }: {
   eventId: string;
   pools: TicketPool[];
+  hasBoxOffice?: boolean;
+  boxOfficeText?: string;
 }) {
   const [quantities, setQuantities] = useState<Record<string, number>>({});
 
@@ -33,6 +37,28 @@ export default function TicketSelector({
   // eslint-disable-next-line react-hooks/purity -- Verfuegbarkeit haengt bewusst von der aktuellen Uhrzeit ab
   const now = Date.now();
 
+  const anyBuyable = pools.some((p) => isPoolBuyable(p, now));
+
+  // Vorverkauf vorbei: keine Ueberschrift, keine Liste - nur der Hinweis mit
+  // dem im Dashboard gepflegten Abendkassen-Text.
+  if (!anyBuyable) {
+    const text =
+      boxOfficeText.trim() ||
+      (hasBoxOffice ? "Tickets gibt es an der Abendkasse." : "");
+    return (
+      <div className="rounded-xl border border-foreground/10 bg-foreground/[0.025] p-6 text-center">
+        <p className="font-black uppercase text-foreground">
+          Der Online-VVK ist beendet
+        </p>
+        {text && (
+          <p className="mt-2 whitespace-pre-line text-sm text-foreground/70">
+            {text}
+          </p>
+        )}
+      </div>
+    );
+  }
+
   const total = Object.values(quantities).reduce((a, b) => a + b, 0);
 
   const items = Object.entries(quantities)
@@ -41,6 +67,9 @@ export default function TicketSelector({
 
   return (
     <div>
+      <h2 className="mb-6 text-center text-xl font-black uppercase text-foreground">
+        Tickets
+      </h2>
       <p className="mb-4 text-xs font-bold uppercase tracking-wide text-accent-lime">
         Online Tickets kaufen &amp; sparen
       </p>

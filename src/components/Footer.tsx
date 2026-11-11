@@ -52,9 +52,11 @@ const LINKS_COL_1 = [
 
 const LINKS_COL_2 = [
   { href: "/jobs", label: "Bewerbung" },
+  { href: "/gutscheine", label: "Gutscheine" },
   { href: "/jobs", label: "Jobs" },
   { href: "/promoter", label: "Promoter werden" },
   { href: "/kontakt", label: "Kontakt" },
+  { href: "/lost-and-found", label: "Lost and Found" },
   { href: "/faq", label: "FAQ" },
   { href: "/aufsichtsformular", label: "Aufsicht & Aufsichtszettel" },
 ];

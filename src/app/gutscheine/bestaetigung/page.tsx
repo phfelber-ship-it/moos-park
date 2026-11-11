@@ -1,0 +1,24 @@
+import GutscheinConfirmation from "@/components/GutscheinConfirmation";
+
+export const metadata = {
+  title: "Bestätigung - moos.park Gutscheine",
+  robots: { index: false },
+};
+
+export default async function GutscheinConfirmationPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ prid?: string; secret?: string }>;
+}) {
+  const { prid, secret } = await searchParams;
+
+  return (
+    <div className="mx-auto max-w-lg px-6 pb-16 pt-32">
+      {prid && secret ? (
+        <GutscheinConfirmation purchaseRequestId={prid} secret={secret} />
+      ) : (
+        <p className="text-sm text-red-500">Ungültiger Bestätigungslink.</p>
+      )}
+    </div>
+  );
+}

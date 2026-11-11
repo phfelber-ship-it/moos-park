@@ -6,7 +6,13 @@ import { motion } from "motion/react";
 
 const SLIDE_DURATION = 8000;
 
-export default function HeroBackground({ images }: { images: string[] }) {
+export default function HeroBackground({
+  images,
+  videoUrl,
+}: {
+  images: string[];
+  videoUrl?: string | null;
+}) {
   const slides = images.length > 0 ? images : ["/images/hero-bg.jpg"];
   // Jeden Tag startet ein anderes Bild als erstes (Reihenfolge bleibt
   // gleich, nur der Einstiegspunkt rotiert taeglich weiter) - Server- und
@@ -25,6 +31,42 @@ export default function HeroBackground({ images }: { images: string[] }) {
     }, SLIDE_DURATION);
     return () => clearInterval(id);
   }, [slides.length]);
+
+  if (videoUrl) {
+    // Video statt Slideshow: object-cover fuellt die volle Breite, egal ob
+    // quer oder hochkant (bei Hochkant wird oben/unten beschnitten). Das erste
+    // Bild liegt darunter - sichtbar bis das Video laeuft und bei "weniger
+    // Bewegung" (dann wird das Video ausgeblendet).
+    return (
+      <motion.div
+        initial={{ clipPath: "inset(20% round 32px)" }}
+        animate={{ clipPath: "inset(0% round 0px)" }}
+        transition={{ duration: 1.4, ease: [0.22, 1, 0.36, 1], delay: 0 }}
+        className="absolute inset-0"
+      >
+        <Image
+          src={slides[0]}
+          alt="Partystimmung im moos.park Pöttmes"
+          fill
+          priority
+          className="object-cover"
+          sizes="100vw"
+        />
+        <video
+          src={videoUrl}
+          poster={slides[0]}
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="auto"
+          aria-hidden
+          className="absolute inset-0 h-full w-full object-cover motion-reduce:hidden"
+        />
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-black/25" />
+      </motion.div>
+    );
+  }
 
   return (
     <motion.div

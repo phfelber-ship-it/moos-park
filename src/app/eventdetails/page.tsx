@@ -9,6 +9,7 @@ import {
   tagClasses,
 } from "@/lib/clubscale";
 import TicketSelector from "@/components/TicketSelector";
+import TicketsCta from "@/components/TicketsCta";
 import ReadMore from "@/components/ReadMore";
 import FlipText from "@/components/FlipText";
 
@@ -149,21 +150,21 @@ export default async function EventDetailPage({
         <ReadMore text={event.description} />
       </div>
 
-      <div className="mt-10 text-center">
-        <a
-          href="#tickets"
-          className="inline-flex items-center gap-2 rounded-lg bg-accent-lime px-8 py-3 text-sm font-black uppercase tracking-wide text-black transition-transform hover:scale-105"
+      <div className="mt-10 flex flex-wrap justify-center gap-3">
+        <TicketsCta pools={event.ticketPools} />
+        <Link
+          href={`/reservierung?event=${event.id}`}
+          className="inline-flex items-center gap-2 rounded-lg border border-foreground/30 px-8 py-3 text-sm font-black uppercase tracking-wide text-foreground transition-transform hover:scale-105"
         >
-          <FlipText text="Tickets sichern" />
-        </a>
+          <FlipText text="Reservierung anfragen" />
+        </Link>
       </div>
 
       <div id="tickets" className="mt-10 scroll-mt-24">
-        <h2 className="mb-6 text-center text-xl font-black uppercase text-foreground">
-          Tickets
-        </h2>
         <TicketSelector
           eventId={event.id}
+          hasBoxOffice={event.hasBoxOffice}
+          boxOfficeText={event.boxOfficeText}
           pools={event.ticketPools
             .filter((p) => !p.deactivated)
             .sort((a, b) => a.sortIndex - b.sortIndex)}

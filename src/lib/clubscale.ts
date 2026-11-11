@@ -116,6 +116,17 @@ export function checkoutUrl(
   return `/tickets-data?${params.toString()}`;
 }
 
+// Ein Ticket ist online kaufbar, wenn es nicht deaktiviert/ausverkauft ist und
+// der Verkaufszeitraum laeuft (gleiche Regeln wie in der Ticketauswahl).
+export function isPoolBuyable(pool: TicketPool, now: number): boolean {
+  return (
+    !pool.deactivated &&
+    pool.sold < pool.contingent &&
+    new Date(pool.saleStart).getTime() <= now &&
+    new Date(pool.saleEnd).getTime() >= now
+  );
+}
+
 export function priceToEuro(cents: number): string {
   return (cents / 100).toLocaleString("de-DE", {
     minimumFractionDigits: 2,
@@ -245,10 +256,18 @@ export type Ticket = {
   qrText: string;
 };
 
+export type GiftCardShort = {
+  id: string;
+  code: string;
+  totalBalance: number;
+};
+
 export type Purchase = {
   id: string;
+  status?: "PENDING" | "SUCCEEDED" | "CANCELED";
   clientSecret?: string;
   tickets?: Ticket[];
+  giftCards?: GiftCardShort[];
 };
 
 export type DirectPurchaseResponse = {
@@ -265,6 +284,7 @@ export async function createDirectPurchaseRequest(input: {
   firstName: string;
   lastName: string;
   items: { ticketPoolID: string; quantity: number }[];
+  code?: string;
 }): Promise<DirectPurchaseResponse> {
   // phoneNumber/phoneVerificationCode duerfen hier nicht als leere Strings
   // mitgeschickt werden - schon ihre bloße Anwesenheit im Body loest bei der
@@ -282,7 +302,9 @@ export async function createDirectPurchaseRequest(input: {
       lastname: input.lastName,
       gender: "UNKNOWN" satisfies Gender,
       address: { street: "", houseNumber: "", zip: "", city: "", country: "" },
-      discountCodes: [],
+      // codes nimmt Rabatt- und Gutscheincodes gemeinsam entgegen
+      codes: input.code ? [input.code] : [],
+      discountCodes: [], // deprecated bei Clubscale, bis zur Entfernung zur Sicherheit mitsenden
       dryRun: false,
       items: input.items,
     }),
@@ -355,6 +377,46 @@ export async function getEventReservables(
   return data.reservables.filter((r) => !r.disabled);
 }
 
+export type ReservationDrinkCategory = {
+  id: string;
+  text: string;
+  sortIndex: number;
+};
+
+export type ReservationDrink = {
+  id: string;
+  text: string;
+  subtext?: string;
+  price: number;
+  categoryID?: string;
+};
+
+// Optionale Vorbestellung (Getraenke) zur Reservierung. Die Public-API liefert
+// nur aktive Produkte, bereits nach Kategorie und sortIndex sortiert. Bei
+// Fehler oder wenn das Feature (enableReservationSubOrders) aus ist, kommt
+// eine leere Liste - der Wizard blendet den Schritt dann aus.
+export async function getReservationDrinks(): Promise<{
+  categories: ReservationDrinkCategory[];
+  products: ReservationDrink[];
+}> {
+  try {
+    const res = await fetch(`${API_BASE}/reservation-sub-order-products`, {
+      cache: "no-store",
+    });
+    if (!res.ok) return { categories: [], products: [] };
+    const data = (await res.json()) as {
+      reservationSubOrderProducts?: ReservationDrink[];
+      reservationSubOrderProductCategories?: ReservationDrinkCategory[];
+    };
+    return {
+      categories: data.reservationSubOrderProductCategories ?? [],
+      products: data.reservationSubOrderProducts ?? [],
+    };
+  } catch {
+    return { categories: [], products: [] };
+  }
+}
+
 // Oeffentliche Reservierungs-API: Name/E-Mail/Telefon sind fuer die
 // /public/ Variante Pflicht (siehe swagger_public.json), userID/vip/state/
 // minConsumption sind dort admin/super-only und werden bewusst nicht
@@ -368,6 +430,7 @@ export async function createReservation(input: {
   amountOfPersons: number;
   arrivalTime: string;
   additionalInformation: string;
+  subOrders?: { productID: string; quantity: number }[];
 }): Promise<void> {
   const res = await fetch(`${API_BASE}/reservations`, {
     method: "POST",
@@ -381,6 +444,8 @@ export async function createReservation(input: {
       amountOfPersons: input.amountOfPersons,
       arrivalTime: input.arrivalTime,
       additionalInformation: input.additionalInformation,
+      // nur mitsenden, wenn etwas gewaehlt wurde (Feature ist optional)
+      ...(input.subOrders?.length ? { subOrderRequests: input.subOrders } : {}),
     }),
   });
   if (!res.ok) {
@@ -482,4 +547,70 @@ export async function getFaqs(): Promise<Faq[]> {
   }
   const data = (await res.json()) as { faqs: Faq[] };
   return [...data.faqs].sort((a, b) => a.sortIndex - b.sortIndex);
+}
+
+export type GiftCardTemplate = {
+  id: string;
+  name: string;
+  description: string;
+  balance: number;
+  sortIndex: number;
+  published: boolean;
+  deactivated: boolean;
+  image: ClubscaleImage | null;
+};
+
+export async function getGiftCardTemplates(): Promise<GiftCardTemplate[]> {
+  try {
+    const res = await fetch(`${API_BASE}/gift-card-templates?limit=100`, {
+      next: { revalidate: 300 },
+    });
+    if (!res.ok) return [];
+    const data = (await res.json()) as { giftCardTemplates: GiftCardTemplate[] };
+    return data.giftCardTemplates
+      .filter((t) => t.published && !t.deactivated)
+      .sort((a, b) => a.sortIndex - b.sortIndex);
+  } catch {
+    return [];
+  }
+}
+
+// Ein Gutschein-Kauf enthaelt nur Gutscheine, nie Tickets, und braucht kein
+// Event. Pro Position entweder eine Vorlage (templateID) oder ein frei
+// gewaehlter Betrag in Cent (balance).
+export type GiftCardItemInput = {
+  templateID?: string;
+  balance?: number;
+  quantity: number;
+};
+
+export async function createDirectGiftCardPurchase(input: {
+  birthday: string;
+  mail: string;
+  firstName: string;
+  lastName: string;
+  items: GiftCardItemInput[];
+}): Promise<DirectPurchaseResponse> {
+  const res = await fetch(`${API_BASE}/purchase-requests/direct`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      birthday: input.birthday,
+      mail: input.mail,
+      firstname: input.firstName,
+      lastname: input.lastName,
+      gender: "UNKNOWN" satisfies Gender,
+      address: { street: "", houseNumber: "", zip: "", city: "", country: "" },
+      codes: [],
+      discountCodes: [],
+      dryRun: false,
+      items: [],
+      giftCardItems: input.items,
+    }),
+  });
+  const data = await res.json();
+  if (!res.ok) {
+    throw new Error(data?.message ?? "Gutschein-Bestellung fehlgeschlagen.");
+  }
+  return data as DirectPurchaseResponse;
 }

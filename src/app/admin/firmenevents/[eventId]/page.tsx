@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import { getCompanyEvent, getCompanyEvents } from "@/lib/company-events";
+import CompanyEventOnlineToggle from "@/components/CompanyEventOnlineToggle";
 import EventSwitcher from "@/components/EventSwitcher";
 import { getRegistrationsForEvent } from "@/lib/event-experience";
 import { getEventTemplate } from "@/lib/event-experience-template";
@@ -106,6 +107,7 @@ export default async function CompanyEventAdminPage({
             events={allEvents.map((ev) => ({ id: ev.id, name: ev.name }))}
             currentEventId={eventId}
           />
+          <CompanyEventOnlineToggle eventId={eventId} initialStatus={event.status} />
           <a
             href={`/${event.slug}`}
             target="_blank"
