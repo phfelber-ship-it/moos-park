@@ -7,8 +7,9 @@ import { useEffect, useRef, useState } from "react";
 import ThemeToggle from "@/components/ThemeToggle";
 import StaggerText from "@/components/StaggerText";
 
-// Home ist das Logo oben. Zuerst die Hauptpunkte, der Rest hinter "Mehr".
+// Zuerst die Hauptpunkte, der Rest hinter "Mehr".
 const NAV_LINKS = [
+  { href: "/", label: "Home" },
   { href: "/events", label: "Events" },
   { href: "/galerie", label: "Bilder" },
   { href: "/reservierung", label: "Reservierung" },
@@ -150,7 +151,10 @@ export default function Header() {
           }`}
         >
           {NAV_LINKS.map((link, i) => {
-            const active = pathname?.startsWith(link.href);
+            const active =
+              link.href === "/"
+                ? pathname === "/"
+                : pathname?.startsWith(link.href);
             return (
               <Link
                 key={link.href}
