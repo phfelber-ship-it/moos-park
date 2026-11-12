@@ -9,7 +9,7 @@ import Hero from "@/components/Hero";
 import Reveal from "@/components/Reveal";
 import AppPhoneReveal from "@/components/AppPhoneReveal";
 import WhatsAppChannelReveal from "@/components/WhatsAppChannelReveal";
-import FanGallery from "@/components/FanGallery";
+import Carousel3D from "@/components/Carousel3D";
 import FlipText from "@/components/FlipText";
 import GalleryCard from "@/components/GalleryCard";
 import RoomsShowcase from "@/components/RoomsShowcase";
@@ -283,7 +283,7 @@ export default async function Home() {
           </p>
         </Reveal>
 
-        <FanGallery photos={fanPhotos} />
+        <Carousel3D photos={fanPhotos} />
       </section>
 
       <section className="flex min-h-[720px] items-center px-6 py-24 lg:py-28">
