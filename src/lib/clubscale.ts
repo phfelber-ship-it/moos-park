@@ -127,6 +127,21 @@ export function isPoolBuyable(pool: TicketPool, now: number): boolean {
   );
 }
 
+// Frühester Verkaufsstart eines Tickets, das noch nicht begonnen hat (und
+// nicht deaktiviert/ausverkauft ist). null, wenn es keinen künftigen Start gibt.
+export function nextSaleStart(pools: TicketPool[], now: number): number | null {
+  const starts = pools
+    .filter(
+      (p) =>
+        !p.deactivated &&
+        p.sold < p.contingent &&
+        new Date(p.saleStart).getTime() > now &&
+        new Date(p.saleEnd).getTime() >= new Date(p.saleStart).getTime()
+    )
+    .map((p) => new Date(p.saleStart).getTime());
+  return starts.length > 0 ? Math.min(...starts) : null;
+}
+
 export function priceToEuro(cents: number): string {
   return (cents / 100).toLocaleString("de-DE", {
     minimumFractionDigits: 2,
