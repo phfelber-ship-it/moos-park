@@ -3,7 +3,12 @@
 import { useState } from "react";
 import Link from "next/link";
 import type { TicketPool } from "@/lib/clubscale";
-import { checkoutUrl, isPoolBuyable, priceToEuro } from "@/lib/clubscale";
+import {
+  checkoutUrl,
+  isPoolBuyable,
+  nextSaleStart,
+  priceToEuro,
+} from "@/lib/clubscale";
 import FlipText from "@/components/FlipText";
 
 function formatSaleDate(iso: string) {
@@ -12,6 +17,24 @@ function formatSaleDate(iso: string) {
     month: "2-digit",
     timeZone: "Europe/Berlin",
   });
+}
+
+// "18. November 2026" bzw. "18. November 2026, 19:00 Uhr" (Uhrzeit nur, wenn
+// der Start nicht genau um Mitternacht liegt).
+function formatSaleStart(ms: number) {
+  const tz = "Europe/Berlin";
+  const date = new Date(ms).toLocaleDateString("de-DE", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+    timeZone: tz,
+  });
+  const time = new Date(ms).toLocaleTimeString("de-DE", {
+    hour: "2-digit",
+    minute: "2-digit",
+    timeZone: tz,
+  });
+  return time === "00:00" ? date : `${date}, ${time} Uhr`;
 }
 
 export default function TicketSelector({
@@ -39,8 +62,19 @@ export default function TicketSelector({
 
   const anyBuyable = pools.some((p) => isPoolBuyable(p, now));
 
-  // Vorverkauf vorbei: keine Ueberschrift, keine Liste - nur der Hinweis mit
-  // dem im Dashboard gepflegten Abendkassen-Text.
+  // Noch nichts kaufbar: Hat der Verkauf noch nicht begonnen, steht der
+  // Starttermin aus dem Dashboard da; sonst ist der Vorverkauf beendet (dann mit
+  // dem im Dashboard gepflegten Abendkassen-Text).
+  const upcoming = anyBuyable ? null : nextSaleStart(pools, now);
+  if (!anyBuyable && upcoming !== null) {
+    return (
+      <div className="rounded-xl border border-foreground/10 bg-foreground/[0.025] p-6 text-center">
+        <p className="font-black uppercase text-foreground">
+          Der Online-Vorverkauf startet am {formatSaleStart(upcoming)}
+        </p>
+      </div>
+    );
+  }
   if (!anyBuyable) {
     const text =
       boxOfficeText.trim() ||
