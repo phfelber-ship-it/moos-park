@@ -211,8 +211,12 @@ export default function TicketSelector({
 
       <Link
         href={total > 0 ? checkoutUrl(eventId, items) : "#"}
-        className={`mt-4 block rounded-lg bg-accent-lime px-8 py-3 text-center text-sm font-black uppercase tracking-wide text-black transition-transform hover:scale-105 ${
-          total === 0 ? "pointer-events-none opacity-40" : ""
+        onClick={(e) => {
+          // Ohne Auswahl bleibt der Button kräftig grün, tut aber nichts.
+          if (total === 0) e.preventDefault();
+        }}
+        className={`mt-4 block rounded-lg bg-green-500 px-8 py-3 text-center text-sm font-black uppercase tracking-wide text-black transition-transform ${
+          total === 0 ? "cursor-default" : "hover:scale-105"
         }`}
       >
         <FlipText text="Weiter zum Checkout" />

@@ -74,7 +74,7 @@ export default function Hero({
               fullWidth={false}
               className={
                 action.filled
-                  ? "block w-full rounded-lg bg-accent-lime px-6 py-2.5 text-center text-xs font-black uppercase tracking-wide text-black sm:py-3.5 sm:text-sm sm:w-auto"
+                  ? "block w-full rounded-lg bg-green-500 px-6 py-2.5 text-center text-xs font-black uppercase tracking-wide text-black sm:py-3.5 sm:text-sm sm:w-auto"
                   : "block w-full rounded-lg border border-white/40 px-6 py-2.5 text-center text-xs font-black uppercase tracking-wide text-white transition-colors hover:border-white sm:py-3.5 sm:text-sm sm:w-auto"
               }
             >

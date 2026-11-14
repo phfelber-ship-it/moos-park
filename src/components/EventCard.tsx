@@ -79,7 +79,7 @@ export default function EventCard({ event }: { event: ClubscaleEvent }) {
       <div className="mt-4 flex w-full max-w-[280px] gap-2">
         <MotionLink
           href={`/eventdetails?id=${event.id}#tickets`}
-          className="block flex-1 whitespace-nowrap rounded-lg bg-foreground px-2 py-2 text-center text-[9px] font-black uppercase tracking-wide text-background sm:text-[10px]"
+          className="block flex-1 whitespace-nowrap rounded-lg bg-green-500 px-2 py-2 text-center text-[9px] font-black uppercase tracking-wide text-black sm:text-[10px]"
         >
           Tickets kaufen
         </MotionLink>
