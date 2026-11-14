@@ -186,7 +186,7 @@ export default function GalleryLightbox({
         <a
           href={current.ticketHref}
           onClick={(e) => e.stopPropagation()}
-          className="fixed inset-x-6 bottom-8 z-10 mx-auto flex w-fit items-center gap-2 rounded-full bg-accent-lime px-6 py-3 text-sm font-black uppercase tracking-wide text-black transition-transform hover:scale-105"
+          className="fixed inset-x-6 bottom-8 z-10 mx-auto flex w-fit items-center gap-2 rounded-full bg-green-500 px-6 py-3 text-sm font-black uppercase tracking-wide text-black transition-transform hover:scale-105"
         >
           <FlipText text="Jetzt Tickets sichern →" />
         </a>
