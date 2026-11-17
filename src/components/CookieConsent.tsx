@@ -49,9 +49,29 @@ export function getStoredConsent(): Consent | null {
 }
 
 function saveConsent(consent: Consent) {
+  const previous = getStoredConsent();
   const stored: StoredConsent = { ...consent, savedAt: Date.now() };
   localStorage.setItem(STORAGE_KEY, JSON.stringify(stored));
   window.dispatchEvent(new CustomEvent(CONSENT_EVENT, { detail: consent }));
+
+  // Widerruf: bereits geladene Tracker (GTM, Meta Pixel) lassen sich nicht
+  // zuverlaessig im laufenden Seitenaufruf abschalten - daher Meta-Pixel
+  // widerrufen und die Seite neu laden, damit nichts weiterlaeuft.
+  const revoked =
+    previous &&
+    ((previous.statistics && !consent.statistics) ||
+      (previous.marketing && !consent.marketing));
+  if (revoked) {
+    try {
+      const fbq = (window as unknown as { fbq?: (...a: unknown[]) => void }).fbq;
+      if (!consent.marketing && typeof fbq === "function") {
+        fbq("consent", "revoke");
+      }
+    } catch {
+      // egal - Reload folgt ohnehin
+    }
+    window.location.reload();
+  }
 }
 
 export default function CookieConsent() {
