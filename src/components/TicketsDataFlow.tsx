@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { loadStripe } from "@stripe/stripe-js";
 import {
@@ -65,6 +65,46 @@ export default function TicketsDataFlow({
   const [secret, setSecret] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  // Warenkorb an den Tag Manager melden (einmal je Aufruf der Seite): Wert und
+  // Positionen aus den Ticketpools, Beträge der Clubscale-API sind Cent.
+  const cartTracked = useRef(false);
+  useEffect(() => {
+    if (cartTracked.current || !eventId || items.length === 0) return;
+    cartTracked.current = true;
+    let cancelled = false;
+    getTicketPools(eventId)
+      .then((poolsData) => {
+        if (cancelled) return;
+        const cartItems = poolsData
+          .map((pool) => {
+            const item = items.find((i) => i.poolId === pool.id);
+            if (!item || item.qty <= 0) return null;
+            return {
+              item_id: pool.id,
+              item_name: pool.name,
+              quantity: item.qty,
+              price: pool.free ? 0 : pool.basePricePerTicket / 100,
+            };
+          })
+          .filter((x): x is NonNullable<typeof x> => Boolean(x));
+        if (cartItems.length === 0) return;
+        const w = window as unknown as { dataLayer?: unknown[] };
+        w.dataLayer = w.dataLayer || [];
+        w.dataLayer.push({
+          event: "add_to_cart",
+          currency: "EUR",
+          value: cartItems.reduce((sum, i) => sum + i.price * i.quantity, 0),
+          items: cartItems,
+        });
+      })
+      .catch(() => {
+        // Tracking darf den Checkout nie stoeren.
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [eventId, items]);
 
   const canContinue =
     firstName.trim() &&
