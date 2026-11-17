@@ -1,16 +1,69 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { CONSENT_EVENT, getStoredConsent, type Consent } from "@/components/CookieConsent";
 
 const GTM_ID = "GTM-5WX2BJ9J";
 
+type DataLayerWindow = Window & { dataLayer?: unknown[] };
+
+function dl(): unknown[] {
+  const w = window as DataLayerWindow;
+  w.dataLayer = w.dataLayer || [];
+  return w.dataLayer;
+}
+
+// Google Consent Mode (v2): gtag-Syntax, der GTM erwartet Argumente-Objekte.
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+function gtag(..._args: unknown[]) {
+  // eslint-disable-next-line prefer-rest-params
+  dl().push(arguments);
+}
+
+// Gibt die Einwilligung an den GTM weiter. Tags im Container koennen darueber
+// (Einwilligungspruefung ad_storage/analytics_storage bzw. Trigger-Ereignisse)
+// auf Statistik bzw. Marketing beschraenkt werden.
+function pushConsent(consent: Consent) {
+  gtag("consent", "update", {
+    analytics_storage: consent.statistics ? "granted" : "denied",
+    ad_storage: consent.marketing ? "granted" : "denied",
+    ad_user_data: consent.marketing ? "granted" : "denied",
+    ad_personalization: consent.marketing ? "granted" : "denied",
+  });
+  dl().push({
+    event: "cookie_consent_update",
+    consent_statistics: consent.statistics,
+    consent_marketing: consent.marketing,
+  });
+}
+
+function pushConsentDefault() {
+  gtag("consent", "default", {
+    analytics_storage: "denied",
+    ad_storage: "denied",
+    ad_user_data: "denied",
+    ad_personalization: "denied",
+  });
+}
+
 export default function GoogleTagManager() {
   const [loaded, setLoaded] = useState(false);
+  const defaultSent = useRef(false);
+  const lastPushed = useRef("");
 
   useEffect(() => {
     const check = (consent: Consent | null) => {
-      if (consent && (consent.statistics || consent.marketing) && !loaded) {
+      if (!consent) return;
+      if (!defaultSent.current) {
+        defaultSent.current = true;
+        pushConsentDefault();
+      }
+      const key = `${consent.statistics}|${consent.marketing}`;
+      if (key !== lastPushed.current) {
+        lastPushed.current = key;
+        pushConsent(consent);
+      }
+      if ((consent.statistics || consent.marketing) && !loaded) {
         setLoaded(true);
       }
     };
@@ -25,9 +78,7 @@ export default function GoogleTagManager() {
   useEffect(() => {
     if (!loaded) return;
 
-    (window as unknown as { dataLayer: unknown[] }).dataLayer =
-      (window as unknown as { dataLayer: unknown[] }).dataLayer || [];
-    (window as unknown as { dataLayer: unknown[] }).dataLayer.push({
+    dl().push({
       "gtm.start": Date.now(),
       event: "gtm.js",
     });
