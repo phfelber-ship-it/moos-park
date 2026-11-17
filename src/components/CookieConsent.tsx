@@ -77,8 +77,8 @@ function saveConsent(consent: Consent) {
 export default function CookieConsent() {
   const [visible, setVisible] = useState(false);
   const [details, setDetails] = useState(false);
-  const [statistics, setStatistics] = useState(true);
-  const [marketing, setMarketing] = useState(true);
+  const [statistics, setStatistics] = useState(false);
+  const [marketing, setMarketing] = useState(false);
 
   useEffect(() => {
     // Bewusst SSR-sicher: Banner startet ausgeblendet (Server-Render) und
