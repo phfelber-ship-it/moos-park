@@ -6,7 +6,7 @@ import Link from "next/link";
 // Anmeldeformular ablenkt oder von der Seite wegfuehrt.
 export default function MinimalFooter() {
   return (
-    <footer className="border-t border-foreground/8 bg-foreground/[0.02] px-6 py-10">
+    <footer className="bg-background px-6 py-10">
       <div className="mx-auto flex max-w-sm flex-col items-center gap-4 text-center">
         <Image
           src="/images/logo.png"
