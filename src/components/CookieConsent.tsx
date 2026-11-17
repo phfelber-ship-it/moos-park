@@ -13,6 +13,12 @@ type StoredConsent = Consent & { savedAt: number };
 
 const STORAGE_KEY = "cookie-consent";
 export const CONSENT_EVENT = "cookie-consent-updated";
+export const OPEN_EVENT = "cookie-consent-open";
+
+// Oeffnet das Banner erneut (Link "Cookie-Einstellungen" im Footer).
+export function openCookieSettings() {
+  window.dispatchEvent(new Event(OPEN_EVENT));
+}
 
 // Laufzeit der Entscheidung, bevor wir erneut fragen. Bei "nur notwendige"
 // speichern wir keinerlei Statistik-/Marketing-Cookies, daher reicht hier
@@ -62,6 +68,18 @@ export default function CookieConsent() {
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setVisible(true);
     }
+  }, []);
+
+  useEffect(() => {
+    const open = () => {
+      const stored = getStoredConsent();
+      setStatistics(stored ? stored.statistics : false);
+      setMarketing(stored ? stored.marketing : false);
+      setDetails(true);
+      setVisible(true);
+    };
+    window.addEventListener(OPEN_EVENT, open);
+    return () => window.removeEventListener(OPEN_EVENT, open);
   }, []);
 
   if (!visible) return null;
