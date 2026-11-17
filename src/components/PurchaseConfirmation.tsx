@@ -43,8 +43,28 @@ export default function PurchaseConfirmation({
     if (purchaseRequest?.status === "SUCCEEDED" && !confettiFired.current) {
       confettiFired.current = true;
       fireConfetti();
+
+      // Kaufabschluss an den Tag Manager melden (echter Betrag in EUR statt
+      // fest verdrahteter 0.00 USD). Betraege der Clubscale-API sind Cent.
+      // Einmal je Bestellung, auch bei Seiten-Reload.
+      try {
+        const key = `purchase-tracked-${purchaseRequest.id}`;
+        if (!sessionStorage.getItem(key)) {
+          sessionStorage.setItem(key, "1");
+          const w = window as unknown as { dataLayer?: unknown[] };
+          w.dataLayer = w.dataLayer || [];
+          w.dataLayer.push({
+            event: "purchase_confirmed",
+            transaction_id: purchaseRequest.id,
+            value: Math.round(purchaseRequest.total) / 100,
+            currency: "EUR",
+          });
+        }
+      } catch {
+        // Tracking darf die Bestaetigung nie stoeren.
+      }
     }
-  }, [purchaseRequest?.status]);
+  }, [purchaseRequest]);
 
   useEffect(() => {
     let cancelled = false;
