@@ -1,4 +1,5 @@
 import Image from "next/image";
+import CookieSettingsButton from "@/components/CookieSettingsButton";
 import Link from "next/link";
 
 // Schlanker Footer fuer reine Landingpages (z.B. /event-experience) - nur
@@ -22,6 +23,7 @@ export default function MinimalFooter() {
           <Link href="/datenschutz" className="hover:text-foreground">
             Datenschutz
           </Link>
+          <CookieSettingsButton className="hover:text-foreground" />
         </div>
         <p className="text-xs text-foreground/40">
           © MOOS-PARK GASTRONOMIE GMBH {new Date().getFullYear()}

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import CookieSettingsButton from "@/components/CookieSettingsButton";
 import Image from "next/image";
 
 const SOCIALS = [
@@ -124,6 +125,7 @@ export default function Footer() {
               {l.label}
             </Link>
           ))}
+          <CookieSettingsButton className="hover:text-foreground" />
         </div>
 
         <div className="mt-8 border-t border-foreground/8 pt-6 text-xs text-foreground/40">
@@ -196,6 +198,9 @@ export default function Footer() {
                 </Link>
               </li>
             ))}
+            <li>
+              <CookieSettingsButton className="hover:text-foreground" />
+            </li>
           </ul>
         </div>
 
