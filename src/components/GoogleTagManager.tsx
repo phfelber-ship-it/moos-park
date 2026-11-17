@@ -35,11 +35,6 @@ function pushConsent(consent: Consent) {
     consent_statistics: consent.statistics,
     consent_marketing: consent.marketing,
   });
-  // Ereignisnamen wie im frueheren Cookie-Tool (Borlabs), auf die bestehende
-  // Trigger im Container hoeren.
-  if (consent.statistics) {
-    dl().push({ event: "borlabs-cookie-opt-in-google-analytics" });
-  }
 }
 
 function pushConsentDefault() {
