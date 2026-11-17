@@ -94,7 +94,7 @@ function IconButton({
 
 export default function Footer() {
   return (
-    <footer className="border-t border-foreground/8 bg-foreground/[0.02] px-6 py-16">
+    <footer className="bg-background px-6 py-16">
       {/* Mobil: schlanke Kurzfassung - nur Logo, Icons und die
           rechtlich nötigen Links, statt aller Link-Spalten. */}
       <div className="mx-auto max-w-sm text-center lg:hidden">
