@@ -3,6 +3,7 @@ import { Montserrat } from "next/font/google";
 import "./globals.css";
 import SiteChrome from "@/components/SiteChrome";
 import GoogleTagManager from "@/components/GoogleTagManager";
+import MetricoolTracker from "@/components/MetricoolTracker";
 import ClickTracker from "@/components/ClickTracker";
 import StructuredDataInjector from "@/components/StructuredDataInjector";
 import { buildStructuredData } from "@/lib/structured-data";
@@ -63,6 +64,7 @@ export default function RootLayout({
       <body className="flex min-h-full flex-col bg-background font-sans text-foreground">
         <SiteChrome>{children}</SiteChrome>
         <GoogleTagManager />
+        <MetricoolTracker />
         <ClickTracker />
         {/* Strukturierte Daten (JSON-LD) laufen bewusst client-seitig statt
             im Server-Rendering - ein Blob-Fetch im Layout/einer Seite
