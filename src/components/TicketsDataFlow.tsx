@@ -142,6 +142,20 @@ export default function TicketsDataFlow({
       const cs =
         response.purchase?.clientSecret ?? response.clientSecret ?? null;
 
+      if (!cs && response.purchaseRequest.total === 0) {
+        // Nichts zu bezahlen (z. B. 100-%-Rabattcode): Clubscale legt dann
+        // keinen Zahlungsvorgang an, die Tickets werden direkt versendet.
+        // Gleich auf die Bestätigungsseite, sie lädt den Status nach.
+        const confirmUrl = new URL(
+          "/tickets-data/bestaetigung",
+          window.location.origin
+        );
+        confirmUrl.searchParams.set("prid", response.purchaseRequest.id);
+        confirmUrl.searchParams.set("secret", response.secret);
+        window.location.assign(confirmUrl.toString());
+        return;
+      }
+
       if (!cs) {
         throw new Error(
           "Zahlung konnte nicht vorbereitet werden. Bitte an den Support wenden."
