@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import confetti from "canvas-confetti";
 import FlipText from "@/components/FlipText";
+import { getStoredConsent } from "@/components/CookieConsent";
 import {
   getPurchaseRequest,
   ticketsPdfUrl,
@@ -59,12 +60,23 @@ export default function PurchaseConfirmation({
             value: Math.round(purchaseRequest.total) / 100,
             currency: "EUR",
           });
+
+          // Zusaetzlich serverseitig an Meta (Conversions API), damit Kaeufe
+          // auch bei Safari/Blockern zaehlen. Nur mit Marketing-Einwilligung.
+          if (getStoredConsent()?.marketing) {
+            fetch("/api/track/meta-purchase", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ purchaseRequestId, secret }),
+              keepalive: true,
+            }).catch(() => {});
+          }
         }
       } catch {
         // Tracking darf die Bestaetigung nie stoeren.
       }
     }
-  }, [purchaseRequest]);
+  }, [purchaseRequest, purchaseRequestId, secret]);
 
   useEffect(() => {
     let cancelled = false;
