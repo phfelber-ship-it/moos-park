@@ -50,7 +50,9 @@ export default function PurchaseConfirmation({
       // Einmal je Bestellung, auch bei Seiten-Reload.
       try {
         const key = `purchase-tracked-${purchaseRequest.id}`;
-        if (!sessionStorage.getItem(key)) {
+        // Kostenlose Bestellungen (0 EUR, z. B. 100-%-Rabattcode) sind kein
+        // Kauf fuer die Werbeauswertung und werden nicht gemeldet.
+        if (purchaseRequest.total > 0 && !sessionStorage.getItem(key)) {
           sessionStorage.setItem(key, "1");
           const w = window as unknown as { dataLayer?: unknown[] };
           w.dataLayer = w.dataLayer || [];
