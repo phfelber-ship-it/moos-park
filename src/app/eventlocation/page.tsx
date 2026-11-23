@@ -11,6 +11,11 @@ import Reveal from "@/components/Reveal";
 const SITE_URL =
   process.env.NEXT_PUBLIC_SITE_URL ?? "https://moos-park-hmd7.vercel.app";
 
+// Raeume, die auf dieser Seite vorerst ausgeblendet sind (z. B. bis ein Foto
+// vorliegt). Zum Wiedereinblenden den Slug hier entfernen.
+const HIDDEN_ROOM_SLUGS = ["bar"];
+const VISIBLE_ROOMS = ROOMS.filter((r) => !HIDDEN_ROOM_SLUGS.includes(r.slug));
+
 export const metadata = {
   alternates: { canonical: "/eventlocation" },
   title: "Eventlocation Pöttmes – Veranstaltungslocation Bayern | moos.park",
@@ -222,7 +227,7 @@ export default async function EventlocationPage() {
       name,
       value: true,
     })),
-    containsPlace: ROOMS.map((room) => ({
+    containsPlace: VISIBLE_ROOMS.map((room) => ({
       "@type": "Room",
       name: room.name,
       description: room.text,
@@ -409,7 +414,7 @@ export default async function EventlocationPage() {
         </div>
 
         <RoomRows
-          rooms={ROOMS.map((room) => ({
+          rooms={VISIBLE_ROOMS.map((room) => ({
             ...room,
             images: roomImages[room.slug] ?? room.images,
           }))}
