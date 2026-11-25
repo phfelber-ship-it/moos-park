@@ -19,7 +19,18 @@ export type TicketPool = {
   sortIndex: number;
   // Optionales Badge, das im Clubscale-Dashboard pro Ticket gesetzt wird.
   badge?: { text: string; color: string; icon: string } | null;
+  // Hinterlegte Coupons: Solche Tickets lassen sich nur ueber die App buchen,
+  // weil der Coupon dort bestaetigt/eingeloest wird.
+  couponShopIDs?: string[];
+  couponPoolIDs?: string[];
 };
+
+export function hasCoupon(pool: TicketPool): boolean {
+  return (
+    (pool.couponShopIDs?.length ?? 0) > 0 ||
+    (pool.couponPoolIDs?.length ?? 0) > 0
+  );
+}
 
 // Lesbare Textfarbe (schwarz/weiss) fuer eine Hex-Hintergrundfarbe.
 // Gibt null zurueck, wenn die Farbe kein gueltiges #RRGGBB ist.
@@ -136,6 +147,7 @@ export function checkoutUrl(
 export function isPoolBuyable(pool: TicketPool, now: number): boolean {
   return (
     !pool.deactivated &&
+    !hasCoupon(pool) &&
     pool.sold < pool.contingent &&
     new Date(pool.saleStart).getTime() <= now &&
     new Date(pool.saleEnd).getTime() >= now
@@ -149,6 +161,7 @@ export function nextSaleStart(pools: TicketPool[], now: number): number | null {
     .filter(
       (p) =>
         !p.deactivated &&
+        !hasCoupon(p) &&
         p.sold < p.contingent &&
         new Date(p.saleStart).getTime() > now &&
         new Date(p.saleEnd).getTime() >= new Date(p.saleStart).getTime()

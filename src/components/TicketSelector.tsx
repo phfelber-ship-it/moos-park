@@ -9,6 +9,7 @@ import {
   nextSaleStart,
   priceToEuro,
   badgeColors,
+  hasCoupon,
 } from "@/lib/clubscale";
 import FlipText from "@/components/FlipText";
 
@@ -66,8 +67,11 @@ export default function TicketSelector({
   // Noch nichts kaufbar: Hat der Verkauf noch nicht begonnen, steht der
   // Starttermin aus dem Dashboard da; sonst ist der Vorverkauf beendet (dann mit
   // dem im Dashboard gepflegten Abendkassen-Text).
-  const upcoming = anyBuyable ? null : nextSaleStart(pools, now);
-  if (!anyBuyable && upcoming !== null) {
+  // Tickets mit Coupon gibt es nur in der App: Sie bleiben sichtbar (ausgegraut,
+  // mit Label), statt dass die Liste durch "VVK beendet" ersetzt wird.
+  const hasAppOnly = pools.some((p) => !p.deactivated && hasCoupon(p));
+  const upcoming = anyBuyable || hasAppOnly ? null : nextSaleStart(pools, now);
+  if (!anyBuyable && !hasAppOnly && upcoming !== null) {
     return (
       <div className="rounded-xl border border-foreground/10 bg-foreground/[0.025] p-6 text-center">
         <p className="font-black uppercase text-foreground">
@@ -76,7 +80,7 @@ export default function TicketSelector({
       </div>
     );
   }
-  if (!anyBuyable) {
+  if (!anyBuyable && !hasAppOnly) {
     const text =
       boxOfficeText.trim() ||
       (hasBoxOffice ? "Tickets gibt es an der Abendkasse." : "");
@@ -116,7 +120,8 @@ export default function TicketSelector({
           const saleNotStarted = new Date(pool.saleStart).getTime() > now;
           const saleEnded = new Date(pool.saleEnd).getTime() < now;
           const soldOut = pool.sold >= pool.contingent;
-          const unavailable = soldOut || saleNotStarted || saleEnded;
+          const appOnly = hasCoupon(pool);
+          const unavailable = soldOut || saleNotStarted || saleEnded || appOnly;
           const qty = quantities[pool.id] ?? 0;
           const available = pool.contingent - pool.sold - pool.reserved;
           const lowStock = !unavailable && available > 0 && available < 20;
@@ -158,15 +163,24 @@ export default function TicketSelector({
                       </span>
                     </div>
                   )}
-                  <p className="truncate text-sm font-bold text-foreground">
-                    {pool.name}
-                  </p>
+                  <div className="flex min-w-0 items-center gap-2">
+                    <p className="truncate text-sm font-bold text-foreground">
+                      {pool.name}
+                    </p>
+                    {appOnly && (
+                      <span className="shrink-0 rounded border border-foreground/40 px-1.5 py-0.5 text-[10px] font-black uppercase tracking-wide text-foreground">
+                        Exklusiv in der App
+                      </span>
+                    )}
+                  </div>
                   <p
                     className={`mt-1 text-xs ${
                       soldOut ? "font-bold text-red-500" : "text-foreground/50"
                     }`}
                   >
-                    {saleNotStarted
+                    {appOnly && !soldOut && !saleEnded && !saleNotStarted
+                      ? "Inkl. Coupon, nur in der moos.park App buchbar"
+                      : saleNotStarted
                       ? `Verkauf ab ${formatSaleDate(pool.saleStart)}`
                       : saleEnded
                       ? "Verkauf beendet"
