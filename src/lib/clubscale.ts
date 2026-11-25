@@ -17,7 +17,22 @@ export type TicketPool = {
   saleEnd: string;
   deactivated: boolean;
   sortIndex: number;
+  // Optionales Badge, das im Clubscale-Dashboard pro Ticket gesetzt wird.
+  badge?: { text: string; color: string; icon: string } | null;
 };
+
+// Lesbare Textfarbe (schwarz/weiss) fuer eine Hex-Hintergrundfarbe.
+// Gibt null zurueck, wenn die Farbe kein gueltiges #RRGGBB ist.
+export function badgeColors(
+  color: string | undefined
+): { background: string; text: string } | null {
+  if (!color || !/^#[0-9a-f]{6}$/i.test(color)) return null;
+  const r = parseInt(color.slice(1, 3), 16);
+  const g = parseInt(color.slice(3, 5), 16);
+  const b = parseInt(color.slice(5, 7), 16);
+  const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+  return { background: color, text: luminance > 0.6 ? "#000000" : "#ffffff" };
+}
 
 export type ClubscaleImage = {
   presignedURL: string;

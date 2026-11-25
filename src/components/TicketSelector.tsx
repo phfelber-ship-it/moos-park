@@ -8,6 +8,7 @@ import {
   isPoolBuyable,
   nextSaleStart,
   priceToEuro,
+  badgeColors,
 } from "@/lib/clubscale";
 import FlipText from "@/components/FlipText";
 
@@ -119,8 +120,12 @@ export default function TicketSelector({
           const qty = quantities[pool.id] ?? 0;
           const available = pool.contingent - pool.sold - pool.reserved;
           const lowStock = !unavailable && available > 0 && available < 20;
-          const isEarly = /early/i.test(pool.name);
-          const isFriends = /friend|freund/i.test(pool.name);
+          // Badge aus Clubscale hat Vorrang; ohne Badge bleiben die
+          // bisherigen Namens-Hinweise ("Beliebt", "Best Deal") bestehen.
+          const badge = pool.badge?.text?.trim() ? pool.badge : null;
+          const badgeStyle = badge ? badgeColors(badge.color) : null;
+          const isEarly = !badge && /early/i.test(pool.name);
+          const isFriends = !badge && /friend|freund/i.test(pool.name);
 
           return (
             <div
@@ -136,6 +141,25 @@ export default function TicketSelector({
                   }`}
                 />
                 <div className="min-w-0">
+                  {badge && (
+                    <div className="mb-1 flex flex-wrap gap-1">
+                      <span
+                        className={`rounded-full px-2 py-0.5 text-[10px] font-black uppercase tracking-wide ${
+                          badgeStyle ? "" : "bg-accent-lime text-black"
+                        }`}
+                        style={
+                          badgeStyle
+                            ? {
+                                backgroundColor: badgeStyle.background,
+                                color: badgeStyle.text,
+                              }
+                            : undefined
+                        }
+                      >
+                        {badge.text}
+                      </span>
+                    </div>
+                  )}
                   {(isEarly || isFriends) && (
                     <div className="mb-1 flex flex-wrap gap-1">
                       {isEarly && (
