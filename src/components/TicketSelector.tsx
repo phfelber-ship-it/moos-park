@@ -120,12 +120,10 @@ export default function TicketSelector({
           const qty = quantities[pool.id] ?? 0;
           const available = pool.contingent - pool.sold - pool.reserved;
           const lowStock = !unavailable && available > 0 && available < 20;
-          // Badge aus Clubscale hat Vorrang; ohne Badge bleiben die
-          // bisherigen Namens-Hinweise ("Beliebt", "Best Deal") bestehen.
+          // Das Badge kommt aus dem Clubscale-Dashboard und ersetzt die
+          // frueheren Namens-Hinweise ("Beliebt", "Best Deal").
           const badge = pool.badge?.text?.trim() ? pool.badge : null;
           const badgeStyle = badge ? badgeColors(badge.color) : null;
-          const isEarly = !badge && /early/i.test(pool.name);
-          const isFriends = !badge && /friend|freund/i.test(pool.name);
 
           return (
             <div
@@ -158,20 +156,6 @@ export default function TicketSelector({
                       >
                         {badge.text}
                       </span>
-                    </div>
-                  )}
-                  {(isEarly || isFriends) && (
-                    <div className="mb-1 flex flex-wrap gap-1">
-                      {isEarly && (
-                        <span className="rounded-full bg-accent-lime px-2 py-0.5 text-[10px] font-black uppercase tracking-wide text-black">
-                          Beliebt
-                        </span>
-                      )}
-                      {isFriends && (
-                        <span className="rounded-full bg-accent px-2 py-0.5 text-[10px] font-black uppercase tracking-wide text-black">
-                          Best Deal
-                        </span>
-                      )}
                     </div>
                   )}
                   <p className="truncate text-sm font-bold text-foreground">
