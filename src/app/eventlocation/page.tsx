@@ -3,7 +3,7 @@ import Link from "next/link";
 import { ROOMS } from "@/lib/rooms";
 import { getAllRoomImages } from "@/lib/room-images";
 import RoomRows from "@/components/RoomRows";
-import EventlocationRequestForm from "@/components/EventlocationRequestForm";
+import EventRequestForm from "@/components/EventRequestForm";
 import FlipText from "@/components/FlipText";
 import Accordion from "@/components/Accordion";
 import Reveal from "@/components/Reveal";
@@ -493,7 +493,7 @@ export default async function EventlocationPage() {
             </p>
           }
         >
-          <EventlocationRequestForm />
+          <EventRequestForm />
         </SplitCard>
       </div>
     </div>
