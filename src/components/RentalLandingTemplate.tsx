@@ -26,8 +26,28 @@ export type RentalPageData = {
 };
 
 export default function RentalLandingTemplate({ data }: { data: RentalPageData }) {
+  // FAQPage-Schema aus denselben Daten wie der sichtbare FAQ-Block, damit
+  // Google und KI-Suchsysteme die Fragen/Antworten sauber auslesen koennen.
+  const faqJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: data.faq.map((item) => ({
+      "@type": "Question",
+      name: item.q,
+      acceptedAnswer: { "@type": "Answer", text: item.a },
+    })),
+  };
+
   return (
     <div>
+      {data.faq.length > 0 && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(faqJsonLd).replace(/</g, "\\u003c"),
+          }}
+        />
+      )}
       <section className="px-6 pb-16 pt-32 text-center">
         <Reveal>
           <p className="text-xs font-bold uppercase tracking-wide text-foreground/50">
