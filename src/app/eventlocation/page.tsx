@@ -7,6 +7,13 @@ import EventRequestForm from "@/components/EventRequestForm";
 import FlipText from "@/components/FlipText";
 import Accordion from "@/components/Accordion";
 import Reveal from "@/components/Reveal";
+import { SplitCard, DotList } from "@/components/SplitCard";
+import {
+  OCCASIONS,
+  ADVANTAGES,
+  EXTRAS,
+  FACTS,
+} from "@/lib/eventlocation-content";
 
 const SITE_URL =
   process.env.NEXT_PUBLIC_SITE_URL ?? "https://moos-park-hmd7.vercel.app";
@@ -58,122 +65,6 @@ const FAQ = [
     a: "Wir bearbeiten Anfragen schnell und melden uns mit einem individuellen, unverbindlichen Angebot. Die Anfrage ist kostenlos.",
   },
 ];
-
-const OCCASIONS = [
-  {
-    title: "Geburtstage & Privatfeiern",
-    text: "Vom runden Geburtstag bis zur privaten Feier: Räume, Technik und Gastronomie an einem Ort.",
-    href: "#anfragen",
-    cta: "Jetzt anfragen",
-  },
-  {
-    title: "Firmenevents, Sommerfest und Weihnachtsfeiern",
-    text: "Betriebsfeier, Kick-off oder Weihnachtsfeier: Planung, Technik und Gastronomie aus einer Hand.",
-    href: "#anfragen",
-    cta: "Jetzt anfragen",
-  },
-  {
-    title: "Seminar, Coaching, Teamevents & Teambuilding",
-    text: "Räume für Gruppen, Workshops und Teamtage, mit eigener Gastronomie vor Ort.",
-    href: "#anfragen",
-    cta: "Jetzt anfragen",
-  },
-  {
-    title: "Konzerte & Messen",
-    text: "Konzerte, Messen und größere Veranstaltungen: Bühne, Licht- und Tontechnik sind vorhanden.",
-    href: "#anfragen",
-    cta: "Jetzt anfragen",
-  },
-];
-
-const ADVANTAGES = [
-  "Große Bühne für Ihr Programm",
-  "Sonnenterrasse für Events unter freiem Himmel",
-  "Professionelle Licht- und Tontechnik",
-  "WLAN für Ihre Gäste",
-  "Fest eingebaute Theken",
-  "Pizzeria im Haus",
-  "Kostenlose Parkplätze direkt am Haus",
-  "Garderobe direkt im Foyer",
-  "Räume einzeln oder kombiniert buchbar",
-  "Ein fester Ansprechpartner für Ihr Event",
-];
-
-const EXTRAS = [
-  "Foto und Video",
-  "Live-Show",
-  "Künstler und Acts",
-  "DJ",
-  "Werbung und Promotion für Ihr Event",
-  "Weitere Extras auf Anfrage",
-];
-
-const FACTS = [
-  { value: "2200 m²", label: "Hausfläche" },
-  { value: "7", label: "Räume" },
-  { value: "1", label: "Location" },
-  { value: "∞", label: "Unzählige Möglichkeiten" },
-];
-
-// Einheitlicher Container: links Überschrift und Text, rechts der Inhalt.
-function SplitCard({
-  id,
-  accent = false,
-  label,
-  title,
-  text,
-  children,
-}: {
-  id?: string;
-  accent?: boolean;
-  label: string;
-  title: string;
-  text?: React.ReactNode;
-  children: React.ReactNode;
-}) {
-  return (
-    <section id={id} className="px-6 py-4 lg:py-5">
-      <Reveal>
-        <div
-          className={`mx-auto grid max-w-[77rem] gap-8 rounded-3xl border p-8 sm:p-10 lg:grid-cols-[5fr_7fr] lg:gap-14 lg:p-14 ${
-            accent
-              ? "border-accent-lime/30 bg-accent-lime/[0.06]"
-              : "border-foreground/10 bg-foreground/[0.03]"
-          }`}
-        >
-          <div className="lg:sticky lg:top-28 lg:self-start">
-            <p className="text-xs font-black uppercase font-mono tracking-[0.2em] text-accent-lime">
-              {label}
-            </p>
-            <h2 className="mt-3 text-2xl font-black uppercase leading-[1.1] text-foreground sm:text-3xl lg:text-5xl">
-              {title}
-            </h2>
-            {text && (
-              <div className="mt-5 text-base leading-relaxed text-foreground/60 lg:text-lg">{text}</div>
-            )}
-          </div>
-          <div className="min-w-0">{children}</div>
-        </div>
-      </Reveal>
-    </section>
-  );
-}
-
-function DotList({ items }: { items: string[] }) {
-  return (
-    <ul>
-      {items.map((item) => (
-        <li
-          key={item}
-          className="flex items-center gap-3 border-b border-foreground/10 py-3.5 text-foreground/80 first:pt-0 last:border-b-0"
-        >
-          <span className="h-2 w-2 shrink-0 rounded-full bg-accent-lime" />
-          {item}
-        </li>
-      ))}
-    </ul>
-  );
-}
 
 export default async function EventlocationPage() {
   const roomImages = await getAllRoomImages();

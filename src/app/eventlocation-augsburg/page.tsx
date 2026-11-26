@@ -1,111 +1,92 @@
-import RentalLandingTemplate, {
-  type RentalPageData,
-} from "@/components/RentalLandingTemplate";
+import LocationLandingTemplate, {
+  type LocationPageData,
+} from "@/components/LocationLandingTemplate";
 
 export const metadata = {
   alternates: { canonical: "/eventlocation-augsburg" },
   title: "Eventlocation Augsburg – Location mieten bei Augsburg | moos.park Pöttmes",
   description:
     "Eventlocation nur 40 Minuten von Augsburg – große Kapazität, eigene Gastronomie und Technik inklusive.",
+  openGraph: {
+    title: "Eventlocation bei Augsburg | moos.park",
+    description:
+      "Bis zu 2300 Gäste, sieben kombinierbare Räume, eigene Gastronomie und Technik. Rund 40 Minuten von Augsburg.",
+    url: "/eventlocation-augsburg",
+    type: "website",
+    locale: "de_DE",
+    images: ["/images/eventlocation-hero.png"],
+  },
 };
 
-const data: RentalPageData = {
-  formal: true,
-  eyebrow: "Zahlreiche Gäste aus dem Raum Augsburg feiern regelmäßig bei uns.",
-  heroTitle: "Die Eventlocation bei Augsburg.",
-  heroSubtitle:
-    "Nur 40 Minuten von Augsburg – mit Parkplatz, Gastronomie und Technik an einem Ort.",
-  painHeading: "Das bringen Eventlocations in Augsburg oft nicht mit.",
-  painIntro:
-    "Kein Parkplatz in der Innenstadt, begrenzte Kapazität, Technik extra buchen, Catering von außen – Augsburger Locations haben strukturelle Grenzen.",
-  painPoints: [
-    {
-      title: "Kein Parkplatz in der Innenstadt",
-      text: "Gäste aus dem Umland müssen mit öPNV oder Taxi kommen. Für große Events ist das keine Freude.",
-    },
-    {
-      title: "Begrenzte Kapazitäten",
-      text: "Die Kapazität ist je nach Location begrenzt. Für große Firmen- oder Privatevents ist das schnell zu wenig.",
-    },
-    {
-      title: "Technik & Catering als Extras",
-      text: "Ohne eigene Gastronomie und Technik buchen Sie alles separat dazu – teurer und aufwendiger als erwartet.",
-    },
+// Nur Fakten, die auch auf den uebrigen Seiten stehen (Fahrzeit ca. 40 Min
+// ueber B2/B300, Parkplatz, Kapazitaeten). Weitere Augsburg-Infos (z. B.
+// Shuttle/OePNV) bewusst nicht erfunden - bei Bedarf hier ergaenzen.
+const data: LocationPageData = {
+  path: "/eventlocation-augsburg",
+  breadcrumbName: "Eventlocation Augsburg",
+  heroTitle: "Die Eventlocation für Augsburg und Umgebung",
+  heroPill: "Pöttmes · ca. 40 Minuten ab Augsburg",
+  introHeading: "Platz für Ihr Event, nur eine Autofahrt von Augsburg entfernt.",
+  introParagraphs: [
+    <>
+      Der <strong>moos.park liegt in Pöttmes</strong> im Landkreis
+      Aichach-Friedberg, rund 40 Minuten von Augsburg entfernt. Dafür
+      bekommen Sie eine Location, die als Ganzes für Ihr Event bereitsteht.
+    </>,
+    <>
+      <strong>2200 m², sieben Räume und bis zu 2300 Gäste</strong>, dazu
+      Bühne, Licht- und Tontechnik, eigene Gastronomie und{" "}
+      <strong>kostenlose Parkplätze direkt am Haus</strong>. Räume lassen
+      sich einzeln oder kombiniert buchen, auf Wunsch exklusiv für Ihre
+      Veranstaltung.
+    </>,
   ],
-  stepsHeading: "In 4 Schritten zum Event bei Augsburg.",
-  steps: [
-    {
-      num: "01",
-      title: "Anfrage senden",
-      text: "Datum, Anlass, Personenzahl – kurze Nachricht genügt. Schnelle Angebotsbearbeitung.",
-    },
-    {
-      num: "02",
-      title: "Gemeinsam planen",
-      text: "Räume, Technik, Gastronomie – wir planen alles mit Ihnen. Ein Ansprechpartner, kein Chaos.",
-    },
-    {
-      num: "03",
-      title: "Alles vorbereitet",
-      text: "Technik steht, Essen ist bereit, Parkplatz ist groß – Ihre Gäste aus Augsburg kommen an und sind sofort begeistert.",
-    },
-    {
-      num: "04",
-      title: "Einfach ankommen & feiern",
-      text: "40 Minuten von Augsburg, kostenloser Großparkplatz, bis 2300 Personen. Alles an einem Ort.",
-    },
-  ],
-  advantagesHeading: "Ihre Location nahe Augsburg.",
-  advantagesIntro:
-    "Nur 40 Minuten von Augsburg – aber mit Parkplatz für alle, bis 2300 Personen, eigener Küche und Vollausstattung.",
-  advantages: [
-    "Großer kostenloser Parkplatz direkt vor der Location",
-    "Bis zu 2300 Gäste im gesamten Haus",
-    "Eigene Gastronomie: Bar, Buffet & Pizzeria",
-    "Vollständige Licht- & Tontechnik inklusive",
-    "Nur 40 Minuten von Augsburg – schnell erreichbar",
-    "Exklusivbuchung möglich",
-  ],
-  testimonialsHeading: "Was Gäste aus dem Raum Augsburg sagen.",
-  testimonials: [],
-  locationSection: {
-    heading: "So kommen Sie aus Augsburg zum moos.park.",
-    paragraphs: [
-      "Der moos.park liegt in Pöttmes im Landkreis Aichach-Friedberg, Rudolf-Diesel-Straße 23, 86554 Pöttmes. Von Augsburg aus erreichen Sie die Location in ca. 40 Minuten über die B2/B300.",
-      "Direkt vor Ort steht ein großer kostenloser Parkplatz zur Verfügung. Gäste aus dem Raum Augsburg feiern bei uns Firmenevents, Geburtstage, Hochzeiten und Club-Events, einzeln oder kombiniert über bis zu sieben Räume.",
+  cityBlock: {
+    label: "Von Augsburg zu uns",
+    title: "Anreise aus Augsburg.",
+    text: "Der moos.park liegt nicht in der Innenstadt. Dafür sind Anreise und Parken einfach.",
+    items: [
+      "Rund 40 Minuten Fahrzeit ab Augsburg (über B2/B300)",
+      "Großer kostenloser Parkplatz direkt am Haus",
+      "Garderobe direkt im Foyer",
+      "Räume einzeln oder kombiniert, auf Wunsch exklusiv buchbar",
+      "Ein fester Ansprechpartner für Ihr Event",
     ],
   },
+  anfahrtText:
+    "Rudolf-Diesel-Straße 23, 86554 Pöttmes. Rund 40 Minuten von Augsburg (B2/B300) und ca. 35 Minuten von Ingolstadt.",
   faq: [
     {
-      q: "Wie weit ist moos.park von Augsburg?",
-      a: "Ca. 40 Minuten über die B2/B300. Großer kostenloser Parkplatz direkt vor Ort.",
+      q: "Wie weit ist der moos.park von Augsburg entfernt?",
+      a: "Rund 40 Minuten mit dem Auto, über die B2/B300. Direkt am Haus gibt es einen großen kostenlosen Parkplatz.",
     },
     {
-      q: "Wie viele Personen passen in die Location?",
-      a: "Bis zu 750 Personen in der Main-Halle. Flexibel kombinierbar für bis zu 2300 Gäste.",
+      q: "Wie viele Gäste passen in die Location?",
+      a: "Bis zu 2300 Gäste im gesamten Haus, inklusive Terrasse. Einzelne Räume fassen je nach Raum 80 bis 750 Personen (stehend), mehrere Räume sind kombinierbar. Die Bestuhlung planen wir individuell nach Ihrem Wunsch.",
     },
     {
-      q: "Für welche Anlässe eignet sich die Location?",
-      a: "Firmenevents, Geburtstage, Hochzeiten, Club-Events, Konzerte, Abiballs – für alle großen Anlässe geeignet.",
+      q: "Für welche Anlässe kann ich die Location mieten?",
+      a: "Für Geburtstage und Privatfeiern, Firmenevents, Sommerfeste und Weihnachtsfeiern, Seminare, Coaching, Teamevents, Konzerte und Messen.",
     },
     {
-      q: "Was ist beim Mieten inklusive?",
-      a: "Licht- & Tontechnik, Bühne, Gastronomie, Parkplatz und Eventteam. Kein externer Aufwand notwendig.",
+      q: "Ist eine exklusive Buchung der gesamten Location möglich?",
+      a: "Ja. moos.park kann komplett exklusiv gebucht werden, ohne parallel stattfindende Events.",
     },
     {
-      q: "Kann ich die Location exklusiv buchen?",
-      a: "Ja – exklusive Buchung ohne parallele Events möglich.",
+      q: "Was ist bei der Miete inklusive?",
+      a: "Licht- und Tontechnik, Bühne, eigene Gastronomie (Bar, Buffet, Pizzeria), großer kostenloser Parkplatz und ein persönlicher Ansprechpartner für die gesamte Planung.",
     },
     {
-      q: "Wie frühzeitig sollte ich buchen?",
-      a: "Für Wochenend-Termine 6–12 Monate im Voraus empfohlen. Werktags sind auch kurzfristige Buchungen möglich.",
+      q: "Wie lange im Voraus sollte ich buchen?",
+      a: "Für Wochenend-Termine empfehlen wir 6–12 Monate im Voraus. Werktags sind auch kurzfristige Buchungen möglich.",
+    },
+    {
+      q: "Wie schnell bekomme ich ein Angebot?",
+      a: "Wir bearbeiten Anfragen schnell und melden uns mit einem individuellen, unverbindlichen Angebot. Die Anfrage ist kostenlos.",
     },
   ],
-  ctaHeading: "40 Minuten von Augsburg – jetzt anfragen.",
-  ctaText:
-    "Schnelle Angebotsbearbeitung: Wir erstellen Ihnen ein persönliches Angebot. Kostenlos und unverbindlich.",
 };
 
 export default function EventlocationAugsburgPage() {
-  return <RentalLandingTemplate data={data} />;
+  return <LocationLandingTemplate data={data} />;
 }
