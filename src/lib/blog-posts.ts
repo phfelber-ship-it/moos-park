@@ -397,6 +397,99 @@ export const BLOG_POSTS: BlogPost[] = [
       { href: "/tickets", label: "Jetzt Tickets sichern" },
     ],
   },
+  {
+    slug: "sommerfest-firma-planen",
+    title: "Sommerfest für die Firma planen: Location, Ablauf & Checkliste",
+    metaTitle:
+      "Sommerfest Firma planen: Location, Ablauf & Checkliste | moos.park",
+    description:
+      "Firmensommerfest organisieren: wann du buchen solltest, wie viel Platz du brauchst, was Terrasse und Gastronomie leisten und welches Programm trägt.",
+    excerpt:
+      "So wird das Firmensommerfest ein Fest, über das noch Wochen später gesprochen wird.",
+    publishedAt: "2026-11-26",
+    sections: [
+      {
+        heading: "Wann du ein Sommerfest buchen solltest",
+        paragraphs: [
+          "Sommerfeste finden fast immer am Wochenende statt, und genau diese Termine sind früh vergeben. Unsere Empfehlung für Wochenend-Termine: 6 bis 12 Monate im Voraus. Wer sein Sommerfest 2027 plant, ist mit einer Anfrage in den nächsten Wochen und Monaten gut dran.",
+          "Werktags sind auch kurzfristige Buchungen möglich. Wenn dein Team flexibel ist, lohnt sich ein Donnerstag oder Freitag als Alternative.",
+        ],
+      },
+      {
+        heading: "Draußen feiern, drinnen abgesichert",
+        paragraphs: [
+          "Ein Sommerfest lebt vom Außenbereich. Im moos.park ist das die Terrasse mit 460 m²: Platz für bis zu 720 Personen stehend oder 576 bestuhlt. Sie eignet sich für Sommerfeste, Grillabende und Veranstaltungen unter freiem Himmel.",
+          "Wetter lässt sich nicht planen. Sinnvoll ist deshalb eine Location, die dir im selben Haus Räume für den Fall der Fälle bietet. Im moos.park gibt es neben der Terrasse sieben Räume, darunter die Main-Halle für bis zu 750 Personen. Welche Variante für dein Fest passt, besprechen wir gern vorab mit dir.",
+        ],
+      },
+      {
+        heading: "Wie viel Platz brauchst du?",
+        paragraphs: [
+          "Die Gästezahl bestimmt Raum, Gastronomie und Budget. Als grobe Orientierung: Bis etwa 100 Personen ist es eine kleine Firmenfeier im persönlichen Rahmen. Zwischen 100 und 250 Personen liegt der Klassiker unter den Sommerfesten, mit genug Platz für Programm, Buffet und Tanzfläche.",
+          "Ab 250 Personen feiern mehrere Abteilungen oder Standorte gemeinsam. Ab etwa 500 Personen ist eine Exklusivbuchung empfehlenswert. Bis zu 2.300 Gäste passen ins gesamte Haus inklusive Terrasse.",
+        ],
+      },
+      {
+        heading: "Essen und Trinken: Grill, Buffet oder Menü",
+        paragraphs: [
+          "Eine eigene Gastronomie spart dir die Suche nach einem externen Caterer und zusätzliche Koordination. Im moos.park gibt es Menü, Buffet, Fingerfood, Bar und Pizzeria, ein externer Caterer ist nicht notwendig.",
+          "Praktisch bei Sommerfesten ist oft eine Mischung: ein Buffet als Basis, dazu Fingerfood und die Bar für den Abend. Frag früh nach Sonderwünschen wie vegetarisch, vegan oder Allergien, damit das Angebot von Anfang an dazu passt.",
+        ],
+      },
+      {
+        heading: "Programm: Was ein Sommerfest trägt",
+        paragraphs: [
+          "Ein bewährter Ablauf: kurze Begrüßung durch die Geschäftsführung, gemeinsames Essen, danach ein Programmpunkt wie Auszeichnungen, Spiele oder ein Auftritt, und zum Ausklang Musik und Bar. Reden sollten kurz bleiben, 10 bis 15 Minuten reichen, damit der gesellige Teil Raum hat.",
+          "Bühne sowie Licht- und Tontechnik sind im moos.park vorhanden. Wenn du mehr willst, lässt sich vieles zubuchen: DJ, Live-Show, Künstler und Acts sowie Foto und Video.",
+        ],
+      },
+      {
+        heading: "Anreise und Parken",
+        paragraphs: [
+          "Der moos.park liegt in Pöttmes, rund 40 Minuten von Augsburg und ca. 35 Minuten von Ingolstadt entfernt. Direkt am Haus gibt es einen großen kostenlosen Parkplatz für alle Mitarbeitenden, und im Foyer eine Garderobe.",
+          "Wenn viele Gäste aus mehreren Standorten kommen, lohnt es sich, Fahrgemeinschaften früh zu organisieren und den Heimweg bei der Einladung mitzudenken.",
+        ],
+      },
+      {
+        heading: "Die Checkliste in Kurzform",
+        paragraphs: [
+          "1. Termin und Alternativtermin festlegen, Wochenenden früh anfragen.",
+          "2. Gästezahl schätzen und Raumvariante wählen, drinnen und draußen.",
+          "3. Essen und Getränke klären, inklusive Sonderwünschen.",
+          "4. Programm und Technik festlegen: Bühne, Musik, Reden, Extras.",
+          "5. Anreise und Heimweg planen, Parkplätze und Fahrgemeinschaften.",
+          "6. Einladung rechtzeitig verschicken und Rückmeldungen einsammeln.",
+        ],
+      },
+    ],
+    faq: [
+      {
+        q: "Wie viele Personen passen auf die Terrasse?",
+        a: "Auf die Terrasse im moos.park passen bis zu 720 Personen stehend oder 576 bestuhlt. Die Terrasse hat 460 m² und ist unser größter Außenbereich.",
+      },
+      {
+        q: "Wann sollte ich ein Firmensommerfest buchen?",
+        a: "Für Wochenend-Termine empfehlen wir 6 bis 12 Monate im Voraus. Werktags sind auch kurzfristige Buchungen möglich.",
+      },
+      {
+        q: "Gibt es Catering im Haus?",
+        a: "Ja. Die eigene Gastronomie bietet Menü, Buffet, Fingerfood, Bar und Pizzeria. Ein externer Caterer ist nicht notwendig.",
+      },
+      {
+        q: "Kann ich die gesamte Location exklusiv für mein Sommerfest buchen?",
+        a: "Ja. moos.park kann komplett exklusiv gebucht werden, ohne parallel stattfindende Events. Bis zu 2.300 Gäste passen ins gesamte Haus inklusive Terrasse.",
+      },
+      {
+        q: "Was kostet ein Firmensommerfest im moos.park?",
+        a: "Die Kosten hängen von Datum, Räumen und Service ab. Deshalb gibt es Preise ausschließlich im persönlichen, unverbindlichen Angebot. Die Anfrage ist kostenlos.",
+      },
+    ],
+    relatedLinks: [
+      { href: "/firmenevents", label: "Firmenevents im moos.park" },
+      { href: "/eventlocation", label: "Räume und Terrasse im Detail" },
+      { href: "/firmenevents#anfragen", label: "Jetzt Angebot anfragen" },
+    ],
+  },
 ];
 
 export function getBlogPost(slug: string): BlogPost | undefined {
