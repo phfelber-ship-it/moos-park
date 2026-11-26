@@ -54,6 +54,10 @@ export default function TicketsDataFlow({
   const [year, setYear] = useState("");
   const [mail, setMail] = useState("");
   const [code, setCode] = useState("");
+  const [codeOpen, setCodeOpen] = useState(false);
+  const monthRef = useRef<HTMLInputElement>(null);
+  const yearRef = useRef<HTMLInputElement>(null);
+  const dayRef = useRef<HTMLInputElement>(null);
 
   const [pools, setPools] = useState<TicketPool[] | null>(null);
   const [purchaseRequest, setPurchaseRequest] =
@@ -213,12 +217,18 @@ export default function TicketsDataFlow({
             value={firstName}
             onChange={(e) => setFirstName(e.target.value)}
             placeholder="Vorname"
+            autoComplete="given-name"
+            autoCapitalize="words"
+            autoCorrect="off"
             className="rounded-lg border border-foreground/20 bg-transparent px-4 py-2.5 text-sm text-foreground outline-none focus:border-accent-lime"
           />
           <input
             value={lastName}
             onChange={(e) => setLastName(e.target.value)}
             placeholder="Nachname"
+            autoComplete="family-name"
+            autoCapitalize="words"
+            autoCorrect="off"
             className="rounded-lg border border-foreground/20 bg-transparent px-4 py-2.5 text-sm text-foreground outline-none focus:border-accent-lime"
           />
         </div>
@@ -228,23 +238,56 @@ export default function TicketsDataFlow({
         </p>
         <div className="flex items-center gap-2">
           <input
+            ref={dayRef}
             value={day}
-            onChange={(e) => setDay(e.target.value.replace(/\D/g, "").slice(0, 2))}
+            onChange={(e) => {
+              let v = e.target.value.replace(/\D/g, "").slice(0, 2);
+              // Erste Ziffer 4-9 kann kein Tag mit zwei Ziffern werden: 0 davor.
+              if (v.length === 1 && Number(v) > 3) v = `0${v}`;
+              setDay(v);
+              if (v.length === 2) monthRef.current?.focus();
+            }}
+            inputMode="numeric"
+            pattern="[0-9]*"
+            autoComplete="bday-day"
             placeholder="TT"
+            aria-label="Geburtstag, Tag"
             className="w-16 rounded-lg border border-foreground/20 bg-transparent px-3 py-2.5 text-center text-sm text-foreground outline-none focus:border-accent-lime"
           />
           <span className="text-foreground/40">.</span>
           <input
+            ref={monthRef}
             value={month}
-            onChange={(e) => setMonth(e.target.value.replace(/\D/g, "").slice(0, 2))}
+            onChange={(e) => {
+              let v = e.target.value.replace(/\D/g, "").slice(0, 2);
+              // Erste Ziffer 2-9 kann kein Monat mit zwei Ziffern werden: 0 davor.
+              if (v.length === 1 && Number(v) > 1) v = `0${v}`;
+              setMonth(v);
+              if (v.length === 2) yearRef.current?.focus();
+            }}
+            onKeyDown={(e) => {
+              if (e.key === "Backspace" && month === "") dayRef.current?.focus();
+            }}
+            inputMode="numeric"
+            pattern="[0-9]*"
+            autoComplete="bday-month"
             placeholder="MM"
+            aria-label="Geburtstag, Monat"
             className="w-16 rounded-lg border border-foreground/20 bg-transparent px-3 py-2.5 text-center text-sm text-foreground outline-none focus:border-accent-lime"
           />
           <span className="text-foreground/40">.</span>
           <input
+            ref={yearRef}
             value={year}
             onChange={(e) => setYear(e.target.value.replace(/\D/g, "").slice(0, 4))}
+            onKeyDown={(e) => {
+              if (e.key === "Backspace" && year === "") monthRef.current?.focus();
+            }}
+            inputMode="numeric"
+            pattern="[0-9]*"
+            autoComplete="bday-year"
             placeholder="JJJJ"
+            aria-label="Geburtstag, Jahr"
             className="w-20 rounded-lg border border-foreground/20 bg-transparent px-3 py-2.5 text-center text-sm text-foreground outline-none focus:border-accent-lime"
           />
         </div>
@@ -257,20 +300,49 @@ export default function TicketsDataFlow({
           onChange={(e) => setMail(e.target.value)}
           placeholder="E-Mail"
           type="email"
+          inputMode="email"
+          autoComplete="email"
+          autoCapitalize="none"
+          autoCorrect="off"
+          spellCheck={false}
           className="w-full rounded-lg border border-foreground/20 bg-transparent px-4 py-2.5 text-sm text-foreground outline-none focus:border-accent-lime"
         />
 
-        <p className="mb-2 mt-5 text-xs font-bold uppercase tracking-wide text-foreground/50">
-          Gutschein- oder Rabattcode (optional)
-        </p>
-        <input
-          value={code}
-          onChange={(e) => setCode(e.target.value)}
-          placeholder="z. B. 9YYT-TH5X"
-          autoCapitalize="characters"
-          autoComplete="off"
-          className="w-full rounded-lg border border-foreground/20 bg-transparent px-4 py-2.5 font-mono text-sm uppercase tracking-widest text-foreground outline-none focus:border-accent-lime"
-        />
+        <button
+          type="button"
+          onClick={() => setCodeOpen((v) => !v)}
+          aria-expanded={codeOpen || code !== ""}
+          className="mt-5 flex w-full items-center justify-between text-left text-xs font-bold uppercase tracking-wide text-foreground/50 hover:text-foreground/70"
+        >
+          <span>Gutschein- oder Rabattcode (optional)</span>
+          <svg
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            aria-hidden="true"
+            className={`shrink-0 transition-transform ${
+              codeOpen || code !== "" ? "rotate-180" : ""
+            }`}
+          >
+            <path d="m6 9 6 6 6-6" />
+          </svg>
+        </button>
+        {(codeOpen || code !== "") && (
+          <input
+            value={code}
+            onChange={(e) => setCode(e.target.value)}
+            placeholder="z. B. 9YYT-TH5X"
+            autoCapitalize="characters"
+            autoComplete="off"
+            autoFocus={codeOpen && code === ""}
+            className="mt-2 w-full rounded-lg border border-foreground/20 bg-transparent px-4 py-2.5 font-mono text-sm uppercase tracking-widest text-foreground outline-none focus:border-accent-lime"
+          />
+        )}
 
         {error && <p className="mt-4 text-sm text-red-500">{error}</p>}
 

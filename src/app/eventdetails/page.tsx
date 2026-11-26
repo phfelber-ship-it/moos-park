@@ -150,11 +150,11 @@ export default async function EventDetailPage({
         <ReadMore text={event.description} />
       </div>
 
-      <div className="mt-10 flex flex-wrap justify-center gap-3">
+      <div className="mx-auto mt-10 flex max-w-xl justify-center gap-3">
         <TicketsCta pools={event.ticketPools} />
         <Link
           href={`/reservierung?event=${event.id}`}
-          className="inline-flex items-center gap-2 rounded-lg border border-foreground/30 px-8 py-3 text-sm font-black uppercase tracking-wide text-foreground transition-transform hover:scale-105"
+          className="inline-flex flex-1 items-center justify-center gap-2 rounded-lg border border-foreground/30 px-3 py-3 text-center text-xs font-black uppercase leading-tight tracking-wide text-foreground transition-transform hover:scale-105 sm:flex-none sm:px-8 sm:text-sm"
         >
           <FlipText text="Reservierung anfragen" />
         </Link>
