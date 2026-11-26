@@ -16,7 +16,7 @@ export default function ReadMore({ text }: { text: string }) {
       </p>
       <button
         onClick={() => setOpen((v) => !v)}
-        className="mt-3 text-sm font-bold text-accent hover:underline"
+        className="mt-3 text-sm font-black text-green-500 hover:underline"
       >
         {open ? "Weniger anzeigen" : "Mehr anzeigen"}
       </button>

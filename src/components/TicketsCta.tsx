@@ -12,7 +12,7 @@ export default function TicketsCta({ pools }: { pools: TicketPool[] }) {
   return (
     <a
       href="#tickets"
-      className="inline-flex items-center gap-2 rounded-lg bg-green-500 px-8 py-3 text-sm font-black uppercase tracking-wide text-black transition-transform hover:scale-105"
+      className="inline-flex flex-1 items-center justify-center gap-2 rounded-lg bg-green-500 px-3 py-3 text-center text-xs font-black uppercase leading-tight tracking-wide text-black transition-transform hover:scale-105 sm:flex-none sm:px-8 sm:text-sm"
     >
       <FlipText text="Tickets sichern" />
     </a>
