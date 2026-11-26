@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import type { TicketPool } from "@/lib/clubscale";
 import {
   checkoutUrl,
@@ -38,6 +39,27 @@ function formatSaleStart(ms: number) {
   });
   return time === "00:00" ? date : `${date}, ${time} Uhr`;
 }
+
+// Aus dem Ticketnamen (Daten aus Clubscale) den Inhalt ablesen: "GOLDEN TICKET -
+// EINTRITT + FAST LANE + FREE LONGDRINK" -> Titel "GOLDEN TICKET", Inhalt
+// "EINTRITT · FAST LANE · FREE LONGDRINK". Nur wenn hinter dem Bindestrich
+// mehrere mit "+" verbundene Punkte stehen; sonst bleibt der Name unveraendert.
+function splitIncludes(name: string): { title: string; includes: string | null } {
+  const idx = name.indexOf(" - ");
+  if (idx === -1) return { title: name, includes: null };
+  const rest = name.slice(idx + 3);
+  if (!rest.includes("+")) return { title: name, includes: null };
+  const parts = rest
+    .split("+")
+    .map((p) => p.trim())
+    .filter(Boolean);
+  if (parts.length < 2) return { title: name, includes: null };
+  return { title: name.slice(0, idx).trim(), includes: parts.join(" · ") };
+}
+
+const APP_STORE_URL = "https://apps.apple.com/de/app/moos-park/id6739537470";
+const PLAY_STORE_URL =
+  "https://play.google.com/store/apps/details?id=de.moospark.clubscale&pcampaignid=web_share";
 
 export default function TicketSelector({
   eventId,
@@ -104,6 +126,59 @@ export default function TicketSelector({
     .filter(([, qty]) => qty > 0)
     .map(([poolId, qty]) => ({ poolId, qty }));
 
+  // Summe der gewaehlten Tickets (Preise aus Clubscale, ohne Gebuehr).
+  const sumCents = pools.reduce(
+    (sum, p) =>
+      sum + (p.free ? 0 : p.basePricePerTicket * (quantities[p.id] ?? 0)),
+    0
+  );
+
+  const visible = pools.filter((p) => !p.deactivated);
+  const standard = visible.filter((p) => !hasCoupon(p));
+  const exclusive = visible.filter((p) => hasCoupon(p));
+
+  const poolState = (pool: TicketPool) => {
+    const saleNotStarted = new Date(pool.saleStart).getTime() > now;
+    const saleEnded = new Date(pool.saleEnd).getTime() < now;
+    const soldOut = pool.sold >= pool.contingent;
+    const available = pool.contingent - pool.sold - pool.reserved;
+    const buyable = !soldOut && !saleNotStarted && !saleEnded;
+    const lowStock = buyable && available > 0 && available < 10;
+    const status = saleNotStarted
+      ? `Verkauf ab ${formatSaleDate(pool.saleStart)}`
+      : saleEnded
+      ? "Verkauf beendet"
+      : soldOut
+      ? "Ausverkauft"
+      : null;
+    return { saleNotStarted, saleEnded, soldOut, available, buyable, lowStock, status };
+  };
+
+  const priceText = (pool: TicketPool) =>
+    pool.free ? "Gratis" : `${priceToEuro(pool.basePricePerTicket)} €`;
+
+  // Badge aus dem Clubscale-Dashboard (Text und Farbe), ersetzt die frueheren
+  // Namens-Hinweise.
+  const renderBadge = (pool: TicketPool) => {
+    const badge = pool.badge?.text?.trim() ? pool.badge : null;
+    if (!badge) return null;
+    const colors = badgeColors(badge.color);
+    return (
+      <span
+        className={`mb-1.5 inline-block rounded-full px-2.5 py-0.5 text-[10px] font-black uppercase tracking-wide ${
+          colors ? "" : "bg-accent-lime text-black"
+        }`}
+        style={
+          colors
+            ? { backgroundColor: colors.background, color: colors.text }
+            : undefined
+        }
+      >
+        {badge.text}
+      </span>
+    );
+  };
+
   return (
     <div>
       <h2 className="mb-6 text-center text-xl font-black uppercase text-foreground">
@@ -113,122 +188,180 @@ export default function TicketSelector({
         Online Tickets kaufen &amp; sparen
       </p>
 
-      <div className="divide-y divide-foreground/8">
-        {pools
-          .filter((pool) => !pool.deactivated)
-          .map((pool) => {
-          const saleNotStarted = new Date(pool.saleStart).getTime() > now;
-          const saleEnded = new Date(pool.saleEnd).getTime() < now;
-          const soldOut = pool.sold >= pool.contingent;
-          const appOnly = hasCoupon(pool);
-          const unavailable = soldOut || saleNotStarted || saleEnded || appOnly;
-          const qty = quantities[pool.id] ?? 0;
-          const available = pool.contingent - pool.sold - pool.reserved;
-          const lowStock = !unavailable && available > 0 && available < 20;
-          // Das Badge kommt aus dem Clubscale-Dashboard und ersetzt die
-          // frueheren Namens-Hinweise ("Beliebt", "Best Deal").
-          const badge = pool.badge?.text?.trim() ? pool.badge : null;
-          const badgeStyle = badge ? badgeColors(badge.color) : null;
-
-          return (
-            <div
-              key={pool.id}
-              className={`flex flex-wrap items-center justify-between gap-x-4 gap-y-2 py-3.5 ${
-                unavailable ? "opacity-50" : ""
-              }`}
-            >
-              <div className="flex min-w-0 items-start gap-2.5">
-                <span
-                  className={`mt-1.5 h-2 w-2 shrink-0 rounded-full ${
-                    unavailable ? "bg-foreground/30" : "bg-green-500"
-                  }`}
-                />
-                <div className="min-w-0">
-                  {badge && (
-                    <div className="mb-1 flex flex-wrap gap-1">
-                      <span
-                        className={`rounded-full px-2 py-0.5 text-[10px] font-black uppercase tracking-wide ${
-                          badgeStyle ? "" : "bg-accent-lime text-black"
-                        }`}
-                        style={
-                          badgeStyle
-                            ? {
-                                backgroundColor: badgeStyle.background,
-                                color: badgeStyle.text,
-                              }
-                            : undefined
-                        }
-                      >
-                        {badge.text}
-                      </span>
-                    </div>
-                  )}
-                  <div className="flex min-w-0 items-center gap-2">
-                    <p className="truncate text-sm font-bold text-foreground">
-                      {pool.name}
+      {standard.length > 0 && (
+        <div className="divide-y divide-foreground/10 rounded-2xl border border-foreground/10 bg-foreground/[0.03] px-4">
+          {standard.map((pool) => {
+            const st = poolState(pool);
+            const qty = quantities[pool.id] ?? 0;
+            return (
+              <div
+                key={pool.id}
+                className={`flex items-center gap-3 py-3.5 ${
+                  st.buyable ? "" : "opacity-50"
+                }`}
+              >
+                <div className="min-w-0 flex-1">
+                  {renderBadge(pool)}
+                  <p className="text-sm font-bold text-foreground">
+                    {pool.name}
+                  </p>
+                  {st.status && (
+                    <p
+                      className={`mt-0.5 text-xs ${
+                        st.soldOut
+                          ? "font-bold text-red-500"
+                          : "text-foreground/50"
+                      }`}
+                    >
+                      {st.status}
                     </p>
-                    {appOnly && (
-                      <span className="shrink-0 rounded border border-foreground/40 px-1.5 py-0.5 text-[10px] font-black uppercase tracking-wide text-foreground">
-                        Exklusiv in der App
+                  )}
+                  {st.lowStock && (
+                    <p className="mt-1 text-xs font-bold text-pink-500">
+                      Weniger als 10 Tickets verfügbar!
+                    </p>
+                  )}
+                </div>
+                <span className="shrink-0 text-base font-black text-foreground">
+                  {priceText(pool)}
+                </span>
+                {st.buyable && (
+                  <div className="flex shrink-0 items-center gap-2.5">
+                    <button
+                      type="button"
+                      onClick={() => setQty(pool.id, -1, st.available)}
+                      disabled={qty === 0}
+                      className="flex h-8 w-8 items-center justify-center rounded-full border border-foreground/25 text-base text-foreground disabled:opacity-30"
+                      aria-label="Weniger"
+                    >
+                      −
+                    </button>
+                    <span className="w-4 text-center text-sm font-bold text-foreground">
+                      {qty}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => setQty(pool.id, 1, st.available)}
+                      className={`flex h-8 w-8 items-center justify-center rounded-full border text-base ${
+                        qty > 0
+                          ? "border-green-500 bg-green-500 text-black"
+                          : "border-foreground/25 text-foreground"
+                      }`}
+                      aria-label="Mehr"
+                    >
+                      +
+                    </button>
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      )}
+
+      {exclusive.length > 0 && (
+        <div className="mt-4 rounded-2xl border border-foreground/10 bg-foreground/[0.02] p-4">
+          <div className="flex items-center gap-2">
+            <span className="text-sm text-accent-lime" aria-hidden="true">
+              ★
+            </span>
+            <h3 className="text-xs font-black uppercase tracking-[0.1em] text-foreground">
+              Exklusiv in der App
+            </h3>
+          </div>
+          <p className="mt-1 text-xs text-foreground/60">
+            Mit Coupon, nur in der moos.park App buchbar.
+          </p>
+
+          <div className="mt-2 divide-y divide-foreground/10">
+            {exclusive.map((pool) => {
+              const st = poolState(pool);
+              const { title, includes } = splitIncludes(pool.name);
+              const stripe = badgeColors(pool.badge?.color)?.background;
+              return (
+                <div
+                  key={pool.id}
+                  className={`flex gap-3 py-3.5 ${st.buyable ? "" : "opacity-50"}`}
+                >
+                  <span
+                    className="w-1 shrink-0 self-stretch rounded-full bg-foreground/20"
+                    style={stripe ? { backgroundColor: stripe } : undefined}
+                  />
+                  <div className="min-w-0 flex-1">
+                    {renderBadge(pool)}
+                    <p className="text-sm font-bold text-foreground">
+                      <span className="mr-1.5 text-xs text-accent-lime" aria-hidden="true">
+                        ★
                       </span>
+                      {title}
+                    </p>
+                    {includes && (
+                      <p className="mt-1 text-xs leading-snug text-foreground/60">
+                        <span className="font-bold text-accent-lime">
+                          Du bekommst:
+                        </span>{" "}
+                        {includes}
+                      </p>
+                    )}
+                    {st.status && (
+                      <p
+                        className={`mt-1 text-xs ${
+                          st.soldOut
+                            ? "font-bold text-red-500"
+                            : "text-foreground/50"
+                        }`}
+                      >
+                        {st.status}
+                      </p>
+                    )}
+                    {st.lowStock && (
+                      <p className="mt-1 text-xs font-bold text-pink-500">
+                        Weniger als 10 Tickets verfügbar!
+                      </p>
                     )}
                   </div>
-                  <p
-                    className={`mt-1 text-xs ${
-                      soldOut ? "font-bold text-red-500" : "text-foreground/50"
-                    }`}
-                  >
-                    {appOnly && !soldOut && !saleEnded && !saleNotStarted
-                      ? "Inkl. Coupon, nur in der moos.park App buchbar"
-                      : saleNotStarted
-                      ? `Verkauf ab ${formatSaleDate(pool.saleStart)}`
-                      : saleEnded
-                      ? "Verkauf beendet"
-                      : soldOut
-                      ? "Ausverkauft"
-                      : pool.free
-                      ? "Gratis"
-                      : `${priceToEuro(pool.basePricePerTicket)} € + Ticketgebühr*`}
-                  </p>
-                  {lowStock && (
-                    <span className="mt-1.5 inline-block rounded-full bg-green-500 px-2.5 py-0.5 text-[10px] font-black uppercase tracking-wide text-black">
-                      Nur noch Wenige verfügbar
-                    </span>
-                  )}
-                </div>
-              </div>
-
-              {!unavailable && (
-                <div className="ml-auto flex shrink-0 items-center gap-3">
-                  <button
-                    type="button"
-                    onClick={() => setQty(pool.id, -1, available)}
-                    disabled={qty === 0}
-                    className="flex h-7 w-7 items-center justify-center rounded-full border border-foreground/20 text-sm text-foreground disabled:opacity-30"
-                    aria-label="Weniger"
-                  >
-                    −
-                  </button>
-                  <span className="w-4 text-center text-sm font-bold text-foreground">
-                    {qty}
+                  <span className="shrink-0 text-base font-black text-foreground">
+                    {priceText(pool)}
                   </span>
-                  <button
-                    type="button"
-                    onClick={() => setQty(pool.id, 1, available)}
-                    className="flex h-7 w-7 items-center justify-center rounded-full border border-foreground/20 text-sm text-foreground"
-                    aria-label="Mehr"
-                  >
-                    +
-                  </button>
                 </div>
-              )}
-            </div>
-          );
-        })}
-      </div>
+              );
+            })}
+          </div>
 
-      <p className="mt-4 text-xs text-foreground/50">
-        *Gebühren werden auf der nächsten Seite automatisch berechnet.
+          <div className="mt-3 border-t border-foreground/10 pt-3">
+            <p className="text-center text-xs font-black uppercase tracking-wide text-accent-lime">
+              App laden &amp; Tickets sichern
+            </p>
+            <div className="mt-2 flex justify-center gap-3">
+              <a
+                href={APP_STORE_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="opacity-80 transition-opacity hover:opacity-100"
+              >
+                <Image src="/images/appstore.png" alt="App Store" width={120} height={33} />
+              </a>
+              <a
+                href={PLAY_STORE_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="opacity-80 transition-opacity hover:opacity-100"
+              >
+                <Image src="/images/googleplay.png" alt="Google Play" width={120} height={34} />
+              </a>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <p className="mt-4 flex items-center gap-2 text-xs text-foreground/60">
+        <span
+          className="flex h-[18px] w-[18px] shrink-0 items-center justify-center rounded-md border border-foreground/40 text-[11px] font-black"
+          aria-hidden="true"
+        >
+          i
+        </span>
+        Ticketpreise zzgl. Gebühr
       </p>
 
       <Link
@@ -237,11 +370,17 @@ export default function TicketSelector({
           // Ohne Auswahl bleibt der Button kräftig grün, tut aber nichts.
           if (total === 0) e.preventDefault();
         }}
-        className={`mt-4 block rounded-lg bg-green-500 px-8 py-3 text-center text-sm font-black uppercase tracking-wide text-black transition-transform ${
+        className={`mt-3 block rounded-lg bg-green-500 px-8 py-3 text-center text-sm font-black uppercase tracking-wide text-black transition-transform ${
           total === 0 ? "cursor-default" : "hover:scale-105"
         }`}
       >
-        <FlipText text="Weiter zum Checkout" />
+        <FlipText
+          text={
+            total > 0 && sumCents > 0
+              ? `Weiter zum Checkout · ${priceToEuro(sumCents)} €`
+              : "Weiter zum Checkout"
+          }
+        />
       </Link>
     </div>
   );
