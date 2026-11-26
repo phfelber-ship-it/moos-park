@@ -57,14 +57,23 @@ export async function POST(request: Request) {
     message: body.message?.trim() ?? "",
   };
 
-  // Postfach-Eintrag ist die eigentliche Zustellgarantie - passiert
-  // unbedingt und unabhaengig davon, ob die SMTP-Benachrichtigung unten
-  // klappt.
-  await appendInboxEntry(entry);
+  // Postfach-Eintrag passiert unbedingt und unabhaengig davon, ob die
+  // SMTP-Benachrichtigung unten klappt. Faellt der Speicher (Vercel Blob)
+  // aus, darf das die Anfrage aber nicht verschlucken: die Mail unten wird
+  // trotzdem versucht, und der Nutzer sieht nur dann einen Fehler, wenn
+  // beide Wege scheitern.
+  let stored = false;
+  try {
+    await appendInboxEntry(entry);
+    stored = true;
+  } catch (err) {
+    console.error(`Postfach-Speicherung fuer ${entry.type} fehlgeschlagen:`, err);
+  }
 
   // Best-effort SMTP-Benachrichtigung an die im Adminpanel hinterlegte
   // Zieladresse - darf den obigen Postfach-Speichervorgang niemals
   // beeinflussen, deshalb in eigenem try/catch und erst danach.
+  let mailed = false;
   const formKind = INBOX_TO_FORM_KIND[entry.type];
   if (formKind) {
     try {
@@ -82,7 +91,9 @@ export async function POST(request: Request) {
         subject: `Neue Formular-Einsendung: ${entry.summary || entry.name || formKind}`,
         text,
       });
-      if (!result.ok) {
+      if (result.ok) {
+        mailed = true;
+      } else {
         console.error(`SMTP-Benachrichtigung fuer ${formKind} fehlgeschlagen:`, result.error);
         await recordSmtpFailure(formKind, result.error);
       }
@@ -91,5 +102,8 @@ export async function POST(request: Request) {
     }
   }
 
+  if (!stored && !mailed) {
+    return NextResponse.json({ error: "Zustellung fehlgeschlagen." }, { status: 500 });
+  }
   return NextResponse.json({ ok: true });
 }
