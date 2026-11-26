@@ -133,19 +133,17 @@ export default function TicketSelector({
     0
   );
 
-  // Reihenfolge wie in Clubscale (sortIndex). Gruppiert wird nur entlang dieser
-  // Reihenfolge: aufeinanderfolgende Standardtickets stehen in einem Rahmen,
-  // aufeinanderfolgende Coupon-Tickets im Fach "Exklusiv in der App".
+  // Zwei Bloecke: oben die Tickets ohne Coupon, unten die mit Coupon ("Exklusiv
+  // in der App"). Innerhalb der Bloecke gilt die Reihenfolge aus Clubscale
+  // (sortIndex).
   const ordered = pools
     .filter((p) => !p.deactivated)
     .sort((a, b) => (a.sortIndex ?? 0) - (b.sortIndex ?? 0));
   const runs: { exclusive: boolean; pools: TicketPool[] }[] = [];
-  for (const p of ordered) {
-    const ex = hasCoupon(p);
-    const last = runs[runs.length - 1];
-    if (last && last.exclusive === ex) last.pools.push(p);
-    else runs.push({ exclusive: ex, pools: [p] });
-  }
+  const withoutCoupon = ordered.filter((p) => !hasCoupon(p));
+  const withCoupon = ordered.filter((p) => hasCoupon(p));
+  if (withoutCoupon.length > 0) runs.push({ exclusive: false, pools: withoutCoupon });
+  if (withCoupon.length > 0) runs.push({ exclusive: true, pools: withCoupon });
   const firstExclusive = runs.findIndex((r) => r.exclusive);
   const lastExclusive = runs.map((r) => r.exclusive).lastIndexOf(true);
 
