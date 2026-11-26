@@ -133,9 +133,19 @@ export default function TicketSelector({
     0
   );
 
-  const visible = pools.filter((p) => !p.deactivated);
-  const standard = visible.filter((p) => !hasCoupon(p));
-  const exclusive = visible.filter((p) => hasCoupon(p));
+  // Zwei Bloecke: oben die Tickets ohne Coupon, unten die mit Coupon ("Exklusiv
+  // in der App"). Innerhalb der Bloecke gilt die Reihenfolge aus Clubscale
+  // (sortIndex).
+  const ordered = pools
+    .filter((p) => !p.deactivated)
+    .sort((a, b) => (a.sortIndex ?? 0) - (b.sortIndex ?? 0));
+  const runs: { exclusive: boolean; pools: TicketPool[] }[] = [];
+  const withoutCoupon = ordered.filter((p) => !hasCoupon(p));
+  const withCoupon = ordered.filter((p) => hasCoupon(p));
+  if (withoutCoupon.length > 0) runs.push({ exclusive: false, pools: withoutCoupon });
+  if (withCoupon.length > 0) runs.push({ exclusive: true, pools: withCoupon });
+  const firstExclusive = runs.findIndex((r) => r.exclusive);
+  const lastExclusive = runs.map((r) => r.exclusive).lastIndexOf(true);
 
   const poolState = (pool: TicketPool) => {
     const saleNotStarted = new Date(pool.saleStart).getTime() > now;
@@ -188,9 +198,115 @@ export default function TicketSelector({
         Online Tickets kaufen &amp; sparen
       </p>
 
-      {standard.length > 0 && (
-        <div className="divide-y divide-foreground/10 rounded-2xl border border-foreground/10 bg-foreground/[0.03] px-4">
-          {standard.map((pool) => {
+      {runs.map((run, runIndex) =>
+        run.exclusive ? (
+          <div
+            key={`run-${runIndex}`}
+            className="mt-4 rounded-2xl border border-foreground/10 bg-foreground/[0.02] p-4 first:mt-0"
+          >
+            {runIndex === firstExclusive && (
+              <>
+                <div className="flex items-center gap-2">
+                  <span className="text-sm text-accent-lime" aria-hidden="true">
+                    ★
+                  </span>
+                  <h3 className="text-xs font-black uppercase tracking-[0.1em] text-foreground">
+                    Exklusiv in der App
+                  </h3>
+                </div>
+                <p className="mt-1 text-xs text-foreground/60">
+                  Mit Coupon, nur in der moos.park App buchbar.
+                </p>
+              </>
+            )}
+
+            <div className="mt-2 divide-y divide-foreground/10">
+              {run.pools.map((pool) => {
+              const st = poolState(pool);
+              const { title, includes } = splitIncludes(pool.name);
+              const stripe = badgeColors(pool.badge?.color)?.background;
+              return (
+                <div
+                  key={pool.id}
+                  className={`flex gap-3 py-3.5 ${st.buyable ? "" : "opacity-50"}`}
+                >
+                  <span
+                    className="w-1 shrink-0 self-stretch rounded-full bg-foreground/20"
+                    style={stripe ? { backgroundColor: stripe } : undefined}
+                  />
+                  <div className="min-w-0 flex-1">
+                    {renderBadge(pool)}
+                    <p className="text-sm font-bold text-foreground">
+                      <span className="mr-1.5 text-xs text-accent-lime" aria-hidden="true">
+                        ★
+                      </span>
+                      {title}
+                    </p>
+                    {includes && (
+                      <p className="mt-1 text-xs leading-snug text-foreground/60">
+                        <span className="font-bold text-accent-lime">
+                          Du bekommst:
+                        </span>{" "}
+                        {includes}
+                      </p>
+                    )}
+                    {st.status && (
+                      <p
+                        className={`mt-1 text-xs ${
+                          st.soldOut
+                            ? "font-bold text-red-500"
+                            : "text-foreground/50"
+                        }`}
+                      >
+                        {st.status}
+                      </p>
+                    )}
+                    {st.lowStock && (
+                      <p className="mt-1 text-xs font-bold text-pink-500">
+                        Weniger als 10 Tickets verfügbar!
+                      </p>
+                    )}
+                  </div>
+                  <span className="shrink-0 text-base font-black text-foreground">
+                    {priceText(pool)}
+                  </span>
+                </div>
+              );
+            })}
+            </div>
+
+            {runIndex === lastExclusive && (
+          <div className="mt-3 border-t border-foreground/10 pt-3">
+            <p className="text-center text-xs font-black uppercase tracking-wide text-accent-lime">
+              App laden &amp; Tickets sichern
+            </p>
+            <div className="mt-2 flex justify-center gap-3">
+              <a
+                href={APP_STORE_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="opacity-80 transition-opacity hover:opacity-100"
+              >
+                <Image src="/images/appstore.png" alt="App Store" width={120} height={33} />
+              </a>
+              <a
+                href={PLAY_STORE_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="opacity-80 transition-opacity hover:opacity-100"
+              >
+                <Image src="/images/googleplay.png" alt="Google Play" width={120} height={34} />
+              </a>
+            </div>
+          </div>
+            )}
+          </div>
+        ) : (
+          <div
+            key={`run-${runIndex}`}
+            className="mt-4 divide-y divide-foreground/10 rounded-2xl border border-foreground/10 bg-foreground/[0.03] px-4 first:mt-0"
+          >
+            {run.pools.map((pool) => {
             const st = poolState(pool);
             const qty = quantities[pool.id] ?? 0;
             return (
@@ -256,102 +372,8 @@ export default function TicketSelector({
               </div>
             );
           })}
-        </div>
-      )}
-
-      {exclusive.length > 0 && (
-        <div className="mt-4 rounded-2xl border border-foreground/10 bg-foreground/[0.02] p-4">
-          <div className="flex items-center gap-2">
-            <span className="text-sm text-accent-lime" aria-hidden="true">
-              ★
-            </span>
-            <h3 className="text-xs font-black uppercase tracking-[0.1em] text-foreground">
-              Exklusiv in der App
-            </h3>
           </div>
-          <p className="mt-1 text-xs text-foreground/60">
-            Mit Coupon, nur in der moos.park App buchbar.
-          </p>
-
-          <div className="mt-2 divide-y divide-foreground/10">
-            {exclusive.map((pool) => {
-              const st = poolState(pool);
-              const { title, includes } = splitIncludes(pool.name);
-              const stripe = badgeColors(pool.badge?.color)?.background;
-              return (
-                <div
-                  key={pool.id}
-                  className={`flex gap-3 py-3.5 ${st.buyable ? "" : "opacity-50"}`}
-                >
-                  <span
-                    className="w-1 shrink-0 self-stretch rounded-full bg-foreground/20"
-                    style={stripe ? { backgroundColor: stripe } : undefined}
-                  />
-                  <div className="min-w-0 flex-1">
-                    {renderBadge(pool)}
-                    <p className="text-sm font-bold text-foreground">
-                      <span className="mr-1.5 text-xs text-accent-lime" aria-hidden="true">
-                        ★
-                      </span>
-                      {title}
-                    </p>
-                    {includes && (
-                      <p className="mt-1 text-xs leading-snug text-foreground/60">
-                        <span className="font-bold text-accent-lime">
-                          Du bekommst:
-                        </span>{" "}
-                        {includes}
-                      </p>
-                    )}
-                    {st.status && (
-                      <p
-                        className={`mt-1 text-xs ${
-                          st.soldOut
-                            ? "font-bold text-red-500"
-                            : "text-foreground/50"
-                        }`}
-                      >
-                        {st.status}
-                      </p>
-                    )}
-                    {st.lowStock && (
-                      <p className="mt-1 text-xs font-bold text-pink-500">
-                        Weniger als 10 Tickets verfügbar!
-                      </p>
-                    )}
-                  </div>
-                  <span className="shrink-0 text-base font-black text-foreground">
-                    {priceText(pool)}
-                  </span>
-                </div>
-              );
-            })}
-          </div>
-
-          <div className="mt-3 border-t border-foreground/10 pt-3">
-            <p className="text-center text-xs font-black uppercase tracking-wide text-accent-lime">
-              App laden &amp; Tickets sichern
-            </p>
-            <div className="mt-2 flex justify-center gap-3">
-              <a
-                href={APP_STORE_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="opacity-80 transition-opacity hover:opacity-100"
-              >
-                <Image src="/images/appstore.png" alt="App Store" width={120} height={33} />
-              </a>
-              <a
-                href={PLAY_STORE_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="opacity-80 transition-opacity hover:opacity-100"
-              >
-                <Image src="/images/googleplay.png" alt="Google Play" width={120} height={34} />
-              </a>
-            </div>
-          </div>
-        </div>
+        )
       )}
 
       <p className="mt-4 flex items-center gap-2 text-xs text-foreground/60">
