@@ -18,6 +18,7 @@ import {
   type TicketPool,
 } from "@/lib/clubscale";
 import FlipText from "@/components/FlipText";
+import { parseFullBirthday } from "@/lib/birthday";
 
 const stripePromise = loadStripe(STRIPE_PUBLISHABLE_KEY);
 
@@ -58,6 +59,18 @@ export default function TicketsDataFlow({
   const monthRef = useRef<HTMLInputElement>(null);
   const yearRef = useRef<HTMLInputElement>(null);
   const dayRef = useRef<HTMLInputElement>(null);
+
+  // Gibt der Browser (Autofill) oder das Einfuegen das ganze Datum in ein Feld,
+  // wird es auf TT, MM und JJJJ verteilt.
+  const applyFullBirthday = (raw: string): boolean => {
+    const full = parseFullBirthday(raw);
+    if (!full) return false;
+    setDay(full.day);
+    setMonth(full.month);
+    setYear(full.year);
+    yearRef.current?.blur();
+    return true;
+  };
 
   const [pools, setPools] = useState<TicketPool[] | null>(null);
   const [purchaseRequest, setPurchaseRequest] =
@@ -241,6 +254,7 @@ export default function TicketsDataFlow({
             ref={dayRef}
             value={day}
             onChange={(e) => {
+              if (applyFullBirthday(e.target.value)) return;
               let v = e.target.value.replace(/\D/g, "").slice(0, 2);
               // Erste Ziffer 4-9 kann kein Tag mit zwei Ziffern werden: 0 davor.
               if (v.length === 1 && Number(v) > 3) v = `0${v}`;
@@ -259,6 +273,7 @@ export default function TicketsDataFlow({
             ref={monthRef}
             value={month}
             onChange={(e) => {
+              if (applyFullBirthday(e.target.value)) return;
               let v = e.target.value.replace(/\D/g, "").slice(0, 2);
               // Erste Ziffer 2-9 kann kein Monat mit zwei Ziffern werden: 0 davor.
               if (v.length === 1 && Number(v) > 1) v = `0${v}`;
@@ -279,7 +294,10 @@ export default function TicketsDataFlow({
           <input
             ref={yearRef}
             value={year}
-            onChange={(e) => setYear(e.target.value.replace(/\D/g, "").slice(0, 4))}
+            onChange={(e) => {
+              if (applyFullBirthday(e.target.value)) return;
+              setYear(e.target.value.replace(/\D/g, "").slice(0, 4));
+            }}
             onKeyDown={(e) => {
               if (e.key === "Backspace" && year === "") monthRef.current?.focus();
             }}
