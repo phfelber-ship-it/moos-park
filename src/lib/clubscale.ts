@@ -17,7 +17,33 @@ export type TicketPool = {
   saleEnd: string;
   deactivated: boolean;
   sortIndex: number;
+  // Optionales Badge, das im Clubscale-Dashboard pro Ticket gesetzt wird.
+  badge?: { text: string; color: string; icon: string } | null;
+  // Hinterlegte Coupons: Solche Tickets lassen sich nur ueber die App buchen,
+  // weil der Coupon dort bestaetigt/eingeloest wird.
+  couponShopIDs?: string[];
+  couponPoolIDs?: string[];
 };
+
+export function hasCoupon(pool: TicketPool): boolean {
+  return (
+    (pool.couponShopIDs?.length ?? 0) > 0 ||
+    (pool.couponPoolIDs?.length ?? 0) > 0
+  );
+}
+
+// Lesbare Textfarbe (schwarz/weiss) fuer eine Hex-Hintergrundfarbe.
+// Gibt null zurueck, wenn die Farbe kein gueltiges #RRGGBB ist.
+export function badgeColors(
+  color: string | undefined
+): { background: string; text: string } | null {
+  if (!color || !/^#[0-9a-f]{6}$/i.test(color)) return null;
+  const r = parseInt(color.slice(1, 3), 16);
+  const g = parseInt(color.slice(3, 5), 16);
+  const b = parseInt(color.slice(5, 7), 16);
+  const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+  return { background: color, text: luminance > 0.6 ? "#000000" : "#ffffff" };
+}
 
 export type ClubscaleImage = {
   presignedURL: string;
@@ -121,6 +147,7 @@ export function checkoutUrl(
 export function isPoolBuyable(pool: TicketPool, now: number): boolean {
   return (
     !pool.deactivated &&
+    !hasCoupon(pool) &&
     pool.sold < pool.contingent &&
     new Date(pool.saleStart).getTime() <= now &&
     new Date(pool.saleEnd).getTime() >= now
@@ -134,6 +161,7 @@ export function nextSaleStart(pools: TicketPool[], now: number): number | null {
     .filter(
       (p) =>
         !p.deactivated &&
+        !hasCoupon(p) &&
         p.sold < p.contingent &&
         new Date(p.saleStart).getTime() > now &&
         new Date(p.saleEnd).getTime() >= new Date(p.saleStart).getTime()
