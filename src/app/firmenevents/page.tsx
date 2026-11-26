@@ -1,75 +1,35 @@
-import RentalLandingTemplate, {
-  type RentalPageData,
-} from "@/components/RentalLandingTemplate";
-import CompanyEventRequestForm from "@/components/CompanyEventRequestForm";
 import Reveal from "@/components/Reveal";
+import CompanyEventRequestForm from "@/components/CompanyEventRequestForm";
+import LocationLandingTemplate, {
+  type LocationPageData,
+} from "@/components/LocationLandingTemplate";
 
 export const metadata = {
   alternates: { canonical: "/firmenevents" },
   title: "Firmenevents Bayern – Betriebsfeier & Weihnachtsfeier | moos.park",
   description:
     "Firmenevents in Bayern – Weihnachtsfeier, Betriebsfest, Kick-off oder Produktlaunch für bis zu 2300 Gäste im gesamten Haus, alles aus einer Hand.",
+  openGraph: {
+    title: "Firmenevents Bayern | moos.park",
+    description:
+      "Weihnachtsfeier, Betriebsfest, Kick-off oder Produktlaunch für bis zu 2300 Gäste im gesamten Haus, alles aus einer Hand.",
+    url: "/firmenevents",
+    type: "website",
+    locale: "de_DE",
+    images: ["/images/eventlocation-hero.png"],
+  },
 };
 
-const data: RentalPageData = {
-  eyebrow: "Firmenevents in Pöttmes, zwischen Augsburg und Ingolstadt.",
-  heroTitle: "Ihr Firmenevent im moos.park.",
-  heroSubtitle:
-    "Weihnachtsfeier, Betriebsfest, Kick-off, Produktlaunch – bis zu 2300 Gäste im gesamten Haus. Wir übernehmen Planung, Technik und Gastronomie. Sie kümmern sich um Ihre Gäste.",
-  painHeading: "Firmenevent planen kostet Zeit und Nerven.",
-  painIntro:
-    "Jedes Jahr dasselbe: Location koordinieren, Catering organisieren, Technik klären – alles neben dem Tagesgeschäft. Klingt nach Arbeit, nicht nach Feier.",
-  painPoints: [
-    {
-      title: "Aufwendige Vorab-Koordination",
-      text: "Location, Catering, Technik, Ablauf – alles separat. Das kostet intern Wochen an Zeit und Ressourcen.",
-    },
-    {
-      title: "Technik & Catering als Kostenfallen",
-      text: "Externe Dienstleister, separate Rechnungen – was günstig beginnt, endet mit deutlich mehr Budget als geplant.",
-    },
-    {
-      title: "Mitarbeiter nicht begeistert",
-      text: "Schlechte Atmosphäre, kein gutes Essen, kein roter Faden – eine misslungene Firmenfeier bleibt negativ in Erinnerung.",
-    },
-  ],
-  stepsHeading: "In 4 Schritten zu Ihrem Firmenevent.",
-  steps: [
-    {
-      num: "01",
-      title: "Anfrage senden",
-      text: "Datum, Anlass, Personenzahl – kurze Nachricht genügt. Schnelle Angebotsbearbeitung.",
-    },
-    {
-      num: "02",
-      title: "Gemeinsam konzipieren",
-      text: "Räume, Ablauf, Technik und Catering – wir planen mit Ihnen. Ein Ansprechpartner für alles.",
-    },
-    {
-      num: "03",
-      title: "Alles wird vorbereitet",
-      text: "Bühne, Licht, Sound, Buffet – alles eingerichtet. Ihr Team muss nur noch ankommen.",
-    },
-    {
-      num: "04",
-      title: "Einfach feiern",
-      text: "Ihr Team kommt, feiert und geht nach Hause. Um den Rest kümmern wir uns.",
-    },
-  ],
-  advantagesHeading: "Firmenevents aus einer Hand.",
-  advantagesIntro:
-    "moos.park liefert kein leeres Gelände – sondern das komplette Firmen-Event-Paket. Technik, Essen, Service, alles inklusive.",
-  advantages: [
+const ADVANTAGES_FIRMEN = [
     "Bis zu 2300 Gäste im gesamten Haus – auch für große Betriebsfeiern",
     "Bühne, Licht & Sound – nichts extra buchen",
     "Eigene Gastronomie: Menü, Buffet, Bar",
     "Kostenloser Parkplatz für alle Mitarbeiter",
     "Exklusivbuchung der Location möglich",
     "Ein Ansprechpartner – von Planung bis Abschluss",
-  ],
-  testimonialsHeading: "Was Unternehmen sagen.",
-  testimonials: [],
-  faq: [
+];
+
+const FAQ = [
     {
       q: "Für welche Firmenevents ist moos.park geeignet?",
       a: "Weihnachtsfeier, Betriebsfest, Sommerfest, Kick-off, Produktlaunch, Kongress, Business Dinner – für alle Firmenanlässe geeignet.",
@@ -94,12 +54,7 @@ const data: RentalPageData = {
       q: "Wie frühzeitig sollte man buchen?",
       a: "Für Wochenend-Termine 6–12 Monate im Voraus empfohlen. Besonders für Weihnachtsfeiern buchen viele Unternehmen bereits im Frühjahr.",
     },
-  ],
-  ctaHeading: "Ihr nächstes Firmenevent – jetzt anfragen.",
-  formal: true,
-  ctaText:
-    "Schnelle Angebotsbearbeitung: Wir erstellen Ihnen ein maßgeschneidertes Angebot. Kostenlos, unverbindlich, konkret.",
-};
+];
 
 const SIZE_STEPS = [
   {
@@ -129,63 +84,86 @@ const SIZE_STEPS = [
   },
 ];
 
-export default function FirmeneventsPage() {
+// Firmengroessen (bisheriger Abschnitt "Von klein bis gross").
+function SizeSteps() {
   return (
-    <div>
-      <RentalLandingTemplate data={data} />
+    <section className="px-6 py-20 lg:py-28">
+      <div className="mx-auto max-w-[77rem]">
+        <Reveal>
+          <p className="text-center text-xs font-black uppercase font-mono tracking-[0.2em] text-accent-lime">
+            Von klein bis groß
+          </p>
+          <h2 className="mx-auto mt-3 max-w-2xl text-center text-2xl font-black uppercase leading-[1.1] text-foreground sm:text-3xl lg:text-5xl">
+            Für jede Firmengröße die passende Veranstaltung.
+          </h2>
+          <p className="mx-auto mt-4 max-w-xl text-center text-foreground/70">
+            Bis zu 2.300 Gäste im gesamten Haus, inklusive Terrasse.
+          </p>
+        </Reveal>
 
-      <section className="px-6 py-20 lg:py-28">
-        <div className="mx-auto max-w-[77rem]">
-          <Reveal>
-            <p className="text-center text-xs font-black uppercase font-mono tracking-[0.2em] text-accent-lime">
-              Von klein bis groß
-            </p>
-            <h2 className="mx-auto mt-3 max-w-2xl text-center text-2xl font-black uppercase leading-tight text-foreground sm:text-3xl lg:text-5xl">
-              Für jede Firmengröße die passende Veranstaltung.
-            </h2>
-            <p className="mx-auto mt-4 max-w-xl text-center text-foreground/70">
-              Bis zu 2.300 Gäste im gesamten Haus, inklusive Terrasse.
-            </p>
-          </Reveal>
-
-          <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
-            {SIZE_STEPS.map((step, i) => (
-              <Reveal key={step.range} delay={i * 0.06}>
-                <div className="h-full rounded-2xl border border-foreground/10 p-5">
-                  <p className="text-sm font-black uppercase text-accent-lime">
-                    {step.range}
-                  </p>
-                  <p className="mt-2 font-black uppercase text-foreground">
-                    {step.fit}
-                  </p>
-                  <p className="mt-2 text-sm text-foreground/60">{step.text}</p>
-                </div>
-              </Reveal>
-            ))}
-          </div>
+        <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
+          {SIZE_STEPS.map((step, i) => (
+            <Reveal key={step.range} delay={i * 0.06}>
+              <div className="h-full rounded-2xl border border-foreground/10 p-5">
+                <p className="text-sm font-black uppercase text-accent-lime">
+                  {step.range}
+                </p>
+                <p className="mt-2 font-black uppercase text-foreground">
+                  {step.fit}
+                </p>
+                <p className="mt-2 text-sm text-foreground/60">{step.text}</p>
+              </div>
+            </Reveal>
+          ))}
         </div>
-      </section>
-
-      <section id="firmenanfrage" className="bg-foreground/[0.02] px-6 py-20 lg:py-28">
-        <div className="mx-auto max-w-2xl">
-          <Reveal>
-            <p className="text-center text-xs font-black uppercase font-mono tracking-[0.2em] text-accent-lime">
-              Jetzt anfragen
-            </p>
-            <h2 className="mx-auto mt-3 max-w-xl text-center text-2xl font-black uppercase leading-tight text-foreground sm:text-3xl lg:text-5xl">
-              Ihre Firmenfeier – unverbindlich anfragen.
-            </h2>
-            <p className="mx-auto mt-4 max-w-md text-center text-foreground/70">
-              Firma, Ansprechpartner, Personenzahl und Wunschtermin genügen –
-              wir melden uns mit einem passenden Konzept.
-            </p>
-          </Reveal>
-
-          <Reveal delay={0.1} className="mt-10">
-            <CompanyEventRequestForm />
-          </Reveal>
-        </div>
-      </section>
-    </div>
+      </div>
+    </section>
   );
+}
+
+const data: LocationPageData = {
+  path: "/firmenevents",
+  breadcrumbName: "Firmenevents",
+  breadcrumbParent: null,
+  heroTitle: "Ihr Firmenevent im moos.park",
+  heroPill: "Firmenevents · bis zu 2300 Gäste",
+  introHeading: "Firmenevents aus einer Hand.",
+  introParagraphs: [
+    <>
+      <strong>Weihnachtsfeier, Betriebsfest, Kick-off, Produktlaunch</strong>{" "}
+      – bis zu 2300 Gäste im gesamten Haus. Wir übernehmen Planung, Technik
+      und Gastronomie. Sie kümmern sich um Ihre Gäste.
+    </>,
+    <>
+      moos.park liefert kein leeres Gelände, sondern das komplette
+      Firmen-Event-Paket in Pöttmes, zwischen Augsburg und Ingolstadt.
+      Technik, Essen und Service sind inklusive.
+    </>,
+  ],
+  cityBlock: {
+    label: "Für Unternehmen",
+    title: "Planung, Technik, Gastronomie.",
+    text: "Ein Ansprechpartner von der Planung bis zum Abschluss.",
+    items: ADVANTAGES_FIRMEN,
+  },
+  extra: <SizeSteps />,
+  occasions: null,
+  request: {
+    label: "Jetzt anfragen",
+    title: "Ihre Firmenfeier unverbindlich anfragen.",
+    text: (
+      <p>
+        Firma, Ansprechpartner, Personenzahl und Wunschtermin genügen – wir
+        melden uns mit einem passenden Konzept.
+      </p>
+    ),
+    form: <CompanyEventRequestForm />,
+  },
+  anfahrtText:
+    "Rudolf-Diesel-Straße 23, 86554 Pöttmes. Rund 40 Minuten von Augsburg und ca. 35 Minuten von Ingolstadt.",
+  faq: FAQ,
+};
+
+export default function FirmeneventsPage() {
+  return <LocationLandingTemplate data={data} />;
 }

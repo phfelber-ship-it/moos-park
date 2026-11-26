@@ -1,14 +1,23 @@
 import Link from "next/link";
 import Reveal from "@/components/Reveal";
-import FlipText from "@/components/FlipText";
-import Accordion from "@/components/Accordion";
-import { ROOMS } from "@/lib/rooms";
+import LocationLandingTemplate, {
+  type LocationPageData,
+} from "@/components/LocationLandingTemplate";
 
 export const metadata = {
   alternates: { canonical: "/eventlocation-region" },
   title: "Eventlocation Region Augsburg & Ingolstadt | moos.park Pöttmes",
   description:
     "Eventlocation in Pöttmes für Hochzeiten, Firmenevents, Club-Nächte und Geburtstage. Bis 2300 Personen, Region Augsburg, Ingolstadt und Aichach-Friedberg.",
+  openGraph: {
+    title: "Eventlocation Region Augsburg & Ingolstadt | moos.park",
+    description:
+      "Bis zu 2300 Gäste, sieben kombinierbare Räume, eigene Gastronomie und Technik für die Region Augsburg, Ingolstadt und Aichach-Friedberg.",
+    url: "/eventlocation-region",
+    type: "website",
+    locale: "de_DE",
+    images: ["/images/eventlocation-hero.png"],
+  },
 };
 
 const EVENT_TYPES = [
@@ -97,202 +106,76 @@ const FAQ = [
   },
 ];
 
-export default function EventlocationRegionPage() {
-  const faqJsonLd = {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    mainEntity: FAQ.map((item) => ({
-      "@type": "Question",
-      name: item.q,
-      acceptedAnswer: { "@type": "Answer", text: item.a },
-    })),
-  };
-
+// Regionen mit Orten und Verweisen auf die Standort-Seiten.
+function RegionList() {
   return (
-    <div>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
-      />
-
-      <section className="px-6 pb-16 pt-32 text-center">
+    <section id="regionen" className="px-6 py-20 lg:py-28">
+      <div className="mx-auto max-w-[77rem]">
         <Reveal>
-          <p className="text-xs font-bold uppercase tracking-wide text-foreground/50">
-            Eine Location, alle Anlässe, ganz Bayerisch-Schwaben &amp; Oberbayern.
+          <p className="text-center text-xs font-black uppercase font-mono tracking-[0.2em] text-accent-lime">
+            Einzugsgebiet
           </p>
-          <h1 className="mx-auto mt-4 max-w-4xl text-3xl font-black uppercase leading-tight text-foreground sm:text-5xl">
-            Eventlocation mieten für Hochzeit, Firmenevent &amp; Club-Feier
-          </h1>
-          <p className="mx-auto mt-5 max-w-2xl text-foreground/70">
-            moos.park in Pöttmes – bis 2300 Personen, alles inklusive. Im Umkreis
-            von rund 100&nbsp;km um Aichach, Friedberg, Augsburg, Neuburg an der
-            Donau, Ingolstadt, Regensburg, Wertingen und Dillingen die
-            Eventlocation für Hochzeiten, Firmenevents, Clubnächte, Geburtstage
-            und Feiern jeder Art mieten.
-          </p>
-          <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
-            <Link
-              href="/veranstaltungsanfrage"
-              className="inline-block rounded-full bg-accent-lime px-8 py-3 text-sm font-black uppercase tracking-wide text-black transition-transform hover:scale-105"
-            >
-              <FlipText text="Jetzt anfragen" />
-            </Link>
-            <a
-              href="tel:082537576"
-              className="inline-block rounded-full border border-foreground/20 px-8 py-3 text-sm font-black uppercase tracking-wide text-foreground transition-colors hover:border-foreground/50"
-            >
-              Uns anrufen
-            </a>
-          </div>
-        </Reveal>
-      </section>
-
-      <section className="bg-foreground/[0.02] px-6 py-20 lg:py-28">
-        <div className="mx-auto max-w-[77rem]">
-          <Reveal>
-            <p className="text-center text-xs font-black uppercase font-mono tracking-[0.2em] text-accent-lime">
-              Für jeden Anlass
-            </p>
-            <h2 className="mx-auto mt-3 max-w-2xl text-center text-2xl font-black uppercase leading-tight text-foreground sm:text-3xl lg:text-5xl">
-              Eine Location für alle Ihre Events.
-            </h2>
-          </Reveal>
-
-          <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {EVENT_TYPES.map((e, i) => (
-              <Reveal key={e.title} delay={i * 0.06}>
-                <div className="flex h-full flex-col rounded-2xl border border-foreground/10 p-6">
-                  <h3 className="font-black uppercase text-foreground">{e.title}</h3>
-                  <p className="mt-2 flex-1 text-sm text-foreground/60">{e.text}</p>
-                  <Link
-                    href={e.href}
-                    className="mt-4 text-xs font-bold uppercase tracking-wide text-accent-lime hover:underline"
-                  >
-                    {e.cta} →
-                  </Link>
-                </div>
-              </Reveal>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="px-6 py-20 lg:py-28">
-        <div className="mx-auto max-w-[77rem]">
-          <Reveal>
-            <p className="text-center text-xs font-black uppercase font-mono tracking-[0.2em] text-accent-lime">
-              7 Räume, ein Anbieter
-            </p>
-            <h2 className="mx-auto mt-3 max-w-2xl text-center text-2xl font-black uppercase leading-tight text-foreground sm:text-3xl lg:text-5xl">
-              Von 50 bis 2300 Gästen – flexibel kombinierbar.
-            </h2>
-          </Reveal>
-
-          <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {ROOMS.map((room, i) => (
-              <Reveal key={room.name} delay={i * 0.05}>
-                <div className="h-full rounded-2xl border border-foreground/10 p-6">
-                  <h3 className="font-black uppercase text-foreground">{room.name}</h3>
-                  <p className="mt-1 text-xs font-bold uppercase tracking-wide text-accent-lime">
-                    {room.capacity} · {room.area}
-                  </p>
-                  <p className="mt-3 text-sm text-foreground/60">{room.text}</p>
-                </div>
-              </Reveal>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="bg-foreground/[0.02] px-6 py-20 lg:py-28">
-        <div className="mx-auto max-w-[77rem]">
-          <Reveal>
-            <p className="text-center text-xs font-black uppercase font-mono tracking-[0.2em] text-accent-lime">
-              Im Umkreis von rund 100 km
-            </p>
-            <h2 className="mx-auto mt-3 max-w-2xl text-center text-2xl font-black uppercase leading-tight text-foreground sm:text-3xl lg:text-5xl">
-              Eventlocation für die ganze Region.
-            </h2>
-            <p className="mx-auto mt-4 max-w-xl text-center text-foreground/70">
-              Ob Aichach, Friedberg, Augsburg, Neuburg an der Donau, Ingolstadt,
-              Regensburg, Wertingen oder Dillingen – moos.park liegt zwischen
-              Augsburg und Ingolstadt.
-            </p>
-          </Reveal>
-
-          <div className="mt-10 grid gap-6 sm:grid-cols-2">
-            {REGIONS.map((region, i) => (
-              <Reveal key={region.name} delay={i * 0.06}>
-                <div className="h-full rounded-2xl border border-foreground/10 p-6">
-                  <h3 className="font-black uppercase text-foreground">{region.name}</h3>
-                  <p className="mt-2 text-sm text-foreground/60">{region.text}</p>
-                  <ul className="mt-4 flex flex-wrap gap-2">
-                    {region.towns.map((t) => (
-                      <li
-                        key={t}
-                        className="rounded-full border border-foreground/10 px-3 py-1 text-xs font-semibold text-foreground/70"
-                      >
-                        {t}
-                      </li>
-                    ))}
-                  </ul>
-                  {region.link && (
-                    <Link
-                      href={region.link.href}
-                      className="mt-4 inline-block text-xs font-bold uppercase tracking-wide text-accent-lime hover:underline"
-                    >
-                      {region.link.label} →
-                    </Link>
-                  )}
-                </div>
-              </Reveal>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="px-6 py-20 lg:py-28">
-        <div className="mx-auto max-w-3xl">
-          <Reveal>
-            <p className="text-center text-xs font-black uppercase font-mono tracking-[0.2em] text-accent-lime">
-              Häufige Fragen
-            </p>
-            <h2 className="mx-auto mt-3 max-w-xl text-center text-2xl font-black uppercase leading-tight text-foreground sm:text-3xl lg:text-5xl">
-              Alles, was Sie wissen möchten.
-            </h2>
-          </Reveal>
-
-          <Reveal delay={0.1} className="mt-8">
-            <Accordion items={FAQ} />
-          </Reveal>
-        </div>
-      </section>
-
-      <section className="bg-foreground/[0.02] px-6 py-24 lg:py-28 text-center">
-        <Reveal direction="scale">
-          <h2 className="mx-auto max-w-2xl text-2xl font-black uppercase leading-tight text-foreground sm:text-4xl lg:text-5xl">
-            Ihre Eventlocation für die ganze Region – jetzt anfragen.
+          <h2 className="mx-auto mt-3 max-w-2xl text-center text-2xl font-black uppercase leading-[1.1] text-foreground sm:text-3xl lg:text-5xl">
+            Aus diesen Regionen kommen unsere Gäste.
           </h2>
-          <p className="mx-auto mt-4 max-w-md text-foreground/70">
-            Schnelle Angebotsbearbeitung: Wir erstellen Ihnen ein persönliches
-            Angebot. Kostenlos, unverbindlich, konkret.
-          </p>
-          <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
-            <Link
-              href="/veranstaltungsanfrage"
-              className="inline-block rounded-full bg-accent-lime px-8 py-3 text-sm font-black uppercase tracking-wide text-black transition-transform hover:scale-105"
-            >
-              <FlipText text="Jetzt anfragen" />
-            </Link>
-            <a
-              href="tel:082537576"
-              className="inline-block rounded-full border border-foreground/20 px-8 py-3 text-sm font-black uppercase tracking-wide text-foreground transition-colors hover:border-foreground/50"
-            >
-              Uns anrufen
-            </a>
-          </div>
         </Reveal>
-      </section>
-    </div>
+        <div className="mt-10 grid gap-4 md:grid-cols-2">
+          {REGIONS.map((region, i) => (
+            <Reveal key={region.name} delay={i * 0.06}>
+              <div className="flex h-full flex-col rounded-2xl border border-foreground/10 p-6">
+                <h3 className="font-black uppercase text-foreground">
+                  {region.name}
+                </h3>
+                <p className="mt-2 text-sm text-foreground/70">{region.text}</p>
+                <div className="mt-4 flex flex-wrap gap-2">
+                  {region.towns.map((t) => (
+                    <span
+                      key={t}
+                      className="rounded-full border border-foreground/15 px-3 py-1 text-xs text-foreground/70"
+                    >
+                      {t}
+                    </span>
+                  ))}
+                </div>
+                {region.link && (
+                  <Link
+                    href={region.link.href}
+                    className="mt-4 text-xs font-black uppercase tracking-wide text-accent-lime"
+                  >
+                    {region.link.label} →
+                  </Link>
+                )}
+              </div>
+            </Reveal>
+          ))}
+        </div>
+      </div>
+    </section>
   );
+}
+
+const data: LocationPageData = {
+  path: "/eventlocation-region",
+  breadcrumbName: "Eventlocation Region",
+  heroTitle: "Eventlocation mieten für Hochzeit, Firmenevent & Club-Feier",
+  heroPill: "Pöttmes · Region Augsburg, Ingolstadt, Aichach-Friedberg",
+  introHeading: "Eine Location, alle Anlässe, ganz Bayerisch-Schwaben & Oberbayern.",
+  introParagraphs: [
+    <>
+      <strong>moos.park in Pöttmes</strong> – bis 2300 Personen, alles
+      inklusive. Im Umkreis von rund 100&nbsp;km um Aichach, Friedberg,
+      Augsburg, Neuburg an der Donau, Ingolstadt, Regensburg, Wertingen und
+      Dillingen die Eventlocation für Hochzeiten, Firmenevents, Clubnächte,
+      Geburtstage und Feiern jeder Art mieten.
+    </>,
+  ],
+  extra: <RegionList />,
+  occasions: EVENT_TYPES,
+  anfahrtText:
+    "Rudolf-Diesel-Straße 23, 86554 Pöttmes. Rund 40 Minuten von Augsburg und ca. 35 Minuten von Ingolstadt.",
+  faq: FAQ,
+};
+
+export default function EventlocationRegionPage() {
+  return <LocationLandingTemplate data={data} />;
 }

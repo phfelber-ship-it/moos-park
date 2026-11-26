@@ -28,13 +28,38 @@ const VISIBLE_ROOMS = ROOMS.filter((r) => !HIDDEN_ROOM_SLUGS.includes(r.slug));
 export type LocationPageData = {
   path: string; // z. B. "/eventlocation-augsburg"
   breadcrumbName: string; // z. B. "Eventlocation Augsburg"
+  // Elternseite im Breadcrumb; Standard "Eventlocation", null = direkt unter
+  // der Startseite (z. B. /firmenevents).
+  breadcrumbParent?: { name: string; path: string } | null;
   heroTitle: string;
   heroPill: string; // kurze Entfernungsangabe unter dem Titel
   introHeading: string;
   introParagraphs: React.ReactNode[];
-  cityBlock: { label: string; title: string; text: string; items: string[] };
+  // Ortsspezifischer Block mit Stichpunkten (optional).
+  cityBlock?: { label: string; title: string; text: string; items: string[] };
+  // Zusatz-Inhalte der Seite (z. B. Firmengroessen, Regionen), erscheinen
+  // nach dem Anreise-Block.
+  extra?: React.ReactNode;
+  // Eigene Anlaesse-Kacheln; null blendet den Abschnitt aus. Standard:
+  // die allgemeinen Anlaesse von /eventlocation.
+  occasions?: OccasionCard[] | null;
+  // Eigener Text und/oder eigenes Formular im Anfrage-Abschnitt
+  // (z. B. Firmenformular auf /firmenevents). Standard: EventRequestForm.
+  request?: {
+    label?: string;
+    title?: string;
+    text?: React.ReactNode;
+    form?: React.ReactNode;
+  };
   anfahrtText: string;
   faq: { q: string; a: string }[];
+};
+
+export type OccasionCard = {
+  title: string;
+  text: string;
+  href: string;
+  cta: string;
 };
 
 export default async function LocationLandingTemplate({
@@ -43,6 +68,11 @@ export default async function LocationLandingTemplate({
   data: LocationPageData;
 }) {
   const roomImages = await getAllRoomImages();
+  const parent =
+    data.breadcrumbParent === undefined
+      ? { name: "Eventlocation", path: "/eventlocation" }
+      : data.breadcrumbParent;
+  const occasions = data.occasions === undefined ? OCCASIONS : data.occasions;
 
   const jsonLd = [
     {
@@ -58,20 +88,16 @@ export default async function LocationLandingTemplate({
       "@context": "https://schema.org",
       "@type": "BreadcrumbList",
       itemListElement: [
-        { "@type": "ListItem", position: 1, name: "Startseite", item: SITE_URL },
+        { "@type": "ListItem", name: "Startseite", item: SITE_URL },
+        ...(parent
+          ? [{ "@type": "ListItem", name: parent.name, item: `${SITE_URL}${parent.path}` }]
+          : []),
         {
           "@type": "ListItem",
-          position: 2,
-          name: "Eventlocation",
-          item: `${SITE_URL}/eventlocation`,
-        },
-        {
-          "@type": "ListItem",
-          position: 3,
           name: data.breadcrumbName,
           item: `${SITE_URL}${data.path}`,
         },
-      ],
+      ].map((item, i) => ({ ...item, position: i + 1 })),
     },
   ];
 
@@ -163,13 +189,17 @@ export default async function LocationLandingTemplate({
       </section>
 
       {/* 4. Ortsspezifischer Block (Anreise) */}
-      <SplitCard
-        label={data.cityBlock.label}
-        title={data.cityBlock.title}
-        text={<p>{data.cityBlock.text}</p>}
-      >
-        <DotList items={data.cityBlock.items} />
-      </SplitCard>
+      {data.cityBlock && (
+        <SplitCard
+          label={data.cityBlock.label}
+          title={data.cityBlock.title}
+          text={<p>{data.cityBlock.text}</p>}
+        >
+          <DotList items={data.cityBlock.items} />
+        </SplitCard>
+      )}
+
+      {data.extra}
 
       {/* 5. Vorteile */}
       <SplitCard
@@ -187,6 +217,7 @@ export default async function LocationLandingTemplate({
       </SplitCard>
 
       {/* 6. Anlaesse */}
+      {occasions && (
       <section id="anlaesse" className="bg-foreground/[0.02] px-6 py-20 lg:py-28">
         <div className="mx-auto max-w-[77rem]">
           <Reveal>
@@ -197,8 +228,12 @@ export default async function LocationLandingTemplate({
               Für jeden Anlass die passende Veranstaltung.
             </h2>
           </Reveal>
-          <div className="mt-10 grid grid-cols-1 gap-4 lg:grid-cols-4">
-            {OCCASIONS.map((o, i) => (
+          <div
+            className={`mt-10 grid grid-cols-1 gap-4 ${
+              occasions.length === 5 ? "lg:grid-cols-5" : "lg:grid-cols-4"
+            }`}
+          >
+            {occasions.map((o, i) => (
               <Reveal key={o.title} delay={i * 0.06}>
                 <div className="flex h-full flex-col rounded-2xl border border-foreground/10 p-6">
                   <h3 className="font-black uppercase text-foreground">
@@ -219,6 +254,7 @@ export default async function LocationLandingTemplate({
           </div>
         </div>
       </section>
+      )}
 
       {/* 7. Raeume */}
       <section id="raeume" className="px-6 py-20 text-center lg:py-28">
@@ -302,16 +338,18 @@ export default async function LocationLandingTemplate({
       <div className="pb-24">
         <SplitCard
           id="anfragen"
-          label="Ihr Event, unsere Beratung."
-          title="Ganz unverbindlich anfragen."
+          label={data.request?.label ?? "Ihr Event, unsere Beratung."}
+          title={data.request?.title ?? "Ganz unverbindlich anfragen."}
           text={
-            <p>
-              Ihre Idee sind unser Antrieb. Melden Sie sich bei uns und wir
-              setzen Ihre Pläne um. Los geht&apos;s!
-            </p>
+            data.request?.text ?? (
+              <p>
+                Ihre Idee sind unser Antrieb. Melden Sie sich bei uns und wir
+                setzen Ihre Pläne um. Los geht&apos;s!
+              </p>
+            )
           }
         >
-          <EventRequestForm />
+          {data.request?.form ?? <EventRequestForm />}
         </SplitCard>
       </div>
     </div>
