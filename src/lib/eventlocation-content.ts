@@ -35,11 +35,14 @@ export const ADVANTAGES = [
   "Professionelle Licht- und Tontechnik",
   "WLAN für Ihre Gäste",
   "Fest eingebaute Theken",
-  "Pizzeria im Haus",
+  "Pizzeria im Haus: Pinsa und Pizza",
   "Kostenlose Parkplätze direkt am Haus",
   "Garderobe direkt im Foyer",
   "Räume einzeln oder kombiniert buchbar",
   "Ein fester Ansprechpartner für Ihr Event",
+  "Catering flexibel mit namhaften Caterer-Partnern",
+  "Auch kurzfristig planbar",
+  "Ihr Angebot in der Regel innerhalb von 24 Stunden",
 ];
 
 export const EXTRAS = [

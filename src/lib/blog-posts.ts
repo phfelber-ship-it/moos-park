@@ -1,5 +1,11 @@
 export type BlogFaqItem = { q: string; a: string };
-export type BlogSection = { heading: string; paragraphs: string[] };
+export type BlogImage = { src: string; alt: string };
+export type BlogSection = {
+  heading: string;
+  paragraphs: string[];
+  // Optionales Bild unter dem Abschnittstext.
+  image?: BlogImage;
+};
 export type BlogRelatedLink = { href: string; label: string };
 
 export type BlogPost = {
@@ -9,6 +15,8 @@ export type BlogPost = {
   description: string;
   excerpt: string;
   publishedAt: string;
+  // Optionales Titelbild (Artikelseite, Blog-Uebersicht, Social-Vorschau).
+  image?: BlogImage;
   sections: BlogSection[];
   faq?: BlogFaqItem[];
   relatedLinks: BlogRelatedLink[];
@@ -43,7 +51,7 @@ export const BLOG_POSTS: BlogPost[] = [
       {
         heading: "Gastronomie aus einer Hand",
         paragraphs: [
-          "Eigene Küche, Bar und idealerweise sogar Pizzeria vor Ort sparen dir die Suche nach externen Caterern – und damit auch zusätzliche Anfahrts- und Koordinationskosten.",
+          "Bietet die Location eigene Gastronomie und arbeitet mit festen Caterer-Partnern, sparst du dir die Suche nach externen Anbietern – und damit auch zusätzliche Anfahrts- und Koordinationskosten.",
           "Frag nach, ob Buffet, Menü und Fingerfood flexibel zusammengestellt werden können, und ob Sonderwünsche (vegan, allergenfrei) möglich sind.",
         ],
       },
@@ -162,7 +170,7 @@ export const BLOG_POSTS: BlogPost[] = [
       {
         heading: "Catering und Getränke",
         paragraphs: [
-          "Eigene Gastronomie vor Ort bedeutet meist mehr Flexibilität bei Menü, Buffet und Sonderwünschen – und keine zusätzliche Anfahrtspauschale für externe Caterer. Klärt außerdem, bis wann Änderungen an der Gästezahl möglich sind.",
+          "Eine Location mit eigener Gastronomie und festen Caterer-Partnern bedeutet meist mehr Flexibilität bei Menü, Buffet und Sonderwünschen – und weniger Koordination für dich. Klärt außerdem, bis wann Änderungen an der Gästezahl möglich sind.",
         ],
       },
       {
@@ -276,7 +284,7 @@ export const BLOG_POSTS: BlogPost[] = [
       {
         heading: "Was Stadtlocations oft fehlt",
         paragraphs: [
-          "Große, kostenlose Parkplätze direkt vor der Tür, eigene Gastronomie mit Bar, Buffet und Pizzeria sowie vollständige Licht- und Tontechnik – Dinge, die in vielen innerstädtischen Locations entweder fehlen oder teuer extra gebucht werden müssen.",
+          "Große, kostenlose Parkplätze direkt vor der Tür, Bar, Pinsa und Pizza aus dem Haus, Catering über Partner sowie vollständige Licht- und Tontechnik – Dinge, die in vielen innerstädtischen Locations entweder fehlen oder teuer extra gebucht werden müssen.",
         ],
       },
     ],
@@ -407,12 +415,17 @@ export const BLOG_POSTS: BlogPost[] = [
     excerpt:
       "So wird das Firmensommerfest ein Fest, über das noch Wochen später gesprochen wird.",
     publishedAt: "2026-11-26",
+    image: {
+      src: "/images/rooms/terrasse-1.jpg",
+      alt: "Terrasse im moos.park mit Stehtischen aus Fässern, Sonnenschirmen und Lichterketten im Sonnenschein",
+    },
     sections: [
       {
         heading: "Wann du ein Sommerfest buchen solltest",
         paragraphs: [
           "Sommerfeste finden fast immer am Wochenende statt, und genau diese Termine sind früh vergeben. Unsere Empfehlung für Wochenend-Termine: 6 bis 12 Monate im Voraus. Wer sein Sommerfest 2027 plant, ist mit einer Anfrage in den nächsten Wochen und Monaten gut dran.",
           "Werktags sind auch kurzfristige Buchungen möglich. Wenn dein Team flexibel ist, lohnt sich ein Donnerstag oder Freitag als Alternative.",
+          "Und falls du das Sommerfest zu spät auf dem Zettel hattest: Wir planen auch kurzfristig und melden uns in der Regel innerhalb von 24 Stunden mit einem Angebot. Ob dein Wunschtermin frei ist, klären wir direkt mit dir.",
         ],
       },
       {
@@ -421,6 +434,10 @@ export const BLOG_POSTS: BlogPost[] = [
           "Ein Sommerfest lebt vom Außenbereich. Im moos.park ist das die Terrasse mit 460 m²: Platz für bis zu 720 Personen stehend oder 576 bestuhlt. Sie eignet sich für Sommerfeste, Grillabende und Veranstaltungen unter freiem Himmel.",
           "Wetter lässt sich nicht planen. Sinnvoll ist deshalb eine Location, die dir im selben Haus Räume für den Fall der Fälle bietet. Im moos.park gibt es neben der Terrasse sieben Räume, darunter die Main-Halle für bis zu 750 Personen. Welche Variante für dein Fest passt, besprechen wir gern vorab mit dir.",
         ],
+        image: {
+          src: "/images/rooms/terrasse-2.jpg",
+          alt: "Weitläufige Terrasse im moos.park mit Pflanzkübeln, Lichterketten und einem Container-Barbereich im Hintergrund",
+        },
       },
       {
         heading: "Wie viel Platz brauchst du?",
@@ -432,9 +449,13 @@ export const BLOG_POSTS: BlogPost[] = [
       {
         heading: "Essen und Trinken: Grill, Buffet oder Menü",
         paragraphs: [
-          "Eine eigene Gastronomie spart dir die Suche nach einem externen Caterer und zusätzliche Koordination. Im moos.park gibt es Menü, Buffet, Fingerfood, Bar und Pizzeria, ein externer Caterer ist nicht notwendig.",
-          "Praktisch bei Sommerfesten ist oft eine Mischung: ein Buffet als Basis, dazu Fingerfood und die Bar für den Abend. Frag früh nach Sonderwünschen wie vegetarisch, vegan oder Allergien, damit das Angebot von Anfang an dazu passt.",
+          "Bar, Pinsa und Pizza kommen im moos.park aus dem Haus. Für alles Weitere arbeiten wir mit namhaften Caterern zusammen und stimmen uns flexibel auf dein Fest ab. Du musst keinen Caterer selbst suchen und koordinieren.",
+          "Praktisch bei Sommerfesten ist oft eine Mischung: ein Buffet als Basis, dazu Pinsa und Pizza und die Bar für den Abend. Frag früh nach Sonderwünschen wie vegetarisch, vegan oder Allergien, damit das Angebot von Anfang an dazu passt.",
         ],
+        image: {
+          src: "/images/rooms/pizzeria-1.jpg",
+          alt: "Pizzeria im moos.park mit Theke, Stehtischen und Pizza-Wandmalerei",
+        },
       },
       {
         heading: "Programm: Was ein Sommerfest trägt",
@@ -473,7 +494,7 @@ export const BLOG_POSTS: BlogPost[] = [
       },
       {
         q: "Gibt es Catering im Haus?",
-        a: "Ja. Die eigene Gastronomie bietet Menü, Buffet, Fingerfood, Bar und Pizzeria. Ein externer Caterer ist nicht notwendig.",
+        a: "Bar, Pinsa und Pizza kommen aus dem Haus. Für weiteres Catering arbeiten wir mit namhaften Caterern zusammen und stimmen uns flexibel auf deinen Anlass ab.",
       },
       {
         q: "Kann ich die gesamte Location exklusiv für mein Sommerfest buchen?",

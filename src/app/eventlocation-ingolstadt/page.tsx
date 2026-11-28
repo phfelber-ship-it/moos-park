@@ -73,7 +73,7 @@ const data: LocationPageData = {
     },
     {
       q: "Was ist bei der Miete inklusive?",
-      a: "Licht- und Tontechnik, Bühne, eigene Gastronomie (Bar, Buffet, Pizzeria), großer kostenloser Parkplatz und ein persönlicher Ansprechpartner für die gesamte Planung.",
+      a: "Licht- und Tontechnik, Bühne, Bar, Pinsa und Pizza aus dem Haus, großer kostenloser Parkplatz und ein persönlicher Ansprechpartner für die gesamte Planung. Weiteres Catering organisieren wir mit namhaften Caterer-Partnern.",
     },
     {
       q: "Wie lange im Voraus sollte ich buchen?",
@@ -81,7 +81,15 @@ const data: LocationPageData = {
     },
     {
       q: "Wie schnell bekomme ich ein Angebot?",
-      a: "Wir bearbeiten Anfragen schnell und melden uns mit einem individuellen, unverbindlichen Angebot. Die Anfrage ist kostenlos.",
+      a: "Sie erhalten Ihr individuelles, unverbindliches Angebot in der Regel innerhalb von 24 Stunden. Die Anfrage ist kostenlos.",
+    },
+    {
+      q: "Gibt es Catering?",
+      a: "Bar, Pinsa und Pizza kommen aus dem Haus. Für weiteres Catering, zum Beispiel Menü oder Buffet, arbeiten wir mit namhaften Caterern zusammen und stimmen uns flexibel auf Ihren Anlass ab.",
+    },
+    {
+      q: "Was, wenn ich sehr kurzfristig plane?",
+      a: "Sprechen Sie uns an. Wir planen auch kurzfristig und melden uns in der Regel innerhalb von 24 Stunden mit einem Angebot. Ob Ihr Wunschtermin frei ist, klären wir direkt mit Ihnen.",
     },
   ],
 };

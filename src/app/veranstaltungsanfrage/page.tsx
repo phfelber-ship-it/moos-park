@@ -4,7 +4,7 @@ export const metadata = {
   alternates: { canonical: "/veranstaltungsanfrage" },
   title: "Veranstaltungsanfragen - moos.park | Eventlocation",
   description:
-    "Veranstaltung im moos.park Pöttmes anfragen – Eckdaten senden, schnelle Angebotsbearbeitung.",
+    "Veranstaltung im moos.park Pöttmes anfragen – Eckdaten senden, Angebot in der Regel innerhalb von 24 Stunden.",
 };
 
 export default function VeranstaltungsanfragePage() {

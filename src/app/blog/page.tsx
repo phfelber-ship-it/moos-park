@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { BLOG_POSTS } from "@/lib/blog-posts";
 
@@ -39,8 +40,19 @@ export default function BlogIndexPage() {
           <Link
             key={post.slug}
             href={`/blog/${post.slug}`}
-            className="flex h-full flex-col rounded-2xl border border-foreground/10 p-6 transition-colors hover:border-accent-lime"
+            className="flex h-full flex-col overflow-hidden rounded-2xl border border-foreground/10 transition-colors hover:border-accent-lime"
           >
+            {post.image && (
+              <Image
+                src={post.image.src}
+                alt={post.image.alt}
+                width={1200}
+                height={675}
+                sizes="(min-width: 640px) 50vw, 100vw"
+                className="aspect-video w-full object-cover"
+              />
+            )}
+            <div className="flex flex-1 flex-col p-6">
             <p className="text-xs font-bold text-accent">
               {formatDate(post.publishedAt)}
             </p>
@@ -53,6 +65,7 @@ export default function BlogIndexPage() {
             <span className="mt-4 text-xs font-black uppercase tracking-wide text-accent-lime">
               Weiterlesen →
             </span>
+            </div>
           </Link>
         ))}
       </div>

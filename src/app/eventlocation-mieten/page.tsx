@@ -54,7 +54,7 @@ const data: LocationPageData = {
   faq: [
     {
       q: "Was ist beim Mieten alles inklusive?",
-      a: "Licht- & Tontechnik, Bühne, eigene Gastronomie, Parkplatz und Eventteam. Kein Fremdküchendienst nötig – alles aus einer Hand.",
+      a: "Licht- & Tontechnik, Bühne, Bar, Pinsa und Pizza aus dem Haus, Parkplatz und Eventteam. Weiteres Catering organisieren wir mit namhaften Caterer-Partnern – alles aus einer Hand.",
     },
     {
       q: "Wie viele Personen passen in die Location?",
@@ -66,7 +66,7 @@ const data: LocationPageData = {
     },
     {
       q: "Was kostet das Mieten der Location?",
-      a: "Die Kosten hängen von Datum, Räumen und Service ab. Wir erstellen Ihnen ein individuelles Angebot ohne versteckte Kosten – schnell bearbeitet.",
+      a: "Die Kosten hängen von Datum, Räumen und Service ab. Wir erstellen Ihnen ein individuelles Angebot ohne versteckte Kosten, in der Regel innerhalb von 24 Stunden.",
     },
     {
       q: "Wie weit ist moos.park von Augsburg und Ingolstadt?",
@@ -75,6 +75,14 @@ const data: LocationPageData = {
     {
       q: "Wie lange im Voraus sollte ich buchen?",
       a: "Für Wochenend-Termine 6–12 Monate im Voraus. Werktags sind auch kurzfristige Buchungen möglich.",
+    },
+    {
+      q: "Gibt es Catering?",
+      a: "Bar, Pinsa und Pizza kommen aus dem Haus. Für weiteres Catering, zum Beispiel Menü oder Buffet, arbeiten wir mit namhaften Caterern zusammen und stimmen uns flexibel auf Ihren Anlass ab.",
+    },
+    {
+      q: "Was, wenn ich sehr kurzfristig plane?",
+      a: "Sprechen Sie uns an. Wir planen auch kurzfristig und melden uns in der Regel innerhalb von 24 Stunden mit einem Angebot. Ob Ihr Wunschtermin frei ist, klären wir direkt mit Ihnen.",
     },
   ],
 };

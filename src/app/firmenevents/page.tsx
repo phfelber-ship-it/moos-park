@@ -23,7 +23,7 @@ export const metadata = {
 const ADVANTAGES_FIRMEN = [
     "Bis zu 2300 Gäste im gesamten Haus – auch für große Betriebsfeiern",
     "Bühne, Licht & Sound – nichts extra buchen",
-    "Eigene Gastronomie: Menü, Buffet, Bar",
+    "Bar, Pinsa und Pizza aus dem Haus, weiteres Catering mit namhaften Partnern",
     "Kostenloser Parkplatz für alle Mitarbeiter",
     "Exklusivbuchung der Location möglich",
     "Ein Ansprechpartner – von Planung bis Abschluss",
@@ -40,7 +40,7 @@ const FAQ = [
     },
     {
       q: "Gibt es Catering für Firmenevents?",
-      a: "Ja – eigene Gastronomie mit Menü, Buffet, Fingerfood, Bar und Pizzeria. Kein externer Caterer notwendig.",
+      a: "Ja. Bar, Pinsa und Pizza kommen aus dem Haus. Für Menü, Buffet und weitere Wünsche arbeiten wir mit namhaften Caterern zusammen und stimmen uns flexibel auf Ihren Anlass ab.",
     },
     {
       q: "Welche Technik steht zur Verfügung?",
@@ -53,6 +53,14 @@ const FAQ = [
     {
       q: "Wie frühzeitig sollte man buchen?",
       a: "Für Wochenend-Termine 6–12 Monate im Voraus empfohlen. Besonders für Weihnachtsfeiern buchen viele Unternehmen bereits im Frühjahr.",
+    },
+    {
+      q: "Wie schnell bekomme ich ein Angebot?",
+      a: "Sie erhalten Ihr individuelles, unverbindliches Angebot in der Regel innerhalb von 24 Stunden. Die Anfrage ist kostenlos.",
+    },
+    {
+      q: "Was, wenn ich sehr kurzfristig plane?",
+      a: "Sprechen Sie uns an. Wir planen auch kurzfristig und melden uns in der Regel innerhalb von 24 Stunden mit einem Angebot. Ob Ihr Wunschtermin frei ist, klären wir direkt mit Ihnen.",
     },
 ];
 

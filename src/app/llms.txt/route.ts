@@ -14,9 +14,10 @@ export function GET() {
 - Adresse: Rudolf-Diesel-Straße 23, 86554 Pöttmes
 - Kapazität: bis zu 2300 Gäste im gesamten Haus inklusive Terrasse
 - Fläche: 2200 m² Hausfläche, sieben Räume (Main-Halle mit Galerie, Bar, Terrasse, Kleine Halle (Lounge), Chillout, Foyer, Pizzeria), einzeln oder kombiniert mietbar
-- Ausstattung: Bühne, Licht- und Tontechnik, eigene Gastronomie, kostenloser Parkplatz
+- Ausstattung: Bühne, Licht- und Tontechnik, Bar, Pinsa und Pizza aus dem Haus, kostenloser Parkplatz
+- Catering: flexible Zusammenarbeit mit namhaften Caterern, abgestimmt auf den jeweiligen Anlass
 - Exklusivbuchung der gesamten Location möglich
-- Angebot: schnelle Angebotsbearbeitung, kostenlos und unverbindlich
+- Angebot: in der Regel innerhalb von 24 Stunden, kostenlos und unverbindlich; auch kurzfristig planbar
 
 ## Wichtige Seiten
 - [Eventlocation](${SITE_URL}/eventlocation): Räume, Anlässe, Anfahrt, FAQ, Anfrage

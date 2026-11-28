@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { BLOG_POSTS, getBlogPost, getAllBlogSlugs } from "@/lib/blog-posts";
@@ -22,6 +23,14 @@ export async function generateMetadata({
     title: post.metaTitle,
     description: post.description,
     alternates: { canonical: `${SITE_URL}/blog/${post.slug}` },
+    ...(post.image && {
+      openGraph: {
+        title: post.metaTitle,
+        description: post.description,
+        type: "article",
+        images: [post.image.src],
+      },
+    }),
   };
 }
 
@@ -50,6 +59,7 @@ export default async function BlogPostPage({
     headline: post.title,
     description: post.description,
     datePublished: post.publishedAt,
+    ...(post.image && { image: `${SITE_URL}${post.image.src}` }),
     dateModified: post.publishedAt,
     author: { "@type": "Organization", name: "moos-park Gastronomie GmbH" },
     publisher: { "@type": "Organization", name: "moos.park" },
@@ -94,6 +104,18 @@ export default async function BlogPostPage({
       </h1>
       <p className="mt-4 text-foreground/70">{post.excerpt}</p>
 
+      {post.image && (
+        <Image
+          src={post.image.src}
+          alt={post.image.alt}
+          width={1200}
+          height={675}
+          priority
+          sizes="(min-width: 768px) 768px, 100vw"
+          className="mt-8 w-full rounded-2xl border border-foreground/10 object-cover"
+        />
+      )}
+
       <div className="mt-10 flex flex-col gap-8">
         {post.sections.map((section) => (
           <div key={section.heading}>
@@ -105,6 +127,16 @@ export default async function BlogPostPage({
                 {p}
               </p>
             ))}
+            {section.image && (
+              <Image
+                src={section.image.src}
+                alt={section.image.alt}
+                width={1200}
+                height={675}
+                sizes="(min-width: 768px) 768px, 100vw"
+                className="mt-5 w-full rounded-2xl border border-foreground/10 object-cover"
+              />
+            )}
           </div>
         ))}
       </div>

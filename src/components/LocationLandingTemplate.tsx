@@ -162,6 +162,9 @@ export default async function LocationLandingTemplate({
           >
             <FlipText text="Jetzt anfragen" />
           </a>
+          <p className="mt-3 text-xs text-foreground/50">
+            Ihr Angebot in der Regel innerhalb von 24 Stunden.
+          </p>
         </div>
       </section>
 
